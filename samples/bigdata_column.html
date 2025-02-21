@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- ajax 요청을 위한 스크립트입니다. -->
+<script type="text/javascript" src="./ajax.js"></script>
+
+<!-- 본 샘플를 위한 스크립트입니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<style type="text/css">
+	.right_style {
+		text-align: right;
+	}
+</style>
+<script type="text/javascript">
+
+	var myGridID;
+
+	var gridData = [];
+
+	// document ready 
+	function documentReady() {
+
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid();
+	};
+
+	// 칼럼 레이아웃
+	var columnLayout = [{
+		dataField: "id",
+		headerText: "ID",
+		width: 140
+	}];
+
+	// 칼럼 99개 생성
+	for (var i = 1, len = 100; i < len; i++) {
+		columnLayout.push({
+			dataField: "field" + i,
+			headerText: "Field" + i,
+			width: 100
+		});
+	}
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid() {
+
+		// 그리드 속성 설정
+		var gridProps = {
+			rowNumColumnWidth: 70,
+			// row 를 구별짓는 유니크한 값을 갖는 필드 설정 (10만 행 이상의 대용량인 경우 반드시 설정을 권함 )
+			rowIdField: "id",
+			showRowCheckColumn: true,
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+		AUIGrid.setGridData(myGridID, []);
+	}
+
+	// count 수만큼 랜덤 데이터 생성
+	function createRandomData(count) {
+		if (!window.confirm(count + '건 수의 데이터 생성을 시작하시겠습니까?')) {
+			return;
+		}
+		console.time('데이터 생성 걸리는 시간');
+
+		var now = new Date();
+		var data = [];
+		var country, product, quantity, color, name, date, price;
+
+		for (var i = 0; i < count; i++) {
+			item = {};
+			item.id = i;
+			for (var j = 1; j < 100; j++) {
+				item["field" + j] = Math.floor(Math.random() * 1000000);
+			}
+			data.push(item);
+		}
+
+		var endDate = new Date();
+		var dataTime = endDate.getTime() - now.getTime();
+
+		gridData = data;
+
+		var txt = count + "개 생성 소요 시간 : " + dataTime + " ms";
+		document.getElementById("ellapse").innerText = txt;
+		console.timeEnd('데이터 생성 걸리는 시간');
+		alert(txt + " 데이터 생성 완료! \r\n이제 그리드에 해당 데이터 삽입(주황 버튼 클릭)하여 확인하십시오.");
+	};
+
+	function setData() {
+		if (gridData.length <= 0) {
+			alert('데이터 생성 버턴을 눌러 먼저 데이터 생성하십시오.');
+			return;
+		}
+		AUIGrid.setGridData("#grid_wrap", gridData);
+	};
+</script>
+
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>순수 AUIGrid가 출력하는 퍼포먼스만 보기 위해 DB Select, 서버 비지니스로직 처리, 전송 등의 시간은 무시한 데모입니다.</p>
+		<p>따라서 로컬(Local) 에서 자바스크립트로 랜덤 데이터를 생성하여 그리드에 적용시킵니다.</p>
+		<p>칼럼 수 100 개 * 데이터 건수 기본 10만부터 시작합니다.</p>
+		<p>로컬에서 랜덤 데이터 생성 시간만으로도 엄청 느리다는 것을 알 수 있습니다.</p>
+		<p style="color:red;">주의 : 성능 낮은 PC 에서는 단순 데이터 생성만으로도 응답없음. 메모리 부족 발생 할 수 있음.</p>
+		<p><strong>그러나 생성된 데이터를 그리드가 렌더링하는 것은 느리지 않습니다.</strong></p>
+		<span class="btn" onclick="createRandomData(100000)">100개 필드 * 10만 데이터 생성</span>
+		<span class="btn" onclick="createRandomData(300000)">100개 필드 * 30만 데이터 생성</span>
+		<span class="btn" onclick="createRandomData(500000)">100개 필드 * 50만 데이터 생성</span>
+		<span class="btn" onclick="createRandomData(1000000)">100개 필드 * 100만 데이터 생성</span>
+		<p>위 데이터 생성 버턴을 눌러 먼저 데이터 생성하십시오.</p>
+		<p><span class="btn btn-primary" onclick="setData()">생성된 데이터 그리드 렌더링</span></p>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="ellapse"></p>
+
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+
+</body>
+</html>

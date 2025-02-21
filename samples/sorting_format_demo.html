@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- ajax 요청을 위한 스크립트입니다. -->
+<script type="text/javascript" src="./ajax.js"></script>
+
+<!-- 본 샘플를 위한 스크립트입니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<script type="text/javascript">
+
+	// 드랍다운 리스트로 출력할 데이터
+	var myList = [{
+		"id": "#Cust0",
+		"date": "2014/10/01",
+		"name": "Steve",
+		"country": "USA",
+		"flag": "usa.png",
+		"product": "IPad Air",
+		"color": "Green"
+	}, {
+		"id": "#Cust1",
+		"date": "2014/09/30",
+		"name": "홍길동",
+		"country": "Korea",
+		"flag": "korea.png",
+		"product": "LG G3",
+		"color": "Pink"
+	}, {
+		"id": "#Cust2",
+		"date": "2014/09/29",
+		"name": "Yamaha",
+		"country": "Japan",
+		"flag": "japan.png",
+		"product": "IPad Air",
+		"color": "Yellow"
+	}, {
+		"id": "#Cust3",
+		"date": "2014/09/28",
+		"name": "Natasha",
+		"country": "UK",
+		"flag": "uk.png",
+		"product": "Galaxy Note3",
+		"color": "Orange"
+	}, {
+		"id": "#Cust4",
+		"date": "2014/09/27",
+		"name": "Thuwai",
+		"country": "China",
+		"flag": "china.png",
+		"product": "LG G3",
+		"color": "Violet"
+	}, {
+		"id": "#Cust5",
+		"date": "2014/09/26",
+		"name": "Anna",
+		"country": "USA",
+		"flag": "usa.png",
+		"product": "Galaxy S5",
+		"color": "Gray"
+	}];
+	//--                   
+
+	// document ready 
+	function documentReady() {
+
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid(columnLayout);
+
+		// 데이터 삽입
+		AUIGrid.setGridData(myGridID, gridData);
+	};
+
+	// AUIGrid 칼럼 설정
+	var columnLayout = [{
+		dataField: "index",
+		headerText: "Index",
+		width: 120
+	}, {
+		dataField: "id",
+		headerText: "책임자",
+		width: 140,
+		labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+			var retStr = "";
+			for (var i = 0, len = myList.length; i < len; i++) {
+				if (myList[i]["id"] == value) {
+					retStr = myList[i]["name"];
+					break;
+				}
+			}
+			return retStr == "" ? value : retStr;
+		},
+		editRenderer: {
+			type: "DropDownListRenderer",
+			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+			keyField: "id",
+			valueField: "name",
+			list: myList,
+			// 드랍 리스트의 개별 아이템에 대하여 출력할 양식을 HTML 로 작성하여 반환하면 리스트로 출력됩니다.
+			listTemplateFunction: function (rowIndex, columnIndex, text, item, dataField, listItem) {
+				var html = '<div style="display:block;text-align:left;white-space:nowrap">';
+				html += '<img src="./assets/' + listItem.flag + '" width="30" height="20" style="vertical-align:middle;padding-right:10px;"/>';
+				for (var n in listItem) {
+					if (n != "flag") {
+						html += '<span style="display:inline-block;width:80px;">' + listItem[n] + '</span>';
+					}
+				}
+				html += '</div>';
+				return html;
+			}
+		}
+	}];
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid(columnLayout) {
+
+		// 그리드 속성 설정
+		var gridProps = {
+				
+			useGroupingPanel: true,
+
+			editable: true,
+
+			enableSorting: true,
+
+			// 정렬을 할 때 데이터 기반이 아닌 그리드에 출력된 값을 기반으로 정렬을 실행할지 여부를 지정합니다.( 기본값 false)
+			// 데이터 기반의 정렬보다 퍼포먼스에 영향을 미치므로 무조건적인 true 설정은 피하십시오.
+			sortableByFormatValue: true
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+		// 정렬 이벤트 바인딩
+		AUIGrid.bind(myGridID, "sorting", function (event) {
+			var sortingStr = "";
+			var sortingFields = event.sortingFields;
+			var sortingField;
+			var sortingType;
+			if (sortingFields.length > 0) {
+				for (var i = 0, len = sortingFields.length; i < len; i++) {
+					sortingField = sortingFields[i].dataField;
+					sortingType = sortingFields[i].sortType == 1 ? "오름차순" : "내림차순";
+					sortingStr += sortingField + " : " + sortingType + ", ";
+				}
+			} else {
+				sortingStr = "정렬 필드 없음";
+			}
+
+			document.getElementById("sorting_info").innerText = "이벤트명 : " + event.type + ", 정렬 필드들 : " + sortingStr;
+		});
+	}
+
+	function setPropSortableByFormatValue(value) {
+		// sortableByFormatValue 속성 true, false 전환
+		AUIGrid.setProp(myGridID, "sortableByFormatValue", value);
+	};
+	
+	// 그리드 데이터
+	var gridData = [{"index":1,"id":"#Cust1"},{"index":2,"id":"#Cust2"},{"index":3,"id":"#Cust3"},{"index":4,"id":"#Cust4"},{"index":5,"id":"#Cust5"},{"index":6,"id":"#Cust0"},{"index":7,"id":"#Cust1"},{"index":8,"id":"#Cust2"},{"index":9,"id":"#Cust3"},{"index":10,"id":"#Cust4"},{"index":11,"id":"#Cust5"},{"index":12,"id":"#Cust0"},{"index":13,"id":"#Cust1"},{"index":14,"id":"#Cust2"},{"index":15,"id":"#Cust3"},{"index":16,"id":"#Cust4"},{"index":17,"id":"#Cust5"},{"index":18,"id":"#Cust0"},{"index":19,"id":"#Cust1"},{"index":20,"id":"#Cust2"},{"index":21,"id":"#Cust3"},{"index":22,"id":"#Cust4"},{"index":23,"id":"#Cust5"},{"index":24,"id":"#Cust0"},{"index":25,"id":"#Cust1"},{"index":26,"id":"#Cust2"},{"index":27,"id":"#Cust3"},{"index":28,"id":"#Cust4"},{"index":29,"id":"#Cust5"},{"index":30,"id":"#Cust0"},{"index":31,"id":"#Cust1"},{"index":32,"id":"#Cust2"},{"index":33,"id":"#Cust3"},{"index":34,"id":"#Cust4"},{"index":35,"id":"#Cust5"},{"index":36,"id":"#Cust0"},{"index":37,"id":"#Cust1"},{"index":38,"id":"#Cust2"},{"index":39,"id":"#Cust3"},{"index":40,"id":"#Cust4"},{"index":41,"id":"#Cust5"},{"index":42,"id":"#Cust0"},{"index":43,"id":"#Cust1"},{"index":44,"id":"#Cust2"},{"index":45,"id":"#Cust3"},{"index":46,"id":"#Cust4"},{"index":47,"id":"#Cust5"},{"index":48,"id":"#Cust0"},{"index":49,"id":"#Cust1"},{"index":50,"id":"#Cust2"},{"index":51,"id":"#Cust3"},{"index":52,"id":"#Cust4"},{"index":53,"id":"#Cust5"},{"index":54,"id":"#Cust0"},{"index":55,"id":"#Cust1"},{"index":56,"id":"#Cust2"},{"index":57,"id":"#Cust3"},{"index":58,"id":"#Cust4"},{"index":59,"id":"#Cust5"},{"index":60,"id":"#Cust0"},{"index":61,"id":"#Cust1"},{"index":62,"id":"#Cust2"},{"index":63,"id":"#Cust3"},{"index":64,"id":"#Cust4"},{"index":65,"id":"#Cust5"},{"index":66,"id":"#Cust0"},{"index":67,"id":"#Cust1"},{"index":68,"id":"#Cust2"},{"index":69,"id":"#Cust3"},{"index":70,"id":"#Cust4"},{"index":71,"id":"#Cust5"},{"index":72,"id":"#Cust0"},{"index":73,"id":"#Cust1"},{"index":74,"id":"#Cust2"},{"index":75,"id":"#Cust3"},{"index":76,"id":"#Cust4"},{"index":77,"id":"#Cust5"},{"index":78,"id":"#Cust0"},{"index":79,"id":"#Cust1"},{"index":80,"id":"#Cust2"},{"index":81,"id":"#Cust3"},{"index":82,"id":"#Cust4"},{"index":83,"id":"#Cust5"},{"index":84,"id":"#Cust0"},{"index":85,"id":"#Cust1"},{"index":86,"id":"#Cust2"},{"index":87,"id":"#Cust3"},{"index":88,"id":"#Cust4"},{"index":89,"id":"#Cust5"},{"index":90,"id":"#Cust0"},{"index":91,"id":"#Cust1"},{"index":92,"id":"#Cust2"},{"index":93,"id":"#Cust3"},{"index":94,"id":"#Cust4"},{"index":95,"id":"#Cust5"},{"index":96,"id":"#Cust0"},{"index":97,"id":"#Cust1"},{"index":98,"id":"#Cust2"},{"index":99,"id":"#Cust3"},{"index":100,"id":"#Cust4"}];
+
+</script>
+
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>정렬을 할 때 데이터 기반이 아닌 뷰(View) 기반으로 정렬을 실행합니다.</p>
+		<p>뷰(View) 기반은 labelFunction 과 같이 실제 값을 변형 시킨 경우를 말합니다.</p>
+		<p>예로 아래 그리드는 드랍다운리스트렌더러 key-value 모드를 사용하여 실제 데이터의 값은 "#Cust0" 과 같습니다.</p>
+		<p>이를 labelFunction 을 사용하여 사용자가 보기 편한 텍스트로 보여주고 있습니다.</p>
+		<p><strong>sortableByFormatValue 속성을 true 설정하면 이와 같이 뷰(View)적 정렬을 실행합니다.</strong></p>
+		<p>뷰(View)적 정렬은 데이터와 뷰의 관계가 1:1 관계여야 합니다. 즉, 데모 상에서 #Cust0 은 "Steve", "#Cust1"은 "홍길동" 관계와 같이 1:1 관계여야 합니다.</p>
+		<p><strong>참고 : 데이터 기반의 정렬보다 퍼포먼스에 영향을 미치므로 무조건적인 sortableByFormatValue=true 설정은 피하십시오.</strong></p>
+		<p><span class="btn" onclick="setPropSortableByFormatValue(false);">sortableByFormatValue = false 로 전환</span><span class="btn" onclick="setPropSortableByFormatValue(true);">sortableByFormatValue = true 로 전환</span></p>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="sorting_info"></p>
+
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- ajax 요청을 위한 스크립트입니다. -->
+<script type="text/javascript" src="./ajax.js"></script>
+
+<!-- 본 샘플를 위한 스크립트입니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<script type="text/javascript">
+
+	// AUIGrid 생성 후 반환 ID
+	var myGridID, myGridID2;
+
+	// document ready 
+	function documentReady() {
+
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid(columnLayout);
+
+		createAUIGrid2(columnLayout);
+
+		setGridData(100, 1)
+	};
+
+	function setGridData(dataSize, len) {
+		var gridData = genData(dataSize, len);
+		AUIGrid.setGridData(myGridID, gridData);
+		AUIGrid.setGridData(myGridID2, gridData);
+	}
+
+	// AUIGrid 칼럼 레이아웃 설정
+	var columnLayout = [{
+		dataField: "f1",
+		headerText: "Field1"
+	}, {
+		headerText: "Header Group",
+		children: [{
+			dataField: "f2",
+			headerText: "Field2",
+		}, {
+			dataField: "f3",
+			headerText: "Field3"
+		}]
+	}, {
+		dataField: "f4",
+		headerText: "Field4"
+	}, {
+		dataField: "f5",
+		headerText: "Field5"
+	}, {
+		dataField: "f6",
+		headerText: "Field6"
+	}, {
+		dataField: "f7",
+		headerText: "Field7"
+	}, {
+		dataField: "f8",
+		headerText: "Field8"
+	}];
+
+	// 상단 AUIGrid 를 생성합니다.
+	function createAUIGrid(columnLayout) {
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout);
+
+		// ready 이벤트 바인딩.
+		AUIGrid.bind(myGridID, "ready", function (event) {
+
+			// 현재 출력된 칼럼들의 값을 모두 조사하여 최적의 칼럼 사이즈를 찾아 배열로 반환.
+			var colSizeList = AUIGrid.getFitColumnSizeList(myGridID);
+
+			// 구해진 칼럼 사이즈를 적용 시킴.
+			AUIGrid.setColumnSizeList(myGridID, colSizeList);
+		});
+	};
+
+	// 하단 AUIGrid 를 생성합니다.
+	function createAUIGrid2(columnLayout) {
+
+
+		// 실제로 #grid_wrap2 에 그리드 생성
+		myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout,);
+
+		// ready 이벤트 바인딩.
+		AUIGrid.bind(myGridID2, "ready", function (event) {
+
+			// 현재 출력된 칼럼들의 값을 모두 조사하여 최적의 칼럼 사이즈를 찾아 배열로 반환.
+			// true 인자를 적용하면 최적의 사이즈가 그리드 크기보자 작은 경우(공간이 남는 경우) 그리드 너비를 채우도록 지시함.
+			var colSizeList = AUIGrid.getFitColumnSizeList(event.pid, true);
+
+			// 구해진 칼럼 사이즈를 적용 시킴.
+			AUIGrid.setColumnSizeList(event.pid, colSizeList);
+		});
+	};
+
+
+	// 그리드 데이터 임의 생성
+	function genData(count, rx) {
+		var characters = '가나다라마바사아자차카타파하';
+		var i, j;
+		var size;
+		var obj;
+		var data = [];
+		for (i = 0; i < count; i++) {
+			obj = {};
+			for (j = 1; j <= 8; j++) {
+				size = parseInt(Math.random() * (j + 2)) + rx;
+				obj["f" + j] = "Field-" + characters.substr(0, size);
+			}
+			data[i] = obj;
+		}
+		return data;
+	};
+</script>
+
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>칼럼 레이아웃 정의할 때 임의의 width 가 아니라 삽입한 데이터의 값 기준으로 width 를 자동 조정하고자 할 때 다음처럼 ready 이벤트에서 활용이 가능합니다.</p>
+		<p>ready 이벤트는 데이터 삽입 후 준비가 된 상태가 된 경우입니다.</p>
+		<p>여기서 getFitColumnSizeList 메소드와 setColumnSizeList 메소드를 활용하여 칼럼들 사이즈 조절이 가능합니다.</p>
+		<p>renderer type을 ImageRenderer 나 DropDownListRenderer, TemplateRenderer 등을 정의 한 경우에는 widthFit 을 반드시 설정해서 해당 값이 적용되도록 해야 합니다.</p>
+		<button class="btn" onclick="setGridData(100, parseInt(Math.random()*5));">데이터 다시 만들어 삽입하기(Refresh)</button>
+		<div class="src_cover">
+			<pre>
+// ready 이벤트 바인딩.
+AUIGrid.bind(myGridID, "ready", function (event) {
+	// 현재 출력된 칼럼들의 값을 모두 조사하여 최적의 칼럼 사이즈를 찾아 배열로 반환.
+	// true 인자를 적용하면 최적의 사이즈가 그리드 크기보자 작은 경우(공간이 남는 경우) 그리드 너비를 채우도록 지시함.
+	var colSizeList = AUIGrid.getFitColumnSizeList(myGridID, true);
+	
+	// 구해진 칼럼 사이즈를 적용 시킴.
+	AUIGrid.setColumnSizeList(myGridID, colSizeList);
+});		</pre>
+		</div>
+		<div>
+			<h1>■ 최적의 칼럼 사이즈로 적용 (getFitColumnSizeList 메소드 사용)</h1>
+			<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+			<div id="grid_wrap" style="width:100%;height:280px; margin:0 auto;"></div>
+
+			<h1 style="padding-top:20px;">■ 최적의 칼럼 사이즈+그리드 크기에 맞추기로 적용(getFitColumnSizeList 메소드 true 인자 사용)</h1>
+			<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+			<div id="grid_wrap2" style="width:100%;height:280px; margin:0 auto;"></div>
+		</div>
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+
+</body>
+</html>

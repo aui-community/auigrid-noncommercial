@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- ajax 요청을 위한 스크립트입니다. -->
+<script type="text/javascript" src="./ajax.js"></script>
+
+<!-- 본 샘플를 위한 스크립트입니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+
+ <style type="text/css">
+/* 컨텍스트 메뉴 아이콘 */ 
+.my-context-item-value {
+	background-image:url(./style/images/pad-icon.png);
+	background-size: 13px 13px;
+	background-position: 6px 50%;
+	background-repeat : no-repeat;
+}
+/* 컨텍스트 메뉴 아이콘 - 엑셀 다운로드*/	
+.my-context-item-export {
+	background-image:url(./style/images/arrow-down-black-icon.png);
+	background-size: 13px 13px;
+	background-position: 6px 50%;
+	background-repeat : no-repeat;
+}
+</style>
+<script type="text/javascript">
+
+	// AUIGrid 생성 후 반환 ID
+	var myGridID;
+
+	// document ready 
+	function documentReady() {
+
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid(columnLayout);
+
+		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+		requestData("./data/normal_100.json");
+	};
+
+	// AUIGrid 칼럼 설정
+	// 데이터 형태는 다음과 같은 형태임,
+	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
+	var columnLayout = [{
+		dataField: "id",
+		headerText: "ID",
+		width: 140
+	}, {
+		dataField: "name",
+		headerText: "Name",
+		width: 140
+	}, {
+		dataField: "country",
+		headerText: "Country",
+		width: 140
+	}, {
+		dataField: "product",
+		headerText: "Product",
+		width: 140
+	}, {
+		dataField: "color",
+		headerText: "Color",
+		width: 140
+	}, {
+		dataField: "quantity",
+		headerText: "Quantity",
+		dataType: "numeric",
+		width: 140
+	}, {
+		dataField: "price",
+		headerText: "Price",
+		dataType: "numeric",
+		formatString: "#,##0",
+		width: 140
+	}, {
+		dataField: "date",
+		headerText: "Date",
+		width: 140
+	}
+	];
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid(columnLayout) {
+
+		var gridProps = {
+
+			selectionMode: "multipleCells",
+
+			// 컨텍스트 메뉴 사용
+			useContextMenu: true,
+
+			showRowCheckColumn: false,
+
+			// 컨텍스트 메뉴 아이템들
+			contextMenuItems: [{
+				label: "$value (커스텀)", style: "my-context-item-value", callback: contextItemHandler // label 에 $value 를 설정하면 마우스가 있는 곳의 value 값으로 대체됩니다.
+			}, {
+				label: "모든 칼럼 너비 자동 맞춤하기", callback: contextItemHandler
+			}, {
+				label: "모든 칼럼 너비 자동 맞춤하기(Fit)", callback: contextItemHandler
+			}, {
+				label: "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+			}, {
+				label: "Export To Excel", style: "my-context-item-export", callback: contextItemHandler
+			}, {
+				label: "Open Google.com", callback: contextItemHandler
+			}, {
+				label: "서브 메뉴",
+				children: [{
+					label: "서브 메뉴1", callback: contextItemSubHandler
+				}, {
+					label: "서브 메뉴2", style: 'my-context-item-export', callback: contextItemSubHandler
+				}, {
+					label: "서브 메뉴3", callback: contextItemSubHandler
+				}]
+			}],
+
+			//  컨텍스트 메뉴를 보기 위해 오른쪽 클릭을 한 경우 클릭 지점이 왼쪽 클릭과 같이 셀 선택을 할지 여부
+			enableRightDownFocus: true // 기본값 : false
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+	};
+
+	//컨텍스트 메뉴 아이템 핸들러
+	function contextItemHandler(event) {
+		console.log(event);
+		switch (event.contextIndex) {
+			case 0:
+				alert(event.value + ", rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex);
+				break;
+			case 1:
+				// 모든 칼럼의 최적의 너비 값 배열을 반환합니다.
+				var widthList = AUIGrid.getFitColumnSizeList(event.pid);
+				// 그리드가 반환한 최적의 값에 +4의 여분 추가 시킴 (이것은 선택 사항)
+				widthList = widthList.map(function(v) {
+					return v + 4;
+				});
+				// 그리드에 새로운 너비 값들 적용 시킴
+				AUIGrid.setColumnSizeList(event.pid, widthList);
+				break;
+			case 2:
+				// 모든 칼럼의 최적의 너비 값 배열을 반환합니다. (그리드 너비에 맞춰서 반환)
+				var widthList = AUIGrid.getFitColumnSizeList(event.pid, true);
+				// 그리드에 새로운 너비 값들 적용 시킴
+				AUIGrid.setColumnSizeList(event.pid, widthList);
+				break;
+			case 4:
+				// 내보내기 실행
+				AUIGrid.exportToXlsx(event.pid);
+				break;
+			case 5:
+				window.open("https://www.google.com", "_blank");
+				break;
+		}
+	};
+	
+	// 컨텍스트 서브 메뉴 아이템 선택 핸들러
+	function contextItemSubHandler(event) {
+		switch (event.contextIndex) {
+		case 0:
+			alert('서브 메뉴 1 : ' + event.value + ", rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex);
+			break;
+		case 1:
+			alert('서브 메뉴 2');
+			break;
+		case 2:
+			alert('서브 메뉴 3');
+			break;
+		}
+	};
+</script>
+
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p> 컨텍스트 메뉴를 사용자 정의 한 데모입니다..</p>
+		<p> 원하는 명령어나 메뉴를 컨텍스트 메뉴에 넣을 수 있습니다.</p>
+		<p> 컨텍스트 메뉴에 복사하기( Copy ), 붙여넣기( Paste ) 를 추가하는 샘플을 보고자 한다면 <a href="https://www.auisoft.net/blog/auigrid/copy_paste.html" target="_blank">여기</a>를 클릭 하십시오.</p>
+		<div class="src_cover">
+			<pre>
+var gridProps = {
+			
+		// 컨텍스트 메뉴 사용
+		useContextMenu : true,
+		
+		// 컨텍스트 메뉴 아이템들
+		contextMenuItems : [{
+			label: "$value (커스텀)", style: "my-context-item-value", callback: contextItemHandler // label 에 $value 를 설정하면 마우스가 있는 곳의 value 값으로 대체됩니다.
+		}, {
+			label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+		}, {
+			label: "Export To Excel", style: "my-context-item-export", callback: contextItemHandler
+		}, {
+			label : "Open Google.com", callback : contextItemHandler
+		}],
+		
+		....
+};</pre>
+		</div>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="ellapse"></p>
+
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+
+</body>
+</html>

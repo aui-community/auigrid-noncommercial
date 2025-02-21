@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- ajax 요청을 위한 스크립트입니다. -->
+<script type="text/javascript" src="./ajax.js"></script>
+
+<!-- 본 샘플를 위한 스크립트입니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+<style type="text/css">
+	/* 커스텀 칼럼 스타일 정의 */
+	.my-column {
+		text-align: right;
+	}
+
+	/* 컨텍스트 메뉴 아이콘 - 엑셀 다운로드*/
+	.my-context-item-export {
+		background-image: url(./style/images/arrow-down-black-icon.png);
+		background-size: 13px 13px;
+		background-position: 6px 50%;
+		background-repeat: no-repeat;
+	}
+</style>
+
+<script type="text/javascript">
+	// AUIGrid 생성 후 반환 ID
+	var myGridID;
+
+	// document ready
+	function documentReady() {
+
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid(columnLayout);
+
+		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+		requestData("./data/normal_100.json");
+	};
+
+	// AUIGrid 칼럼 설정
+	var columnLayout = [{
+		dataField: "id",
+		headerText: "ID",
+		width: 140
+	}, {
+		headerText: "헤더 그룹",
+		dataField: "myGroup",
+		children: [{
+			dataField: "name",
+			headerText: "이름",
+			width: 140
+		}, {
+			dataField: "country",
+			headerText: "나라",
+			width: 140
+		}, {
+			dataField: "product",
+			headerText: "제품명",
+			width: 140
+		}]
+	}, {
+		dataField: "flag",
+		headerText: "이미지",
+		width: 140
+	}, {
+		dataField: "color",
+		headerText: "색상",
+		width: 140
+	}, {
+		dataField: "price",
+		headerText: "가격",
+		dataType: "numeric",
+		style: "my-column",
+		width: 140
+	}, {
+		dataField: "quantity",
+		headerText: "개수",
+		dataType: "numeric",
+		width: 140
+	}, {
+		dataField: "date",
+		headerText: "날짜",
+		width: 140
+	}];
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid(columnLayout) {
+
+		var gridProps = {
+
+			selectionMode: "multipleCells",
+
+			// 헤더 컨텍스트 메뉴 사용
+			useContextHeaderMenu: true,
+
+			//  컨텍스트 메뉴를 보기 위해 오른쪽 클릭을 한 경우 클릭 지점이 왼쪽 클릭과 같이 셀 선택을 할지 여부
+			enableRightDownFocus: true // 기본값 : false
+		};
+
+		// 헤더 컨텍스트 메뉴 아이템 정의
+		gridProps.contextMenuHeaderItems = [{
+			label: "오름 차순 정렬", callback: contextItemHeaderHandler
+		}, {
+			label: "내림 차순 정렬", callback: contextItemHeaderHandler
+		}, {
+			label: "정렬 초기화", callback: contextItemHeaderHandler
+		}, {
+			label: "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+		}, {
+			label: "현재 칼럼 숨기기", callback: contextItemHeaderHandler
+		}, {
+			label: "모든 칼럼 보이기(숨기기 초기화)", callback: contextItemHeaderHandler
+		}, {
+			label: "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+		}, {
+			label: "헤더 서브 메뉴",
+			children: [{
+				label: "서브 메뉴1", callback: contextItemHeaderSubHandler
+			}, {
+				label: "서브 메뉴2", style: 'my-context-item-export', callback: contextItemHeaderSubHandler
+			}, {
+				label: "서브 메뉴3", callback: contextItemHeaderSubHandler
+			}]
+		}];
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+		
+		AUIGrid.bind(myGridID, "contextMenu", function(event) {
+			console.log( event );
+			if(event.target === "body") {
+				alert("본 데모는 헤더 컨텍스트 데모입니다. 헤더에서 우클릭 하여 메뉴를 확인하십시오.");
+				return false; // contextMenu 이벤트에서 false 반환하면 메뉴 생성 안함.
+			}
+		});
+	};
+
+
+	// 헤더 컨텍스트 메뉴 아이템 선택 핸들러
+	function contextItemHeaderHandler(event) {
+		console.log( event );
+		switch (event.contextIndex) {
+			case 0: // 오름 차순 정렬
+				// currentDataField 로 오름차순 정렬 실행
+				AUIGrid.setSorting(myGridID, [{ "dataField": event.dataField, "sortType": 1 }]);
+				break;
+			case 1: // 내림 차순 정렬
+				// currentDataField 로 내림차순 정렬 실행
+				AUIGrid.setSorting(myGridID, [{ "dataField": event.dataField, "sortType": -1 }]);
+				break;
+			case 2: // 정렬 초기화
+				AUIGrid.clearSortingAll(myGridID);
+				break;
+			case 4: // 현재 칼럼 숨기기
+				if(event.isGroup) { // 그룹형 헤더인 경우 (데모 상 '헤더 그룹' 인 경우)
+					AUIGrid.hideColumnGroup(myGridID, event.dataField);
+				} else {
+					AUIGrid.hideColumnByDataField(myGridID, event.dataField);
+				}
+				break;
+			case 5: // 모든 칼럼 보이기
+				AUIGrid.showAllColumns(myGridID);
+				break;
+			default:
+				break;
+		}
+	};
+
+	// 헤더 컨텍스트 서브 메뉴 아이템 선택 핸들러
+	function contextItemHeaderSubHandler(event) {
+		console.log(event);
+		alert(event.contextItem.label + ' 클릭');
+	};
+</script>
+
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>헤더 컨텍스트를 사용하기 위해서는 useContextHeaderMenu 속성 설정 및 contextMenuHeaderItems 속성을 설정하여야 합니다.</p>
+		<P> useContextMenu 속성 설정만으로 기본 바디 컨텍스트 메뉴는 출력됩니다. 그러나 헤더 컨텍스트 메뉴는 직접 원하는 메뉴 구성을 해야 합니다.</p>
+		<p>본 데모는 헤더 컨텍스트를 다음과 같이 정의한 모습입니다.</p>
+<div class="src_cover">
+<pre>
+// 헤더 컨텍스트 메뉴 아이템 정의
+contextMenuHeaderItems = [{
+	label: "오름 차순 정렬", callback: contextItemHeaderHandler
+}, {
+	label: "내림 차순 정렬", callback: contextItemHeaderHandler
+}, {
+	label: "정렬 초기화", callback: contextItemHeaderHandler
+}, {
+	label: "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+}, {
+	label: "현재 칼럼 숨기기", callback: contextItemHeaderHandler
+}, {
+	label: "모든 칼럼 보이기(숨기기 초기화)", callback: contextItemHeaderHandler
+}, {
+	label: "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+}, {
+	label: "헤더 서브 메뉴",
+	children: [{
+		label: "서브 메뉴1", callback: contextItemHeaderSubHandler
+	}, {
+		label: "서브 메뉴2", style: 'my-context-item-export', callback: contextItemHeaderSubHandler
+	}, {
+		label: "서브 메뉴3", callback: contextItemHeaderSubHandler
+	}]
+}];
+</pre>
+</div>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="ellapse"></p>
+
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+
+</body>
+</html>

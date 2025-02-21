@@ -1,0 +1,56 @@
+/* CustomRenderer 스타일....AUIGrid.MyClientRenderer.js 에서 사용할 사용자가 정의해야 할 스타일입니다.*/
+#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-child1 {
+	position: absolute;
+	display: block;
+	left: 4px;
+	top: 4px;
+	font-size: 13px;
+	background: #eee;
+	border: 1px solid #ddd;
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	font-weight: bold;
+}
+#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-child2 {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	width: 20px;
+	height: 20px;
+	background: url(../assets/info-icon.png) 50% 50% no-repeat;
+	cursor: pointer;
+}
+#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-chart-base {
+	/* 차트 베이스*/
+	position: absolute;
+	display: block;
+	top: 50px;
+	width: 90px;
+	height: 15px;
+	border: 1px solid #ccc;
+	left: 10px;
+}
+#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-chart {
+	/* 차트 */
+	display: block;
+	top: 22px;
+	width: 80px;
+	height: 15px;
+}
+#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-chart-label {
+	/* 차트 텍스트 */
+	position: absolute;
+	display: inline;
+	font-size: 18px;
+	color: #000;
+	top: 30px;
+	left: 45px;
+}
+/* CustomRenderer 스타일 끝*/
+#aui-grid-wrap-showcase7 .my-saturday-style {
+	color: #0000ff;
+}
+#aui-grid-wrap-showcase7 .my-sunday-style {
+	color: #ff0000;
+}

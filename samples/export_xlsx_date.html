@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- ajax 요청을 위한 스크립트입니다. -->
+<script type="text/javascript" src="./ajax.js"></script>
+
+<!-- 본 샘플를 위한 스크립트입니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+
+<script type="text/javascript">
+
+	// AUIGrid 생성 후 반환 ID
+	var myGridID;
+
+	// document ready 
+	function documentReady() {
+
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid();
+
+	};
+
+	// AUIGrid 칼럼 설정
+	var columnLayout = [{
+		dataField: "field0",
+		headerText: "yyyy-mm-dd",
+		dataType: "date",
+		formatString: "yyyy-mm-dd",
+		width: 140
+	}, {
+		dataField: "field1",
+		headerText: "yyyy/m/d",
+		dataType: "date",
+		formatString: "yyyy/m/d",
+		xlsxDate: true, // 엑셀 내보내기 시 날짜 시스템 적용
+		width: 140
+	}, {
+		dataField: "field2",
+		headerText: "yyyy년 m월 d일",
+		dataType: "date",
+		formatString: "yyyy년 m월 d일",
+		xlsxDate: true, // 엑셀 내보내기 시 날짜 시스템 적용
+		width: 140
+	}, {
+		dataField: "field3",
+		headerText: "yy年 m月 d日",
+		dataType: "date",
+		formatString: "yy年 m月 d日",
+		xlsxDate: true, // 엑셀 내보내기 시 날짜 시스템 적용
+		width: 140
+	}, {
+		dataField: "field4",
+		headerText: "yyyy년 m월",
+		dataType: "date",
+		formatString: "yyyy년 m월",
+		xlsxDate: true, // 엑셀 내보내기 시 날짜 시스템 적용
+		width: 140
+	}, {
+		dataField: "field5",
+		headerText: "m월 d일",
+		dataType: "date",
+		formatString: "m월 d일",
+		xlsxDate: true, // 엑셀 내보내기 시 날짜 시스템 적용
+		width: 140
+	}, {
+		dataField: "field6",
+		headerText: "yyyy년 m월 d일 ddd요일",
+		dataType: "date",
+		formatString: "yyyy년 m월 d일 ddd요일",
+		xlsxDate: "[$-F800]dddd, mmmm dd, yyyy", // 엑셀 내보내기 시 엑셀에서 정의하는 날짜 표시 형식(엑셀 자세한 날짜)
+		width: 180
+	}, {
+		dataField: "field7",
+		headerText: "yy년 m월 d일 (ddd) HH시 MM분",
+		dataType: "date",
+		formatString: "yy년 m월 d일 (ddd) HH시 MM분",
+		xlsxDate: "[$-ko-KR]yy년 m월 d일 (ddd) hh시 mm분", // 엑셀 내보내기 시 엑셀에서 정의하는 날짜 표시 형식(사용자 지정 형식)
+		width: 220
+	}];
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid() {
+
+		var gridProps = {
+			editable: true
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+		// 만들어진 데이터 삽입
+		AUIGrid.setGridData(myGridID, gridData);
+	};
+
+	// 엑셀 내보내기(Export);
+	function exportTo() {
+		AUIGrid.exportToXlsx(myGridID);
+	};
+
+
+	// 그리드 데이터
+	var gridData = [{"field0":"2024/1/1","field1":"2024/1/1","field2":"2024/1/1","field3":"2024/1/1","field4":"2024/1/1","field5":"2024/1/1","field6":"2024/1/1 14:30:30","field7":"2024/1/1 14:30:30"},{"field0":"2024/1/2","field1":"2024/1/2","field2":"2024/1/2","field3":"2024/1/2","field4":"2024/1/2","field5":"2024/1/2","field6":"2024/1/2 14:30:30","field7":"2024/1/2 14:30:30"},{"field0":"2024/1/3","field1":"2024/1/3","field2":"2024/1/3","field3":"2024/1/3","field4":"2024/1/3","field5":"2024/1/3","field6":"2024/1/3 14:30:30","field7":"2024/1/3 14:30:30"},{"field0":"2024/1/4","field1":"2024/1/4","field2":"2024/1/4","field3":"2024/1/4","field4":"2024/1/4","field5":"2024/1/4","field6":"2024/1/4 14:30:30","field7":"2024/1/4 14:30:30"},{"field0":"2024/1/5","field1":"2024/1/5","field2":"2024/1/5","field3":"2024/1/5","field4":"2024/1/5","field5":"2024/1/5","field6":"2024/1/5 14:30:30","field7":"2024/1/5 14:30:30"},{"field0":"2024/1/6","field1":"2024/1/6","field2":"2024/1/6","field3":"2024/1/6","field4":"2024/1/6","field5":"2024/1/6","field6":"2024/1/6 14:30:30","field7":"2024/1/6 14:30:30"},{"field0":"2024/1/7","field1":"2024/1/7","field2":"2024/1/7","field3":"2024/1/7","field4":"2024/1/7","field5":"2024/1/7","field6":"2024/1/7 14:30:30","field7":"2024/1/7 14:30:30"},{"field0":"2024/1/8","field1":"2024/1/8","field2":"2024/1/8","field3":"2024/1/8","field4":"2024/1/8","field5":"2024/1/8","field6":"2024/1/8 14:30:30","field7":"2024/1/8 14:30:30"},{"field0":"2024/1/9","field1":"2024/1/9","field2":"2024/1/9","field3":"2024/1/9","field4":"2024/1/9","field5":"2024/1/9","field6":"2024/1/9 14:30:30","field7":"2024/1/9 14:30:30"},{"field0":"2024/1/10","field1":"2024/1/10","field2":"2024/1/10","field3":"2024/1/10","field4":"2024/1/10","field5":"2024/1/10","field6":"2024/1/10 14:30:30","field7":"2024/1/10 14:30:30"},{"field0":"2024/1/11","field1":"2024/1/11","field2":"2024/1/11","field3":"2024/1/11","field4":"2024/1/11","field5":"2024/1/11","field6":"2024/1/11 14:30:30","field7":"2024/1/11 14:30:30"},{"field0":"2024/1/12","field1":"2024/1/12","field2":"2024/1/12","field3":"2024/1/12","field4":"2024/1/12","field5":"2024/1/12","field6":"2024/1/12 14:30:30","field7":"2024/1/12 14:30:30"},{"field0":"2024/1/13","field1":"2024/1/13","field2":"2024/1/13","field3":"2024/1/13","field4":"2024/1/13","field5":"2024/1/13","field6":"2024/1/13 14:30:30","field7":"2024/1/13 14:30:30"},{"field0":"2024/1/14","field1":"2024/1/14","field2":"2024/1/14","field3":"2024/1/14","field4":"2024/1/14","field5":"2024/1/14","field6":"2024/1/14 14:30:30","field7":"2024/1/14 14:30:30"},{"field0":"2024/1/15","field1":"2024/1/15","field2":"2024/1/15","field3":"2024/1/15","field4":"2024/1/15","field5":"2024/1/15","field6":"2024/1/15 14:30:30","field7":"2024/1/15 14:30:30"},{"field0":"2024/1/16","field1":"2024/1/16","field2":"2024/1/16","field3":"2024/1/16","field4":"2024/1/16","field5":"2024/1/16","field6":"2024/1/16 14:30:30","field7":"2024/1/16 14:30:30"},{"field0":"2024/1/17","field1":"2024/1/17","field2":"2024/1/17","field3":"2024/1/17","field4":"2024/1/17","field5":"2024/1/17","field6":"2024/1/17 14:30:30","field7":"2024/1/17 14:30:30"},{"field0":"2024/1/18","field1":"2024/1/18","field2":"2024/1/18","field3":"2024/1/18","field4":"2024/1/18","field5":"2024/1/18","field6":"2024/1/18 14:30:30","field7":"2024/1/18 14:30:30"},{"field0":"2024/1/19","field1":"2024/1/19","field2":"2024/1/19","field3":"2024/1/19","field4":"2024/1/19","field5":"2024/1/19","field6":"2024/1/19 14:30:30","field7":"2024/1/19 14:30:30"},{"field0":"2024/1/20","field1":"2024/1/20","field2":"2024/1/20","field3":"2024/1/20","field4":"2024/1/20","field5":"2024/1/20","field6":"2024/1/20 14:30:30","field7":"2024/1/20 14:30:30"},{"field0":"2024/1/21","field1":"2024/1/21","field2":"2024/1/21","field3":"2024/1/21","field4":"2024/1/21","field5":"2024/1/21","field6":"2024/1/21 14:30:30","field7":"2024/1/21 14:30:30"},{"field0":"2024/1/22","field1":"2024/1/22","field2":"2024/1/22","field3":"2024/1/22","field4":"2024/1/22","field5":"2024/1/22","field6":"2024/1/22 14:30:30","field7":"2024/1/22 14:30:30"},{"field0":"2024/1/23","field1":"2024/1/23","field2":"2024/1/23","field3":"2024/1/23","field4":"2024/1/23","field5":"2024/1/23","field6":"2024/1/23 14:30:30","field7":"2024/1/23 14:30:30"},{"field0":"2024/1/24","field1":"2024/1/24","field2":"2024/1/24","field3":"2024/1/24","field4":"2024/1/24","field5":"2024/1/24","field6":"2024/1/24 14:30:30","field7":"2024/1/24 14:30:30"},{"field0":"2024/1/25","field1":"2024/1/25","field2":"2024/1/25","field3":"2024/1/25","field4":"2024/1/25","field5":"2024/1/25","field6":"2024/1/25 14:30:30","field7":"2024/1/25 14:30:30"},{"field0":"2024/1/26","field1":"2024/1/26","field2":"2024/1/26","field3":"2024/1/26","field4":"2024/1/26","field5":"2024/1/26","field6":"2024/1/26 14:30:30","field7":"2024/1/26 14:30:30"},{"field0":"2024/1/27","field1":"2024/1/27","field2":"2024/1/27","field3":"2024/1/27","field4":"2024/1/27","field5":"2024/1/27","field6":"2024/1/27 14:30:30","field7":"2024/1/27 14:30:30"},{"field0":"2024/1/28","field1":"2024/1/28","field2":"2024/1/28","field3":"2024/1/28","field4":"2024/1/28","field5":"2024/1/28","field6":"2024/1/28 14:30:30","field7":"2024/1/28 14:30:30"},{"field0":"2024/1/29","field1":"2024/1/29","field2":"2024/1/29","field3":"2024/1/29","field4":"2024/1/29","field5":"2024/1/29","field6":"2024/1/29 14:30:30","field7":"2024/1/29 14:30:30"},{"field0":"2024/1/30","field1":"2024/1/30","field2":"2024/1/30","field3":"2024/1/30","field4":"2024/1/30","field5":"2024/1/30","field6":"2024/1/30 14:30:30","field7":"2024/1/30 14:30:30"},{"field0":"2024/1/31","field1":"2024/1/31","field2":"2024/1/31","field3":"2024/1/31","field4":"2024/1/31","field5":"2024/1/31","field6":"2024/1/31 14:30:30","field7":"2024/1/31 14:30:30"},{"field0":"2024/2/1","field1":"2024/2/1","field2":"2024/2/1","field3":"2024/2/1","field4":"2024/2/1","field5":"2024/2/1","field6":"2024/2/1 14:30:30","field7":"2024/2/1 14:30:30"},{"field0":"2024/2/2","field1":"2024/2/2","field2":"2024/2/2","field3":"2024/2/2","field4":"2024/2/2","field5":"2024/2/2","field6":"2024/2/2 14:30:30","field7":"2024/2/2 14:30:30"},{"field0":"2024/2/3","field1":"2024/2/3","field2":"2024/2/3","field3":"2024/2/3","field4":"2024/2/3","field5":"2024/2/3","field6":"2024/2/3 14:30:30","field7":"2024/2/3 14:30:30"},{"field0":"2024/2/4","field1":"2024/2/4","field2":"2024/2/4","field3":"2024/2/4","field4":"2024/2/4","field5":"2024/2/4","field6":"2024/2/4 14:30:30","field7":"2024/2/4 14:30:30"},{"field0":"2024/2/5","field1":"2024/2/5","field2":"2024/2/5","field3":"2024/2/5","field4":"2024/2/5","field5":"2024/2/5","field6":"2024/2/5 14:30:30","field7":"2024/2/5 14:30:30"},{"field0":"2024/2/6","field1":"2024/2/6","field2":"2024/2/6","field3":"2024/2/6","field4":"2024/2/6","field5":"2024/2/6","field6":"2024/2/6 14:30:30","field7":"2024/2/6 14:30:30"},{"field0":"2024/2/7","field1":"2024/2/7","field2":"2024/2/7","field3":"2024/2/7","field4":"2024/2/7","field5":"2024/2/7","field6":"2024/2/7 14:30:30","field7":"2024/2/7 14:30:30"},{"field0":"2024/2/8","field1":"2024/2/8","field2":"2024/2/8","field3":"2024/2/8","field4":"2024/2/8","field5":"2024/2/8","field6":"2024/2/8 14:30:30","field7":"2024/2/8 14:30:30"},{"field0":"2024/2/9","field1":"2024/2/9","field2":"2024/2/9","field3":"2024/2/9","field4":"2024/2/9","field5":"2024/2/9","field6":"2024/2/9 14:30:30","field7":"2024/2/9 14:30:30"},{"field0":"2024/2/10","field1":"2024/2/10","field2":"2024/2/10","field3":"2024/2/10","field4":"2024/2/10","field5":"2024/2/10","field6":"2024/2/10 14:30:30","field7":"2024/2/10 14:30:30"},{"field0":"2024/2/11","field1":"2024/2/11","field2":"2024/2/11","field3":"2024/2/11","field4":"2024/2/11","field5":"2024/2/11","field6":"2024/2/11 14:30:30","field7":"2024/2/11 14:30:30"},{"field0":"2024/2/12","field1":"2024/2/12","field2":"2024/2/12","field3":"2024/2/12","field4":"2024/2/12","field5":"2024/2/12","field6":"2024/2/12 14:30:30","field7":"2024/2/12 14:30:30"},{"field0":"2024/2/13","field1":"2024/2/13","field2":"2024/2/13","field3":"2024/2/13","field4":"2024/2/13","field5":"2024/2/13","field6":"2024/2/13 14:30:30","field7":"2024/2/13 14:30:30"},{"field0":"2024/2/14","field1":"2024/2/14","field2":"2024/2/14","field3":"2024/2/14","field4":"2024/2/14","field5":"2024/2/14","field6":"2024/2/14 14:30:30","field7":"2024/2/14 14:30:30"},{"field0":"2024/2/15","field1":"2024/2/15","field2":"2024/2/15","field3":"2024/2/15","field4":"2024/2/15","field5":"2024/2/15","field6":"2024/2/15 14:30:30","field7":"2024/2/15 14:30:30"},{"field0":"2024/2/16","field1":"2024/2/16","field2":"2024/2/16","field3":"2024/2/16","field4":"2024/2/16","field5":"2024/2/16","field6":"2024/2/16 14:30:30","field7":"2024/2/16 14:30:30"},{"field0":"2024/2/17","field1":"2024/2/17","field2":"2024/2/17","field3":"2024/2/17","field4":"2024/2/17","field5":"2024/2/17","field6":"2024/2/17 14:30:30","field7":"2024/2/17 14:30:30"},{"field0":"2024/2/18","field1":"2024/2/18","field2":"2024/2/18","field3":"2024/2/18","field4":"2024/2/18","field5":"2024/2/18","field6":"2024/2/18 14:30:30","field7":"2024/2/18 14:30:30"}];
+</script>
+
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>dataType : "date" 로 설정한 칼럼을 엑셀로 내보내기 할 때 엑셀에서 사용하는 날짜 시스템(1900년 날짜 시스템)으로 변환하여 내보내기 할 수 있습니다.</p>
+		<p>formatString 을 "yyyy-mm-dd"로 설정한 경우 엑셀의 "간단한 날짜" 시스템으로 자동 내보내기 합니다. (다른 설정 없이도 날짜 시스템으로 내보내기 함)</p>
+		<p>그 외의 formatString 인 경우는 <strong>xlsxDate : true 설정 한 경우 엑셀의 날짜 시스템으로 내보내기 합니다.</strong></p>
+		<p>엑셀에서 사용하는 포맷 형식이 그리드와 서로 다르기 때문에 그리드가 모두 자동으로 변환할 수가 없습니다.</p>
+		<p>이를 위해 xlsxDate 에 true 대신 엑셀 날짜 표시 형식을 작성하면 그대로 내보내기 합니다.</p>
+		<p>자세한 엑셀 날짜 사용자 지정 형식은 MS에서 제공하는 <a href="https://support.microsoft.com/ko-kr/office/%EC%88%AB%EC%9E%90-%EC%84%9C%EC%8B%9D%EC%9D%84-%EB%82%A0%EC%A7%9C-%EB%98%90%EB%8A%94-%EC%8B%9C%EA%B0%84%EC%9C%BC%EB%A1%9C-%EC%A7%80%EC%A0%95-418bd3fe-0577-47c8-8caa-b4d30c528309#bm2" target="_blank">지원 문서</a>를 참고하십시오.</p>
+		<p>참고 : formatString 이 아닌 labelFunction 을 정의한 경우에는 xlsxDate 무시됩니다.<p>
+<div class="src_cover">
+<pre>
+formatString: "yy년 m월 d일 (ddd) HH시 MM분", // 그리드의 날짜 포맷 형식
+xlsxDate: "[$-ko-KR]yy년 m월 d일 (ddd) hh시 mm분", // 엑셀 내보내기 시 엑셀에서 정의하는 날짜 표시 형식(사용자 지정 형식)
+</pre>
+</div>
+ 
+	<button class="btn" onclick="exportTo()">엑셀 내보내기</button>
+	</div>
+
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="ellapse"></p>
+
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+
+</body>
+</html>

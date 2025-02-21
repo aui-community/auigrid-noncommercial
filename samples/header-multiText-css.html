@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- ajax 요청을 위한 스크립트입니다. -->
+<script type="text/javascript" src="./ajax.js"></script>
+
+<!-- 본 샘플를 위한 스크립트입니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+
+<style type="text/css">
+	/* 커스텀 칼럼 스타일 정의 */
+	.my-column {
+		text-align: right;
+	}
+	/* 헤더 렌더러 스타일 - 자동 개행으로 변경*/
+	.my-header-wrap-style .aui-grid-header-renderer {
+		white-space: normal !important;
+	}
+</style>
+
+<script type="text/javascript">
+
+	// AUIGrid 생성 후 반환 ID
+	var myGridID;
+
+	// document ready 
+	function documentReady() {
+
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid(columnLayout);
+
+		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+		requestData("./data/normal_100.json");
+
+	};
+
+	// AUIGrid 칼럼 설정
+	var columnLayout = [{
+		dataField: "name",
+		headerText: "Name은 이름을 나타냅니다.",
+		headerStyle: "my-header-wrap-style", // white-sapce  CSS 적용 하기 위한 헤더 스타일 설정
+		width: 120
+	}, {
+		dataField: "country",
+		headerText: "Country는 국가명을 나타냅니다.",
+		headerStyle: "my-header-wrap-style",
+		width: 120
+	}, {
+		dataField: "product",
+		headerText: "Product는 제품명을 나타냅니다.",
+		width: 120
+	}, {
+		dataField: "quantity",
+		headerText: "Quantity",
+		dataType: "numeric",
+		formatString: "#,##0"
+	}, {
+		dataField: "price",
+		headerText: "Price",
+		dataType: "numeric",
+		formatString: "#,##0",
+		style: "my-column"
+	}, {
+		dataField: "date",
+		headerText: "Date"
+	}];
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid(columnLayout) {
+
+		var gridProps = {
+			// 헤더 높이 지정
+			headerHeight: 40,
+
+			selectionMode: "singleRow"
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+	}
+
+	// 엑셀 내보내기(Export);
+	function exportClick() {
+
+		// 내보내기 실행
+		AUIGrid.exportToXlsx(myGridID);
+	};
+
+</script>
+
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>헤더의 텍스트를 개행이 자동으로 이루어지도록 white-space 를 이용한 방법입니다.</p>
+		<p>그리드 헤더의 white-space 는 기본값으로 nowrap 이 적용되기 때문에 개행이 발생하지 않습니다.</p>
+		<p>Name과 Country 칼럼은 개행이 이뤄지도록 white-space 를 normal 로 적용한 모습입니다.</p>
+<div class="src_cover"><xmp>// 그리드 속성 설정
+var gridProps = {
+    // 헤더 높이 지정
+    headerHeight : 40,
+...
+
+// AUIGrid 칼럼 설정
+var columnLayout = [ {
+    dataField: "name",
+	headerText: "Name은 이름을 나타냅니다.",
+	headerStyle: "my-header-wrap-style", // white-sapce  CSS 적용 하기 위한 헤더 스타일 설정
+	width: 120
+...
+
+/* 헤더 렌더러 스타일 */
+.my-header-wrap-style .aui-grid-header-renderer {
+	white-space: normal !important;
+}
+</xmp></div>
+		<p><span class="btn" onclick="exportClick()">엑셀(xlsx)로 저장</span></p>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width:100%;height:340px; margin:0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="ellapse"></p>
+
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+
+</body>
+</html>

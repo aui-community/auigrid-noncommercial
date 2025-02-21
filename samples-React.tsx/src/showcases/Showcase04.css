@@ -1,0 +1,34 @@
+#aui-grid-wrap-showcase4 .my-right-style {
+	text-align: right;
+}
+
+/* 행 갱신 시 깜빡이게 하는 스타일 */
+#aui-grid-wrap-showcase4 .my-refresh-row-flash-style {
+	background: #dfdfdf;
+}
+
+/* 주식 하락 색상*/
+#aui-grid-wrap-showcase4 .my-custom-down {
+	color: #0000ff;
+	text-align: right;
+}
+/* 주식 상승 색상*/
+#aui-grid-wrap-showcase4 .my-custom-up {
+	color: #ff0000;
+	text-align: right;
+}
+#aui-grid-wrap-showcase4 .my-custom-normal {
+	color: inherit;
+	text-align: right;
+}
+
+/* 바게이지 양수 음수 함께 사용되는 영역에서 음수 바 재정의*/
+#aui-grid-wrap-showcase4 .aui-grid-bar-renderer-negative {
+	background: #4641d9;
+	border: 1px solid #4641d9;
+}
+/* 바게이지 양수 음수 함께 사용되는 영역에서 양수 바 재정의*/
+#aui-grid-wrap-showcase4 .aui-grid-bar-renderer-positive {
+	background: #df4d4d;
+	border: 1px solid #df4d4d;
+}

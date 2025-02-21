@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=800">
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid 데모, HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- ajax 요청을 위한 스크립트입니다. -->
+<!-- jQuery 사용한다면, 해당 2개의 JS는 불필요 합니다.  -->
+<script type="text/javascript" src="./ajax.js"></script>
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- 실제적인 AUIGrid 라이브러리입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<script type="text/javascript">
+
+	// AUIGrid 생성 후 반환 ID
+	var myGridID;
+
+	// document ready 
+	function documentReady() {
+
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid(columnLayout);
+
+		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+		requestData("./data/normal_100.json");
+	};
+
+	// AUIGrid 칼럼 설정
+	var columnLayout = [{
+		dataField: "id",
+		headerText: "ID",
+		width: 120
+	}, {
+		dataField: "name",
+		headerText: "Name",
+		filter: {
+			showIcon: true
+		},
+		width: 140
+	}, {
+		dataField: "country",
+		headerText: "Country",
+		filter: {
+			showIcon: true
+		},
+		width: 140
+	}, {
+		dataField: "flag",
+		headerText: "Flag IMG",
+		editable: false,
+		prefix: "./assets/",
+		renderer: {
+			type: "ImageRenderer",
+			imgHeight: 24,
+			altField: "country"
+		},
+		width: 100
+	}, {
+		dataField: "product",
+		headerText: "Product",
+		width: 140
+	}, {
+		dataField: "color",
+		headerText: "Color",
+		width: 100
+	}, {
+		dataField: "price",
+		headerText: "Price",
+		dataType: "numeric",
+		style: "my-column",
+		width: 120,
+		editRenderer: {
+			type: "InputEditRenderer",
+			onlyNumeric: true, // 0~9만 입력가능
+			textAlign: "right", // 오른쪽 정렬로 입력되도록 설정
+			autoThousandSeparator: true
+			// 천단위 구분자 삽입 여부
+		}
+	}, {
+		dataField: "quantity",
+		headerText: "Quantity",
+		dataType: "numeric",
+		style: "my-column",
+		width: 100,
+		editRenderer: {
+			type: "InputEditRenderer",
+			onlyNumeric: true, // 0~9만 입력가능
+			textAlign: "right", // 오른쪽 정렬로 입력되도록 설정
+			autoThousandSeparator: true
+			// 천단위 구분자 삽입 여부
+		}
+	}, {
+		dataField: "date",
+		headerText: "Date",
+		dataType: "date",
+		dateInputFormat: "yyyy-mm-dd", // 데이터의 날짜 형식
+		formatString: "yyyy년 mm월 dd일", // 그리드에 보여줄 날짜 형식
+		editRenderer: {
+			type: "CalendarRenderer",
+			defaultFormat: "yyyy-mm-dd"
+		}
+	}];
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid(columnLayout) {
+
+		// 그리드 속성 설정
+		var gridProps = {
+
+			// 편집 가능 여부 (기본값 : false)
+			editable: true,
+
+			enableDrag: true,
+
+			enableDrop: true,
+
+			enableDragByCellDrag: true,
+
+			enableMovingColumn: true,
+
+			// 컨텍스트 메뉴 사용 여부 (기본값 : false)
+			useContextMenu: true,
+
+			// 필터 사용 여부 (기본값 : false)
+			enableFilter: true,
+
+			// 다이얼로그 ID 설정
+			// dialog modal 에 그리드를 출력하고자 하는 경우 반드시 설정해야 합니다.
+			dialogId: "grid_dialog"
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+	};
+
+	function openDialog() {
+		document.getElementById("grid_dialog").showModal();
+		openCheck(true);
+	};
+
+	function closeDialog() {
+		document.getElementById("grid_dialog").close("cancel");
+		openCheck(false);
+	};
+
+	function openCheck(open) {
+		if (open) {
+			console.log("Dialog open");
+			AUIGrid.resize(myGridID);
+		} else {
+			console.log("Dialog closed");
+			// 필터 레이어(필터 메뉴)가 열린 경우 닫습니다.
+			AUIGrid.closeFilterLayer(myGridID);
+		}
+	};
+
+</script>
+
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>기본 내장 dialog 인 HTMLDialogElement 를 Modal로 이용하는 경우 : https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/showModal</p>
+		<p>dialog 태그를 이용하는 경우에는 #top-layer 에 Modal 을 띄우기 때문에 문서 모델 z-index 의 최상위로 인식 시켜 z-index 우선 순위는 의미 없어짐.</p>
+		<p>그리드 속성 dialogId 를 설정하면 기존 body 의 자식으로 붙던 레이어들이 dialog를 기준으로 표시됩니다.</p>
+		<p>따라서 dialog 에 그리드를 출력한 경우 반드시 dialogId 를 설정해야 dialog 상단에 레이어들이 표시됩니다.</p>
+		<pre class="src_cover">
+	// 다이얼로그 ID 설정
+	// dialog modal 에 그리드를 출력하고자 하는 경우 반드시 설정해야 합니다.
+	dialogId: "grid_dialog"</pre>
+		<button class="btn" onClick="openDialog();">다이얼로그 Modal 열기</button><span>&lt;- 클릭</span>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<dialog id="grid_dialog">
+			<div id="grid_wrap" style="width:1200px; height:300px; margin:0 auto;"></div>
+			<div>
+				<button id="cancel" class="btn" onClick="closeDialog();">닫기</button>
+			</div>
+		</dialog>
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+
+</body>
+</html>

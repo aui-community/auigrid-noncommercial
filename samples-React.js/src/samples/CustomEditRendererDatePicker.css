@@ -1,0 +1,13 @@
+/* 커스텀 에디트렌더러 datepicker 스타일 */
+.aui-grid-react-date-picker {
+	border: none;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
+
+.aui-grid-react-date-picker .react-datepicker {
+	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+	-webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+}

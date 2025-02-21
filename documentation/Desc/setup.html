@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
+<meta charset="utf-8">
+<meta content="text/javascript" http-equiv="Content-Script-Type">
+<meta content="text/css" http-equiv="Content-Style-Type">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta content="width=1200" name="viewport">
+<meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
+<meta content="AUIGrid API Documentation" property="og:title">
+<meta content="https://www.auisoft.net/documentation/auigrid" property="og:url">
+<meta content="AUIGrid API Documentation" property="og:description">
+<meta content="AUIGrid API Documentation" name="keywords">
+<title>	AUIGrid Documentation</title>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:굴림;
+	panose-1:2 11 6 0 0 1 1 1 1 1;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:"맑은 고딕";
+	panose-1:2 11 5 3 2 0 0 2 0 4;}
+@font-face
+	{font-family:"\@맑은 고딕";
+	panose-1:2 11 5 3 2 0 0 2 0 4;}
+@font-face
+	{font-family:"\@굴림";
+	panose-1:2 11 6 0 0 1 1 1 1 1;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:0cm;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	line-height:107%;
+	text-autospace:none;
+	word-break:break-hangul;
+	font-size:10.0pt;
+	font-family:"맑은 고딕";}
+p
+	{margin-right:0cm;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:굴림;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:40.0pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	line-height:107%;
+	text-autospace:none;
+	word-break:break-hangul;
+	font-size:10.0pt;
+	font-family:"맑은 고딕";}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	line-height:107%;}
+ /* Page Definitions */
+ @page WordSection1
+	{size:595.3pt 841.9pt;
+	margin:3.0cm 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+</head>
+<body>
+<div class="header">
+<div id="logo-bar">
+<a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
+</div>
+<span id="title">AUIGrid 3.0.15 Documentation</span>
+</div>
+<div class="MainContent">
+
+	<span class="className">AUIGrid 설치 방법</span>
+	
+	
+
+
+<div class=WordSection1>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>AUIGrid
+</span><span style='font-size:12.0pt;line-height:107%'>는 순수 자바스크립트<span
+lang=EN-US>, HTML, CSS </span>로 제작된 클라이언트 사이드 데이터그리드입니다<span lang=EN-US>. </span>따라서
+<span lang=EN-US>WAS </span>에 따로 특별한 설치는 필요 없습니다<span lang=EN-US>.</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>WAS
+</span><span style='font-size:12.0pt;line-height:107%'>로 톰캣<span lang=EN-US>,
+Jeus, Resin, IIS, WebLogic </span>등 어떤 것을 사용해도 무관합니다<span lang=EN-US>.</span></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>웹 서버에<span
+lang=EN-US> FTP </span>로 업로드하여 주십시오<span lang=EN-US>. </span>이것으로 모든 설치는 완료됩니다<span
+lang=EN-US>.</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>https://www.auisoft.net
+</span><span style='font-size:12.0pt;line-height:107%'>에서 다운로드를 받아 압축을 해제하면
+다음과 같은 폴더구조가 보입니다<span lang=EN-US>.</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
+
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse;border:none'>
+ <tr>
+  <td width=601 valign=top style='width:450.8pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+  normal'><span lang=EN-US><img width=326 height=344
+  src="../images/setup_image.png"></span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
+
+<p><span style='font-family:"맑은 고딕"'>이 파일 그대로<span lang=EN-US> FTP </span>를 통해 원하는
+웹 서버에 올려주십시오<span lang=EN-US>.</span></span></p>
+<br/>
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>디렉토리 설명</span></p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* AUIGrid : AUIGrid 라이브러리와 스타일(css) 가 있는 디렉토리입니다.
+  실제로 AUIGrid 를 사용할 때 이 디렉토리만 복사해서 사용하십시오.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* AUIGrid-React : AUIGrid 를 React.js 라이브러리에서 사용토록 작성된 서브 컴포넌트입니다.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* AUIGrid-Vue : AUIGrid 를 Vue.js 프레임워크에서 사용토록 작성된 서브 컴포넌트입니다.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* documentation : AUIGrid 다큐멘트 문서가 있습니다.
+index.html 파일을 실행하십시오.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* export_server_samples : 엑셀, CSV, PDF 등 내보내기 할 때 서버사이드에서 처리할 예제가 있습니다.
+PHP, JSP, ASP 소스 샘플이 있으니 맞는 서버 사이드를 선택해서 사용하십시오.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* pdfkit : PDF 출력을 위한 라이브러리가 있습니다.
+PDF 저장 기능을 사용할 때만 필요한 라이브러리이니 참고하십시오.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* samples : 개별적인 모든 샘플이 있는 디렉토리입니다.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* samples-React.js : React.js 라이브러리에서의 샘플이 있는 디렉토리입니다.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* samples-React.tsx : React.js + Typescript 라이브러리에서의 샘플이 있는 디렉토리입니다.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* samples-Vue.js : Vue.js 프레임워크에서의 샘플이 있는 디렉토리입니다.
+</p>
+
+<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'>
+* samples-Vue.ts : Vue.js + Typescript  프레임워크에서의 샘플이 있는 디렉토리입니다.
+</p>
+
+<p class="MsoNormal" style='margin-top:20px;'><span style='font-size:12.0pt;line-height:107%'>만약, 위 디렉토리를 그대로 서버에 올렸다면 브라우저로 해당 서버 URL 로 접속하여 indext.html 을 실행하면 샘플을 확인할 수 있습니다.</span></p>
+</div>
+
+</div>
+
+</body>
+</html>

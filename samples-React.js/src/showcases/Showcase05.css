@@ -1,0 +1,10 @@
+.showcase5-aui-grid-my-right-style {
+	text-align: right;
+}
+
+/* 푸터 커스텀 summary total  스타일 */
+.showcase5-aui-grid-my-custom-sum-total {
+	font-weight: bold;
+	color: #4374d9;
+	text-align: right;
+}

@@ -1,0 +1,36 @@
+.mycustom-n {
+	background: #eeeeee;
+	color: #000;
+}
+.mycustom-t {
+	background: #53c14b;
+	color: #000;
+}
+.mycustom-u {
+	background: #de4f4f;
+	color: #000;
+}
+.mycustom-e {
+	background: #f2cb61;
+	color: #000;
+}
+.mycustom-p {
+	background: #fff29e;
+	color: #000;
+}
+.showcase1-custmom-bar {
+	border: 1px solid #e4e4e4;
+	background: #008299;
+	background: -webkit-linear-gradient(left, #5cd1e5, #008299);
+	background: -moz-linear-gradient(left, #5cd1e5, #008299);
+	background: -ms-linear-gradient(left, #5cd1e5, #008299);
+	background: -o-linear-gradient(left, #5cd1e5, #008299);
+	background: linear-gradient(to right, #5cd1e5, #008299);
+}
+.legend {
+	display: inline-block;
+	text-align: center;
+	width: 30px;
+	margin: 0.5em;
+	padding: 0.25em;
+}

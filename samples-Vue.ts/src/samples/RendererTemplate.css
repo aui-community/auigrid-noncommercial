@@ -1,0 +1,50 @@
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-column {
+	background: #ffffee;
+	font-weight: bold;
+}
+
+/* HTML 템플릿에서 사용할 스타일 정의*/
+.my_div {
+	display: inline-block;
+	margin-top: 4px;
+	line-height: 12px;
+}
+.my_div_text_box {
+	display: inline-block;
+	border: 1px solid #aaa;
+	text-align: left;
+	width: 140px;
+	padding: 4px;
+}
+.my_div_btn {
+	color: #fff !important;
+	background-color: #2a2d33;
+	font-weight: bold;
+	margin: 2px 4px;
+	padding: 2px 4px;
+	line-height: 2em;
+	cursor: pointer;
+}
+.my_div_btn2 {
+	color: #fff !important;
+	background-color: #ee5315;
+	font-weight: bold;
+	margin: 2px 4px;
+	padding: 2px 4px;
+	line-height: 2em;
+	cursor: pointer;
+}
+.my_div_code_span {
+	margin-right: 4px;
+	color: #000099;
+}
+.my_div_chk_span {
+	line-height: 2em;
+}
+.my_div_chk_span input {
+	margin-left: 4px;
+	width: 16px;
+	height: 16px;
+}
+/* HTML 템플릿에서 사용할 스타일 정의 끝*/

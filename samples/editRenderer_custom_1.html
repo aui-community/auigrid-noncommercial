@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=800">
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid 데모, HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- ajax 요청을 위한 스크립트입니다. -->
+<!-- jQuery 사용한다면, 해당 2개의 JS는 불필요 합니다.  -->
+<script type="text/javascript" src="./ajax.js"></script>
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- 실제적인 AUIGrid 라이브러리입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<!-- 사용자가 작성한 렌더러 JS -->
+<script type="text/javascript" src="../AUIGrid/editRenderers/AUIGrid.TextareaEditor.js"></script>
+<link rel="stylesheet" type="text/css" href="../AUIGrid/editRenderers/AUIGrid.TextareaEditor.css">
+
+<!-- jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+
+<style type="text/css">
+	/* 줄바꿈 문자 들어온 값 그대로 개행 시키기 위한 스타일 */
+	.my-wrap-column .aui-grid-renderer-base {
+		white-space: pre-wrap;
+	}
+</style>
+
+<script type="text/javascript">
+
+	function documentReady() { };
+
+	// AUIGrid 생성 후 반환 ID
+	var myGridID;
+
+	// document ready (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
+	$(document).ready(function () {
+
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid(columnLayout);
+
+		// 그리드 데이터 삽입
+		$.get('./data/article_list.json', function (data) {
+			AUIGrid.setGridData(myGridID, data);
+		});
+	});
+
+	// 칼럼 레이아웃
+	var columnLayout = [{
+		dataField: "no",
+		headerText: "No.",
+		width: 50,
+	}, {
+		dataField: "title",
+		headerText: "Title",
+		width: 200,
+		editRenderer: {
+			type: "CustomEditRenderer",
+			jsClass: AUIGrid.TextareaEditor,
+			vPosition: "top",
+			fitWidth: true
+		}
+	}, {
+		dataField: "content",
+		headerText: "Content",
+		style: "my-wrap-column", // 줄바꿈 문자 들어온 값 그대로 개행 시키기 위한 스타일
+		width: 400,
+		editRenderer: {
+			type: "CustomEditRenderer",
+			jsClass: AUIGrid.TextareaEditor,
+			vPosition: "top",
+			fitWidth: true,
+			extraProps: {
+				confirm: "확 인(Ctrl+Enter)",
+				cancel: "취 소(Esc)"
+			}
+		}
+	}, {
+		dataField: "date",
+		headerText: "Date",
+		width: 140
+	}];
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid(columnLayout) {
+
+		var gridProps = {
+
+			editable: true,
+
+			// 워드랩 개행 처리
+			wordWrap: true,
+			
+			selectionMode: "multipleCells"
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+			$('#ellapse').text('수정 완료 : ' + event.value);
+		});
+	};
+</script>
+
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>Title 과 Content 칼럼은 그리드에서 제공되는 에디트 렌더러(에디터)가 아닌 사용자(개발자)가 직접 작성한 에디터를 그리드의 editRenderer 로 정의하여 설정한 모습입니다.</p>
+		<p>사용자 정의 에디트렌더러는 다음과 같이 editRenderer 에 "CustomEditRenderer" 를 type으로 지정하고, 실제 사용자가 작성한 js 파일을 jsClass 값으로 설정하십시오.</p>
+		<div class="src_cover">
+			<pre>
+dataField: "content",
+headerText: "Content",
+style: "my-wrap-column", // 줄바꿈 문자 들어온 값 그대로 개행 시키기 위한 스타일 정의
+width: 400,
+editRenderer: {
+	type: "CustomEditRenderer",
+	jsClass: AUIGrid.TextareaEditor,
+	vPosition: "top",
+	fitWidth: true,
+	extraProps: {
+		confirm: "확 인(Ctrl+Enter)",
+		cancel: "취 소(Esc)"
+	}
+}
+</pre>
+		</div>
+		<p>AUIGrid.TextareaEditor 는 HTML의 textarea 를 활용하여 작성한 것으로서 다수의 줄을 입력하면 캐리지 리턴을 포함하여 값으로 수정 완료 처리하도록 작성한 것입니다. </p>
+		<p>샘플로 제공되는 AUIGrid.TextareaEditor.js 파일을 참고하여 원하는 에디트 렌더러를 작성해 보십시오.</p>
+		<p>* Title : 그리드에서 값으로 존재하는 \n, \r\n이  줄바꿈을 하지 않음.</p>
+		<p>* Content : 그리드에서 값으로 존재하는 \n, \r\n이 줄바꿈 하도록 스타일 지정. (my-wrap-column CSS 참고)</p>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width:100%;height:420px; margin:0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="ellapse"></p>
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+
+</body>
+</html>

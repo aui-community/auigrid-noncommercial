@@ -1,0 +1,4 @@
+/* 줄바꿈 문자 들어온 값 그대로 개행 시키기 위한 스타일 */
+.my-wrap-column .aui-grid-renderer-base {
+	white-space: pre-wrap;
+}
