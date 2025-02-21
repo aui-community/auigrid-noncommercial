@@ -1,5 +1,5 @@
 /*!
- * AUIGrid NON-COMMERCIAL LICENSE v3.0.15
+ * AUIGrid Non-Commercial LICENSE v3.0.15
  * Authorized Domain(or IP) : localhost, 127.0.0.1
  * www.auisoft.net
  *

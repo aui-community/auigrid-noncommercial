@@ -1,5 +1,5 @@
 /*!
- * AUIGrid NON-COMMERCIAL v3.0.15.11
+ * AUIGrid Non-Commercial v3.0.15.11
  * Copyright AUISoft Co., Ltd.
  * www.auisoft.net
  */
