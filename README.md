@@ -1,10 +1,10 @@
-# AUIGrid NON-COMMERCIAL
+# AUIGrid Non-Commercial
 
 AUIGrid 는 Active-X 사용 없이 자바스크립트와 HTML, CSS 로 작성된 웹 데이터그리드(DataGrid) 입니다.
 
-AUIGrid 는 상용 라이선스(Enterprise License) 와 비상용 라이선스(NON-COMMERCIAL License)가 존재합니다.
+AUIGrid 는 상용 라이선스(Enterprise License) 와 비상용 라이선스(Non-Commercial License)가 존재합니다.
 
-이 패키지는 비상용 라이선스(NON-COMMERCIAL License)에 해당되므로 사용을 원하는 분은 라이선스 세부항목 확인 후 사용하십시오.
+이 패키지는 비상용 라이선스(Non-Commercial License)에 해당되므로 사용을 원하는 분은 라이선스 세부항목 확인 후 사용하십시오.
 
 ## 무료 라이선스 사용권 부여 및 제한
 
@@ -159,6 +159,6 @@ AUIGrid 는 상용 라이선스(Enterprise License) 와 비상용 라이선스(N
 
 ## 기술 지원 및 유지보수
 
--   기술 지원: NON-COMMERCIAL 사용자는 공식적인 기술 지원을 받을 수 없습니다.
--   업데이트 및 유지보수: NON-COMMERCIAL 사용자를 위한 소프트웨어 업데이트를 제공할 의무가 없습니다.
--   NON-COMMERCIAL 사용자의 유지보수 및 보안 패치는 당사의 재량에 따라 제공될 수 있습니다.
+-   기술 지원: Non-Commercial 사용자는 공식적인 기술 지원을 받을 수 없습니다.
+-   업데이트 및 유지보수: Non-Commercial 사용자를 위한 소프트웨어 업데이트를 제공할 의무가 없습니다.
+-   Non-Commercial 사용자의 유지보수 및 보안 패치는 당사의 재량에 따라 제공될 수 있습니다.
