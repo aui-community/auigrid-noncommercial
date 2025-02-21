@@ -71,6 +71,84 @@ AUIGrid 는 상용 라이선스(Enterprise License) 와 비상용 라이선스(N
 
 -   samples-Vue.ts : Vue.js + Typescript 프레임워크에서의 샘플이 있는 디렉토리입니다.
 
+## CDN 사용
+
+기본 제공되는 jsDelivr CDN 의 dist 디렉토리를 사용하십시오.
+
+기본적으로 다음 3개의 JS와 CSS를 HTML 파일에 추가해서 CDN 사용 가능합니다.
+
+```html
+<!-- 실제적인 AUIGrid 라이브러리입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
+<script src="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGrid.js"></script>
+
+<!-- AUIGrid 라이선선스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script src="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGrid_style.css" rel="stylesheet" />
+```
+
+## 기본적인 사용방법
+
+```HTML
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- 실제적인 AUIGrid 라이브러리입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
+    <script src="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGrid.js"></script>
+    <!-- AUIGrid 라이선선스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+    <script src="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGridLicense.js"></script>
+    <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+    <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+    <link href="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGrid_style.css" rel="stylesheet" />
+    <script type="text/javascript">
+        // 칼럼 레이아웃 작성
+        var columnLayout = [
+            { dataField: "name", headerText: "Name", width: 140 },
+            { dataField: "country", headerText: "Country", width: 120 },
+            { dataField: "product", headerText: "Product", width: 120 },
+            { dataField: "quantity", headerText: "Quantity" },
+            { dataField: "price", headerText: "Price", dataType: "numeric" },
+            { dataField: "date", headerText: "Date" }
+        ];
+
+        // 그리드 생성 후 해당 ID 보관 변수
+        var myGridID;
+
+        // 윈도우 onload 이벤트 핸들링
+        window.onload = function () {
+            // 실제로 #grid_wrap 에 그리드 생성
+            myGridID = AUIGrid.create("#grid_wrap", columnLayout);
+            // 데이터 요청 하여 그리드에 삽입
+            requestAjax();
+        };
+
+        function requestData() {
+            //  요청 전 그리드에 로더 표시
+            AUIGrid.showAjaxLoader(myGridID);
+            // /normal_100.json 데이터 그리드에 출력
+            fetch("./data/normal_100.json")
+                .then((response) => response.json())
+                .then((data) => {
+                    // 로더 제거
+                    AUIGrid.removeAjaxLoader(myGridID);
+                    // 그리드에 데이터 세팅
+                    AUIGrid.setGridData(myGridID, data);
+                });
+        };
+    </script>
+</head>
+<body>
+    <div id="grid_wrap" style="width:800px;height:480px;"></div>
+</body>
+</html>
+```
+
 ## 기술 지원 및 유지보수
 
 -   기술 지원: NON-COMMERCIAL 사용자는 공식적인 기술 지원을 받을 수 없습니다.
