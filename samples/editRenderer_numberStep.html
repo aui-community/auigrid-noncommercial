@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-left {
 		text-align: left;
@@ -42,93 +40,89 @@
 	}
 </style>
 
-<script type="text/javascript">
+<script>
+	// AUIGrid 생성 후 반환 ID
+	let myGridID;
 
-	//AUIGrid 생성 후 반환 ID
-	var myGridID;
-
-	//document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// AUIGrid 에 데이터 삽입합니다.
 		AUIGrid.setGridData(myGridID, gridData);
-
-	};
-
-	//AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "Client ID",
-		width: 140
-	}, {
-		dataField: "name",
-		headerText: "Name",
-		width: 140,
-		style: "aui-grid-user-custom-left",
-		renderer: {
-			type: "IconRenderer",
-			iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-			iconHeight: 20,
-			iconTableRef: { // icon 값 참조할 테이블 레퍼런스
-				"default": "./assets/office_man.png" // default
-			}
-		}
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		width: 180,
-		dataType: "numeric",
-		style: "aui-grid-user-custom-right",
-		editRenderer: {
-			type: "NumberStepRenderer",
-			min: -100000,
-			max: 1000000,
-			step: 1000
-		}
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		width: 180,
-		dataType: "numeric",
-		headerTooltip: { // 헤더 툴팁 표시 HTML 양식
-			show: true,
-			tooltipHtml: '키보드로 바로 입력 불가 설정<br/>오른쪽 스텝퍼로만 가능'
-		},
-		editRenderer: {
-			type: "NumberStepRenderer",
-			min: 0,
-			max: 50,
-			step: 1,
-			textAlign: "center",
-			textEditable: false
-		}
-	}, {
-		dataField: "stock",
-		headerText: "Stock",
-		width: 180,
-		dataType: "numeric",
-		style: "aui-grid-user-custom-right",
-		headerTooltip: { // 헤더 툴팁 표시 HTML 양식
-			show: true,
-			tooltipHtml: '스텝퍼를 좌우로 설정'
-		},
-		editRenderer: {
-			type: "NumberStepRenderer",
-			min: 0,
-			max: 100000,
-			step: 10,
-			isHorizontalStep: true // 스텝퍼 좌우로 수평에 설정
-		}
 	}
-	];
 
 	//AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "Client ID",
+			width: 140
+		}, {
+			dataField: "name",
+			headerText: "Name",
+			width: 140,
+			style: "aui-grid-user-custom-left",
+			renderer: {
+				type: "IconRenderer",
+				iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+				iconHeight: 20,
+				iconTableRef: { // icon 값 참조할 테이블 레퍼런스
+					"default": "./assets/office_man.png" // default
+				}
+			}
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			width: 180,
+			dataType: "numeric",
+			style: "aui-grid-user-custom-right",
+			editRenderer: {
+				type: "NumberStepRenderer",
+				min: -100000,
+				max: 1000000,
+				step: 1000
+			}
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			width: 180,
+			dataType: "numeric",
+			headerTooltip: { // 헤더 툴팁 표시 HTML 양식
+				show: true,
+				tooltipHtml: '키보드로 바로 입력 불가 설정<br/>오른쪽 스텝퍼로만 가능'
+			},
+			editRenderer: {
+				type: "NumberStepRenderer",
+				min: 0,
+				max: 50,
+				step: 1,
+				textAlign: "center",
+				textEditable: false
+			}
+		}, {
+			dataField: "stock",
+			headerText: "Stock",
+			width: 180,
+			dataType: "numeric",
+			style: "aui-grid-user-custom-right",
+			headerTooltip: { // 헤더 툴팁 표시 HTML 양식
+				show: true,
+				tooltipHtml: '스텝퍼를 좌우로 설정'
+			},
+			editRenderer: {
+				type: "NumberStepRenderer",
+				min: 0,
+				max: 100000,
+				step: 10,
+				isHorizontalStep: true // 스텝퍼 좌우로 수평에 설정
+			}
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
+			rowIdField: "id",
 			editable: true,
 			// 행 체크 칼럼 설정
 			showRowCheckColumn: true,
@@ -142,34 +136,32 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
 		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler);
-
+		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+			const logEle = document.getElementById("elapse");
+			logEle.textContent = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+		});
 	}
-
-	//편집 핸들러
-	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditEnd") {
-			document.getElementById("ellapse").innerText = "Editing End : ( " + event.rowIndex + ", " + event.columnIndex + ") : " + event.value;
-		}
-	};
 
 	//체크된 아이템 얻기
 	function getCheckedRowItems() {
-		var checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-		var str = "";
-		var rowItem;
-		for (var i = 0, len = checkedItems.length; i < len; i++) {
-			rowItem = checkedItems[i];
-			str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", Price : " + rowItem.item.price + ", Quantity : " + rowItem.item.quantity + ", Stock : " + rowItem.item.stock;
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+		if (checkedItems.length <= 0) {
+			alert("체크된 항목 없음!!");
+			return;
+		}
+		let str = "";
+		for (let i = 0, len = checkedItems.length; i < len; i++) {
+			const rowItem = checkedItems[i];
+			str += Object.entries(rowItem.item)
+				.map(([key, value]) => `${key} : ${value}`)
+				.join(", ");
 		}
 		alert(str);
 	}
 
 	//그리드 데이터 
-	var gridData = [{ "id": "#Cust0", "name": "Steve", "price": 411129, "quantity": 11, "stock": 5749 }, { "id": "#Cust1", "name": "Anna", "price": 645085, "quantity": 8, "stock": 1755 }, { "id": "#Cust2", "name": "Lawrence", "price": 658506, "quantity": 43, "stock": 1261 }, { "id": "#Cust3", "name": "Kim", "price": 499718, "quantity": 14, "stock": 5132 }, { "id": "#Cust4", "name": "Emma", "price": 53897, "quantity": 2, "stock": 9141 }, { "id": "#Cust5", "name": "Jennifer", "price": 851217, "quantity": 4, "stock": 6848 }, { "id": "#Cust6", "name": "Han", "price": 576905, "quantity": 49, "stock": 8041 }, { "id": "#Cust7", "name": "Steve", "price": 102855, "quantity": 22, "stock": 9566 }, { "id": "#Cust8", "name": "Anna", "price": 38864, "quantity": 18, "stock": 8091 }, { "id": "#Cust9", "name": "Lawrence", "price": 350045, "quantity": 40, "stock": 800 }, { "id": "#Cust10", "name": "Kim", "price": 969049, "quantity": 7, "stock": 352 }, { "id": "#Cust11", "name": "Emma", "price": 546477, "quantity": 44, "stock": 7890 }, { "id": "#Cust12", "name": "Jennifer", "price": 261180, "quantity": 24, "stock": 5570 }, { "id": "#Cust13", "name": "Han", "price": 201670, "quantity": 11, "stock": 1094 }, { "id": "#Cust14", "name": "Steve", "price": 960010, "quantity": 45, "stock": 6342 }, { "id": "#Cust15", "name": "Anna", "price": 940867, "quantity": 3, "stock": 492 }, { "id": "#Cust16", "name": "Lawrence", "price": 338717, "quantity": 36, "stock": 1480 }, { "id": "#Cust17", "name": "Kim", "price": 832232, "quantity": 3, "stock": 1651 }, { "id": "#Cust18", "name": "Emma", "price": 199931, "quantity": 46, "stock": 6796 }, { "id": "#Cust19", "name": "Jennifer", "price": 617157, "quantity": 42, "stock": 9273 }, { "id": "#Cust20", "name": "Han", "price": 814309, "quantity": 47, "stock": 9966 }, { "id": "#Cust21", "name": "Steve", "price": 954999, "quantity": 4, "stock": 6859 }, { "id": "#Cust22", "name": "Anna", "price": 43408, "quantity": 2, "stock": 6584 }, { "id": "#Cust23", "name": "Lawrence", "price": 28520, "quantity": 19, "stock": 8113 }, { "id": "#Cust24", "name": "Kim", "price": 444799, "quantity": 38, "stock": 4436 }, { "id": "#Cust25", "name": "Emma", "price": 93669, "quantity": 29, "stock": 8247 }, { "id": "#Cust26", "name": "Jennifer", "price": 432524, "quantity": 29, "stock": 9283 }, { "id": "#Cust27", "name": "Han", "price": 638463, "quantity": 47, "stock": 8242 }, { "id": "#Cust28", "name": "Steve", "price": 823066, "quantity": 42, "stock": 398 }, { "id": "#Cust29", "name": "Anna", "price": 508443, "quantity": 6, "stock": 399 }];
-
+	const gridData = [{ "id": "#Cust0", "name": "Steve", "price": 411129, "quantity": 11, "stock": 5749 }, { "id": "#Cust1", "name": "Anna", "price": 645085, "quantity": 8, "stock": 1755 }, { "id": "#Cust2", "name": "Lawrence", "price": 658506, "quantity": 43, "stock": 1261 }, { "id": "#Cust3", "name": "Kim", "price": 499718, "quantity": 14, "stock": 5132 }, { "id": "#Cust4", "name": "Emma", "price": 53897, "quantity": 2, "stock": 9141 }, { "id": "#Cust5", "name": "Jennifer", "price": 851217, "quantity": 4, "stock": 6848 }, { "id": "#Cust6", "name": "Han", "price": 576905, "quantity": 49, "stock": 8041 }, { "id": "#Cust7", "name": "Steve", "price": 102855, "quantity": 22, "stock": 9566 }, { "id": "#Cust8", "name": "Anna", "price": 38864, "quantity": 18, "stock": 8091 }, { "id": "#Cust9", "name": "Lawrence", "price": 350045, "quantity": 40, "stock": 800 }, { "id": "#Cust10", "name": "Kim", "price": 969049, "quantity": 7, "stock": 352 }, { "id": "#Cust11", "name": "Emma", "price": 546477, "quantity": 44, "stock": 7890 }, { "id": "#Cust12", "name": "Jennifer", "price": 261180, "quantity": 24, "stock": 5570 }, { "id": "#Cust13", "name": "Han", "price": 201670, "quantity": 11, "stock": 1094 }, { "id": "#Cust14", "name": "Steve", "price": 960010, "quantity": 45, "stock": 6342 }, { "id": "#Cust15", "name": "Anna", "price": 940867, "quantity": 3, "stock": 492 }, { "id": "#Cust16", "name": "Lawrence", "price": 338717, "quantity": 36, "stock": 1480 }, { "id": "#Cust17", "name": "Kim", "price": 832232, "quantity": 3, "stock": 1651 }, { "id": "#Cust18", "name": "Emma", "price": 199931, "quantity": 46, "stock": 6796 }, { "id": "#Cust19", "name": "Jennifer", "price": 617157, "quantity": 42, "stock": 9273 }, { "id": "#Cust20", "name": "Han", "price": 814309, "quantity": 47, "stock": 9966 }, { "id": "#Cust21", "name": "Steve", "price": 954999, "quantity": 4, "stock": 6859 }, { "id": "#Cust22", "name": "Anna", "price": 43408, "quantity": 2, "stock": 6584 }, { "id": "#Cust23", "name": "Lawrence", "price": 28520, "quantity": 19, "stock": 8113 }, { "id": "#Cust24", "name": "Kim", "price": 444799, "quantity": 38, "stock": 4436 }, { "id": "#Cust25", "name": "Emma", "price": 93669, "quantity": 29, "stock": 8247 }, { "id": "#Cust26", "name": "Jennifer", "price": 432524, "quantity": 29, "stock": 9283 }, { "id": "#Cust27", "name": "Han", "price": 638463, "quantity": 47, "stock": 8242 }, { "id": "#Cust28", "name": "Steve", "price": 823066, "quantity": 42, "stock": 398 }, { "id": "#Cust29", "name": "Anna", "price": 508443, "quantity": 6, "stock": 399 }];
 </script>
-
 </head>
 <body>
 
@@ -185,8 +177,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -194,6 +185,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

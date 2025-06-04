@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,12 +28,14 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+
+<!-- PDF 내보내기 필수 JS 추가-->
 <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style type="text/css">
+<style>
 	/* 그리드 기본 칼럼 재정의*/
 	.aui-grid-default-column {
 		text-align: right;
@@ -54,132 +53,120 @@
 		text-align: center;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/profit.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "type0",
-		headerText: "구분",
-		cellMerge: true,
-		style: "my-column",
-		filter: {
-			showIcon: true
-		}
-	}, {
-		dataField: "type",
-		headerText: "유형",
-		style: "my-column2",
-		width: 120
-	}, {
-		dataField: "p131,p132,p133,p134,p135,p136,p137,p138,p139,p1310,p1311,p1312",
-		headerText: "월별 추이",
-		width: 120,
-		renderer: {
-			type: "SparkColumnRenderer"
-		}
-	}, {
-		dataField: "p131",
-		headerText: "'13 1월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p132",
-		headerText: "'13 2월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p133",
-		headerText: "'13 3월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p134",
-		headerText: "'13 4월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p135",
-		headerText: "'13 5월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p136",
-		headerText: "'13 6월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p137",
-		headerText: "'13 7월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p138",
-		headerText: "'13 8월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p139",
-		headerText: "'13 9월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1310",
-		headerText: "'13 10월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1311",
-		headerText: "'13 11월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1312",
-		headerText: "'13 12월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}];
-
+		requestGridData("./data/profit.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "type0",
+			headerText: "구분",
+			cellMerge: true,
+			style: "my-column",
+			filter: {
+				showIcon: true
+			}
+		}, {
+			dataField: "type",
+			headerText: "유형",
+			style: "my-column2",
+			width: 120
+		}, {
+			dataField: "p131,p132,p133,p134,p135,p136,p137,p138,p139,p1310,p1311,p1312",
+			headerText: "월별 추이",
+			width: 120,
+			renderer: {
+				type: "SparkColumnRenderer"
+			}
+		}, {
+			dataField: "p131",
+			headerText: "'13 1월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p132",
+			headerText: "'13 2월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p133",
+			headerText: "'13 3월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p134",
+			headerText: "'13 4월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p135",
+			headerText: "'13 5월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p136",
+			headerText: "'13 6월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p137",
+			headerText: "'13 7월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p138",
+			headerText: "'13 8월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p139",
+			headerText: "'13 9월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1310",
+			headerText: "'13 10월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1311",
+			headerText: "'13 11월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1312",
+			headerText: "'13 12월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}];
 
-		var gridProps = {
+		// AUIGrid 그리드 속성 설정
+		const gridProps = {
 			enableCellMerge: true,
-
 			enableFilter: true,
-
 			editable: true,
-
 			// singleRow 선택모드
 			selectionMode: "multipleCells",
-
 			// 줄번호 칼럼 렌더러 출력 안함
 			showRowNumColumn: false,
-
 			// 체크박스 표시 렌더러 출력 안함
 			showRowCheckColumn: false,
-
 			rowStyleFunction: function (rowIndex, item) {
-				if (item._mySum || item._mySum == "true") {
+				if (item._mySum || item._mySum === "true") {
 					return "aui-grid-row-depth2-style";
 				}
 			}
 		};
-
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
@@ -187,27 +174,18 @@
 
 	// 엑셀 내보내기(Export);
 	function exportClick() {
-
 		// 내보내기 실행
 		AUIGrid.exportToXlsx(myGridID);
-	};
+	}
 
 	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
 	function exportPdfClick() {
-
-		// 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
-		if (!AUIGrid.isAvailabePdf(myGridID)) {
-			alert("PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)");
-			return;
-		}
-
 		// 내보내기 실행
 		AUIGrid.exportToPdf(myGridID, {
-			fontPath: "../pdfkit/jejugothic-regular.ttf"
+			fontPath: "../pdfkit/nyjgothic-medium.ttf"
 		});
-	};
+	}
 </script>
-
 </head>
 <body>
 
@@ -222,8 +200,7 @@
 		<div id="grid_wrap" style="width:100%;height:600px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -231,6 +208,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

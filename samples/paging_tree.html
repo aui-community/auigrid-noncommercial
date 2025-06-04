@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,10 +29,11 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style type="text/css">
+<style>
 	/* 커스텀 스타일 */
 	.left {
 		text-align: left;
@@ -46,127 +44,113 @@
 		font-weight: bold;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/schedule_tree.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 120
-	}, {
-		dataField: "name",
-		headerText: "Task Name",
-		filter: {
-			showIcon: true
-		},
-		style: "left",
-		width: 400
-	}, {
-		dataField: "charge",
-		headerText: "Charge",
-		filter: {
-			showIcon: true
-		},
-		style: "left",
-		width: 140,
-		renderer: {
-			type: "IconRenderer",
-			iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-			iconHeight: 20,
-			iconFunction: function (rowIndex, columnIndex, value, item) {
-				if (value.substr(0, 1) == "A")
-					return "./assets/office_female.png";
-				return "./assets/office_man.png";
-			}
-		}
-	}, {
-		dataField: "complete",
-		headerText: "Complete(%)",
-		dataType: "numeric",
-		formatString: "#,##0",
-		width: 140,
-		renderer: {
-			type: "BarRenderer",
-			min: 0,
-			max: 100
-		},
-		styleFunction: function (rowIndex, columnIndex, value, headerText, dataField, item) {
-			if (value == 100)
-				return "c-red";
-			return "";
-		}
-	}, {
-		dataField: "start",
-		headerText: "Start Date"
-	}, {
-		dataField: "end",
-		headerText: "End Date"
-	}];
-
+		requestGridData("./data/schedule_tree.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		let columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 120
+		}, {
+			dataField: "name",
+			headerText: "Task Name",
+			filter: {
+				showIcon: true
+			},
+			style: "left",
+			width: 400
+		}, {
+			dataField: "charge",
+			headerText: "Charge",
+			filter: {
+				showIcon: true
+			},
+			style: "left",
+			width: 140,
+			renderer: {
+				type: "IconRenderer",
+				iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+				iconHeight: 20,
+				iconFunction: function (rowIndex, columnIndex, value, item) {
+					if (value.substr(0, 1) === "A")
+						return "./assets/office_female.png";
+					return "./assets/office_man.png";
+				}
+			}
+		}, {
+			dataField: "complete",
+			headerText: "Complete(%)",
+			dataType: "numeric",
+			formatString: "#,##0",
+			width: 140,
+			renderer: {
+				type: "BarRenderer",
+				min: 0,
+				max: 100
+			},
+			styleFunction: function (rowIndex, columnIndex, value, headerText, dataField, item) {
+				if (value === 100) return "c-red";
+			}
+		}, {
+			dataField: "start",
+			headerText: "Start Date"
+		}, {
+			dataField: "end",
+			headerText: "End Date"
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			selectionMode: "singleRow",
-			
 			hoverMode: "singleRow",
-
 			// 페이징 사용
 			usePaging: true,
-
 			// 한 화면 출력되는 row 수 변경
 			pageRowCount: 30,
-
 			// 최초 보여질 때 모두 열린 상태로 출력 여부
 			displayTreeOpen: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	};
+	}
 
-	var isExpanded = true;
+	let isExpanded = true;
 	function expand() {
 		if (!isExpanded) {
 			AUIGrid.expandAll(myGridID);
 			isExpanded = true;
-		} else {
-			AUIGrid.collapseAll(myGridID);
-			isExpanded = false;
+			return;
 		}
+		AUIGrid.collapseAll(myGridID);
+		isExpanded = false;
 	}
 
 	// 엑셀 내보내기(Export);
 	function exportClick() {
-
 		// 내보내기 실행
 		AUIGrid.exportToXlsx(myGridID);
-	};
+	}
 
 	function showItemsOnDepth(event) {
-		var depthSelect = document.getElementById("depthSelect");
-		var depth = depthSelect.value;
-
+		const depthSelect = document.getElementById("depthSelect");
+		const depth = depthSelect.value;
 		// 해당 depth 까지 오픈함
 		AUIGrid.showItemsOnDepth(myGridID, Number(depth));
-	};
+	}
 </script>
-
 </head>
 <body>
 
@@ -197,6 +181,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

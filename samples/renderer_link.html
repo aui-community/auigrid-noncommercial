@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,12 +28,14 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+
+<!-- PDF 내보내기 필수 JS 추가-->
 <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style type="text/css">
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-right {
 		text-align: right;
@@ -52,106 +51,95 @@
 		color: #FF0000;
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name",
-		width: 120
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		width: 200,
-		style: "myLinkStyle",
-		postfix: " 설명 바로가기",
-
-		// 전체 URL 은 baseUrl + linkField 의 값으로 결정됨.
-		// baseUrl 설정하지 않으면 linkField 의 값이 URL임(즉, linkField 의 값은 온전한 URL형태를 갖는 데이터여야함)
-		renderer: {
-			type: "LinkRenderer",
-			linkField: "country",
-			baseUrl: "https://en.wikipedia.org/wiki/" // 기본 URL
-		}
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		width: 140,
-		style: "myLinkStyle",
-
-		// LinkRenderer 를 활용하여 javascript 함수 호출로 사용하고자 하는 경우
-		renderer: {
-			type: "LinkRenderer",
-			baseUrl: "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
-			// baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
-			jsCallback: function (rowIndex, columnIndex, value, item) {
-				alert("( " + rowIndex + ", " + columnIndex + " ) " + item.color + "  Link 클릭\r\n자바스크립트 함수 호출하고자 하는 경우로 사용하세요!");
-			}
-		}
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		width: 140
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		formatString: "#,##0",
-		style: "my-right",
-		width: 140
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 140
+		requestGridData("./data/normal_100.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Name",
+			width: 120
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			width: 200,
+			style: "myLinkStyle",
+			postfix: " 설명 바로가기",
 
-		var gridProps = {
+			// 전체 URL 은 baseUrl + linkField 의 값으로 결정됨.
+			// baseUrl 설정하지 않으면 linkField 의 값이 URL임(즉, linkField 의 값은 온전한 URL형태를 갖는 데이터여야함)
+			renderer: {
+				type: "LinkRenderer",
+				linkField: "country",
+				baseUrl: "https://en.wikipedia.org/wiki/" // 기본 URL
+			}
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			width: 140,
+			style: "myLinkStyle",
+
+			// LinkRenderer 를 활용하여 javascript 함수 호출로 사용하고자 하는 경우
+			renderer: {
+				type: "LinkRenderer",
+				baseUrl: "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
+				// baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
+				jsCallback: function (rowIndex, columnIndex, value, item) {
+					alert("( " + rowIndex + ", " + columnIndex + " ) " + item.color + "  Link 클릭\r\n자바스크립트 함수 호출하고자 하는 경우로 사용하세요!");
+				}
+			}
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			width: 140
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			formatString: "#,##0",
+			style: "my-right",
+			width: 140
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 140
+		}];
+
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	};
+	}
 
 	// 엑셀 내보내기(Export);
 	function exportClick() {
-
 		// 내보내기 실행
 		AUIGrid.exportToXlsx(myGridID);
-	};
-
+	}
 
 	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
 	function exportPdfClick() {
-
 		// 내보내기 실행
 		AUIGrid.exportToPdf(myGridID, {
 			// 폰트 경로 지정
-			fontPath: "../pdfkit/jejugothic-regular.ttf"
+			fontPath: "../pdfkit/nyjgothic-medium.ttf"
 		});
 	};
-
 </script>
-
 </head>
 <body>
 
@@ -170,8 +158,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -179,6 +166,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

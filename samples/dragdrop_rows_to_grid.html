@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,32 +29,28 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script type="text/javascript">
 
-	// 상단 그리드 생성 후 반환 ID
-	var myGridID;
+<script>
+	// AUIGrid 생성 후 반환 ID
+	let myGridID;
 
 	// 하단 그리드 생성 후 반환ID
-	var myGridID2;
+	let myGridID2;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// 상단 그리드를 생성합니다.
 		createAUIGrid();
-
 		// 하단 그리드를 생성합니다.
 		createDetailAUIGrid();
-
 		// 데이터 요청하여 상단 그리드에 삽입
-		requestData("./data/normal_500.json");
-	};
+		requestGridData("./data/normal_500.json");
+	}
 
 	// Master 그리드 를 생성합니다.
 	function createAUIGrid() {
-
-		// AUIGrid 칼럼 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 160
@@ -97,9 +90,8 @@
 			headerText: "Date"
 		}];
 
-
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			selectionMode: "multipleCells",
 			// 드래깅 행 이동 가능 여부 (기본값 : false)
 			enableDrag: true,
@@ -116,23 +108,22 @@
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-		
+
 		// 드랍 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "dropEnd", function(e) {
-			var pid = e.pidToDrop; // 드랍되는 곳의 그리드ID
+		AUIGrid.bind(myGridID, "dropEnd", function (e) {
+			const pid = e.pidToDrop; // 드랍되는 곳의 그리드ID
 
 			// 드랍되는 곳에 셀렉션 지정
 			AUIGrid.setSelectionByIndex(pid, e.toRowIndex, e.dropColumnIndex);
 			// 정보 출력
-			document.getElementById("ellapse").innerText = ("드랍 행 인덱스: " + e.toRowIndex + ", 열 인덱스 : " + e.dropColumnIndex);
+			document.getElementById("elapse").textContent = `드랍 행 인덱스: ${e.toRowIndex}, 열 인덱스 : ${e.dropColumnIndex}`;
 		});
 	}
 
 	// 하단 그리드 생성
 	function createDetailAUIGrid() {
-
-		// AUIGrid 칼럼 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 160
@@ -151,7 +142,7 @@
 		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			// 드래깅 행 이동 가능 여부 (기본값 : false)
 			enableDrag: true,
 			// 다수의 행을 한번에 이동 가능 여부(기본값 : true)
@@ -170,10 +161,8 @@
 
 		// 최초 빈 배열로 초기화
 		AUIGrid.setGridData(myGridID2, []);
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -185,14 +174,12 @@
 	<div>
 		<!-- 상단 Grid -->
 		<div id="grid_wrap" style="width:100%;height:280px; margin:0 auto;"></div>
-
 		<div style="width:100%; height:20px;"></div>
-
 		<!-- 하단 Grid -->
 		<div id="grid_wrap2" style="width:100%;height:280px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -200,6 +187,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

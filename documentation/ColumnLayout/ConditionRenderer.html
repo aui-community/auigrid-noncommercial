@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
@@ -16,6 +16,8 @@
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <script src="../static/doc.js" type="text/javascript"></script>
+
+
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -23,7 +25,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.14 Documentation</span>
+<span id="title">AUIGrid 3.0.16 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -42,22 +44,22 @@
 <p><strong>칼럼의 editRenderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 <p></p>
 <a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
-<div class="mxmlSyntax" id="mxmlSyntax"><pre>
+<div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">
 // 조건부 에디트렌더러 출력할 editRenderer 정의 1
-var myEditRenderer = {
+const myEditRenderer = {
       type : "DropDownListRenderer",
       list : posList
 };
 
 // 조건부 에디트렌더러 출력할 editRenderer 정의 2
-var myEditRenderer2 = {
+const myEditRenderer2 = {
       type : "CalendarRenderer",
       showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
       onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
       showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
 };
 
-var columnLayout = [ {
+const columnLayout = [{
      dataField : "name",
      headerText : "Name",
      width : 140
@@ -69,15 +71,15 @@ var columnLayout = [ {
             type : "ConditionRenderer", 
             conditionFunction : function(rowIndex, columnIndex, value, item, dataField) {
                   // 특정 조건에 따라 미리 정의한 editRenderer 반환.
-                  if(item.myCode == 1) {
+                  if(item.myCode === 1) {
                        return myEditRenderer;
-                  } else if(item.myCode == 2) {
+                  } else if(item.myCode === 2) {
                        return myEditRenderer2;
                   }
             }
      }
 }];
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -101,14 +103,14 @@ var columnLayout = [ {
 <li>item : 해당 행에 출력되고 있는 행 아이템 객체 (Object)</li>
 <li>dataField : 해당 칼럼이 출력하고 있는 행 아이템의 필드명(String)</li>
 </ul>
-<pre>conditionFunction : function(rowIndex, columnIndex, value, item, dataField) {
+<pre><code class="language-javascript">conditionFunction : function(rowIndex, columnIndex, value, item, dataField) {
        // 특정 조건에 따라 미리 정의한 editRenderer 반환.
-       if(item.myCode == 1) {
-              return myEditRenderer; // 미리 정의된 Object
-       } else if(item.myCode == 2) {
-              return myEditRenderer2; // 미리 정의된 Object
+       if(item.myCode === 1) {
+              return myEditRenderer;
+       } else if(item.myCode === 2) {
+              return myEditRenderer2;
        }
-}</pre>
+}</code></pre>
 <p> 이 함수의 반환값이 곧 실제 적용되는 에디트렌더러가 됩니다.</p>
 </td>
 </tr>

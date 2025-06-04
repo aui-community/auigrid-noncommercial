@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,65 +29,56 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style type="text/css">
+
+<style>
 	.my-custom-column {
 		text-align: left;
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/message_tag_100_.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140,
-	}, {
-		dataField: "msg",
-		headerText: "Message",
-		style: "my-custom-column",
-		renderer: { // 템플릿 렌더러 사용
-			type: "TemplateRenderer"
-		},
-		width: 500
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 150
+		requestGridData("./data/message_tag_100_.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140,
+		}, {
+			dataField: "msg",
+			headerText: "Message",
+			style: "my-custom-column",
+			renderer: { // 템플릿 렌더러 사용
+				type: "TemplateRenderer"
+			},
+			width: 500
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 150
+		}];
 
-		var gridProps = {
+		const gridProps = {
 			// 워드랩 적용 
 			wordWrap: true,
-
 			// 페이징 모드
 			usePaging: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -99,20 +87,19 @@
 		<p>워드랩(wordWrap=true) 사용 후 Message 칼럼에 TemplateRenderer 를 적용한 모습입니다.</p>
 		<p>작성된 JSON 데이터를 보면, 다음과 같이 BR 태그를 비롯하여 색상, 강조를 내타내는 태그가 내재되어 있습니다. 이를 그대로 HTML 처리합니다.</p>
 		<div class="src_cover">
-			<xmp>....
-				}, {
-				"id": "#Cust2",
-				"date": "2014-12-26",
-				"name": "Kim",
-				"msg": "<span style='color:#D941C5'>자바스크립트(JavaScript)</span>는 객체 기반의 스크립트 프로그래밍 언어이다.<br />이 언어는... "
-				}, {
-				"id": "#Cust3",
-				"date": "2014-12-25",
-				"name": "Jennifer",
-				"msg": "JavaScript is a dynamic computer <b>programming language</b>."
-				}, {
-				....
-			</xmp>
+			<pre><xmp>....
+}, {
+	"id": "#Cust2",
+	"date": "2014-12-26",
+	"name": "Kim",
+	"msg": "<span style='color:#D941C5'>자바스크립트(JavaScript)</span>는 객체 기반의 스크립트 프로그래밍 언어이다.<br />이 언어는... "
+}, {
+	"id": "#Cust3",
+	"date": "2014-12-25",
+	"name": "Jennifer",
+	"msg": "JavaScript is a dynamic computer <b>programming language</b>."
+}, {
+....</xmp></pre>
 		</div>
 	</div>
 	<div>
@@ -121,7 +108,7 @@
 	</div>
 
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -129,6 +116,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

@@ -114,42 +114,51 @@ AUIGrid 는 상용 라이선스(Enterprise License) 와 비상용 라이선스(N
     <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
     <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
     <link href="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGrid_style.css" rel="stylesheet" />
-    <script type="text/javascript">
-        // 칼럼 레이아웃 작성
-        var columnLayout = [
-            { dataField: "name", headerText: "Name", width: 140 },
-            { dataField: "country", headerText: "Country", width: 120 },
-            { dataField: "product", headerText: "Product", width: 120 },
-            { dataField: "quantity", headerText: "Quantity" },
-            { dataField: "price", headerText: "Price", dataType: "numeric" },
-            { dataField: "date", headerText: "Date" }
-        ];
+    <script>
+    // AUIGrid 생성 후 반환 ID
+    let myGridID;
 
-        // 그리드 생성 후 해당 ID 보관 변수
-        var myGridID;
+    document.addEventListener("DOMContentLoaded", () => {
+      // 칼럼 레이아웃 정의
+      const columnLayout = [
+        { dataField: "name", headerText: "Name", width: 140 },
+        { dataField: "country", headerText: "Country", width: 120 },
+        { dataField: "product", headerText: "Product", width: 120 },
+        { dataField: "quantity", headerText: "Quantity" },
+        { dataField: "price", headerText: "Price", dataType: "numeric" },
+        { dataField: "date", headerText: "Date" }
+      ];
 
-        // 윈도우 onload 이벤트 핸들링
-        window.onload = function () {
-            // 실제로 #grid_wrap 에 그리드 생성
-            myGridID = AUIGrid.create("#grid_wrap", columnLayout);
-            // 데이터 요청 하여 그리드에 삽입
-            requestAjax();
-        };
+      // 그리드 속성 설정
+      const gridProps = {
+        editable: true
+      };
 
-        function requestData() {
-            //  요청 전 그리드에 로더 표시
-            AUIGrid.showAjaxLoader(myGridID);
-            // /normal_100.json 데이터 그리드에 출력
-            fetch("./data/normal_100.json")
-                .then((response) => response.json())
-                .then((data) => {
-                    // 로더 제거
-                    AUIGrid.removeAjaxLoader(myGridID);
-                    // 그리드에 데이터 세팅
-                    AUIGrid.setGridData(myGridID, data);
-                });
-        };
-    </script>
+      // 실제로 #grid_wrap 에 그리드 생성
+      myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+      // 그리드 cellClick 이벤트 바인딩
+      AUIGrid.bind(myGridID, "cellClick", function(event) {
+        console.log(event);
+        // 그리드 셀 클릭 시 알림 창
+        alert(`${event.type} 이벤트, 클릭한 값: ${event.value}`);
+      });
+
+      // 데이터 로딩
+      fetch("./data/normal_100.json")
+        .then(response => {
+          if (!response.ok) throw new Error("HTTP error " + response.status);
+          return response.json();
+        })
+        .then(data => {
+          // 그리드에 데이터 JSON 데이터 삽입
+          AUIGrid.setGridData(myGridID, data);
+        })
+        .catch(error => {
+          alert("데이터 요청 실패: " + error.message);
+        });
+    });
+  </script>
 </head>
 <body>
     <div id="grid_wrap" style="width:800px;height:480px;"></div>

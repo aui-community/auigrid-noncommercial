@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,107 +28,103 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<script type="text/javascript">
 
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/nutrition.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "gubun1",
-		headerText: "구분1",
-		width: 160
-	}, {
-		dataField: "gubun2",
-		headerText: "구분2",
-		width: 160
-	}, {
-		headerText: "2008년",
-		children: [{
-			dataField: "avg08",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev08",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2009년",
-		children: [{
-			dataField: "avg09",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev09",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2010년",
-		children: [{
-			dataField: "avg10",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev10",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2011년",
-		children: [{
-			dataField: "avg11",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev11",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2012년",
-		children: [{
-			dataField: "avg12",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev12",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}];
+		requestGridData("./data/nutrition.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "gubun1",
+			headerText: "구분1",
+			width: 160
+		}, {
+			dataField: "gubun2",
+			headerText: "구분2",
+			width: 160
+		}, {
+			headerText: "2018년",
+			children: [{
+				dataField: "avg08",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev08",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}, {
+			headerText: "2019년",
+			children: [{
+				dataField: "avg09",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev09",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}, {
+			headerText: "2020년",
+			children: [{
+				dataField: "avg10",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev10",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}, {
+			headerText: "2021년",
+			children: [{
+				dataField: "avg11",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev11",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}, {
+			headerText: "2022년",
+			children: [{
+				dataField: "avg12",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev12",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}];
 
-		var gridProps = {};
-
-		// singleRow 선택모드
-		gridProps.selectionMode = "singleCell";
+		// 그리드 속성 설정
+		const gridProps = {
+			headerHeight: 34
+		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
 		// 헤더 클릭 이벤트 바인딩
 		AUIGrid.bind(myGridID, "headerClick", function (event) {
-			alert(event.type + " : " + event.headerText + ", dataField : " + event.dataField + ", index : " + event.columnIndex + ", depth : " + event.item.depth);
-			return false; // 기본 행위 소팅하지 않음, return true 시 소팅 시킴
+			const { type, headerText, dataField, columnIndex, item } = event;
+			alert(`${type} : ${headerText}, dataField: ${dataField}, index: ${columnIndex}, depth: ${item.depth}`);
+			return false; // 기본 정렬 동작 막음 (true 시 정렬 허용)
 		});
-	};
+	}
 </script>
-
 </head>
 <body>
 
@@ -139,11 +132,11 @@
 	<div class="desc">
 		<p>헤더 클릭 이벤트를 정의한 모습입니다.</p>
 		<div class="src_cover">
-			<pre>
-// 헤더 클릭 이벤트 바인딩
+			<pre>// 헤더 클릭 이벤트 바인딩
 AUIGrid.bind(myGridID, "headerClick", function(event) {
-	alert(event.type + " : " + event.headerText + ", dataField : " + event.dataField + ", index : " + event.columnIndex + ", depth : " + event.item.depth);
-	return false; // 기본 행위 소팅하지 않음, return true 시 소팅 시킴
+	const { type, headerText, dataField, columnIndex, item } = event;
+	alert(`${type} : ${headerText}, dataField: ${dataField}, index: ${columnIndex}, depth: ${item.depth}`);
+	return false; // 기본 정렬 동작 막음 (true 시 정렬 허용)
 });
 </pre>
 		</div>
@@ -153,7 +146,7 @@ AUIGrid.bind(myGridID, "headerClick", function(event) {
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 		<div><span style="float:right;"> 식품군별 1일 섭취량 추이 , 통계청 </span></div>
 
 	</div>
@@ -163,6 +156,5 @@ AUIGrid.bind(myGridID, "headerClick", function(event) {
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

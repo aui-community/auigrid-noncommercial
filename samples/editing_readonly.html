@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-color {
 		color: #00aa00;
@@ -42,94 +40,80 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name",
-		width: 160,
-		headerTooltip: { // 헤더 툴팁 표시 HTML 양식
-			show: true,
-			tooltipHtml: "어떤 경우라도 이 칼럼은 수정 불가 설정"
-		},
-		style: "my-color",
-		headerStyle: "my-color",
-		editable: false // Name 편집 불가능 설정, 추가된 행인 경우도 편집 불가임
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		headerTooltip: { // 헤더 툴팁 표시 HTML 양식
-			show: true,
-			tooltipHtml: "기본적으로 수정 불가, 단 새 행 추가한 경우는 편집 허용"
-		},
-		style: "my-color",
-		headerStyle: "my-color",
-		editable: true, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
-		width: 160
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		width: 140
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric",
-		style: "my-right",
-		width: 100
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		style: "my-right",
-		width: 120
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 120
+		requestGridData("./data/normal_100.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Name",
+			width: 160,
+			headerTooltip: { // 헤더 툴팁 표시 HTML 양식
+				show: true,
+				tooltipHtml: "어떤 경우라도 이 칼럼은 수정 불가 설정"
+			},
+			style: "my-color",
+			headerStyle: "my-color",
+			editable: false // Name 편집 불가능 설정, 추가된 행인 경우도 편집 불가임
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			headerTooltip: { // 헤더 툴팁 표시 HTML 양식
+				show: true,
+				tooltipHtml: "기본적으로 수정 불가, 단 새 행 추가한 경우는 편집 허용"
+			},
+			style: "my-color",
+			headerStyle: "my-color",
+			editable: true, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
+			width: 160
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			width: 140
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric",
+			style: "my-right",
+			width: 100
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			style: "my-right",
+			width: 120
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 120
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
-
 			selectionMode: "multipleCells",
-
 			// 행 고유 id 에 속하는 필드명 (필드의 값은 중복되지 않은 고유값이여야 함)
 			rowIdField: "id",
-
 			// 상태 칼럼 사용
 			showStateColumn: true,
-
 			// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 			wrapSelectionMove: true,
-
 			// 엔터키가 다음 행이 아닌 다음 칼럼으로 이동
 			enterKeyColumnBase: true,
-
 			// 붙여넣기로 새행이 생길 때 begin 이벤트 발생 시키지 않을지 여부
 			// 기본값 : false
 			notBeginEventNewRowsOnPaste: true,
-
 			// 붙여넣기로 새행이 생길 때 칼럼의 editable=false 설정한 칼럼의 값을
 			// 새행이 생기는 경우에도 고칠 수 없을지 여부 (기본값 : false)
 			// false 인 경우에는 붙여넣기로 새행이 생길 때 클립보드 데이터가 적용됩니다.
@@ -143,25 +127,24 @@
 		// 사용자가 Insert 키, Ctrl+Insert 키로 행 추가하는 경우, 기본 값으로 적용 시킬 아이템 작성
 		AUIGrid.bind(myGridID, "beforeInsertRow", function (event) {
 			return {
-				"name": "Anna",
-				"country": "이 값을 변경하세요.",
-				"product": "새 제품",
-				"quantity": 1,
-				"price": 0,
-				"date": "2016/02/15"
+				name: "Anna",
+				country: "이 값을 변경하세요.",
+				product: "새 제품",
+				quantity: 1,
+				price: 0,
+				date: "2016/02/15"
 			};
 		});
 
 		// 행 추가 시 셀렉션을 이동시킴
 		AUIGrid.bind(myGridID, "addRowFinish", function (event) {
-			var selectionIdxes = AUIGrid.getSelectedIndex(event.pid);
+			const selectionIdxes = AUIGrid.getSelectedIndex(event.pid);
 			AUIGrid.setSelectionByIndex(event.pid, selectionIdxes[0], 1);
 		});
 
-
 		// 에디팅 시작 이벤트 바인딩
 		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
-			if (event.dataField == "country") {
+			if (event.dataField === "country") {
 				// 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
 				if (AUIGrid.isAddedByRowIndex(event.pid, event.rowIndex)) {
 					return true;
@@ -173,25 +156,22 @@
 		});
 	}
 
-
 	// 하단에 새행 추가
 	function addNewRow() {
-		var newItem = {
-			"name": "Anna",
-			"country": "이 값을 변경하세요.",
-			"product": "새 제품",
-			"quantity": 1,
-			"price": 0,
-			"date": "2016/02/15"
+		const newItem = {
+			name: "Anna",
+			country: "이 값을 변경하세요.",
+			product: "새 제품",
+			quantity: 1,
+			price: 0,
+			date: "2016/02/15"
 		};
 		// parameter
 		// item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
 		// rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
 		AUIGrid.addRow(myGridID, newItem, "last");
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -204,7 +184,6 @@
 		<p>"Country" 칼럼은 기본적으로 수정이 불가능하지만, 새 행을 추가한 경우 수정이 가능하도록 설정한 모습입니다.</p>
 		<p><span class="btn" onclick="addNewRow()">새 행 추가</span>
 	</div>
-
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:420px; margin:0 auto;"></div>
@@ -220,6 +199,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

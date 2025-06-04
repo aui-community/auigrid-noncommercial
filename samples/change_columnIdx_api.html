@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,7 +29,8 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-column {
 		color: #008299;
@@ -48,14 +46,12 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// 칼럼 순서 나타내는 보조 그리드 생성
 		createPropAUIGrid(columnLayout);
 
@@ -64,10 +60,10 @@
 
 		// 그리드 데이터 삽입
 		AUIGrid.setGridData(myGridID, getGridData());
-	};
+	}
 
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
+	// 그리드 칼럼 레이아웃 설정
+	const columnLayout = [{
 		dataField: "f1",
 		headerText: "Field 1",
 		width: 100
@@ -106,20 +102,19 @@
 		width: 100
 	}];
 
-	//--- 본 페이지가 샘플(데모)인 관계로 위 columnLayout 하드 코딩함.(예시용)
-	//--- 나머지 칼럼들 생성...
-	for (var i = 9; i < 30; i++) {
-		columnLayout[columnLayout.length] = {
+	// 나머지 칼럼들 생성
+	for (let i = 9; i < 30; i++) {
+		columnLayout.push({
 			dataField: "f" + i,
 			headerText: "Field " + i,
 			width: 100
-		};
-	};
+		});
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid(columnLayout) {
-
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true
 		};
 
@@ -128,38 +123,32 @@
 
 		// columnStateChange 이벤트 바인딩.
 		AUIGrid.bind(myGridID, "columnStateChange", function (event) {
-
-			var str = "eventType :" + event.type;
-			str += ", dataField : " + event.dataField;
-			str += ", prop : " + event.property;
-			str += ", old : " + event.old + ", current : " + event.current;
-
-			document.getElementById("ellapse").innerText = str;
+			const str = `eventType: ${event.type}, dataField: ${event.dataField}, prop: ${event.property}, old: ${event.old}, current: ${event.current}`;
+			document.getElementById("elapse").textContent = str;
 		});
-	};
+	}
 
 	// 칼럼 순서를 나타내는 그리드 생성하기
 	function createPropAUIGrid(targetLayout) {
-		var props = {
+		// 그리드 속성
+		const props = {
 			selectionMode: "multipleRows"
 		};
 
-		var propColumnLayout = {
+		// 칼럼 레이아웃 설정
+		const columnLayout = {
 			dataField: "fieldName",
 			headerText: "칼럼 순서"
 		};
 
 		// 데이터 작성
-		var gridData = [];
-		for (var i = 0, len = targetLayout.length; i < len; i++) {
-			gridData[i] = {
-				"dataField": targetLayout[i]["dataField"],
-				"fieldName": targetLayout[i]["headerText"]
-			};
-		}
+		const gridData = targetLayout.map(({ dataField, headerText }) => ({
+			dataField,
+			fieldName: headerText
+		}));
 
 		// 실제로 #prop_grid_wrap 에 그리드 생성
-		AUIGrid.create("#prop_grid_wrap", propColumnLayout, props);
+		AUIGrid.create("#prop_grid_wrap", columnLayout, props);
 
 		// ready 이벤트 바인딩
 		AUIGrid.bind("#prop_grid_wrap", "ready", function (event) {
@@ -168,61 +157,50 @@
 
 		// 데이터 삽입
 		AUIGrid.setGridData("#prop_grid_wrap", gridData);
-	};
-
-	// 그리드 데이터 생성하여 반환
-	function getGridData() {
-		var i, j, len, len2;
-		var gridData = [];
-		var obj;
-		for (i = 0, len = 1000; i < len; i++) {
-			obj = {};
-			for (j = 1, len2 = 30; j < len2; j++) {
-				obj["f" + j] = "F (" + i + ", " + j + ")";
-			}
-			gridData[i] = obj;
-		}
-
-		return gridData;
-	};
+	}
 
 	//선택 행들 위로 한 단계 올림
 	function moveRowsToUp() {
 		AUIGrid.moveRowsToUp("#prop_grid_wrap");
-	};
+	}
 
 	// 선택 행들 아래로 한 단계 올림
 	function moveRowsToDown() {
 		AUIGrid.moveRowsToDown("#prop_grid_wrap");
-	};
+	}
 
 	// 칼럼 순서 적용 시키기
 	function applyColumnOrder() {
-		var gridData = AUIGrid.getGridData("#prop_grid_wrap");
-		var dataFieldOrders = [];
-
-		for (var i = 0, len = gridData.length; i < len; i++) {
-			dataFieldOrders[i] = gridData[i]["dataField"];
-		}
+		const gridData = AUIGrid.getGridData("#prop_grid_wrap");
+		const dataFieldOrders = gridData.map(row => row.dataField);
 
 		// 실제 그리드의 칼럼 순서를 변경시켜서 적용 시키기
 		AUIGrid.setColumnOrder(myGridID, dataFieldOrders);
-
 		// 예제 : 처음 3개의 칼럼만 순서 지정..지정 안한 칼럼들은 기존 순서대로
 		//AUIGrid.setColumnOrder(myGridID, ["myGroupField", "f10", "f11"] );
-	};
+	}
 
 	// 그룹 칼럼의 자식 순서 바꾸기
 	function applyColumnChildOrder() {
 		// 그룹형의 자식들을 f4, f3, f2 로 맞추기
 		AUIGrid.setColumnChildOrder(myGridID, ["f4", "f3", "f2"]);
-
 		// 예제 : f3 만 순서 지정...나머지 기존 순서대로
 		// 즉, f3, f2, f4 와 같은 순서로 됨.
 		//AUIGrid.setColumnChildOrder(myGridID, ["f3"]);
-	};
-</script>
+	}
 
+	// 그리드 데이터 생성하여 반환
+	function getGridData() {
+		const data = Array.from({ length: 1000 }, (v, i) => {
+			const obj = {};
+			for (let j = 1; j < 30; j++) {
+				obj[`f${j}`] = `F (${i}, ${j})`;
+			}
+			return obj;
+		});
+		return data;
+	}
+</script>
 </head>
 <body>
 
@@ -244,23 +222,18 @@ AUIGrid.setColumnOrder(myGridID, ["f5", "f6", "f7", "f10"] );</pre>
 			<span>||</span>
 			<button class="btn" onclick="applyColumnChildOrder();">Header Group 안의 칼럼 4, 3, 2 로 변경</button>
 		</div>
-
 	</div>
 	<div>
 		<div style="width:100%;margin:0 auto;">
-
 			<!-- 칼럼 순서 그리드가 이곳에 생성됩니다. -->
 			<div id="prop_grid_wrap" style="width:180px; height:460px;display:inline-block;"></div>
-
 			<!-- 경계 라인 -->
 			<div class="v_line"></div>
-
 			<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 			<div id="grid_wrap" style="width:1000px; height:460px;;display:inline-block;"></div>
 		</div>
 		<div class="desc_bottom">
-			<p id="ellapse"></p>
-
+			<p id="elapse"></p>
 		</div>
 	</div>
 	<div id="footer">
@@ -268,6 +241,5 @@ AUIGrid.setColumnOrder(myGridID, ["f5", "f6", "f7", "f10"] );</pre>
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

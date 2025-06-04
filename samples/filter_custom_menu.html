@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,12 +28,13 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+
 <!-- jQuery , jQuery UI 사용 -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 
-<style type="text/css">
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-column {
 		text-align: right;
@@ -95,11 +93,11 @@
 	}
 </style>
 
-<script type="text/javascript">
+<script>
 	function documentReady() { };
 
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
 	// document ready 이벤트
 	$(document).ready(function () {
@@ -122,13 +120,13 @@
 		createAUIGrid(columnLayout);
 
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_500.json");
+		requestGridData("./data/normal_500.json");
 	});
 
-	// AUIGrid 칼럼 설정
+	// 그리드 칼럼 레이아웃 설정
 	// 데이터 형태는 다음과 같은 형태임,
 	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
+	let columnLayout = [{
 		dataField: "name",
 		headerText: "Name"
 	}, {
@@ -179,8 +177,8 @@
 	}
 	];
 
-	// 푸터 설정
-	var footerLayout = [{
+	// 그리드 푸터 설정
+	let footerLayout = [{
 		positionField: "price",
 		dataField: "price",
 		formatString: "#,##0",
@@ -196,7 +194,7 @@
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid(columnLayout) {
 
-		var gridProps = {
+		let gridProps = {
 			showRowNumColumn: false,
 			showRowCheckColumn: false,
 			enableFilter: true,
@@ -221,23 +219,23 @@
 	function filterIconClickHandler(columnItem, values) {
 
 		// 아이콘의 전역 좌표 구하기
-		var offset = $(this).offset();
-		var posX = offset.left - $("#myFilterMenu").outerWidth() + 18;
-		var posY = offset.top + 26;
+		let offset = $(this).offset();
+		let posX = offset.left - $("#myFilterMenu").outerWidth() + 18;
+		let posY = offset.top + 26;
 
 		// 필터 아이콘이 price 인 경우
-		if (columnItem.dataField == "price") {
+		if (columnItem.dataField === "price") {
 
 			// 그리드에 있는 price 의 최소, 최대값 구하기
-			var minValue = Math.min.apply(this, values);
-			var maxValue = Math.max.apply(this, values);
+			let minValue = Math.min.apply(this, values);
+			let maxValue = Math.max.apply(this, values);
 
-			var start = $("#amount").val();
-			var end = $("#amount2").val();
+			let start = $("#amount").val();
+			let end = $("#amount2").val();
 
-			if (start == "")
+			if (start === "")
 				start = minValue;
-			if (end == "")
+			if (end === "")
 				end = maxValue;
 
 			// 최대, 최소값 슬리아더에 적용
@@ -254,7 +252,7 @@
 			$("#myFilterMenu2").hide();
 
 			// 필터 아이콘이 date 인 경우
-		} else if (columnItem.dataField == "date") {
+		} else if (columnItem.dataField === "date") {
 			$("#myFilterMenu").hide();
 			$("#myFilterMenu2").css({
 				left: posX,
@@ -272,14 +270,14 @@
 
 	// 가격 필터 실행
 	function applyPriceFilter() {
-		var start = $("#amount").val();
-		var end = $("#amount2").val();
+		let start = $("#amount").val();
+		let end = $("#amount2").val();
 
-		if (start == "" || isNaN(Number(start))) { // 시작값 없는 경우 
+		if (start === "" || isNaN(Number(start))) { // 시작값 없는 경우 
 			start = 0;
 		}
 
-		if (end == "" || isNaN(Number(end))) { // 종료값 없는 경우
+		if (end === "" || isNaN(Number(end))) { // 종료값 없는 경우
 			end = Number.MAX_VALUE;
 		}
 
@@ -288,7 +286,7 @@
 
 		// price 필드에 대해 사용자 필터링 실행
 		AUIGrid.setFilter(myGridID, "price", function (dataField, value, item) {
-			var val = Number(value);
+			let val = Number(value);
 			if (isNaN(val)) {
 				return false;
 			}
@@ -303,11 +301,11 @@
 
 	// 날짜 필터 실행
 	function applyDateFilter() {
-		var start = $("#datepicker").val();
-		var end = $("#datepicker2").val();
+		let start = $("#datepicker").val();
+		let end = $("#datepicker2").val();
 
-		var startTime = new Date(start).getTime();
-		var endTime = new Date(end).getTime();
+		let startTime = new Date(start).getTime();
+		let endTime = new Date(end).getTime();
 
 		if (isNaN(startTime)) { // 시작 날짜 없는 경우
 			startTime = 0;
@@ -323,7 +321,7 @@
 
 			// 날짜 형식이 서버에서 작성된 형태가 yyyy-mm-dd 였으므로 JS Date 가 사용할 수 있도록 형태를 바꿈
 			value = value.replace(/-/g, "/");
-			var valueTime = new Date(value).getTime();
+			let valueTime = new Date(value).getTime();
 			if (startTime <= valueTime && valueTime <= endTime) {
 				return true;
 			}
@@ -337,7 +335,7 @@
 		// dataField 에 맞는 필터링 해제
 		AUIGrid.clearFilter(myGridID, dataField);
 
-		if (dataField == "price") {
+		if (dataField === "price") {
 			$("#amount").val('');
 			$("#amount2").val('');
 		} else {
@@ -371,7 +369,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 
 	</div>
 </div>
@@ -406,6 +404,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

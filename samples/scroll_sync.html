@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.my-right-style {
 		text-align: right;
 	}
@@ -43,36 +41,34 @@
 		border-radius: 8px;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID, myGridID2;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
+	let myGridID2;
 
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
 
 		// AUIGrid 에 데이터 삽입합니다.
-		AUIGrid.setGridData(myGridID, createRandomData(100));
-		AUIGrid.setGridData(myGridID2, createRandomData(100));
-
-	};
+		AUIGrid.setGridData(myGridID, genRandomData(100));
+		AUIGrid.setGridData(myGridID2, genRandomData(100));
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
 
-		var columnLayout = [];
-
-		columnLayout[0] = { // 연도 칼럼 생성
+		// 칼럼 레이아웃 정의
+		const columnLayout = [{ // 연도 칼럼 생성
 			headerText: "연도",
 			dataField: "year",
 			postfix: "년",
 			width: 100
-		}
+		}];
 
-		for (var i = 1; i <= 12; i++) { // 1~12월 칼럼 생성
+		for (let i = 1; i <= 12; i++) { // 1~12월 칼럼 생성
 			columnLayout.push({
 				headerText: i + "월",
 				dataField: "col" + i,
@@ -85,7 +81,7 @@
 		}
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			editable: true,
 			enableFilter: true,
 			scrollHeight: 18, // 스크롤의 높이
@@ -93,63 +89,56 @@
 			fixedColumnCount: 1
 		};
 
-		//------------------------- 상단 그리드 ------------------------------------------------------
+		//------------------------- 상단 그리드 ----------------------
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
 		// H스크롤 체인지 핸들러.
 		AUIGrid.bind(myGridID, "hScrollChange", function (event) {
-			//console.log(event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition);
 			AUIGrid.setHScrollPositionByPx(myGridID2, event.position); // 수평 스크롤 이동 시킴..
 		});
 
 		// V스크롤 체인지 핸들러.
 		AUIGrid.bind(myGridID, "vScrollChange", function (event) {
-			//console.log(event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition);
 			AUIGrid.setRowPosition(myGridID2, event.position); // 수평 스크롤 이동 시킴..
 		});
 
-		//------------------------- 하단 그리드 ------------------------------------------------------
+		//------------------------- 하단 그리드 ------------------------
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridProps);
 
 		// H스크롤 체인지 핸들러.
 		AUIGrid.bind(myGridID2, "hScrollChange", function (event) {
-			//console.log(event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition);
 			AUIGrid.setHScrollPositionByPx(myGridID, event.position); // 수평 스크롤 이동 시킴...
 		});
 
 		// V스크롤 체인지 핸들러.
 		AUIGrid.bind(myGridID2, "vScrollChange", function (event) {
-			//console.log(event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition);
 			AUIGrid.setRowPosition(myGridID, event.position); // 수평 스크롤 이동 시킴..
 		});
+	}
 
-	};
+	// 주어진 개수만큼 랜덤 데이터 생성하여 반환
+	function genRandomData(count) {
+		const data = Array.from({ length: count }, (v, i) => {
+			const year = 2024 - i;
+			const row = {
+				id: `PK${i + 1}`,
+				year,
+			};
 
-	// 주어진 개수만큼 랜덤 데이터 생성하여 그리드에 삽입
-	function createRandomData(count) {
-		var data = [];
-		var row;
-		var maxYear = 2015;
-		for (var i = 1; i <= count; i++) {
-
-			row = {};
-			row.id = "PK" + i; // rowIdField 로 지정할 중복되지 않는 고유값(primary key)
-			row.year = 2015 - i;
-			for (var j = 1; j <= 12; j++) { // 1~12월 개별 데이터 생성
-				row["col" + j] = Math.round(Math.random() * 10000); // 모든 데이터를 랜덤 데이터로 생성
+			for (let j = 1; j <= 12; j++) {
+				row[`col${j}`] = Math.round(Math.random() * 10000);
 			}
-			data.push(row);
-		}
+
+			return row;
+		});
 
 		return data;
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -182,6 +171,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

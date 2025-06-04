@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-left {
 		text-align: left;
@@ -42,141 +40,131 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "일반 Input",
-		width: 140,
-		style: "aui-grid-user-custom-left",
-		renderer: {
-			type: "IconRenderer",
-			//iconWidth : 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-			//iconHeight : 20,
-			iconTableRef: { // icon 값 참조할 테이블 레퍼런스
-				"default": "./assets/office_man.png" // default
-			}
-		}
-	}, {
-		dataField: "country",
-		headerText: "드랍 리스트",
-		width: 140,
-		prefix: "./assets/",
-		renderer: {
-			type: "ImageRenderer",
-			imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
-			altField: "country", // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
-			imgTableRef: { // icon 값 참조할 테이블 레퍼런스
-				"Korea": "./assets/korea.png",
-				"USA": "./assets/usa.png",
-				"UK": "./assets/uk.png",
-				"Japan": "./assets/japan.png",
-				"France": "./assets/france.png",
-				"Italy": "./assets/italy.png",
-				"China": "./assets/china.png",
-				"Singapore": "./assets/singapore.png",
-				"Ireland": "./assets/ireland.png",
-				"Taiwan": "./assets/taiwan.png",
-				"default": "./assets/glider.png" //default
-			}
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			list: ["Korea", "USA", "UK", "Japan", "China", "France", "Italy", "Singapore", "Ireland", "Taiwan"]
-		}
-	}, {
-		dataField: "color",
-		headerText: "드랍 리스트",
-		width: 140,
-		renderer: {
-			type: "IconRenderer",
-			iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-			iconHeight: 20,
-			iconTableRef: { // icon 값 참조할 테이블 레퍼런스
-				"Blue": "./assets/blue_circle.png",
-				"Gray": "./assets/gray_circle.png",
-				"Green": "./assets/green_circle.png",
-				"Orange": "./assets/orange2_circle.png",
-				"Pink": "./assets/pink_circle.png",
-				"Violet": "./assets/violet_circle.png",
-				"Yellow": "./assets/yellow_circle.png",
-				"Red": "./assets/orange_circle.png",
-				"default": "./assets/glider.png" //default
-			}
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			list: ["Blue", "Gray", "Green", "Orange", "Pink", "Violet", "Yellow", "Red"]
-		}
-	}, {
-		dataField: "product",
-		headerText: "일반 Input",
-		width: 140
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric",
-		width: 120,
-		renderer: {
-			type: "NumberStepRenderer",
-			min: 0,
-			max: 30,
-			step: 1
-		}
-	}, {
-		dataField: "price",
-		headerText: "넘버 스텝",
-		style: "aui-grid-user-custom-right",
-		dataType: "numeric",
-		formatString: "#,##0",
-		width: 140,
-		editRenderer: {
-			type: "NumberStepRenderer",
-			min: 0,
-			max: 1000000,
-			step: 1000
-		},
-		dataType: "numeric"
-	}, {
-		dataField: "date",
-		headerText: "달력",
-		width: 140,
-		dataType: "date",
-		formatString: "yyyy년 mm월 dd일",
-		editRenderer: {
-			type: "CalendarRenderer"
-			//onlyMonthMode : true
-		}
+		requestGridData("./data/normal_100.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "일반 Input",
+			width: 140,
+			style: "aui-grid-user-custom-left",
+			renderer: {
+				type: "IconRenderer",
+				//iconWidth : 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+				//iconHeight : 20,
+				iconTableRef: { // icon 값 참조할 테이블 레퍼런스
+					"default": "./assets/office_man.png" // default
+				}
+			}
+		}, {
+			dataField: "country",
+			headerText: "드랍 리스트",
+			width: 140,
+			prefix: "./assets/",
+			renderer: {
+				type: "ImageRenderer",
+				imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
+				altField: "country", // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
+				imgTableRef: { // icon 값 참조할 테이블 레퍼런스
+					"Korea": "./assets/korea.png",
+					"USA": "./assets/usa.png",
+					"UK": "./assets/uk.png",
+					"Japan": "./assets/japan.png",
+					"France": "./assets/france.png",
+					"Italy": "./assets/italy.png",
+					"China": "./assets/china.png",
+					"Singapore": "./assets/singapore.png",
+					"Ireland": "./assets/ireland.png",
+					"Taiwan": "./assets/taiwan.png",
+					"default": "./assets/glider.png" //default
+				}
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				list: ["Korea", "USA", "UK", "Japan", "China", "France", "Italy", "Singapore", "Ireland", "Taiwan"]
+			}
+		}, {
+			dataField: "color",
+			headerText: "드랍 리스트",
+			width: 140,
+			renderer: {
+				type: "IconRenderer",
+				iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+				iconHeight: 20,
+				iconTableRef: { // icon 값 참조할 테이블 레퍼런스
+					"Blue": "./assets/blue_circle.png",
+					"Gray": "./assets/gray_circle.png",
+					"Green": "./assets/green_circle.png",
+					"Orange": "./assets/orange2_circle.png",
+					"Pink": "./assets/pink_circle.png",
+					"Violet": "./assets/violet_circle.png",
+					"Yellow": "./assets/yellow_circle.png",
+					"Red": "./assets/orange_circle.png",
+					"default": "./assets/glider.png" //default
+				}
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				list: ["Blue", "Gray", "Green", "Orange", "Pink", "Violet", "Yellow", "Red"]
+			}
+		}, {
+			dataField: "product",
+			headerText: "일반 Input",
+			width: 140
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric",
+			width: 120,
+			renderer: {
+				type: "NumberStepRenderer",
+				min: 0,
+				max: 30,
+				step: 1
+			}
+		}, {
+			dataField: "price",
+			headerText: "넘버 스텝",
+			style: "aui-grid-user-custom-right",
+			dataType: "numeric",
+			formatString: "#,##0",
+			width: 140,
+			editRenderer: {
+				type: "NumberStepRenderer",
+				min: 0,
+				max: 1000000,
+				step: 1000
+			},
+			dataType: "numeric"
+		}, {
+			dataField: "date",
+			headerText: "달력",
+			width: 140,
+			dataType: "date",
+			formatString: "yyyy년 mm월 dd일",
+			editRenderer: {
+				type: "CalendarRenderer"
+				//onlyMonthMode : true
+			}
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
-
 			enableSorting: false,
-
 			showStateColumn: true,
-
 			// 사용자가 추가한 새행은 softRemoveRowMode 적용 안함. 
 			// 즉, 바로 삭제함.
 			softRemovePolicy: "exceptNew"
@@ -186,27 +174,24 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
 		// 에디팅 시작 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditingHandler);
+		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+			const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginDesc").textContent = msg;
+		});
 
 		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler);
+		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+			const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
 
 		// 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditingHandler);
-
+		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+			const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
 	}
-
-	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditBegin") {
-			document.getElementById("editBeginDesc").innerText = "에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		} else if (event.type == "cellEditEnd") {
-			document.getElementById("editBeginEnd").innerText = "에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		} else if (event.type == "cellEditCancel") {
-			document.getElementById("editBeginEnd").innerText = "에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		}
-	};
 </script>
-
 </head>
 <body>
 
@@ -229,6 +214,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

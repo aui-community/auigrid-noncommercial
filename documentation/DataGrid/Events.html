@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
@@ -16,6 +16,8 @@
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <script src="../static/doc.js" type="text/javascript"></script>
+
+
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -23,7 +25,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.14 Documentation</span>
+<span id="title">AUIGrid 3.0.16 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -59,10 +61,9 @@
 <li>dataFields : 추가된 열들이 출력하고 있는 데이터의 KeyField들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "addColumn", function( event ) {
-     alert(event.type + " 이벤트\r\n" + "\r\n삽입된 열 개수 : " + event.dataFields.length);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "addColumn", function( event ) {
+     console.log(event.type + " 이벤트, 삽입된 열 개수 : " + event.dataFields.length);
+});</code></pre>
 </td>
 </tr>
 <tr id="addRow">
@@ -79,10 +80,9 @@ AUIGrid.bind(myGridID, "addColumn", function( event ) {
 <li>items : 추가된 행(Row) 아이템들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "addRow", function( event ) {
-     alert(event.type + " 이벤트\r\n" + "\r\n삽입된 행 개수 : " + event.items.length);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "addRow", function( event ) {
+     console.log(event.type + " 이벤트, 삽입된 행 개수 : " + event.items.length);
+});</code></pre>
 </td>
 </tr>
 <tr id="addRowFinish">
@@ -105,10 +105,9 @@ AUIGrid.bind(myGridID, "addRow", function( event ) {
 <li>items : 추가된 행(Row) 아이템들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "addRowFinish", function( event ) {
-     alert(event.type + " 이벤트\r\n" + "\r\n삽입된 행 개수 : " + event.items.length);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "addRowFinish", function( event ) {
+     console.log(event.type + " 이벤트, 삽입된 행 개수 : " + event.items.length);
+});</code></pre>
 </td>
 </tr>
 <tr id="addTreeColumn">
@@ -128,10 +127,9 @@ AUIGrid.bind(myGridID, "addRowFinish", function( event ) {
 <li>parentDataField : 추가된 열의 부모의 dataField</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "addTreeColumn", function( event ) {
-     alert(event.type + " 이벤트\r\n" + "\r\n삽입된 열 개수 : " + event.dataFields.length + "부모 dataField : " + event.parentDataField);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "addTreeColumn", function( event ) {
+     console.log(event.type + " 이벤트, 삽입된 열 개수 : " + event.dataFields.length + ", 부모 dataField : " + event.parentDataField);
+});</code></pre>
 </td>
 </tr>
 <tr id="beforeInsertRow">
@@ -150,21 +148,19 @@ AUIGrid.bind(myGridID, "addTreeColumn", function( event ) {
 <li>isClipboard : 붙여 넣기로 인해 새 행이 추가되었는지 여부(Boolean) (v3.0.4 지원)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "beforeInsertRow", function(event) {
-     var newRow = {};
-     var cols = event.columnInfoList;
-     var dataField;
-     for(var i=0,len=cols.length; i&lt;len; i++) {
-         dataField = cols[i]["dataField"];
-         if(dataField == "name") {
-              newRow[dataField] = "< New Task >";
-          } else {
-              newRow[dataField] = "";
-          }
-     }
-     return newRow;
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "beforeInsertRow", function(event) {
+    const newRow = {};
+    const cols = event.columnInfoList;
+    for(let i=0, len=cols.length; i&lt;len; i++) {
+        const dataField = cols[i]["dataField"];
+        if(dataField === "name") {
+            newRow[dataField] = "< New Task >";
+        } else {
+            newRow[dataField] = "";
+        }
+    }
+    return newRow;
+});</code></pre>
 <p> Retrun : (Object) 새 행(Row) 아이템의 초기값을 담는 Object 를 반환하면 적용시킵니다. 만약 반환하지 않으면 빈 행이 출력됩니다.</p>
 <p> 주의 : addRow(), addTreeRow() 로 행(Row)을 추가할 때는 발생하지 않습니다. 즉, 사용자의 키보드 인터페이스 (Insert, Ctrl + Insert) 에 의해서만 발생합니다.</p>
 </td>
@@ -184,11 +180,10 @@ AUIGrid.bind(myGridID, "beforeInsertRow", function(event) {
 <li>dataFields : 삭제될 열의 dataField 묶음 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "beforeRemoveColumn", function( event ) {
-     alert(event.type + " 이벤트 :  " + ", 삭제될 열 개수 : " + event.dataFields.length);
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "beforeRemoveColumn", function( event ) {
+     console.log(event.type + " 이벤트, 삭제될 열 개수 : " + event.dataFields.length);
      //return false; // 반환을 false 로 처리하면 삭제 실행을 취소함.
-});</pre>
+});</code></pre>
 <p>Return : (Boolean) false 를 반환하면 삭제 처리를 하지 않습니다. 따라서 실제 삭제 전 확인 단계를 거칠 수 있습니다.</p>
 </td>
 </tr>
@@ -207,11 +202,10 @@ AUIGrid.bind(myGridID, "beforeRemoveColumn", function( event ) {
 <li>items : 삭제될 행(Row) 아이템들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "beforeRemoveRow", function( event ) {
-     alert(event.type + " 이벤트 :  " + ", 삭제될 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "beforeRemoveRow", function( event ) {
+     console.log(event.type + " 이벤트,  삭제될 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
      //return false; // 반환을 false 로 처리하면 삭제 실행을 취소함.
-});</pre>
+});</code></pre>
 <p>Return : (Boolean) false 를 반환하면 삭제 처리를 하지 않습니다. 따라서 실제 삭제 전 확인 단계를 거칠 수 있습니다.</p>
 </td>
 </tr>
@@ -231,10 +225,9 @@ AUIGrid.bind(myGridID, "beforeRemoveRow", function( event ) {
 <li>items : 삭제될 행(Row) 아이템들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "beforeRemoveSoftRows", function( event ) {
-     alert(event.type + " 이벤트 :  " + ", 삭제될 행 개수 : " + event.items.length);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "beforeRemoveSoftRows", function( event ) {
+     console.log(event.type + " 이벤트, 삭제될 행 개수 : " + event.items.length);
+});</code></pre>
 <p>Return : (Boolean) false 를 반환하면 삭제 처리를 하지 않습니다. 따라서 실제 삭제 전 확인 단계를 거칠 수 있습니다.</p>
 </td>
 </tr>
@@ -261,10 +254,9 @@ AUIGrid.bind(myGridID, "beforeRemoveSoftRows", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "cellClick", function( event ) {
-      alert("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellClick", function( event ) {
+      console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+});</code></pre>
 </td>
 </tr>
 <tr id="cellDoubleClick">
@@ -289,10 +281,9 @@ AUIGrid.bind(myGridID, "cellClick", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) {
-      alert("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " dbl clicked");
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) {
+      console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " dbl clicked");
+});</code></pre>
 </td>
 </tr>
 <tr id="cellEditBegin">
@@ -318,11 +309,10 @@ AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) {
 <li>which : 편집 시작을 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "cellEditBegin", function( event ) {
-      alert("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditBegin");
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellEditBegin", function( event ) {
+      console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditBegin");
       // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
-});</pre>
+});</code></pre>
  <p>Return : (Boolean) false 를 반환하면 편집, 수정을 못하도록 막습니다.</p>
 </td>
 </tr>
@@ -347,10 +337,9 @@ AUIGrid.bind(myGridID, "cellEditBegin", function( event ) {
 <li>which : 편집 취소를 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "cellEditCancel", function( event ) {
-      alert("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditCancel");
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellEditCancel", function( event ) {
+      console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditCancel");
+});</code></pre>
 </td>
 </tr>
 <tr id="cellEditEnd">
@@ -377,10 +366,9 @@ AUIGrid.bind(myGridID, "cellEditCancel", function( event ) {
 <li>mergeEndIndex : 셀 병합된 셀 전체가 수정 적용되었을 때 병합 종료 인덱스(Number)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
-      alert("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditEnd");
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
+      console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditEnd");
+});</code></pre>
 </td>
 </tr>
 <tr id="cellEditEndBefore">
@@ -407,10 +395,9 @@ AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
 <li>which : 편집 완료를 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "cellEditEndBefore", function( event ) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellEditEndBefore", function( event ) {
       return removeComma(event.value); // 사용자가 입력한 값에 컴마가 있으면 제거 후 적용
-});</pre>
+});</code></pre>
 <p>Return : (String) 수정에 적용될 최종값. 이 핸들러의 반환값은 반드시 지정해야 합니다. 이 반환값이 곧 최종 수정값입니다.</p> 
 </td>
 </tr>
@@ -434,10 +421,9 @@ AUIGrid.bind(myGridID, "cellEditEndBefore", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "cellLongTap", function( event ) {
-      alert("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " longTapped");
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellLongTap", function( event ) {
+      console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " longTapped");
+});</code></pre>
 </td>
 </tr>
 <tr id="columnStateChange">
@@ -459,14 +445,13 @@ AUIGrid.bind(myGridID, "cellLongTap", function( event ) {
 <li>current : 사용자에 의해 변경된 새로운 값(현재 값) (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "columnStateChange", function(event) {
-      var str = "event type : " + event.type;
-      str += ", dataField : " + event.dataField;
-      str += ", prop : " + event.property;
-      str += ", old : " + event.old + ", current : " + event.current;
-      alert(str);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "columnStateChange", function(event) {
+     let str = "event type : " + event.type;
+     str += ", dataField : " + event.dataField;
+     str += ", prop : " + event.property;
+     str += ", old : " + event.old + ", current : " + event.current;
+     console.log(str);
+});</code></pre>
 </td>
 </tr>
 <tr id="contextMenu">
@@ -491,10 +476,9 @@ AUIGrid.bind(myGridID, "columnStateChange", function(event) {
 <li>pageY : 컨텍스트 활성화 된 지점의 전역 좌표 Y 값 (Number) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "contextMenu", function( event ) {
-     alert(  "이벤트명: " + event.type + ", 컨텍스트 활성화 된 곳 : " + event.target );
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "contextMenu", function( event ) {
+    console.log("이벤트명: " + event.type + ", 컨텍스트 활성화 된 곳 : " + event.target);
+});</code></pre>
 <p>Return : (Boolean or Array) false 를 반환하면 기본 행위인 기본 컨텍스트를 출력시키지 않습니다. 바디(body) 에서 발생했을 경우 사용자 정의 컨텍스트 메뉴를 Array 로 구성하여 반환하면 동적 컨텍스트 메뉴를 구성합니다.</p>
 <p><a href="../../samples/context_user_dynamic.html?cur2&theme=default&s=3550" target="_blank">관련 데모 보기</a></p>
 </td>
@@ -514,17 +498,16 @@ AUIGrid.bind(myGridID, "contextMenu", function( event ) {
 <li>data : 클립보드에 복사할 값 (String) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "copyBegin", function(event) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "copyBegin", function(event) {
      console.log("복사 시작!!");
      console.log(event.data);
-     var rows = event.data.split("\r\n"); // 캐리지리턴으로 행 구분
+     const rows = event.data.split("\r\n"); // 캐리지리턴으로 행 구분
      console.log(rows);
 
      // 클립보드에 복사하는 값은 2행으로 구성된 1행-"a,b,c" 2행-"1,2,3" 임
      // 클립보드는 TSV 데이터로 작성합니다.
      return "a\tb\tc\r\n1\t2\t3"; // 반환되는 값이 곧 클립보드로 복사됨.
-});</pre>
+});</code></pre>
 <p> Retrun : (Boolean or String) 만약 false 를 반환하면 기본 행위인 복사를 하지 않습니다. 또한 TSV 데이터로 행구분은 캐리지리턴(\r\n)으로 구성된 스트링을 반환하면 해당 값을 클립보드에 적용시킵니다.</p>
 </td>
 </tr>
@@ -558,12 +541,11 @@ AUIGrid.bind(myGridID, "copyBegin", function(event) {
 <li>items : 드래깅 되는 행(Row) 아이템들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "dragBegin", function( event ) {
-   if(event.rowIndex == 0) {   
-          return false; // 0번째 행은 드래깅 막음
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "dragBegin", function( event ) {
+   if(event.rowIndex === 0) {   
+       return false; // 0번째 행은 드래깅 막음
    }
-});</pre>
+});</code></pre>
 <p> Retrun : (Boolean or String) 만약 false 를 반환하면 기본 행위인 행(Row) 드래깅을 하지 않습니다.  그리고 String 을 반환하면 해당 String 이 드래깅 텍스트로 출력됩니다.</p>
 </td>
 </tr>
@@ -585,10 +567,9 @@ AUIGrid.bind(myGridID, "dragBegin", function( event ) {
  <li>items : 드래깅되고 있으며 드랍될 행(Row) 아이템들 (Array)</li>
  </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "dropCancel", function(event ) {
-   alert(event.pidToDrop + " 그리드에 " + event.items.length + " 행(들)을 드랍하는데 실패하였습니다.");
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "dropCancel", function(event ) {
+   console.log(event.pidToDrop + " 그리드에 " + event.items.length + " 행(들)을 드랍하는데 실패하였습니다.");
+});</code></pre>
 </td>
 </tr>
 <tr id="dropEnd">
@@ -610,10 +591,9 @@ AUIGrid.bind(myGridID, "dropCancel", function(event ) {
  <li>items : 드래깅되고 있으며 드랍될 행(Row) 아이템들 (Array)</li>
  </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "dropEnd", function(event ) {
-   alert(event.pidToDrop + " 그리드에 " + event.items.length + " 행(들)을 드랍 완료하였습니다.");
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "dropEnd", function(event ) {
+   console.log(event.pidToDrop + " 그리드에 " + event.items.length + " 행(들)을 드랍 완료하였습니다.");
+});</code></pre>
 </td>
 </tr>
 <tr id="dropEndBefore">
@@ -637,16 +617,14 @@ AUIGrid.bind(myGridID, "dropEnd", function(event ) {
  <li>isMoveMode : 드랍 액션이 이동인지 복사인지 결정지을 속성 (Boolean)</li>
  </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "dropEndBefore", function( event ) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "dropEndBefore", function( event ) {
    // 이벤트의 isMoveMode 속성을 false 설정하면 행(Row) 복사를 합니다.
    event.isMoveMode = false;
    if(confirm("드랍하시겠습니까?")) {
-         return true;
-   } else {
-         return false; // 기본 행위 안함.
+       return true;
    }
-});</pre>
+   return false; // 기본 행위 안함.
+});</code></pre>
 <p> Retrun : (Boolean) 만약 false 를 반환하면 기본 행위인 행(Row) 드랍을 하지 않습니다.</p>
 </td>
 </tr>
@@ -666,12 +644,11 @@ AUIGrid.bind(myGridID, "dropEndBefore", function( event ) {
 <p>만약 필터링이 name 필드 "Anna", "Lawrence" 만 출력하게 설정되었다면 다음과 같은 filterCache 정보를 담고 있습니다.</p>
 <p>{ "name" : [ "Anna", "Lawrence" ] }</p>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "filtering", function( event ) {
-     for(var n in event.filterCache) {
-           console.log( event.filterCache[n] );
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "filtering", function( event ) {
+     for(let n in event.filterCache) {
+         console.log( event.filterCache[n] );
      }
-});</pre>
+});</code></pre>
 </td>
 </tr>
 <tr id="footerClick">
@@ -693,10 +670,9 @@ AUIGrid.bind(myGridID, "filtering", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "footerClick", function( event ) {
-     alert(event.type + " : " + event.footerIndex + " text : " + event.footerText);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "footerClick", function( event ) {
+    console.log(event.type + " : " + event.footerIndex + " text : " + event.footerText);
+});</code></pre>
 </td>
 </tr>
 <tr id="footerDoubleClick">
@@ -718,10 +694,9 @@ AUIGrid.bind(myGridID, "footerClick", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "footerDoubleClick", function( event ) {
-     alert(event.type + " : " + event.footerIndex + " text : " + event.footerText);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "footerDoubleClick", function( event ) {
+    console.log(event.type + " : " + event.footerIndex + " text : " + event.footerText);
+});</code></pre>
 </td>
 </tr>
 <tr id="grouping">
@@ -739,10 +714,9 @@ AUIGrid.bind(myGridID, "footerDoubleClick", function( event ) {
 <li>groupingSummary : 그룹핑 썸머리를 설정한 경우 적용되는 썸머리 객체 (Object)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "grouping", function( event ) {
-     console.log(  "이벤트명: " + event.type + ", 현재 그룹핑 필드들 : " + event.groupingFields.join(", ") );
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "grouping", function( event ) {
+     console.log("이벤트명: " + event.type + ", 현재 그룹핑 필드들 : " + event.groupingFields.join(", ") );
+});</code></pre>
 </td>
 </tr>
 <tr id="headerClick">
@@ -766,13 +740,12 @@ AUIGrid.bind(myGridID, "grouping", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "headerClick", function( event ) {
-     alert(event.type + " : " + event.headerText + ", dataField : " + event.dataField + ", index : " + event.columnIndex + ", depth : " + event.item.depth);
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "headerClick", function( event ) {
+     console.log(event.type + " : " + event.headerText + ", dataField : " + event.dataField + ", index : " + event.columnIndex + ", depth : " + event.item.depth);
      // 이벤트 핸들링 함수에서 false 를 반환하면 기본 행위를 하지 않음.
      // headerClick 의 기본 행위는 정렬임.
      // return false; // 정렬 실행 안함. 
-});</pre>
+});</code></pre>
 <p>Return : (Boolean) false 를 반환하면 기본 행위인 정렬을 실행하지 않습니다.</p>
 </td>
 </tr>
@@ -793,10 +766,9 @@ AUIGrid.bind(myGridID, "headerClick", function( event ) {
 <li>maxPosition : 수직 스크롤의 최소 위치 (Number)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "hScrollChange", function( event ) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "hScrollChange", function( event ) {
      console.log( event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition + ")" );
-});</pre>
+});</code></pre>
 <p>주의 : 이 이벤트 핸들러에서 무리한 작업을 하면 그리드 스크롤링 시 성능이 저하됩니다.</p>
 </td>
 </tr>
@@ -814,10 +786,9 @@ AUIGrid.bind(myGridID, "hScrollChange", function( event ) {
 <li>items : 실제로 행 깊이(depth) 적용된 행(Row) 아이템들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "indent", function( event ) {
-     console.log(event.type + " 이벤트\r\n" + "\r\n적용된 행 개수 : " + event.items.length);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "indent", function( event ) {
+     console.log(event.type + " 이벤트, 적용된 행 개수 : " + event.items.length);
+});</code></pre>
 </td>
 </tr>
 <tr id="keyDown">
@@ -838,14 +809,13 @@ AUIGrid.bind(myGridID, "indent", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "keyDown", function(event) {
-     if(event.keyCode == 13) { // 엔터 키
-           alert("엔터 키 누름");
-           return false; // 선택 아래로 내리지 않음(즉, 기본행위 안함)
-     }
-     return true;
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "keyDown", function(event) {
+    if(event.keyCode === 13) { // 엔터 키
+         console.log("엔터 키 누름");
+         return false; // 선택 아래로 내리지 않음(즉, 기본행위 안함)
+    }
+    return true;
+});</code></pre>
 <p> Retrun : (Boolean) 만약 false 를 반환하면 그리드에 미리 지정된 행위를 하지 않습니다.</p>
 <p> 참고 : 그리드에 기본 단축키를 변경하거나 새로운 단축키를 추가할 수 있는 이벤트입니다.</p>
 </td>
@@ -865,10 +835,9 @@ AUIGrid.bind(myGridID, "keyDown", function(event) {
 <li>wrapFound : wrapSearch 를 한 경우 한 바퀴 돌아 같은 행(Row)을 찾은 경우. 즉, 문자열에 해당되는 행이 단 1개 인 경우 true임</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "notFound", function( event ) {
-     alert('다음 문자열을 찾을 수 없습니다 - "' + event.term + '"');
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "notFound", function( event ) {
+    console.log('다음 문자열을 찾을 수 없습니다 - "' + event.term + '"');
+});</code></pre>
 </td>
 </tr>
 <tr id="outdent">
@@ -885,10 +854,9 @@ AUIGrid.bind(myGridID, "notFound", function( event ) {
 <li>items : 실제로 행 깊이(depth) 적용된 행(Row) 아이템들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "outdent", function( event ) {
-     console.log(event.type + " 이벤트\r\n" + "\r\n적용된 행 개수 : " + event.items.length);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "outdent", function( event ) {
+     console.log(event.type + " 이벤트, 적용된 행 개수 : " + event.items.length);
+});</code></pre>
 </td>
 </tr>
 <tr id="pageChange">
@@ -907,10 +875,9 @@ AUIGrid.bind(myGridID, "outdent", function( event ) {
 <li>totalPageCount : 전체 페이지 수</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
- AUIGrid.bind(myGridID, "pageChange", function(event) {
-    alert("eventType : " + event.type + "\r\ncurrentPage : " + event.currentPage + ", oldPage : " + event.oldPage);
- });</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "pageChange", function(event) {
+    console.log("eventType : " + event.type + ", currentPage : " + event.currentPage + ", oldPage : " + event.oldPage);
+ });</code></pre>
 </td>
 </tr>
 <tr id="pageRowCountChange">
@@ -929,10 +896,9 @@ AUIGrid.bind(myGridID, "outdent", function( event ) {
  <li>totalPageCount : 전체 페이지 개수</li>
  </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "pageRowCountChange", function(event ) {
-   alert("페이지 행 개수 변경 이벤트 : " + event.oldRowCount + " → "  + event.rowCount + ", 전체 페이지 수 : " + event.totalPageCount);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "pageRowCountChange", function(event ) {
+   console.log("페이지 행 개수 변경 이벤트 : " + event.oldRowCount + " → "  + event.rowCount + ", 전체 페이지 수 : " + event.totalPageCount);
+});</code></pre>
 </td>
 </tr>
 <tr id="pasteBegin">
@@ -950,16 +916,14 @@ AUIGrid.bind(myGridID, "pageRowCountChange", function(event ) {
 <li>clipboardData : 클립보드에 저장된 값(String) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "pasteBegin", function(event) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "pasteBegin", function(event) {
      console.log("붙여 넣기 시작!!");
      console.log(event.clipboardData);
      // return false; // 붙여 넣기 안함(취소 시킴)
-
      // event.clipboardData 를 사용자가 파싱하여 2중 배열로 반환하면 해당 값을 그리드의 붙여넣기로 적용
      // 다음처럼 반환하면 4개의 셀에 대하여 1행에 각각 "a1", "a2" 그리고 2행에 "b1", "b2" 가 적용됩니다. 
      // return [["a1", "a2"], ["b1", "b2"]];
-});</pre>
+});</code></pre>
 <p> Retrun : (Boolean or Array) 만약 false 를 반환하면 기본 행위인 붙여 넣기를 하지 않습니다. 또한 Array 을 반환하면 그 반환값을 그리드에 붙여 넣기 적용시킵니다.</p>
 </td>
 </tr>
@@ -977,11 +941,10 @@ AUIGrid.bind(myGridID, "pasteBegin", function(event) {
 <li>clipboardData : 그리드에 붙여 넣기 된 데이터 (Array) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "pasteEnd", function(event) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "pasteEnd", function(event) {
      AUIGrid.setSelectionByIndex(0, 0); // 0, 0 으로 선택자 이동시킴.
      console.log("붙여 넣기 완료!!");
-});</pre>
+});</code></pre>
 </td>
 </tr>
 <tr id="ready">
@@ -998,10 +961,9 @@ AUIGrid.bind(myGridID, "pasteEnd", function(event) {
 <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "ready", function(event) {
-    alert(event.type);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "ready", function(event) {
+    console.log(event.type);
+});</code></pre>
 </td>
 </tr>
 <tr id="removeColumn">
@@ -1018,10 +980,9 @@ AUIGrid.bind(myGridID, "ready", function(event) {
 <li>dataFields : 삭제된 열의 dataField 묶음 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "removeColumn", function( event ) {
-     alert(event.type + " 이벤트 :  " + ", 삭제된 열 개수 : " + event.dataFields.length);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "removeColumn", function( event ) {
+     console.log(event.type + " 이벤트, 삭제된 열 개수 : " + event.dataFields.length);
+});</code></pre>
 </td>
 </tr>
 <tr id="removeRow">
@@ -1039,10 +1000,9 @@ AUIGrid.bind(myGridID, "removeColumn", function( event ) {
 <li>items : 삭제된 행(Row) 아이템들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "removeRow", function( event ) {
-     alert(event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "removeRow", function( event ) {
+     console.log(event.type + " 이벤트, 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
+});</code></pre>
 </td>
 </tr>
 <tr id="removeSoftRows">
@@ -1061,10 +1021,9 @@ AUIGrid.bind(myGridID, "removeRow", function( event ) {
 <li>items : 삭제된 행(Row) 아이템들 (Array)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "removeSoftRows", function( event ) {
-     alert(event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "removeSoftRows", function( event ) {
+     console.log(event.type + " 이벤트, 삭제된 행 개수 : " + event.items.length);
+});</code></pre>
 </td>
 </tr>
 <tr id="rowAllCheckClick">
@@ -1076,10 +1035,9 @@ AUIGrid.bind(myGridID, "removeSoftRows", function( event ) {
 <p><strong>[deprecated Ver 2.8]</strong> 이 이벤트는 event 객체가 아닌 checked 값 파라메터로 갖습니다. rowAllChkClick 이벤트를 사용하십시오.</p>
 <p>엑스트라 체크박스 열(Column)에 있는 전체 선택 체크박스 클릭 시 발생합니다.</p>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "rowAllCheckClick", function( checked ) {
-     alert("전체 선택  checked : " + checked);
-}</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowAllCheckClick", function( checked ) {
+     console.log("전체 선택  checked : " + checked);
+}</code></pre>
 </td>
 </tr>
 <tr id="rowAllChkClick">
@@ -1097,10 +1055,9 @@ AUIGrid.bind(myGridID, "rowAllCheckClick", function( checked ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
-     alert("전체 선택  checked : " + event.checked);
-}</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
+     console.log("전체 선택 checked : " + event.checked);
+}</code></pre>
 </td>
 </tr>
 <tr id="rowCheckClick">
@@ -1122,17 +1079,14 @@ AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
-      var item = event.item;
-      var rowIndex = event.rowIndex;
-      varchecked = event.checked;
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
+      const {item, rowIndex, checked} = event;
       if(item._$groupParentValue && item._$isBranch) { // 그룹핑하여 계층형으로 출력된 경우
-          alert("rowIndex : " + rowIndex + ", group : " + item._$groupParentValue + ", isBranch : " + item._$isBranch + ", checked : " + checked);
+          console.log("rowIndex : " + rowIndex + ", group : " + item._$groupParentValue + ", isBranch : " + item._$isBranch + ", checked : " + checked);
       } else { // 일반 그리드 모드
-          alert("rowIndex : " + rowIndex + ", id : " + item.id + ", name : " + item.name + ", checked : " + checked);
+          console.log("rowIndex : " + rowIndex + ", id : " + item.id + ", name : " + item.name + ", checked : " + checked);
       }
-});</pre>
+});</code></pre>
 </td>
 </tr>
 <tr id="rowNumCellClick">
@@ -1151,12 +1105,11 @@ AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
- AUIGrid.bind(myGridID, "rowNumCellClick", function(event) {
-    alert("eventType : " + event.type + "\r\nrowNum : " + event.rowNum + ", rowIndex : " + event.rowIndex);
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowNumCellClick", function(event) {
+    console.log("eventType : " + event.type + ", rowNum : " + event.rowNum + ", rowIndex : " + event.rowIndex);
     // false 반환하면 기본 행위 안함
     return false;
- });</pre>
+ });</code></pre>
 <p> Retrun : (Boolean) 만약 false 를 반환하면 기본 행위인 행(또는 셀) 선택을 하지 않습니다.</p>
 </td>
 </tr>
@@ -1174,10 +1127,9 @@ AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
- AUIGrid.bind(myGridID, "rowNumHeaderClick", function(event) {
-    alert("eventType : " + event.type);
- });</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowNumHeaderClick", function(event) {
+    console.log("eventType : " + event.type);
+ });</code></pre>
 </td>
 </tr>
 <tr id="rowStateCellClick">
@@ -1210,15 +1162,14 @@ AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
   </ul></li>
  </ul>
  <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
- <pre>
- AUIGrid.bind(myGridID, "rowStateCellClick", function( event ) {
-        if(event.marker == "edited") { // 현재 수정된 상태를 클릭 한 경우
-            if("수정 취소 즉, 원래 값으로 복구 하시겠습니까?") {
-                return true;
-             } 
-             return false;
+ <pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowStateCellClick", function( event ) {
+     if(event.marker === "edited") { // 현재 수정된 상태를 클릭 한 경우
+         if(confirm("수정 취소 즉, 원래 값으로 복구 하시겠습니까?")) {
+             return true;
          }
-  });</pre>
+         return false;
+     }
+  });</code></pre>
  <p>Return : (Boolean) false 를 반환하면 복구 행위를 하지 않습니다.</p>
  </td>
 </tr>
@@ -1249,13 +1200,11 @@ AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
 <li>item : 선택 행 아이템들을 갖는 Object</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "selectionChange", function( event ) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "selectionChange", function( event ) {
     // 다수의 선택 셀 중 기본이 되는 주요 셀 정보
-    var primeCell = event.primeCell; // 선택된 대표 셀
-    
+    const primeCell = event.primeCell; // 선택된 대표 셀
     console.log("현재 셀 : ( " + primeCell.rowIndex + ", " + primeCell.headerText + " ), 값 : " + primeCell.value);
-});</pre>
+});</code></pre>
 <p>Also See : <a href="./Properties.html#simplifySelectionEvent">simplifySelectionEvent</a>
 </td>
 </tr>
@@ -1274,18 +1223,17 @@ AUIGrid.bind(myGridID, "selectionChange", function( event ) {
  <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
  <li>rowIndex : 현재 셀렉션의 행(Row) 인덱스</li>
  <li>columnIndex : 현재 셀렉션의 열(Column) 인덱스</li>
- <li>toRowIndex : 사용자가 변경 시킬 열(Column) 인덱스</li>
+ <li>toRowIndex : 사용자가 변경 시킬 행(Row) 인덱스</li>
  <li>toColumnIndex : 사용자가 변경 시킬 열(Column) 인덱스</li>
  <li>dataField : toColumnIndex 에 해당되는 데이터의 KeyField</li>
  <li>stopPropagation : confirm과 같이 Modal 을 띄워서 확인 하는 경우 event 의 stopPropagation 요소에 true 를 설정하여 진행을 막음. </li>
  </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "selectionConstraint", function(event) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "selectionConstraint", function(event) {
     if(event.toRowIndex < 5) {
         return false; // 5행까지 셀렉션 변경을 하지 않음
     }
-});</pre>
+});</code></pre>
  <p>Return : (Boolean) false 를 반환하면 사용자의 셀렉션 변경을 막습니다.</p>
 </td>
 </tr>
@@ -1303,12 +1251,11 @@ AUIGrid.bind(myGridID, "selectionConstraint", function(event) {
 <li>sortingFields : 현재 정렬된 필드 및 정렬 방법들 (Array)</li>
 </ul>
 <p>만약 정렬을 "Name 오름차순, County 내림차순" 설정한 경우 다음과 같은 sortingFields 정보를 담고 있습니다.</p>
-<p>[ {dataField : "name", sortType : 1}, {dataField : "country", sortType : -1}]</p>
+<p>[{dataField : "name", sortType : 1}, {dataField : "country", sortType : -1}]</p>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "sorting", function( event ) {
-     console.log(  "이벤트명: " + event.type + ", 현재 소팅 필드 개수 : " + event.sortingFields.length );
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "sorting", function( event ) {
+     console.log("이벤트명: " + event.type + ", 현재 소팅 필드 개수 : " + event.sortingFields.length );
+});</code></pre>
 </td>
 </tr>
 <tr id="treeLazyRequest">
@@ -1328,10 +1275,8 @@ AUIGrid.bind(myGridID, "sorting", function( event ) {
 <li>response : 응답으로 설정할 함수(Function)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-// 트리그리드 lazyLoading 요청 이벤트 핸들러 
-AUIGrid.bind(myGridID, "treeLazyRequest", function(event) {
- var item = event.item;
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "treeLazyRequest", function(event) {
+ const item = event.item;
  // 자식 데이터 요청
  $.ajax({
   url: "./data/get_my_children.do?pid=" + item.id + "&name=" + item.name,
@@ -1340,7 +1285,7 @@ AUIGrid.bind(myGridID, "treeLazyRequest", function(event) {
    event.response(data);
   }
  }); // end of ajax
-});</pre>
+});</code></pre>
 <p><a href="../../samples/treeData_lazy_loading.html?trn_lz&s=3550" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
@@ -1361,10 +1306,9 @@ AUIGrid.bind(myGridID, "treeLazyRequest", function(event) {
 <li>item : 열기/닫기의 대상이 된 브랜치(branch) 행(Row) 아이템 객체 (Object)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "treeOpenChange", function( event ) {
-     alert(event.type + " : " + event.isOpen + ", rowIndex : " + event.rowIndex);
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "treeOpenChange", function( event ) {
+     console.log(event.type + " : " + event.isOpen + ", rowIndex : " + event.rowIndex);
+});</code></pre>
 <p>이 이벤트는 사용자에 의해 열기/닫기 아이콘을 클릭 한 경우만 발생합니다.</p>
 </td>
 </tr>
@@ -1391,14 +1335,13 @@ AUIGrid.bind(myGridID, "treeOpenChange", function( event ) {
  <li>undoable : 실행 취소(undo) 가능 여부</li>
  </ul>
  <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
- <pre>
-  AUIGrid.bind(myGridID, "undoRedoChange", function( event ) {
+ <pre><code class="language-javascript">AUIGrid.bind(myGridID, "undoRedoChange", function( event ) {
         // Undo, Redo 버턴 가능한지 버턴 업데이트 
         if(event.undoable) $("#undoBtn).removeClass("disabled"); // Undo버턴 비활성화 제거
         else $("#undoBtn).addClass("disabled"); // Undo 버턴 비활성화
         if(event.redoable) $("#redoBtn).removeClass("disabled");
         else $("#redoBtn).addClass("disabled");
-  });</pre>
+  });</code></pre>
  </td>
 </tr>
 <tr id="updateRow">
@@ -1420,10 +1363,9 @@ AUIGrid.bind(myGridID, "treeOpenChange", function( event ) {
 <li>dataFields : 행(Row) 아이템에서 수정된 열(Column)이 출력되고 있는 데이터의 KeyField들(배열)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "updateRow", function( event ) {
-      alert("rowIndex : " + event.rowIndex + ", columnIndexes : " + event.columnIndexes + " updateRow");
-});</pre>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "updateRow", function( event ) {
+      console.log("rowIndex : " + event.rowIndex + ", columnIndexes : " + event.columnIndexes + " updateRow");
+});</code></pre>
 </td>
 </tr>
 <tr id="updateRows">
@@ -1440,10 +1382,9 @@ AUIGrid.bind(myGridID, "updateRow", function( event ) {
 <li>items : 변경된 행(Row) 아이템 객체 (Array-Object)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "updateRows", function( event ) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "updateRows", function( event ) {
       console.log( "items : " + JSON.stringify(event.items) );
-});</pre>
+});</code></pre>
 </td>
 </tr>
 <tr id="vScrollChange">
@@ -1464,10 +1405,9 @@ AUIGrid.bind(myGridID, "updateRows", function( event ) {
 <li>maxPosition : 수직 스크롤의 최소 위치 (Number)</li>
 </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre>
-AUIGrid.bind(myGridID, "vScrollChange", function( event ) {
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "vScrollChange", function( event ) {
      console.log( event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition + ")" );
-});</pre>
+});</code></pre>
 <p>주의 : 이 이벤트 핸들러에서 무리한 작업을 하면 그리드 스크롤링 시 성능이 저하됩니다.</p>
 </td>
 </tr>

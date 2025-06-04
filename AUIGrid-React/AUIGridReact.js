@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.js for React.js v1.5.20250221
- * Based on AUIGrid v3.0.15.11
+ * AUIGridReact.js for React.js v1.5.20250604
+ * Based on AUIGrid v3.0.16.0
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */

@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
@@ -16,6 +16,8 @@
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <script src="../static/doc.js" type="text/javascript"></script>
+
+
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -23,7 +25,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.14 Documentation</span>
+<span id="title">AUIGrid 3.0.16 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -40,8 +42,8 @@
 <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 <p></p>
 <a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
-<div class="mxmlSyntax" id="mxmlSyntax"><pre>
-var columnLayout = [ {
+<div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">
+const columnLayout = [{
      dataField : "name",
      headerText : "Name",
      width : 140
@@ -56,7 +58,7 @@ var columnLayout = [ {
             offset : 40
       }
 }];
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -72,7 +74,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number<br>
 <p>바 게이지 축의 최대값을 지정합니다.</p>
- 기본값(default) : <code>100</code>.</td>
+기본값(default) : <code>100</code></td>
 </tr>
 <tr id="min">
 <td class="summaryTableSignatureCol">
@@ -81,7 +83,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number<br>
 <p>바 게이지의 최소값을 지정합니다.</p>
- 기본값(default) : <code>0</code>.</td>
+기본값(default) : <code>0</code></td>
 </tr>
 <tr id="offset">
 <td class="summaryTableSignatureCol">
@@ -93,7 +95,7 @@ var columnLayout = [ {
 <p>기본적으로 칼럼 전체의 text-align 스타일을 따릅니다. 그러나 min, max 가 -100 ~ 100 사이 인 경우(즉, 0이라는 기준점이 있는 경우)
 게이지의 시작은 0 에서 음수와 양수 범위로 나뉘어 출력되고, 텍스트는 가운데 출력이 됩니다.</p>
 <p> 이 때 텍스트의 좌우 여백을 지정하여 좀 더 자연스러운 텍스트를 출력할 수 있습니다.</p>
- 기본값(default) : <code>0</code>.</td>
+기본값(default) : <code>0</code></td>
 </tr>
 <tr id="showLabel">
 <td class="summaryTableSignatureCol">
@@ -102,7 +104,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean<br>
 <p>바 게이지의 텍스트 출력 여부를 지정합니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 <tr id="style">
 <td class="summaryTableSignatureCol">
@@ -112,7 +114,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
 <p>바 게이지의 스타일을 지정합니다.</p>
 <p>스타일은 CSS 에서 미리 선언된 CSS 클래스 선언자여야 합니다.</p>
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 </table>
 </div>

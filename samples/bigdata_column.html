@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,45 +28,45 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.right_style {
 		text-align: right;
 	}
 </style>
-<script type="text/javascript">
+<script>
+	// AUIGrid 생성 후 반환 ID
+	let myGridID;
 
-	var myGridID;
+	let gridData = [];
 
-	var gridData = [];
-
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-	};
-
-	// 칼럼 레이아웃
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140
-	}];
-
-	// 칼럼 99개 생성
-	for (var i = 1, len = 100; i < len; i++) {
-		columnLayout.push({
-			dataField: "field" + i,
-			headerText: "Field" + i,
-			width: 100
-		});
 	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
 
+		// 칼럼 레이아웃
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140
+		}];
+
+		// 칼럼 99개 생성
+		for (let i = 1, len = 100; i < len; i++) {
+			columnLayout.push({
+				dataField: "field" + i,
+				headerText: "Field" + i,
+				width: 100
+			});
+		}
+
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			rowNumColumnWidth: 70,
 			// row 를 구별짓는 유니크한 값을 갖는 필드 설정 (10만 행 이상의 대용량인 경우 반드시 설정을 권함 )
 			rowIdField: "id",
@@ -78,39 +75,36 @@
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+		// 빈 데이터 삽입
 		AUIGrid.setGridData(myGridID, []);
 	}
 
 	// count 수만큼 랜덤 데이터 생성
 	function createRandomData(count) {
-		if (!window.confirm(count + '건 수의 데이터 생성을 시작하시겠습니까?')) {
-			return;
-		}
+		if (!window.confirm(`${count}건 수의 데이터 생성을 시작하시겠습니까?`)) return;
+
 		console.time('데이터 생성 걸리는 시간');
 
-		var now = new Date();
-		var data = [];
-		var country, product, quantity, color, name, date, price;
-
-		for (var i = 0; i < count; i++) {
-			item = {};
-			item.id = i;
-			for (var j = 1; j < 100; j++) {
-				item["field" + j] = Math.floor(Math.random() * 1000000);
+		const startTime = Date.now();
+		const data = Array.from({ length: count }, (v, i) => {
+			const item = { id: i };
+			for (let j = 1; j < 100; j++) {
+				item[`field${j}`] = Math.floor(Math.random() * 1000000);
 			}
-			data.push(item);
-		}
+			return item;
+		});
 
-		var endDate = new Date();
-		var dataTime = endDate.getTime() - now.getTime();
+		const duration = Date.now() - startTime;
 
+		// 생성된 데이터 보관
 		gridData = data;
 
-		var txt = count + "개 생성 소요 시간 : " + dataTime + " ms";
-		document.getElementById("ellapse").innerText = txt;
+		const message = `${count}개 생성 소요 시간 : ${duration} ms`;
+		document.getElementById("elapse").textContent = message;
 		console.timeEnd('데이터 생성 걸리는 시간');
-		alert(txt + " 데이터 생성 완료! \r\n이제 그리드에 해당 데이터 삽입(주황 버튼 클릭)하여 확인하십시오.");
-	};
+		alert(`${message} 데이터 생성 완료!\n이제 그리드에 해당 데이터 삽입(주황 버튼 클릭)하여 확인하십시오.`);
+	}
 
 	function setData() {
 		if (gridData.length <= 0) {
@@ -118,9 +112,8 @@
 			return;
 		}
 		AUIGrid.setGridData("#grid_wrap", gridData);
-	};
+	}
 </script>
-
 </head>
 <body>
 
@@ -144,7 +137,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 
 	</div>
 </div>
@@ -153,6 +146,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

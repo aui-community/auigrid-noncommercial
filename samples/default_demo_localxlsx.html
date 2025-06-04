@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,93 +29,69 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<!-- jQuery -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
 <!-- SheetJS js-xlsx, https://github.com/SheetJS/js-xlsx-->
 <!-- Apache License v2.0  (https://www.apache.org/licenses/LICENSE-2.0) -->
 <script type="text/javascript" src="./js-xlsx/xlsx.full.min.js"></script>
 
-<script type="text/javascript">
+<style>
+	.custom-file-upload {
+		display: inline-block;
+		padding: 10px 20px;
+		cursor: pointer;
+		background-color: #374151;
+		color: white;
+		font-size: 14px;
+		font-family: 'Segoe UI', sans-serif;
+		border: none;
+		border-radius: 4px;
+		transition: background-color 0.3s ease;
+	}
 
-	function documentReady() {
-		return false;
-	};
+	.custom-file-upload:hover {
+		background-color: #1f2937;
+	}
 
-	var myGridID;
+	/* 실제 input은 숨김 처리 */
+	#fileSelector {
+		display: none;
+	}
+</style>
+<script>
+	// AUIGrid 생성 후 반환 ID
+	let myGridID;
 
-	// document ready 
-	$(document).ready(function () {
-
-		// 최초 그리드 생성함.
+	// 시작점
+	function init() {
+		// 최초 빈 그리드를 생성합니다.
 		createInitGrid();
 
-		// IE10, 11은 readAsBinaryString 지원을 안함. 따라서 체크함.
-		var rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
-
-		// HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
-		function checkHTML5Brower() {
-			var isCompatible = false;
-			if (window.File && window.FileReader && window.FileList && window.Blob) {
-				isCompatible = true;
-			}
-			return isCompatible;
-		};
-
 		// 파일 선택하기
-		$('#fileSelector').on('change', function (evt) {
-			if (!checkHTML5Brower()) {
-				alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
+		document.getElementById('fileSelector').addEventListener('change', (event) => {
+			const file = event.target.files[0];
+			if (!file) {
+				alert("파일 선택 시 오류 발생!!");
 				return;
-			} else {
-				var data = null;
-				var file = evt.target.files[0];
-				if (typeof file == "undefined") {
-					alert("파일 선택 시 오류 발생!!");
-					return;
-				}
-				var reader = new FileReader();
-
-				reader.onload = function (e) {
-					var data = e.target.result;
-
-					/* 엑셀 바이너리 읽기 */
-
-					var workbook;
-
-					if (rABS) { // 일반적인 바이너리 지원하는 경우
-						workbook = XLSX.read(data, { type: 'binary' });
-					} else { // IE 10, 11인 경우
-						var arr = fixdata(data);
-						workbook = XLSX.read(btoa(arr), { type: 'base64' });
-					}
-
-					var jsonObj = process_wb(workbook);
-
-					//console.log(JSON.stringify(jsonObj.Sheet1, 2, 2));
-
-					createAUIGrid(jsonObj[Object.keys(jsonObj)[0]]);
-				};
-
-				if (rABS) reader.readAsBinaryString(file);
-				else reader.readAsArrayBuffer(file);
-
 			}
+
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				const data = e.target.result;
+				let workbook;
+
+				// 일반적인 바이너리
+				workbook = XLSX.read(data, { type: 'binary' });
+
+				const jsonObj = process_wb(workbook);
+				const firstSheetName = Object.keys(jsonObj)[0];
+				createAUIGrid(jsonObj[firstSheetName]);
+			};
+			reader.readAsBinaryString(file);
 		});
-
-	});
-
-	// IE10, 11는 바이너리스트링 못읽기 때문에 ArrayBuffer 처리 하기 위함.
-	function fixdata(data) {
-		var o = "", l = 0, w = 10240;
-		for (; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
-		o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
-		return o;
-	};
+	}
 
 	// 파싱된 시트의 CDATA 제거 후 반환.
 	function process_wb(wb) {
-		var output = "";
+		let output = "";
 		output = JSON.stringify(to_json(wb));
 		output = output.replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1');
 		return JSON.parse(output);
@@ -126,13 +99,13 @@
 
 	// 엑셀 시트를 파싱하여 반환
 	function to_json(workbook) {
-		var result = {};
+		const result = {};
 		workbook.SheetNames.forEach(function (sheetName) {
 			// JSON 으로 파싱
-			//var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+			//let roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
 
 			// CSV 로 파싱
-			var roa = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+			const roa = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
 
 			if (roa.length > 0) {
 				result[sheetName] = roa;
@@ -147,26 +120,28 @@
 			AUIGrid.destroy(myGridID);
 			myGridID = null;
 		}
-		var jsonData = parseCsv(csvStr);
-		var columnLayout = [];
-		var gridProps = {
+
+		const jsonData = parseCsv(csvStr);
+		const columnLayout = [];
+		const gridProps = {
 			selectionMode: "multipleCells"
 		};
 
 		// 현재 엑셀 파일의 0번째 행을 기준으로 컬럼을 작성함.
 		// 만약 상단에 문서 제목과 같이 있는 경우
 		// 조정 필요.
-		var firstRow = jsonData[0];
+		const firstRow = jsonData[0];
 
-		if (typeof firstRow == "undefined") {
+		if (typeof firstRow === "undefined") {
 			alert("AUIGrid 로 변환할 수 없는 엑셀 파일입니다.");
 			return;
 		}
 
-		$.each(firstRow, function (n, v) {
+		// Object.entries [key, value] 쌍으로 반복
+		Object.entries(firstRow).forEach(([key], index) => {
 			columnLayout.push({
-				dataField: n,
-				headerText: "Col" + (1 + n),
+				dataField: key,
+				headerText: `Col${index + 1}`,
 				width: 100
 			});
 		});
@@ -176,25 +151,22 @@
 
 		// 그리드에 CSV 데이터 삽입
 		AUIGrid.setCsvGridData(myGridID, csvStr, false);
+	}
 
-	};
-
-
-	//최초 그리드 생성..
+	//최초 그리드 생성
 	function createInitGrid() {
+		const columnLayout = [];
 
-		var columnLayout = [];
-
-		for (var i = 0; i < 20; i++) {
+		for (let i = 0; i < 20; i++) {
 			columnLayout.push({
-				dataField: "f" + i,
+				dataField: `f${i}`,
 				headerText: String.fromCharCode(65 + i),
 				width: 80
 			});
 		}
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			noDataMessage: "로컬 PC의 엑셀 파일을 선택하십시오."
 		};
 
@@ -205,17 +177,11 @@
 		AUIGrid.setGridData(myGridID, []);
 	}
 
-	function parseCsv(value) {
-		var rows = value.split("\n");
-		var pData = [];
-		for (var i = 0, len = rows.length; i < len; i++) {
-			pData[i] = rows[i].split(",");
-		}
-		return pData;
+	function parseCsv(csvText) {
+		const rows = csvText.trim().split('\n');
+		return rows.map(row => row.split(','));
 	}
 </script>
-
-
 </head>
 <body>
 
@@ -228,10 +194,10 @@
 		<p>본 데모는 기본적인 구현 데모로, 엑셀 파일의 상단에 제목이나 기타 텍스트가 존재한다면 설정을 다르게 할 필요가 있습니다.</p>
 		<p>본 데모는 XLSX 파일을 CSV 로 파싱하여 AUIGrid 에 CSV 데이터를 삽입하는 예제입니다.</p>
 		<p>즉, SheetJS js-xlsx 를 통하여 엑셀 파일을 CSV 로 파싱처리한 후, 생성된 CSV 포맷 데이터를 AUIGrid 에 삽입합니다.</p>
-		<p>아래 샘플 파일 다운 받아 적용해 보세요.</p>
-		<p>테스트 파일 다운 받기 : <a href="./data/import_test.xlsx" target="_blank">import_test.xlsx</a>, 2번 테스트 파일 : <a href="./data/import_test2.xlsx" target="_blank">import_test2.xlsx</a></p>
-		
 		<!-- 파일 읽기  -->
+		<label for="fileSelector" class="custom-file-upload">
+			📎 파일 선택하기
+		</label>
 		<input type="file" id="fileSelector" name="files" accept=".xlsx">
 	</div>
 	<div>
@@ -239,8 +205,7 @@
 		<div id="grid_wrap" style="width:100%;height:450px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -248,6 +213,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

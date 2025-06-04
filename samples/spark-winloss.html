@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,12 +28,13 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+
+<!-- PDF 내보내기 필수 JS 추가-->
 <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
-
-<style type="text/css">
+<style>
 	.aui-grid-default-column {
 		text-align: right;
 	}
@@ -49,134 +47,126 @@
 		text-align: center;
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
+		createAUIGrid();
 
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/revenue_region2.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "region",
-		headerText: "지역",
-		style: "aui-grid-my-column",
-		width: 120
-	}, {
-		dataField: "p1201,p1202,p1203,p1204,p1205,p1206,p1207,p1208,p1209,p1210,p1211,p1212",
-		headerText: "승패(최대,최소 표시)",
-		width: 120,
-		sortable: false,
-		renderer: {
-			type: "SparkWinLossRenderer"
-		},
-		tooltip: {
-			tooltipFunction: toolTipCustomFunction
-		}
-	}, {
-		dataField: "p1201,p1202,p1203,p1204,p1205,p1206,p1207,p1208,p1209,p1210,p1211,p1212",
-		headerText: "승패 스타일링",
-		width: 120,
-		sortable: false,
-		renderer: {
-			type: "SparkWinLossRenderer",
-			markMaxValue: true,
-			markMinValue: true,
-			maxColor: "#D941C5",
-			minColor: "#FF2424",
-			winColor: "#2F9D27",
-			lossColor: "#2F9D27"
-		},
-		tooltip: {
-			tooltipFunction: toolTipCustomFunction
-		}
-	}, {
-		dataField: "p1201",
-		headerText: "'12 1월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1202",
-		headerText: "'12 2월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1203",
-		headerText: "'12 3월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1204",
-		headerText: "'12 4월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1205",
-		headerText: "'12 5월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1206",
-		headerText: "'12 6월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1207",
-		headerText: "'12 7월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1208",
-		headerText: "'12 8월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1209",
-		headerText: "'12 9월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1210",
-		headerText: "'12 10월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1211",
-		headerText: "'12 11월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1212",
-		headerText: "'12 12월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}];
+		requestGridData("./data/revenue_region2.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "region",
+			headerText: "지역",
+			style: "aui-grid-my-column",
+			width: 120
+		}, {
+			dataField: "p1201,p1202,p1203,p1204,p1205,p1206,p1207,p1208,p1209,p1210,p1211,p1212",
+			headerText: "승패(최대,최소 표시)",
+			width: 120,
+			sortable: false,
+			renderer: {
+				type: "SparkWinLossRenderer"
+			},
+			tooltip: {
+				tooltipFunction: toolTipCustomFunction
+			}
+		}, {
+			dataField: "p1201,p1202,p1203,p1204,p1205,p1206,p1207,p1208,p1209,p1210,p1211,p1212",
+			headerText: "승패 스타일링",
+			width: 120,
+			sortable: false,
+			renderer: {
+				type: "SparkWinLossRenderer",
+				markMaxValue: true,
+				markMinValue: true,
+				maxColor: "#D941C5",
+				minColor: "#FF2424",
+				winColor: "#2F9D27",
+				lossColor: "#2F9D27"
+			},
+			tooltip: {
+				tooltipFunction: toolTipCustomFunction
+			}
+		}, {
+			dataField: "p1201",
+			headerText: "'12 1월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1202",
+			headerText: "'12 2월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1203",
+			headerText: "'12 3월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1204",
+			headerText: "'12 4월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1205",
+			headerText: "'12 5월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1206",
+			headerText: "'12 6월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1207",
+			headerText: "'12 7월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1208",
+			headerText: "'12 8월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1209",
+			headerText: "'12 9월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1210",
+			headerText: "'12 10월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1211",
+			headerText: "'12 11월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1212",
+			headerText: "'12 12월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
-
 			// singleRow 선택모드
 			selectionMode: "multipleCells",
-
 			// 고정칼럼 3 적용
 			fixedColumnCount: 3,
-
 			// 툴팁 사용
 			showTooltip: true,
-
 			// 줄번호 칼럼 렌더러 출력
 			showRowNumColumn: false
 		};
@@ -185,76 +175,58 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	}
 
-
-	// AUIGrid 툴팁 사용자 정의 함수
+	// 툴팁 사용자 정의 함수
 	function toolTipCustomFunction(rowIndex, columnIndex, value, headerText, item, dataField) {
-		var fields = dataField.split(","),
-			min = Number.MAX_VALUE, min_t = 0,
-			max = Number.MIN_VALUE, max_t = 0,
-			avg, sum = 0,
-			v,
-			str;
+		const fields = dataField.split(",");
+		const count = fields.length;
 
-		for (var i = 0, len = fields.length; i < len; i++) {
-			v = Number(item[fields[i]]);
-			if (min > v) {
+		let min = Number.MAX_VALUE, minMonth = 0;
+		let max = Number.MIN_VALUE, maxMonth = 0;
+		let sum = 0;
+
+		for (let i = 0; i < count; i++) {
+			const v = Number(item[fields[i]]);
+			if (v < min) {
 				min = v;
-				min_t = i;
+				minMonth = i;
 			}
-			if (max < v) {
+			if (v > max) {
 				max = v;
-				max_t = i;
+				maxMonth = i;
 			}
 			sum += v;
 		}
 
-		min_t += 1;
-		max_t += 1;
-		avg = (sum / 12).toFixed(2);
+		const avg = sum / count;
 
-		str = item.region;
-		str += "<br><span style='color:#2F9D27;'>최대 : " + commafy(max) + " (" + max_t + "월)</span>";
-		str += "<br><span style='color:#FF2424;'>최소 : " + commafy(min) + " (" + min_t + "월)</span>";
-		str += "<br>합계 : " + commafy(sum);
-		str += "<br>평균 : " + commafy(avg);
+		const fMax = AUIGrid.formatNumber(max, "#,##0");
+		const fMin = AUIGrid.formatNumber(min, "#,##0");
+		const fSum = AUIGrid.formatNumber(sum, "#,##0");
+		const fAvg = AUIGrid.formatNumber(avg, "#,##0.00");
+
+		let str = item.region;
+		str += `<br><span style='color:#2F9D27;'>최대 : ${fMax} (${maxMonth + 1}월)</span>`;
+		str += `<br><span style='color:#FF2424;'>최소 : ${fMin} (${minMonth + 1}월)</span>`;
+		str += `<br>합계 : ${fSum}`;
+		str += `<br>평균 : ${fAvg}`;
 
 		return str;
 	}
 
-	// 숫자에 컴마 붙이기
-	function commafy(n) {
-		var reg = /(^[+-]?\d+)(\d{3})/;
-		n += '';
-
-		while (reg.test(n)) {
-			n = n.replace(reg, '$1' + ',' + '$2');
-		}
-		return n;
-	};
-
 	// 엑셀 내보내기(Export);
 	function exportClick() {
-
 		// 내보내기 실행
 		AUIGrid.exportToXlsx(myGridID);
-	};
+	}
 
 	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
 	function exportPdfClick() {
-
-		// 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
-		if (!AUIGrid.isAvailabePdf(myGridID)) {
-			alert("PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)");
-			return;
-		}
-
 		// 내보내기 실행
 		AUIGrid.exportToPdf(myGridID, {
-			fontPath: "../pdfkit/jejugothic-regular.ttf"
+			fontPath: "../pdfkit/nyjgothic-medium.ttf"
 		});
-	};
+	}
 </script>
-
 </head>
 <body>
 
@@ -264,10 +236,8 @@
 		<p>승패는 기본적으로 양수, 음수로 결정됩니다.</p>
 		<p>또는 승패 결정 값(baseValue) 를 500,000 으로 설정하여 50만 보다 높다면 승(Win), 50만보다 작다면 패(Loss)를 출력할 수 있습니다.</p>
 		<p>월별 매출에서 최소값과 최대값을 각각 빨강색과 파랑색으로 표시하였습니다.</p>
-		<p>스파크 칼럼 렌더러는 IE9 이상에서 사용 가능합니다.(IE8 이하에서 출력 시 공백으로 처리됨)</p>
-
 		<p><span class="btn" onclick="exportPdfClick()">PDF로 저장</span>
-			<span class="btn" onclick="exportClick()">엑셀(xlsx)로 저장</span><span>(엑셀2010 이상 지원)</span>
+			<span class="btn" onclick="exportClick()">엑셀(xlsx)로 저장</span><span>(엑셀2010 이상에서만 표현 가능)</span>
 		</p>
 		<p>참고 : 스파크 승패를 엑셀로 동일하게 내보내기 하려면 연속적인 값이여야 하며 그리드가 출력하고 있는 값이여야 합니다. (엑셀이 스파크 승패를 출력하는 엑셀의 규칙)</p>
 	</div>
@@ -276,8 +246,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -285,6 +254,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

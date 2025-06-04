@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+    <meta name="title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+    <meta name="url" content="https://www.auisoft.net/">
+    <meta name="description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
+    <title>AUIGrid 자바스크립트 데이터그리드(Javascript DataGrid AUIGrid)</title>
+    <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+    <!-- 데모를 위한 스크립트입니다. -->
+    <script type="text/javascript" src="./js/demo.js"></script>
+
+    <!-- 공용 스크립트. 여기에 공통적인 스크립트가 존재합니다. -->
+    <script type="text/javascript" src="./js/common.js"></script>
+
+    <!-- AUIGrid 컴포넌트 JS 파일입니다. -->
+    <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+    <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+    <script type="text/javascript" src="./js/AUIGridLicense.js"></script>
+
+    <!-- AUIGrid 컴포넌트의 CSS 파일입니다. 원하는 테마 스타일 CSS를 선언하십시오.-->
+    <link href="./style/AUIGrid_style.css" rel="stylesheet" />
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .header {
+            padding-left: 10px;
+        }
+
+        .footer {
+            height: 40px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content {
+            flex: 1;
+            overflow: auto;
+            min-height: 0;
+            padding: 10px;
+        }
+
+        /* 커스텀 칼럼 스타일 정의 */
+        .aui-grid-user-custom-column {
+            background: #ffffee;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        // AUIGrid 생성 후 반환 ID
+        let myGridID;
+
+        // 시작점
+        function init() {
+            // AUIGrid 그리드를 생성합니다.
+            createAUIGrid();
+            // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+            requestGridData("./data/normal_500.json");
+        }
+
+        // AUIGrid 를 생성합니다.
+        function createAUIGrid() {
+            // 그리드 칼럼 레이아웃 설정
+            const columnLayout = [{
+                dataField: "name",
+                headerText: "15%",
+                width: "15%",
+                minWidth: 50
+            }, {
+                dataField: "country",
+                headerText: "15%",
+                width: "15%",
+                minWidth: 50
+            }, {
+                dataField: "product",
+                headerText: "15%",
+                width: "15%",
+                minWidth: 50
+            }, {
+                dataField: "quantity",
+                headerText: "15%",
+                dataType: "numeric",
+                width: "15%",
+                minWidth: 50
+            }, {
+                dataField: "price",
+                headerText: "20%",
+                dataType: "numeric",
+                width: "20%",
+                minWidth: 50
+            }, {
+                dataField: "date",
+                headerText: "20%",
+                width: "20%",
+                minWidth: 50
+            }];
+
+            // 그리드 속성 설정
+            const gridProps = {
+                // singleRow 선택모드
+                selectionMode: "singleRow",
+                showRowNumColumn: false,
+                showRowCheckColumn: false,
+                editable: true
+            };
+
+            // 실제로 #grid_wrap 에 그리드 생성
+            myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+        }
+
+        // 윈도우 리사이징 이벤트
+        window.addEventListener('resize', function () {
+            // 크기가 변경되었을 때 AUIGrid.resize() 메소드 호출 
+            if (typeof myGridID !== "undefined") {
+                AUIGrid.resize(myGridID);
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <p>* 그리드 부모 Div 의 width: 100%, height: 100% 로 설정한 예제입니다. (윈도우 크기 변경하면 그리드 가로, 세로 모두 크기 따라서 변경함)</p>
+            <p>* height:100% 의 의미를 생각하고 전체적인 레이아웃을 작성하십시오. 이것은 그리드와 무관한 단순히 CSS 기본 스킬입니다.</p>
+            <p>* 샘플은 CSS Flexbox 방식으로 레이아웃을 작성하여 그리드도 height:100% 로 설정한 모습입니다.</p>
+        </div>
+        <div class="content">
+            <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+            <div id="grid_wrap" style="width:100%; height:100%;"></div>
+        </div>
+        <div id="footer" class="footer">
+            <div class="copyright">
+                <p>Copyright © AUISoft Co., Ltd.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

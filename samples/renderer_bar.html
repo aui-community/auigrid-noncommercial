@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,12 +28,13 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+<!-- PDF 내보내기 필수 JS 추가-->
 <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style type="text/css">
+<style>
 	/* 커스텀 바 렌더러 스타일 정의 */
 	.my-custom-bar {
 		border: 1px solid #E4E4E4;
@@ -48,132 +46,113 @@
 		background: linear-gradient(to left, #FFB2D9, #F361DC);
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
+	// 시작점
+	function init() {
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid();
 
-		var gridData = [];
-		var obj;
-
-		for (var i = 0; i < 200; i++) {
-			obj = {};
-			obj.field0 = Math.round(Math.random() * 100);
-			obj.field1 = Math.round(Math.random() * 1000);
-			obj.field2 = Math.round(Math.random() * -100);
-			obj.field3 = Math.round(Math.random() * 100 * (Math.random() > 0.5 ? -1 : 1));
-
-			gridData[i] = obj;
-		}
-
-		// AUIGrid를 생성한 배열로 그리드를 생성합니다.
-		createAUIGrid(columnLayout, gridData);
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "field0",
-		headerText: "기본 (0 ~ 100 범위)",
-		width: 200,
-		renderer: {
-			type: "BarRenderer"
-		}
-	}, {
-		dataField: "field3",
-		headerText: "-100 ~ 100 범위",
-		width: 200,
-		renderer: {
-			type: "BarRenderer",
-			min: -100,
-			max: 100,
-			offset: 30
-		}
-	}, {
-		dataField: "field2",
-		headerText: "-100 ~ 0 범위",
-		width: 200,
-		renderer: {
-			type: "BarRenderer",
-			min: -100,
-			max: 0
-		}
-	}, {
-		headerText: "",
-		width: 20
-	}, {
-		dataField: "field1",
-		headerText: "0 ~ 1000 범위",
-		width: 200,
-		renderer: {
-			type: "BarRenderer",
-			min: 0,
-			max: 1000,
-			style: "my-custom-bar"
-		}
+		// 랜덤 데이터 생성하여 그리드에 삽입
+		AUIGrid.setGridData(myGridID, genRandomData());
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout, gridData) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "field0",
+			headerText: "기본 (0 ~ 100 범위)",
+			width: 200,
+			renderer: {
+				type: "BarRenderer"
+			}
+		}, {
+			dataField: "field3",
+			headerText: "-100 ~ 100 범위",
+			width: 200,
+			renderer: {
+				type: "BarRenderer",
+				min: -100,
+				max: 100,
+				offset: 30
+			}
+		}, {
+			dataField: "field2",
+			headerText: "-100 ~ 0 범위",
+			width: 200,
+			renderer: {
+				type: "BarRenderer",
+				min: -100,
+				max: 0
+			}
+		}, {
+			headerText: "",
+			width: 20
+		}, {
+			dataField: "field1",
+			headerText: "0 ~ 1000 범위",
+			width: 200,
+			renderer: {
+				type: "BarRenderer",
+				min: 0,
+				max: 1000,
+				style: "my-custom-bar"
+			}
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			selectionMode: "singleRow",
 			enableSorting: false
 		};
 
-
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+	}
 
-		// 데이터 삽입
-		AUIGrid.setGridData(myGridID, gridData);
-	};
-
+	function genRandomData() {
+		const gridData = [];
+		for (let i = 0; i < 200; i++) {
+			const obj = {};
+			obj.field0 = Math.round(Math.random() * 100);
+			obj.field1 = Math.round(Math.random() * 1000);
+			obj.field2 = Math.round(Math.random() * -100);
+			obj.field3 = Math.round(Math.random() * 100 * (Math.random() > 0.5 ? -1 : 1));
+			gridData[i] = obj;
+		}
+		return gridData;
+	}
 
 	// 엑셀 내보내기(Export);
 	function exportClick() {
-
 		// 내보내기 실행
 		AUIGrid.exportToXlsx(myGridID);
-	};
-
+	}
 
 	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
 	function exportPdfClick() {
-
-		// 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
-		if (!AUIGrid.isAvailabePdf(myGridID)) {
-			alert("PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)");
-			return;
-		}
-
 		// 내보내기 실행
 		AUIGrid.exportToPdf(myGridID, {
-			fontPath: "../pdfkit/jejugothic-regular.ttf"
+			fontPath: "../pdfkit/nyjgothic-medium.ttf"
 		});
-	};
+	}
 
 	// 렌더러 속성값 변경하기
 	function changeRendererProp() {
-
 		// 0번째 칼럼의 renderer 속성값 변경하기
 		AUIGrid.setRendererProp(myGridID, 0, {
 			"min": 0,
 			"max": 150,
 		});
-
 		// 헤더 텍스트 변경
 		AUIGrid.setColumnProp(myGridID, 0, {
 			"headerText": "0 ~ 150 범위"
 		});
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -197,6 +176,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

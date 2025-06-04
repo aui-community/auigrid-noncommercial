@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
@@ -16,6 +16,8 @@
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <script src="../static/doc.js" type="text/javascript"></script>
+
+
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -23,7 +25,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.14 Documentation</span>
+<span id="title">AUIGrid 3.0.16 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -42,8 +44,8 @@
 <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 <p></p>
 <a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
-<div class="mxmlSyntax" id="mxmlSyntax"><pre>
-var columnLayout = [ {
+<div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">
+const columnLayout = [{
      dataField : "name",
      headerText : "Name",
      width : 140
@@ -58,7 +60,7 @@ var columnLayout = [ {
             maxColor : "#ff0000"
       }
 }];
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -75,7 +77,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number<br>
 <p>스파크 승패에서 기준이 되는 값을 지정합니다.</p>
 <p>예를 들어 이 값을 5로 지정한 경우 5보다 작은 값은 패(loss) 에 해당되며, 큰 값은 승(win) 에 해당됩니다.</p>
- 기본값(default) : <code>0</code>.</td>
+기본값(default) : <code>0</code></td>
 </tr>
 <tr id="lossColor">
 <td class="summaryTableSignatureCol">
@@ -84,7 +86,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
 <p>스파크 승패 차트에서 패(loss)에 해당되는 칼럼의 채우기 색을 지정합니다.</p>
- 기본값(default) : <code>"#8C8C8C"</code>.</td>
+기본값(default) : <code>"#8C8C8C"</code></td>
 </tr>
 <tr id="markMaxValue">
 <td class="summaryTableSignatureCol">
@@ -93,7 +95,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean<br>
 <p>스파크 승패 차트에 대입된 데이터 중 최대값에 해당되는 값을 다른 컬러로 표시합니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 <tr id="markMinValue">
 <td class="summaryTableSignatureCol">
@@ -102,7 +104,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean<br>
 <p>스파크 승패 차트에 대입된 데이터 중 최소값에 해당되는 값을 다른 컬러로 표시합니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 <tr id="maxColor">
 <td class="summaryTableSignatureCol">
@@ -111,7 +113,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
 <p>최대값에 표시를 설정(markMaxValue=true 설정) 한 경우 최대값 표시할 색상을 지정합니다.</p>
- 기본값(default) : <code>"#2F9D27"</code>.</td>
+기본값(default) : <code>"#2F9D27"</code></td>
 </tr>
 <tr id="minColor">
 <td class="summaryTableSignatureCol">
@@ -120,7 +122,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
 <p>최소값에 표시를 설정(markMinValue=true 설정) 한 경우 최소값에 표시할 색상을 지정합니다.</p>
- 기본값(default) : <code>"#FF2424"</code>.</td>
+기본값(default) : <code>"#FF2424"</code></td>
 </tr>
 <tr id="renderingField">
 <td class="summaryTableSignatureCol">
@@ -132,7 +134,7 @@ var columnLayout = [ {
 <p>renderingField 를 정의 한 후 해당 Row 데이터에 정의한 필드가 true 인 경우만 스파크 차트가 출력됩니다.</p>
 <p>예를 들어 칼럼 레이아웃에서 renderingField : "drawSpark" 라고 정의 하고, 데이터 작성 시(JSON 또는 XML) 특정 Row 에 drawSpark : true ( &lt;drawSpark&gt;true&lt;/drawSpark&gt; )
 를 설정하면 drawSpark 가 true 로 지정된 데이터의 행만 스파크 차트가 출력됩니다.</p>
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="winColor">
 <td class="summaryTableSignatureCol">
@@ -141,7 +143,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
 <p>스파크 승패 차트에서 승(win)에 해당되는 칼럼의 채우기 색을 지정합니다.</p>
- 기본값(default) : <code>"#8C8C8C"</code>.</td>
+기본값(default) : <code>"#8C8C8C"</code></td>
 </tr>
 </table>
 </div>

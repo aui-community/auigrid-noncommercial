@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
@@ -16,6 +16,8 @@
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <script src="../static/doc.js" type="text/javascript"></script>
+
+
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -23,7 +25,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.14 Documentation</span>
+<span id="title">AUIGrid 3.0.16 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -40,8 +42,8 @@
 <p><strong>칼럼의 headerRenderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 <p></p>
 <a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
-<div class="mxmlSyntax" id="mxmlSyntax"><pre>
-var columnLayout = [ {
+<div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">
+const columnLayout = [{
      dataField : "country",
      headerText : "Country",
      width : 80,
@@ -54,7 +56,7 @@ var columnLayout = [ {
 }, {
  ...
 }];
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -70,7 +72,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.13<br>
  <p>드랍다운 리스트의 항목을 선택하면 선택한 값으로 헤더 텍스트를 변경 시킬지 여부를 지정합니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="keyField">
 <td class="summaryTableSignatureCol">
@@ -80,7 +82,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.13<br>
  <p>list 속성의 값이 key-value 를 갖는 Object 요소 배열인 경우 key 에 해당되는 필드명을 지정합니다.</p>
  <p>실제 적용되는 데이터 값의 필드명입니다.</p>
-  기본값(default) : <code>null</code>.</td>
+ 기본값(default) : <code>null</code></td>
 </tr>
 <tr id="list">
 <td class="summaryTableSignatureCol">
@@ -92,7 +94,7 @@ var columnLayout = [ {
 <p>리스트는 배열로 지정합니다. 여기서 지정된 리스트 중 하나를 사용자는 선택할 수 있습니다.</p>
 <p>드랍다운 리스트를 사용하기 위해서 반드시 선언되어야 할 속성이지만 listFunction 으로 대체 될 수 있습니다.</p>
 <p>만약 listFunction 을 설정한다면 이 속성은 무시됩니다.</p>
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="listAlign">
 <td class="summaryTableSignatureCol">
@@ -101,7 +103,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.13<br>
  <p>리스트 항목들의 텍스트 정렬 방식을 지정합니다. 유효값은 "left", "right", "center" 입니다.</p>
-  기본값(default) : <code>"center"</code>.</td>
+ 기본값(default) : <code>"center"</code></td>
 </tr>
 <tr id="listFunction">
 <td class="summaryTableSignatureCol">
@@ -116,11 +118,11 @@ var columnLayout = [ {
 <li>dataField : 해당 칼럼이 출력하고 있는 행 아이템의 필드명(String)</li>
 <li>cItem : 해당 칼럼의 데이터</li>
 </ul>
-<pre>listFunction : function(columnIndex, dataField, cItem) {
+<pre><code class="language-javascript">listFunction : function(columnIndex, dataField, cItem) {
       if(조건)
            return ["A", "B", "C"]; // 조건에 따른 리스트 반환
       return ["1", "2", "3"]; // 기본 리스트
-}</pre>
+}</code></pre>
 <p> 이 함수의 반환값이 곧 해당 항목의 출력 리스트가 됩니다.(반드시 Array를 반환하십시오.)</p>
 </td>
 </tr>
@@ -131,7 +133,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.13<br>
  <p>드랍다운 항목 리스트의 높이를 명시적으로 지정합니다. 이 값으로 설정한 값보다 항목 리스트의 높이는 커지지 않습니다.</p>
-  기본값(default) : <code>NaN</code>.</td>
+ 기본값(default) : <code>NaN</code></td>
 </tr>
 <tr id="listTemplateFunction">
 <td class="summaryTableSignatureCol">
@@ -162,7 +164,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.13<br>
  <p>헤더에 출력되는 드랍다운의 오른쪽 여백을 지정합니다.</p>
  <p>이 여백은 헤더 클릭으로 정렬을 실행하고자 할 때 지정할 필요가 있습니다.</p>
-  기본값(default) : <code>0</code>.</td>
+ 기본값(default) : <code>0</code></td>
 </tr>
 <tr id="onClick">
 <td class="summaryTableSignatureCol">
@@ -184,11 +186,11 @@ var columnLayout = [ {
 </ul>
 <p>onClick 은 함수를 지정해야 하며 함수 형태는 다음과 같습니다. </p>
 </ul>
-<pre>onClick : function(event) {
+<pre><code class="language-javascript">onClick : function(event) {
   alert( event.columnIndex + " , " + event.value );
-}</pre>
+}</code></pre>
 <p><a href="../../samples/header_renderer_dropdown.html?hrenDd&theme=default" target="_blank">관련 데모 보기</a></p>
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="valueField">
 <td class="summaryTableSignatureCol">
@@ -198,7 +200,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.13<br>
  <p>list 속성의 값이 key-value 를 갖는 Object 요소 배열인 경우 value 에 해당되는 필드명을 지정합니다.</p>
  <p>드랍다운리스트에 출력되는 데이터의 필드명입니다.</p>
-  기본값(default) : <code>null</code>.</td>
+ 기본값(default) : <code>null</code></td>
 </tr>
 </table>
 </div>

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,101 +28,91 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스컴 disable 스타일*/
 	.mycustom-disable-color {
 		color: #cccccc;
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "Client ID",
-		width: 140
-	}, {
-		dataField: "name",
-		headerText: "Name",
-		width: 140,
-		styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-			if (value == "Anna")
-				return "mycustom-disable-color";
-			return null;
-		}
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		width: 100
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		width: 120
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		width: 140
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		width: 140
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 140,
-		renderer: {
-			type: "IconRenderer",
-			iconWidth: 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-			iconHeight: 16,
-			iconPosition: "aisleRight",
-			iconFunction: function (rowIndex, columnIndex, value, item) {
-				if (item.color != "Yellow") { // 행의 color 가 Yellow 인 경우 아이콘 출력
-					return "./assets/calendar-icon.png";
-				}
-				return null; // null 반환인 경우 아이콘 출력 안함
-			},
-			onClick: function (event) {
-				AUIGrid.openInputer(event.pid);
-			}
-		},
-		editRenderer: {
-			type: "CalendarRenderer",
-			showEditorBtn: false // 아이콘 렌더러가 출력되므로 에디터버튼은 출력 안시킴
-		}
-	}];
+		requestGridData("./data/normal_100.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "Client ID",
+			width: 140
+		}, {
+			dataField: "name",
+			headerText: "Name",
+			width: 140,
+			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (value === "Anna") return "mycustom-disable-color";
+			}
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			width: 100
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			width: 120
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			width: 140
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			width: 140
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 140,
+			renderer: {
+				type: "IconRenderer",
+				iconWidth: 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+				iconHeight: 16,
+				iconPosition: "aisleRight",
+				iconFunction: function (rowIndex, columnIndex, value, item) {
+					if (item.color != "Yellow") { // 행의 color 가 Yellow 인 경우 아이콘 출력
+						return "./assets/calendar-icon.png";
+					}
+					return null; // null 반환인 경우 아이콘 출력 안함
+				},
+				onClick: function (event) {
+					AUIGrid.openInputer(event.pid);
+				}
+			},
+			editRenderer: {
+				type: "CalendarRenderer",
+				showEditorBtn: false // 아이콘 렌더러가 출력되므로 에디터버튼은 출력 안시킴
+			}
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			// 편집 가능 설정
 			editable: true,
 			// rowHeight 조절
 			rowHeight: 30,
-
 			// row Styling 함수
 			rowStyleFunction: function (rowIndex, item) {
 				//Color 가 Yellow 인 경우 해당 Row 전체
-				if (item.color == "Yellow") {
-					return "mycustom-disable-color";
-				}
-				return null;
+				if (item.color === "Yellow") return "mycustom-disable-color";
 			}
 		};
 
@@ -136,13 +123,12 @@
 		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
 			// 셀이 Anna 인 경우
 			// 또는 행의 color 가 Yellow 인 경우 수정 불가
-			if (event.value == "Anna" || event.item.color == "Yellow") {
+			if (event.value === "Anna" || event.item.color === "Yellow") {
 				return false
 			}
 		});
 	}
 </script>
-
 </head>
 <body>
 
@@ -158,8 +144,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -167,6 +152,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

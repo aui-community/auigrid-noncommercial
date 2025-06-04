@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,7 +29,8 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 스타일 */
 	.left {
 		text-align: left;
@@ -43,73 +41,61 @@
 		font-weight: bold;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/schedule_tree.json");
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140
-	}, {
-		dataField: "name",
-		headerText: "Task Name",
-		style: "left",
-		width: 340
-	}, {
-		dataField: "charge",
-		headerText: "Charge",
-		style: "left",
-		width: 140
-	}, {
-		dataField: "complete",
-		headerText: "Complete(%)",
-		postfix: "%",
-		width: 140
-	}, {
-		dataField: "start",
-		headerText: "Start Date"
-	}, {
-		dataField: "end",
-		headerText: "End Date"
-	}];
-
+		requestGridData("./data/schedule_tree.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140
+		}, {
+			dataField: "name",
+			headerText: "Task Name",
+			style: "left",
+			width: 340
+		}, {
+			dataField: "charge",
+			headerText: "Charge",
+			style: "left",
+			width: 140
+		}, {
+			dataField: "complete",
+			headerText: "Complete(%)",
+			postfix: "%",
+			width: 140
+		}, {
+			dataField: "start",
+			headerText: "Start Date"
+		}, {
+			dataField: "end",
+			headerText: "End Date"
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			rowIdField: "id",
-
 			// singleRow 선택모드
 			selectionMode: "singleRow",
-			
 			hoverMode: "singleRow",
-
 			// 최초 보여질 때 모두 열린 상태로 출력 여부
 			displayTreeOpen: true,
-
 			// 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
 			treeColumnIndex: 1,
-
 			softRemoveRowMode: false,
-
 			// 엑스트라 행 체크박스 사용
 			showRowCheckColumn: true,
-
 			// 엑스트라 행 체크박스 칼럼이 트리 의존적인지 여부
 			// 트리 의존적인 경우, 부모를 체크하면 자식도 체크됨.
 			rowCheckDependingTree: true
@@ -117,68 +103,50 @@
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-		// 체크박스 클린 이벤트 바인딩
-		AUIGrid.bind(myGridID, "rowCheckClick", function (event) {
-			//	alert("rowIndex : " + event.rowIndex + ", id : " + event.item.id + ", name : " + event.item.name + ", checked : " + event.checked	+ ", isBranch : " + event.item._$isBranch + ", depth : " + event.item._$depth);
-		});
-
-		// 전체 체크박스 클릭 이벤트 바인딩
-		AUIGrid.bind(myGridID, "rowAllChkClick", function (event) {
-			//	alert("전체 선택  checked : " + event.checked);
-		});
 	}
-
 
 	//체크된 아이템 얻기
 	function getCheckedRowItems() {
-
 		// 중요 : 체크된 아이템 얻는 메소드는 2개가 있습니다.
 		// 1. getCheckedRowItems : 현재 그리드에서 숨겨진 행 아이템을 얻어오지 않습니다.
 		// 2. getCheckedRowItemsAll :  현재 그리드에서 숨겨진 행 아이템들까지 모두 얻어 옵니다.
 		// 일반 그리드에서 필터링이 되지 않았다면, getCheckedRowItems 과 getCheckedRowItemsAll 같습니다. (트리 그리드에서는 다름)
+		const checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID); // 접혀진 자식들이 체크된 경우 모두 얻기
 
-		var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID); // 접혀진 자식들이 체크된 경우 모두 얻기
-		if (checkedItems.length <= 0) {
-			alert("없음");
+		if (checkedItems.length === 0) {
+			alert("체크된 항목 없음!!");
 			return;
 		}
-		var str = "";
-		var item;
-		for (var i = 0, len = checkedItems.length; i < len; i++) {
-			item = checkedItems[i];
-			str += "id :" + item.id + ", name : " + item.name + ", isBranch : " + item._$isBranch + ", depth : " + item._$depth + "\n";
-		}
-		alert(str + "\n Length : " + len);
+
+		const str = checkedItems.map(item =>
+			`id : ${item.id}, name : ${item.name}, isBranch : ${item._$isBranch}, depth : ${item._$depth}`
+		).join("\r\n");
+
+		alert(str);
 	}
 
 	// 특정 행 체크 (rowIdField 기준으로 체크 하기)
 	function setCheckedRowsByIds() {
-
 		// rowIdField 설정 값 즉, 데모 상 id 가 "T3", "T4", "T5" 체크함.
-		var items = ["T3", "T4", "T5"];
+		const items = ["T3", "T4", "T5"];
 		AUIGrid.setCheckedRowsByIds(myGridID, items);
 	}
 
 	// 특정 행 체크 ( 특정 값 기준으로 체크하기)
 	function setCheckedRowsByValue() {
-
 		// rowIdField 와 상관없이 행 아이템의 특정 값에 체크함
 		// 행아이템의 charge 필드 중 Ken 라는 사람을 모두 체크함
 		AUIGrid.setCheckedRowsByValue(myGridID, "charge", "Ken");
-
 		// 만약 복수 값(Anna, Steve) 체크 하고자 한다면 다음과 같이 배열로 삽입
 		//AUIGrid.setCheckedRowsByValue(myGridID, "charge", ["Anna", "Steve"]);
-
 	}
 
 	// 전체 체크 해제
-	var allChecked = false;
+	let allChecked = false;
 	function setAllCheckedRows() {
 		allChecked = !allChecked;
 		AUIGrid.setAllCheckedRows(myGridID, allChecked);
-	};
-
+	}
 
 	// 체크된 행들 삭제
 	function deleteCheckedRows() {
@@ -188,32 +156,32 @@
 
 	// 삭제된 행들 보기
 	function getRemovedItems() {
-		var removedRowItems = AUIGrid.getRemovedItems(myGridID); // 삭제된 행 아이템들 얻기(배열)
-		if (removedRowItems.length <= 0) {
+		const removedRowItems = AUIGrid.getRemovedItems(myGridID);
+
+		if (removedRowItems.length === 0) {
 			alert("삭제된 행 없음!");
 			return;
 		}
 
-		var str = "삭제된 행들 ID\r\n";
-		for (var i = 0, len = removedRowItems.length; i < len; i++) {
-			str += "id : " + removedRowItems[i].id + ", name : " + removedRowItems[i].name + "\r\n";
-		}
+		const str = [
+			"삭제된 행들 ID",
+			...removedRowItems.map(row => `id : ${row.id}, name : ${row.name}`)
+		].join("\r\n");
+
 		alert(str);
 	}
 
-	var isExpanded = true;
+	let isExpanded = true;
 	function expand() {
 		if (!isExpanded) {
 			AUIGrid.expandAll(myGridID);
 			isExpanded = true;
-		} else {
-			AUIGrid.collapseAll(myGridID);
-			isExpanded = false;
+			return;
 		}
-	};
-
+		AUIGrid.collapseAll(myGridID);
+		isExpanded = false;
+	}
 </script>
-
 </head>
 <body>
 
@@ -247,6 +215,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

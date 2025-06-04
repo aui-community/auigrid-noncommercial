@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 스타일 */
 	.left {
 		text-align: left;
@@ -42,76 +40,64 @@
 		font-weight: bold;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/schedule_tree.json");
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Task Name",
-		style: "left",
-		width: 360
-	}, {
-		dataField: "charge",
-		headerText: "Charge",
-		style: "left",
-		width: 100
-	}, {
-		dataField: "complete",
-		headerText: "Complete(%)",
-		postfix: "%",
-		width: 140,
-		dataType: "numeric"
-	}, {
-		headerText: "Task Period",
-		children: [{
-			dataField: "start",
-			headerText: "Start Date",
-			width: 140,
-			dataType: "date",
-			formatString: "yyyy. mm. dd."
-		}, {
-			dataField: "end",
-			headerText: "End Date",
-			width: 140,
-			dataType: "date",
-			formatString: "yyyy. mm. dd."
-		}]
-	}];
-
+		requestGridData("./data/schedule_tree.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Task Name",
+			style: "left",
+			width: 360
+		}, {
+			dataField: "charge",
+			headerText: "Charge",
+			style: "left",
+			width: 100
+		}, {
+			dataField: "complete",
+			headerText: "Complete(%)",
+			postfix: "%",
+			width: 140,
+			dataType: "numeric"
+		}, {
+			headerText: "Task Period",
+			children: [{
+				dataField: "start",
+				headerText: "Start Date",
+				width: 140,
+				dataType: "date",
+				formatString: "yyyy. mm. dd."
+			}, {
+				dataField: "end",
+				headerText: "End Date",
+				width: 140,
+				dataType: "date",
+				formatString: "yyyy. mm. dd."
+			}]
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			rowIdField: "id",
-
 			selectionMode: "multipleRows",
-
 			editable: true,
-
 			onlyEnterKeyEditEnd: true,
-
 			displayTreeOpen: true,
-
 			showStateColumn: true,
-
 			// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 			wrapSelectionMove: true,
-
 			// 사용자가 추가한 새행은 softRemoveRowMode 적용 안함. 
 			// 즉, 바로 삭제함.
 			softRemovePolicy: "exceptNew"
@@ -125,31 +111,29 @@
 			// 특정 행 선택되도록 지정
 			AUIGrid.setSelectionByIndex(myGridID, 4, 0);
 		});
-	};
+	}
 
 	// depth 들여쓰기
 	function indentTreeDepth() {
 		AUIGrid.indentTreeDepth(myGridID);
-	};
+	}
 
 	// depth 내어쓰기
 	function outdentTreeDepth() {
 		AUIGrid.outdentTreeDepth(myGridID);
-	};
+	}
 
-	var isExpanded = true;
+	let isExpanded = true;
 	function expand() {
 		if (!isExpanded) {
 			AUIGrid.expandAll(myGridID);
 			isExpanded = true;
-		} else {
-			AUIGrid.collapseAll(myGridID);
-			isExpanded = false;
+			return;
 		}
+		AUIGrid.collapseAll(myGridID);
+		isExpanded = false;
 	}
-
 </script>
-
 </head>
 <body>
 
@@ -161,8 +145,8 @@
 		<p>■ Ctrl + Delete 키 : 선택 행 삭제</p>
 		<p>■ Ctrl + 왼쪽 화살표 키 (또는 Space 키) : 트리 열린 행 닫기</p>
 		<p>■ Ctrl + 오른쪽 화살표 키 (또는 Space 키) : 트리 닫힌 행 열기</p>
-		<p>■ Alt + Shift + 왼쪽 화살표 키: 트리 depth 내리기(outdent)</p>
-		<p>■ Alt + Shift + 오른쪽 화살표 키: 트리 depth 올리기(indent)</p>
+		<p>■ Alt + Shift + 오른쪽 화살표 키: 트리 depth 내리기(indent)</p>
+		<p>■ Alt + Shift + 왼쪽 화살표 키: 트리 depth 올리기(outdent)</p>
 		<ul class="nav_u">
 			<li><span onclick="expand()" class="btn">모두 열기/ 닫기</span></li>
 			<li><button class="btn" onclick="outdentTreeDepth()">◁수준 올리기</button></li>
@@ -183,6 +167,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

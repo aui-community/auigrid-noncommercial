@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,165 +28,155 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<script type="text/javascript">
 
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/schedule_tree.json");
-	};
-
-	//AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140
-	}, {
-		dataField: "name",
-		headerText: "Task Name",
-		style: "left",
-		width: 380
-	}, {
-		dataField: "charge",
-		headerText: "Charge",
-		style: "left",
-		width: 140
-	}, {
-		dataField: "complete",
-		headerText: "Complete(%)",
-		postfix: "%",
-		width: 120
-	}, {
-		dataField: "start",
-		headerText: "Start Date"
-	}, {
-		dataField: "end",
-		headerText: "End Date"
-	}];
-
+		requestGridData("./data/schedule_tree.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140
+		}, {
+			dataField: "name",
+			headerText: "Task Name",
+			style: "left",
+			width: 380
+		}, {
+			dataField: "charge",
+			headerText: "Charge",
+			style: "left",
+			width: 140
+		}, {
+			dataField: "complete",
+			headerText: "Complete(%)",
+			postfix: "%",
+			width: 120
+		}, {
+			dataField: "start",
+			headerText: "Start Date"
+		}, {
+			dataField: "end",
+			headerText: "End Date"
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			// 편집 가능 여부
 			editable: true,
-
 			rowIdField: "id",
-
 			// singleRow 선택모드
 			selectionMode: "singleRow",
-
 			// 최초 보여질 때 모두 열린 상태로 출력 여부
 			displayTreeOpen: true,
-
 			// 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
 			treeColumnIndex: 1
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-		// ready 이벤트 바인딩
-		AUIGrid.bind(myGridID, "ready", function () {
-			// 0, 1에 선택자 놓기
-			AUIGrid.setSelectionByIndex(myGridID, 0, 1);
-		});
-	};
+	}
 
 	// 부모 행 얻기
 	function getParent() {
-		var parentRow;
-		var rowId = getSelectedRowId(); // 현재 선택된 행의 rowId 값 얻기
-		if (rowId != null) {
-			parentRow = AUIGrid.getParentItemByRowId(myGridID, rowId);
-			if (parentRow) {
-				alert("ID : " + parentRow.id + ", Task Name : " + parentRow.name);
-			} else {
-				alert("Root에 해당되는 행으로 부모는 없습니다.");
-			}
+		const rowId = getSelectedRowId(); // 현재 선택된 행의 rowId 값 얻기
+		if (rowId === null) {
+			alert("선택한 행이 없습니다. 행을 먼저 선택하십시오.");
+			return;
 		}
-	};
+
+		const parentRow = AUIGrid.getParentItemByRowId(myGridID, rowId); // 부모행
+		if (parentRow) {
+			alert("ID : " + parentRow.id + ", Task Name : " + parentRow.name);
+		} else {
+			alert("Root에 해당되는 행으로 부모는 없습니다.");
+		}
+	}
 
 	// 자식 행 얻기
 	function getChildren() {
-		var rowItem;
-		var children;
-		var msg = "";
-		var rowId = getSelectedRowId(); // 현재 선택된 행의 rowId 값 얻기
-		if (rowId != null) {
-			rowItem = AUIGrid.getItemByRowId(myGridID, rowId);
-			if (rowItem) {
-				children = rowItem.children; // 자식들
-				if (children && children.length) {
-					for (var i = 0, len = children.length; i < len; i++) {
-						msg += "ID : " + children[i]["id"] + ", Task Name : " + children[i]["name"] + "\r\n";
-					}
-					alert(msg);
-				} else {
-					alert("Leaf 에 해당되는 행으로 자식들은 없습니다.");
-				}
-			}
+		const rowId = getSelectedRowId(); // 현재 선택된 행의 rowId 값 얻기
+		if (rowId === null) {
+			alert("선택한 행이 없습니다. 행을 먼저 선택하십시오.");
+			return;
 		}
-	};
+
+		const rowItem = AUIGrid.getItemByRowId(myGridID, rowId);
+		if (rowItem === null) {
+			console.log(`rowId : ${rowId}에 맞는 행 아이템 존재 안함`);
+			return;
+		}
+
+		const children = rowItem.children; // 자식들
+		if (children && children.length) {
+			let msg = "";
+			for (let i = 0, len = children.length; i < len; i++) {
+				msg += "ID : " + children[i]["id"] + ", Task Name : " + children[i]["name"] + "\r\n";
+			}
+			alert(msg);
+		} else {
+			alert("Leaf 에 해당되는 행으로 자식들은 없습니다.");
+		}
+	}
 
 	// 조상 행들 얻기
 	function getAscendants() {
-		var ascendants;
-		var msg = "";
-		var rowId = getSelectedRowId(); // 현재 선택된 행의 rowId 값 얻기
-		if (rowId != null) {
-			ascendants = AUIGrid.getAscendantsByRowId(myGridID, rowId); // 조상행들
-			if (ascendants && ascendants.length) {
-				for (var i = 0, len = ascendants.length; i < len; i++) {
-					msg += "ID : " + ascendants[i]["id"] + ", Task Name : " + ascendants[i]["name"] + "\r\n";
-				}
-				alert(msg);
-			} else {
-				alert("Root에 해당되는 행으로 조상행(들)은 없습니다.");
-			}
+		const rowId = getSelectedRowId(); // 현재 선택된 행의 rowId 값 얻기
+		if (rowId === null) {
+			alert("선택한 행이 없습니다. 행을 먼저 선택하십시오.");
+			return;
 		}
-	};
+
+		const ascendants = AUIGrid.getAscendantsByRowId(myGridID, rowId); // 조상행들
+		if (ascendants && ascendants.length) {
+			let msg = "";
+			for (let i = 0, len = ascendants.length; i < len; i++) {
+				msg += "ID : " + ascendants[i]["id"] + ", Task Name : " + ascendants[i]["name"] + "\r\n";
+			}
+			alert(msg);
+		} else {
+			alert("Root에 해당되는 행으로 조상행(들)은 없습니다.");
+		}
+	}
 
 	// 자손 행들 얻기
 	function getDescendants() {
-		var descendants;
-		var msg = "";
-		var rowId = getSelectedRowId(); // 현재 선택된 행의 rowId 값 얻기
-		if (rowId != null) {
-			descendants = AUIGrid.getDescendantsByRowId(myGridID, rowId); // 자손행들
-			if (descendants && descendants.length) {
-				for (var i = 0, len = descendants.length; i < len; i++) {
-					msg += "ID : " + descendants[i]["id"] + ", Task Name : " + descendants[i]["name"] + "\r\n";
-				}
-				alert(msg);
-			} else {
-				alert("Leaf 에 해당되는 행으로 자손(들)은 없습니다.");
-			}
+		const rowId = getSelectedRowId(); // 현재 선택된 행의 rowId 값 얻기
+		if (rowId === null) {
+			alert("선택한 행이 없습니다. 행을 먼저 선택하십시오.");
+			return;
 		}
-	};
 
+		const descendants = AUIGrid.getDescendantsByRowId(myGridID, rowId); // 자손행들
+		if (descendants && descendants.length) {
+			let msg = "";
+			for (let i = 0, len = descendants.length; i < len; i++) {
+				msg += "ID : " + descendants[i]["id"] + ", Task Name : " + descendants[i]["name"] + "\r\n";
+			}
+			alert(msg);
+		} else {
+			alert("Leaf 에 해당되는 행으로 자손(들)은 없습니다.");
+		}
+	}
 
 	// 현재 선택된 행의 rowId 값 반환
 	function getSelectedRowId() {
-		var selectedItems = AUIGrid.getSelectedItems(myGridID);
-		if (selectedItems.length <= 0)
-			return null;
-
+		const selectedItems = AUIGrid.getSelectedItems(myGridID);
+		if (selectedItems.length <= 0) return null;
 		return selectedItems[0].rowIdValue;
-	};
-
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -216,6 +203,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

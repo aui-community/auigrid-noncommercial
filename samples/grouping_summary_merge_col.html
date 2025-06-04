@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,7 +29,8 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 스타일 */
 	.my-group-sum-field-style {
 		font-weight: bold;
@@ -45,51 +43,33 @@
 	}
 </style>
 
-<script type="text/javascript">
+<script>
 
 	// AUIGrid 생성 후 반환 ID
-	var myGridID, myGridID2;
+	let myGridID, myGridID2;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-
 		// AUIGrid2 그리드를 생성합니다
 		createAUIGrid2();
-
-		AUIGrid.showAjaxLoader(myGridID);
-		AUIGrid.showAjaxLoader(myGridID2);
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		ajax({
-			url: "./data/country_phone_1000.json",
-			onSuccess: function (data) {
-				// 그리드에 데이터 세팅
-				// data 는 JSON 을 파싱한 Array-Object 입니다.
-				AUIGrid.setGridData(myGridID, data);
-
-				AUIGrid.setGridData(myGridID2, data);
-
-				AUIGrid.removeAjaxLoader(myGridID);
-				AUIGrid.removeAjaxLoader(myGridID2);
-			}
-		});
-	};
+		requestGridData("./data/country_phone_1000.json", myGridID);
+		requestGridData("./data/country_phone_1000.json", myGridID2);
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
-
-		var columnLayout = getColumnLayout();
-
-		var gridProps = getGridProp();
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = getColumnLayout();
+		// 그리드 속성 설정
+		const gridProps = getGridProp();
 
 		// 그룹핑 후 셀 병합 실행
 		gridProps.enableCellMerge = true;
-
 		// 그룹핑 합계 필드(소계) 셀 가로 병합 실행 여부
 		gridProps.enableSummaryMerge = true;
-
 		// 그룹핑 합계 필드(소계) 셀 가로 병합 실행 정책 지정
 		// * default : 자신의 이전에서만 병합 실행
 		// * all : 그룹핑 필드 지정 개수 만큼 병합 실행
@@ -101,22 +81,19 @@
 		AUIGrid.bind(myGridID, "ready", function (e) {
 			AUIGrid.setRowPosition(myGridID, 1285);
 		});
-	};
-
+	}
 
 	//AUIGrid2 를 생성합니다.
 	function createAUIGrid2() {
-
-		var columnLayout = getColumnLayout();
-
-		var gridProps = getGridProp();
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = getColumnLayout();
+		// 그리드 속성 설정
+		const gridProps = getGridProp();
 
 		// 그룹핑 후 셀 병합 실행
 		gridProps.enableCellMerge = true;
-
 		// 그룹핑 합계 필드(소계) 셀 가로 병합 실행 여부
 		gridProps.enableSummaryMerge = true;
-
 		// 그룹핑 합계 필드(소계) 셀 가로 병합 실행 정책 지정
 		// * default : 자신의 이전에서만 병합 실행
 		// * all : 그룹핑 필드 지정 개수 만큼 병합 실행
@@ -128,32 +105,25 @@
 		AUIGrid.bind(myGridID2, "ready", function (e) {
 			AUIGrid.setRowPosition(myGridID2, 1285);
 		});
-	};
-
+	}
 
 	// 기본 그리드 속성 반환.
 	function getGridProp() {
-
-		var gridProps = {
+		const gridProps = {
 			selectionMode: 'multipleCells',
 			// 차례로 country, product, name 순으로 그룹핑을 합니다.
 			// 즉, 각 나라별, 각 제품을 구매한 사용자로 그룹핑
 			groupingFields: ["country", "product", "name"],
-
 			// 그룹핑 썸머리 설정
 			groupingSummary: {
 				// 합계 필드는 price 1개에 대하여 실시 합니다.
 				dataFields: ["price"]
 			},
-
 			// 브랜치에 해당되는 행을 출력 여부
 			showBranchOnGrouping: false,
-
 			// 그리드 ROW 스타일 함수 정의
 			rowStyleFunction: function (rowIndex, item) {
-
 				if (item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
-
 					// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
 					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
 					switch (item._$depth) {  // 계층형의 depth 비교 연산
@@ -167,24 +137,18 @@
 							return "aui-grid-row-depth-default-style";
 					}
 				}
-
-				return null;
 			} // end of rowStyleFunction
 		};
-
 		return gridProps;
-	};
+	}
 
 	// 칼럼 레이아웃 반환.
 	function getColumnLayout() {
-		//AUIGrid 칼럼 설정
-		var columnLayout = [{
+		const columnLayout = [{
 			dataField: "country",
 			headerText: "Country",
 			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-				if (item._$isGroupSumField)
-					return "my-group-sum-field-style";
-				return null;
+				if (item._$isGroupSumField) return "my-group-sum-field-style";
 			}
 		}, {
 			dataField: "name",
@@ -209,14 +173,10 @@
 		}, {
 			dataField: "date",
 			headerText: "Date"
-		}
-		];
-
+		}];
 		return columnLayout;
 	}
-
 </script>
-
 </head>
 <body>
 
@@ -243,15 +203,13 @@ gridProps.enableSummaryMerge = true;
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:200px; margin:0 auto;"></div>
 	</div>
-
 	<div style="margin-top:10px;">
 		<h1 style="margin-left:30px;">■ summaryMergePolicy = "all" 설정</h1>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap2" style="width:100%;height:200px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -259,6 +217,5 @@ gridProps.enableSummaryMerge = true;
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

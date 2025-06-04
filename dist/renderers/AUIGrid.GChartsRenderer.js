@@ -65,12 +65,11 @@ window.AUIGrid.ChartRenderer = window.AUIGrid.Class({
 	 * @Overriden public update
 	 *
 	 * 그리드에 의해 호출되는 메소드이며 빈번히 호출됩니다.
-	 * 이 메소드에서 DOM 검색이나, jQuery 객체 생성 등은 자제하십시오.
-	 * DOM 검색이나 jQuery 객체는 initialize() 메소드에서 하십시오.
+	 * 이 메소드에서 DOM 검색이나 조작은 자제하십시오.
 	 */
 	update: function () {
-		var data = this.data;
-
+		// 행 아이템
+		const data = this.data;
 		if (!data) return;
 
 		// 최초 1회만 실행해야 할 것들.
@@ -91,7 +90,6 @@ window.AUIGrid.ChartRenderer = window.AUIGrid.Class({
 	destroy: function (unload) {
 		// 구글 차트 제거
 		this.__chart.clearChart();
-
 		this.__chart = null;
 
 		// 필수 : 반드시 아래 코드는 추가 해야 합니다.
@@ -128,19 +126,22 @@ window.AUIGrid.ChartRenderer = window.AUIGrid.Class({
 		//var d = [ ['분기', '실적'], ['Q1', 11], ['Q2', 2], ['Q3', 4], ['Q4', 2] ];
 
 		// 행 데이터를 통하여 구글 차트에 맞는 데이터 형식 맞추기
-		var item = this.data;
-		var d = [];
-		d[0] = ['분기', '실적'];
-		d[1] = ['Q1', item.q1];
-		d[2] = ['Q2', item.q2];
-		d[3] = ['Q3', item.q3];
-		d[4] = ['Q4', item.q4];
+		const item = this.data;
 
+		// Google Chart용 데이터 구성
+		const chartRows = [
+			['분기', '실적'],
+			['Q1', item.q1],
+			['Q2', item.q2],
+			['Q3', item.q3],
+			['Q4', item.q4]
+		];
 		// 여기서 구글 차트에 맞는 Data 형식의 기초를 작성함.
-		var chartData = google.visualization.arrayToDataTable(d);
+		const chartData = google.visualization.arrayToDataTable(chartRows);
 
+		// Chart 옵션 정의
 		// API : https://developers.google.com/chart/interactive/docs/gallery/piechart
-		var options = {
+		const options = {
 			fontName: '맑은 고딕',
 			height: 100, // 구글 차트 높이
 			chartArea: {

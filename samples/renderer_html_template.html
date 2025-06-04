@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,7 +29,7 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style type="text/css">
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-column {
 		background: #ffffee;
@@ -63,127 +60,113 @@
 
 	/* HTML 템플릿에서 사용할 스타일 정의 끝*/
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		preRequestData();
+		requestGridData("./data/normal_100.json");
+	}
 
-	};
-
-
-	//AUIGrid 칼럼 설정
-	var columnLayout = [{
-		headerText: "Client ID",
-		children: [{
-			dataField: "name",
-			headerText: "Name",
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			headerText: "Client ID",
+			children: [{
+				dataField: "name",
+				headerText: "Name",
+				width: 140,
+				renderer: { // HTML 템플릿 렌더러 사용
+					type: "TemplateRenderer"
+				},
+				labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
+					return (`
+					<div>
+						<p> ${item.id}</p>
+						<p>${item.name}</p>
+					</div>
+				`);
+				}
+			}]
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			width: 160,
+			widthFit: 80, // 헤더 경계를 더블 클릭했을 때 적용 시킬 width
+			filter: {
+				showIcon: true
+			},
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "HTML 템플릿으로 a 태그 정의함<br>원하는 태그를 작성하면 그대로 셀에 출력합니다."
+			},
+			renderer: { // HTML 템플릿 렌더러 사용
+				type: "TemplateRenderer"
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
+				if (!value) return "";
+				return (`
+					<div class="my_div">
+						<img src="./assets/${value.toLowerCase()}.png"><br/>
+						<a href="https://en.wikipedia.org/wiki/${value}" class="my_a_tag" target="_blank" title="https://en.wikipedia.org/wiki/${value}">${value}</a>
+					</div>
+				`);
+			}
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			width: 160,
+			widthFit: 124, // 헤더 경계를 더블 클릭했을 때 적용 시킬 width
+			renderer: { // HTML 템플릿 렌더러 사용
+				type: "TemplateRenderer"
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
+				if (!value) return "";
+				const showIcon = item.name === "Anna" || item.name === "Emma";
+				return (`
+					<div class="my_div">
+						${showIcon ? `<img src="./assets/info-icon.png" title="확인 할 사항이 있습니다.">` : ""}
+						<span>${value}</span>
+					</div>
+				`);
+			}
+		}, {
+			dataField: "price",
+			headerText: "Valuable<br/>a star per 200000",
+			dataType: "numeric",
 			width: 140,
 			renderer: { // HTML 템플릿 렌더러 사용
 				type: "TemplateRenderer"
 			},
-			// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
 			labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
-				var template = '<div>';
-				template += '<p>' + item.id + '</p>';
-				template += '<p>' + item.name + '</p>';
-				template += '</div>';
-				return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
+				if (!value) return "";
+				const count = Math.min(Math.ceil(value / 200000), 5);
+				return (`
+					<div class="my_div">
+						${Array(count)
+						.fill()
+						.map(() => '<img src="./assets/star.png">')
+						.join("")}
+					</div>
+				`);
 			}
-		}]
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		width: 160,
-		widthFit: 80, // 헤더 경계를 더블 클릭했을 때 적용 시킬 width
-		filter: {
-			showIcon: true
-		},
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "HTML 템플릿으로 a 태그 정의함<br>원하는 태그를 작성하면 그대로 셀에 출력합니다."
-		},
-		renderer: { // HTML 템플릿 렌더러 사용
-			type: "TemplateRenderer"
-		},
-		// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
-			if (!value) return "";
-			var link = 'https://en.wikipedia.org/wiki/' + value; // 이동할 URL
-			var template = '<div class="my_div">';
-			template += '<img src="./assets/' + value.toLowerCase() + '.png"><br>';
-			template += '<a href="' + link + '" class="my_a_tag" target="_blank" title="' + link + '">';
-			template += value;
-			template += '</a></div>';
-			return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-		}
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		width: 160,
-		widthFit: 124, // 헤더 경계를 더블 클릭했을 때 적용 시킬 width
-		renderer: { // HTML 템플릿 렌더러 사용
-			type: "TemplateRenderer"
-		},
-		// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
-			if (!value) return "";
-			var template = '<div class="my_div">';
-			// 이름이 "Anna" 또는 "Emma" 인 경우 
-			if (item.name == "Anna" || item.name == "Emma") {
-				template += '<img src="./assets/info-icon.png" title="확인 할 사항이 있습니다.">';
-			}
-			template += '<span>'
-			template += value;
-			template += '</span></div>';
-			return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-		}
-	}, {
-		dataField: "price",
-		headerText: "Valuable<br/>a star per 200000",
-		dataType: "numeric",
-		width: 140,
-		renderer: { // HTML 템플릿 렌더러 사용
-			type: "TemplateRenderer"
-		},
-		// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
-			if (!value) return "";
-			var template = '<div class="my_div">';
-			var cnt = value / 200000;
-			cnt = Math.min(cnt, 5); // 최대 별5개
-			while (cnt > 0) {
-				template += '<img src="./assets/star.png">'
-				cnt--;
-			}
-			template += '</div>';
-			return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-		}
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 140
-	}];
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 140
+		}];
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
-
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
 			enableFilter: true,
-
 			// 행 높이 설정
 			rowHeight: 40,
-
 			// 소팅
 			enableSorting: true
 		};
@@ -191,21 +174,14 @@
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	}
-
-	function preRequestData() {
-		var url = "./data/normal_100.json";
-		requestData(url);
-	}
-
 </script>
-
 </head>
 <body>
 
 <div id="main">
 	<div class="desc">
 		<p>Country, Product 칼럼에 HTML 템플릿(Template) 렌더러를 설정한 모습입니다.
-		<p>데이터 값이 HTML 인 경우 그대로 출력하며 labelFunction 으로 HTML 스트링을 작성할 수 있습니다.(innerHTML 처리)</p>
+		<p>데이터 값이 HTML 인 경우 그대로 출력하며 labelFunction 으로 HTML 템플릿 리터럴을 작성할 수 있습니다.(innerHTML 처리)</p>
 		<strong>템플릿 렌더러는이미지(img)와 링크(a) 또는 다른 태그(tag)를 직접 출력 모습으로 만들 수 있습니다.</strong>
 		<p>기본적으로 TemplateRenderer는 행 높이를 벗어날 수 없습니다. 만약, BR 태그로 개행을 하여 개별 행 높이를 원한다면 wordWrap 속성을 true 로 설정하십시오.</p>
 		<p>■ 단점 : 사용자가 HTML 템플릿을 작성하였기 때문에 엑셀 저장, 그룹핑, 필터링, 정렬, 복사 등에 제약을 받습니다. (dataField 값 기준으로 처리됩니다.)</p>
@@ -217,8 +193,7 @@
 		<div id="grid_wrap" style="width:100%;height:450px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -226,6 +201,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

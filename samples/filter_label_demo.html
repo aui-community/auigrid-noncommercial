@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-column {
 		color: #D9418C;
@@ -42,135 +40,117 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
-
-	// document ready 
-	function documentReady() {
-
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
-		var gridData = getRandomData();
-		// 그리드 데이터 삽입
-		AUIGrid.setGridData(myGridID, gridData);
-	};
+	let myGridID;
 
 	//key-value 를 갖는 구조
-	var keyValueList = [{ "code": "001", "value": "영업본부" }, { "code": "002", "value": "경영본부" }, { "code": "003", "value": "인사부" }, { "code": "004", "value": "경영기획본부" }];
+	const keyValueList = [{ "code": "001", "value": "영업본부" }, { "code": "002", "value": "경영본부" }, { "code": "003", "value": "인사부" }, { "code": "004", "value": "경영기획본부" }];
 
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name",
-		width: 160,
-		filter: {
-			showIcon: true,
-			displayFormatValues: true,
-			useExMenu: true,
-			iconWidth: 30
-		},
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-			if (value == "Emma") {
-				return value + " (엠마)";
-			} else if (value == "Anna") {
-				return value + " (안나)";
-			}
-			return value;
-		}
-	}, {
-		dataField: "deptCode",
-		headerText: "부서명(원래 값 필터 메뉴)",
-		width: 220,
-		filter: {
-			showIcon: true,
-			useExMenu: true,
-			iconWidth: 30
-		},
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-			var retStr = value;
-			for (var i = 0, len = keyValueList.length; i < len; i++) {
-				if (keyValueList[i]["code"] == value) {
-					retStr = keyValueList[i]["value"];
-					break;
-				}
-			}
-			return retStr;
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			list: keyValueList, //key-value Object 로 구성된 리스트
-			keyField: "code", // key 에 해당되는 필드명
-			valueField: "value" // value 에 해당되는 필드명
-		}
-	}, {
-		dataField: "deptCode2",
-		headerText: "부서명(포맷팅된 필터 메뉴)",
-		width: 220,
-		filter: {
-			showIcon: true,
-			displayFormatValues: true,
-			useExMenu: true,
-			iconWidth: 30
-		},
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-			var retStr = value;
-			for (var i = 0, len = keyValueList.length; i < len; i++) {
-				if (keyValueList[i]["code"] == value) {
-					retStr = keyValueList[i]["value"];
-					break;
-				}
-			}
-			return retStr;
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			list: keyValueList, //key-value Object 로 구성된 리스트
-			keyField: "code", // key 에 해당되는 필드명
-			valueField: "value" // value 에 해당되는 필드명
-		}
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		dataType: "date",
-		formatString: "yyyy년 mm월 dd일",
-		width: 160,
-		filter: {
-			showIcon: true,
-			displayFormatValues: true,
-			useExMenu: true,
-			iconWidth: 30
-		},
-		editRenderer: {
-			type: "CalendarRenderer",
-			onlyCalendar: false,
-			defaultFormat: "yyyy-mm-dd"
-		}
+	// 시작점
+	function init() {
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid();
+		// 그리드 데이터 삽입
+		AUIGrid.setGridData(myGridID, getRandomData());
 	}
-	];
-
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Name",
+			width: 160,
+			filter: {
+				showIcon: true,
+				displayFormatValues: true,
+				useExMenu: true,
+				iconWidth: 30
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				if (value === "Emma") {
+					return value + " (엠마)";
+				} else if (value === "Anna") {
+					return value + " (안나)";
+				}
+				return value;
+			}
+		}, {
+			dataField: "deptCode",
+			headerText: "부서명(원래 값 필터 메뉴)",
+			width: 220,
+			filter: {
+				showIcon: true,
+				useExMenu: true,
+				iconWidth: 30
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				const keyField = this.editRenderer.keyField;
+				const valueField = this.editRenderer.valueField;
+				const list = this.editRenderer.list;
+				const result = list.find(v => v[keyField] === value); // editRenderer 리스트에서 key-value 에 맞는 값 찾아 반환.
+				if (result === undefined) return "";
+				return result[valueField]; // key 값이 아닌 value 값으로 출력 시키기
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				list: keyValueList, //key-value Object 로 구성된 리스트
+				keyField: "code", // key 에 해당되는 필드명
+				valueField: "value" // value 에 해당되는 필드명
+			}
+		}, {
+			dataField: "deptCode2",
+			headerText: "부서명(포맷팅된 필터 메뉴)",
+			width: 220,
+			filter: {
+				showIcon: true,
+				displayFormatValues: true,
+				useExMenu: true,
+				iconWidth: 30
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				const keyField = this.editRenderer.keyField;
+				const valueField = this.editRenderer.valueField;
+				const list = this.editRenderer.list;
+				const result = list.find(v => v[keyField] === value); // editRenderer 리스트에서 key-value 에 맞는 값 찾아 반환.
+				if (result === undefined) return "";
+				return result[valueField]; // key 값이 아닌 value 값으로 출력 시키기
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				list: keyValueList, //key-value Object 로 구성된 리스트
+				keyField: "code", // key 에 해당되는 필드명
+				valueField: "value" // value 에 해당되는 필드명
+			}
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			dataType: "date",
+			formatString: "yyyy년 mm월 dd일",
+			width: 160,
+			filter: {
+				showIcon: true,
+				displayFormatValues: true,
+				useExMenu: true,
+				iconWidth: 30
+			},
+			editRenderer: {
+				type: "CalendarRenderer",
+				onlyCalendar: false,
+				defaultFormat: "yyyy-mm-dd"
+			}
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			selectionMode: "multipleCells",
-
 			showRowNumColumn: true,
-
 			showRowCheckColumn: false,
-
 			editable: true,
-
 			softRemoveRowMode: false,
-
 			enableMovingColumn: false,
-
 			useContextMenu: true,
-
 			enableFilter: true
 		};
 
@@ -179,29 +159,28 @@
 
 		// 필터링 이벤트 바인딩
 		AUIGrid.bind(myGridID, "filtering", function (evt) {
-			var filterInfo = evt.filterCache;
-			var str = "filtering Event Info<br/>";
-			var length = 0;
-			for (var n in filterInfo) {
-				length++;
-				str += n + " : " + JSON.stringify(filterInfo[n]) + "<br/>";
-			}
-			if (length <= 0)
+			const filterInfo = evt.filterCache;
+			const keys = Object.keys(filterInfo);
+			let str;
+			if (keys.length === 0) {
 				str = "필터링 되지 않음";
-
-			document.getElementById("ellapse").innerText = str;
+			} else {
+				str = "filtering Event Info : " +
+					keys.map(key => `${key} : ${JSON.stringify(filterInfo[key])}`).join(", ");
+			}
+			document.getElementById("elapse").textContent = str;
 		});
 	}
 
 	// 랜덤 데이터 생성
 	function getRandomData() {
-		var names = ["Steve", "Anna", "Lawrence", "Kim", "Emma", "Jennifer", "Han"];
-		var deptCodes = ["001", "002", "003", "004"];
-		var nameLen = names.length;
-		var deptCodeLen = deptCodes.length;
-		var data = [];
-		var today = new Date();
-		for (var i = 0; i < 500; i++) {
+		const names = ["Steve", "Anna", "Lawrence", "Kim", "Emma", "Jennifer", "Han"];
+		const deptCodes = ["001", "002", "003", "004"];
+		const nameLen = names.length;
+		const deptCodeLen = deptCodes.length;
+		const data = [];
+		const today = new Date();
+		for (let i = 0; i < 500; i++) {
 			today.setDate(today.getDate() - 1);
 			data.push({
 				name: names[i % nameLen],
@@ -213,7 +192,6 @@
 		return data;
 	}
 </script>
-
 </head>
 <body>
 
@@ -229,9 +207,8 @@ headerText : "부서명(포맷팅된 필터 메뉴)",
 width:200,
 filter : {
 	showIcon : true,
-	displayFormatValues : true // 포매팅된 값으로 필터 메뉴 작성 (기본값 : false)
-},
-		</pre>
+	displayFormatValues : true // 포맷팅된 값으로 필터 메뉴 작성 (기본값 : false)
+},</pre>
 		</div>
 		<p>아래 그리드의 "부서명" 칼럼의 필터 메뉴를 서로 비교해 보십시오.</p>
 	</div>
@@ -240,7 +217,7 @@ filter : {
 		<div id="grid_wrap" style="width:100%;height:400px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 
 	</div>
 </div>
@@ -249,6 +226,5 @@ filter : {
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

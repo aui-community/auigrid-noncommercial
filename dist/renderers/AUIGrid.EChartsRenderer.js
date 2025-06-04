@@ -66,12 +66,11 @@ window.AUIGrid.ChartRenderer = window.AUIGrid.Class({
 	 * @Overriden public update
 	 *
 	 * 그리드에 의해 호출되는 메소드이며 빈번히 호출됩니다.
-	 * 이 메소드에서 DOM 검색이나, jQuery 객체 생성 등은 자제하십시오.
-	 * DOM 검색이나 jQuery 객체는 initialize() 메소드에서 하십시오.
+	 * 이 메소드에서 DOM 검색이나 조작은 자제하십시오.
 	 */
 	update: function () {
-		var data = this.data;
-
+		// 행 아이템
+		const data = this.data;
 		if (!data) return;
 
 		// 최초 1회만 실행해야 할 것들.
@@ -92,7 +91,6 @@ window.AUIGrid.ChartRenderer = window.AUIGrid.Class({
 	destroy: function (unload) {
 		// echart  제거
 		this.__chart.clear();
-
 		this.__chart = null;
 
 		// 필수 : 반드시 아래 코드는 추가 해야 합니다.
@@ -127,12 +125,11 @@ window.AUIGrid.ChartRenderer = window.AUIGrid.Class({
 
 	/* echart 출력하기 */
 	__drawChart: function () {
-		let option;
 		const item = this.data;
 
 		// 다음 참고하여 작성함.
 		// https://echarts.apache.org/examples/en/editor.html?c=pie-simple
-		option = {
+		const option = {
 			tooltip: {
 				confine: true,
 				trigger: 'item'

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-column {
 		background: #ffffee;
@@ -39,102 +37,97 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_50.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "Client ID",
-		width: 180
-	}, {
-		dataField: "name",
-		headerText: "Name",
-		cellMerge: true,
-		width: 180
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		cellMerge: true,
-		width: 180
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		width: 180
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		width: 180
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		style: "my-column",
-		width: 180
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric",
-		width: 180
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 200
-	}];
+		requestGridData("./data/normal_50.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "Client ID",
+			width: 180
+		}, {
+			dataField: "name",
+			headerText: "Name",
+			cellMerge: true,
+			width: 180
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			cellMerge: true,
+			width: 180
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			width: 180
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			width: 180
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			style: "my-column",
+			width: 180
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric",
+			width: 180
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 200
+		}];
 
+		// 그리드 속성 설정
+		const gridProps = {
 			// 마우스 오버 모드 (기본값: "singleCell")
 			hoverMode: "singleRow",
-
 			// 셀 클릭 선택 모드
 			selectionMode: "multipleRows",
-
 			// 고정 칼럼 지정
 			fixedColumnCount: 1,
-			
-			editable : true,
-
+			editable: true,
 			showRowNumColumn: true,
-
 			// Home, End 키가 칼럼의 시작과 끝으로 이동함.
 			isColumnOriented: true,
-
 			enableCellMerge: true,
-
 			groupingFields: ["country", "name"],
-
 			// 브랜치에 해당되는 행을 출력 여부
 			showBranchOnGrouping: false,
-
 			// 셀 병합된 경우 병합된 셀을 구분해서 선택할 수 있는지 여부
 			separatedSelectionOnMerge: true
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+		// 셀 선택변경 이벤트 바인딩
+		AUIGrid.bind(myGridID, "selectionChange", function (event) {
+			console.log(event);
+			// 선택 대표 셀 정보 
+			const primeCell = event.primeCell;
+			// 하단에 행인덱스, 헤더 텍스트, 수정 가능여부 출력함.
+			document.getElementById("elapse").textContent = `현재 셀 : ( ${primeCell.rowIndex}, ${primeCell.headerText} ), 값 : ${primeCell.value}`;
 		});
-	};
+	}
 
 	function changeHoverMode(mode) {
 		AUIGrid.setHoverMode(myGridID, mode); // 마우스 오버 모드 변경
-	};
-
+	}
 </script>
 
 </head>
@@ -146,12 +139,11 @@
 		<p>아래 버턴을 눌러 변경 후 직접 그리드 셀로 커서를 이동하여 확인할 수 있습니다.</p>
 		<p>singleRow 설정 시 병합된 셀 전체가 적용됩니다.</p>
 		<p>데모는 병합된 셀도 개별 선택이 가능하도록 separatedSelectionOnMerge = true 설정을 한 모습입니다.</p>
-		<p>separatedSelectionOnMerge = true 설정하면 예로 Country 칼럼의 1~5행이 병합된 USA 에서 3번행 클릭 시 개별적 3번행의 USA가 선택이 됩니다.)</p>  
-		<p>참고 : v3.0.13 이전 버전에서는 CSS 를 직접 정의해서 표현했던 것을 속성 설정을 통하여 쉽게 사용하도록 개선한 것 입니다.</p>
+		<p>separatedSelectionOnMerge = true 설정하면 예로 Country 칼럼의 1~5행이 병합된 USA 에서 3번행 클릭 시 개별적 3번행의 USA가 선택이 됩니다.)</p>
 		<ul class="nav_u">
-			<li><span onclick="changeHoverMode('singleCell')" class="btn">singleCell (기본값)</span></li>
-			<li><span onclick="changeHoverMode('singleRow')" class="btn">singleRow</span></li>
-			<li><span onclick="changeHoverMode('none')" class="btn">none</span></li>
+			<li><button onclick="changeHoverMode('singleCell')" class="btn">singleCell (기본값)</button></li>
+			<li><button onclick="changeHoverMode('singleRow')" class="btn">singleRow</button></li>
+			<li><button onclick="changeHoverMode('none')" class="btn">none</button></li>
 		</ul>
 		<span></span>
 	</div>
@@ -160,8 +152,7 @@
 		<div id="grid_wrap" style="width:100%;height:400px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -169,6 +160,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

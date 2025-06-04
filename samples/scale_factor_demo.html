@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-column {
 		text-align: right;
@@ -41,10 +39,10 @@
 		transform-origin: 0 0;
 	}
 </style>
-<script type="text/javascript">
+<script>
 
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
 	// document ready 
 	function documentReady() {
@@ -53,14 +51,14 @@
 		createAUIGrid(columnLayout);
 
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_500.json");
+		requestGridData("./data/normal_500.json");
 
 	};
 
-	// AUIGrid 칼럼 설정
+	// 그리드 칼럼 레이아웃 설정
 	// 데이터 형태는 다음과 같은 형태임,
 	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
+	let columnLayout = [{
 		dataField: "id",
 		headerText: "ID",
 		width: 120
@@ -127,7 +125,7 @@
 	function createAUIGrid(columnLayout) {
 
 		// 그리드 속성 설정
-		var gridProps = {
+		let gridProps = {
 
 			// 편집 가능 여부 (기본값 : false)
 			editable: true,
@@ -167,7 +165,7 @@
 
 	// 스케일 설정하기
 	function setScaleFactorGrid(factor) {
-		var value = AUIGrid.getProp(myGridID, "scaleFactor");
+		let value = AUIGrid.getProp(myGridID, "scaleFactor");
 		if (factor > 0) { // 크게
 			value += 0.1;
 		} else { // 작게
@@ -197,7 +195,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 
 	</div>
 </div>
@@ -206,6 +204,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

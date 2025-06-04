@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,149 +28,134 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<script type="text/javascript">
 
+<script>
     // AUIGrid 생성 후 반환 ID
-    var myGridID;
+    let myGridID;
 
-    // document ready 
-    function documentReady() {
-
+    // 시작점
+    function init() {
         // AUIGrid 그리드를 생성합니다.
-        createAUIGrid(columnLayout);
-
+        createAUIGrid();
         // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-        requestData("./data/revenue_region.json");
-
-    };
-
-    // AUIGrid 칼럼 설정
-    var columnLayout = [{
-        dataField: "region",
-        headerText: "지역",
-        width: 120
-    }, {
-        dataField: "p1201",
-        headerText: "'12 1월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1202",
-        headerText: "'12 2월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1203",
-        headerText: "'12 3월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1204",
-        headerText: "'12 4월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1205",
-        headerText: "'12 5월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1206",
-        headerText: "'12 6월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1207",
-        headerText: "'12 7월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1208",
-        headerText: "'12 8월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1209",
-        headerText: "'12 9월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1210",
-        headerText: "'12 10월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1211",
-        headerText: "'12 11월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1212",
-        headerText: "'12 12월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1301",
-        headerText: "'13 1월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1302",
-        headerText: "'13 2월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1303",
-        headerText: "'13 3월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1304",
-        headerText: "'13 4월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1305",
-        headerText: "'13 5월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1306",
-        headerText: "'13 6월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1307",
-        headerText: "'13 7월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1308",
-        headerText: "'13 8월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1309",
-        headerText: "'13 9월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1310",
-        headerText: "'13 10월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1311",
-        headerText: "'13 11월",
-        dataType: "numeric"
-    }, {
-        dataField: "p1312",
-        headerText: "'13 12월",
-        dataType: "numeric"
-    }];
+        requestGridData("./data/revenue_region.json");
+    }
 
     // AUIGrid 를 생성합니다.
-    function createAUIGrid(columnLayout) {
+    function createAUIGrid() {
+        // 그리드 칼럼 레이아웃 설정
+        const columnLayout = [{
+            dataField: "region",
+            headerText: "지역",
+            width: 120
+        }, {
+            dataField: "p1201",
+            headerText: "'12 1월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1202",
+            headerText: "'12 2월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1203",
+            headerText: "'12 3월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1204",
+            headerText: "'12 4월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1205",
+            headerText: "'12 5월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1206",
+            headerText: "'12 6월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1207",
+            headerText: "'12 7월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1208",
+            headerText: "'12 8월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1209",
+            headerText: "'12 9월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1210",
+            headerText: "'12 10월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1211",
+            headerText: "'12 11월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1212",
+            headerText: "'12 12월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1301",
+            headerText: "'13 1월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1302",
+            headerText: "'13 2월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1303",
+            headerText: "'13 3월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1304",
+            headerText: "'13 4월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1305",
+            headerText: "'13 5월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1306",
+            headerText: "'13 6월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1307",
+            headerText: "'13 7월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1308",
+            headerText: "'13 8월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1309",
+            headerText: "'13 9월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1310",
+            headerText: "'13 10월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1311",
+            headerText: "'13 11월",
+            dataType: "numeric"
+        }, {
+            dataField: "p1312",
+            headerText: "'13 12월",
+            dataType: "numeric"
+        }];
 
-        var gridProps = {};
-
-        gridProps.enableSorting = true;
-
-        // singleRow 선택모드
-        gridProps.selectionMode = "multipleCells";
-
-        // 고정칼럼 1 적용
-        gridProps.fixedColumnCount = 1;
-
-        gridProps.editable = true;
-
-        // 그리드 헤더를 표시하지 않습니다.
-        gridProps.showHeader = false;
+        // 그리드 속성 설정
+        const gridProps = {
+            // 그리드 헤더를 표시하지 않습니다.
+            showHeader: false
+        };
 
         // 실제로 #grid_wrap 에 그리드 생성
         myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
     }
-
 </script>
-
 </head>
 <body>
 
@@ -186,8 +168,7 @@
         <div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
     </div>
     <div class="desc_bottom">
-        <p id="ellapse"></p>
-
+        <p id="elapse"></p>
     </div>
 </div>
 <div id="footer">
@@ -195,6 +176,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

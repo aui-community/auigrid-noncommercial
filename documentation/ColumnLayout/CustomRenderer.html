@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
@@ -16,6 +16,8 @@
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <script src="../static/doc.js" type="text/javascript"></script>
+
+
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -23,7 +25,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.14 Documentation</span>
+<span id="title">AUIGrid 3.0.16 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -41,8 +43,8 @@
 <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
 <p></p>
 <a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
-<div class="mxmlSyntax" id="mxmlSyntax"><pre>
-var columnLayout = [ {
+<div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">
+const columnLayout = [{
 ...
 }, {
      dataField : "close",
@@ -53,7 +55,7 @@ var columnLayout = [ {
           jsClass : AUIGrid.MyStockRenderer // 작성한 사용자 정의 렌더러 JS
      }
 }];
-</pre>
+</code></pre>
 <p><strong>커스텀 렌더러 사용에 대한 사전 스킬 요구 사항</strong><p>
 <ul><li>자바스크립트로 HTML 요소(Element)를 생성하고, 제어할 수 있는 스킬이 요구 됩니다.</li>
 <li>자바스크립트로 DOM 에 접근하여 CSS 클래스 및 style 을 추가, 삭제 등 제어할 수 있는 스킬이 요구 됩니다.</li></ul>
@@ -89,14 +91,14 @@ var columnLayout = [ {
 <li>item : 해당 행에 출력되고 있는 행 아이템 객체 (Object)</li>
 <li>dataField : 행 아이템에서 현재 칼럼이 출력되고 있는 데이터의 KeyField</li>
 </ul>
-<pre>aliasFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-   var myString = "";
+<pre><code class="language-javascript">aliasFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+   const myString = "";
    // 로직 처리
    // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
    return myString;
-}</pre>
+}</code></pre>
 <p>함수의 반환값이 곧 엑셀, PDF 등 내보내기 값입니다.</p>
- 기본값(default) : <code>null;</code>.</td>
+기본값(default) : <code>null;</code></td>
 </tr>
 <tr id="extraProps">
 <td class="summaryTableSignatureCol">
@@ -106,7 +108,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Object &nbsp; <span class="label">Version: </span>3.0.11<br>
  <p>CustomRenderer 에 전달할 여분의 속성을 설정합니다.</p>
  <p>여기서 작성한 extraProps 는 사용자가 작성한 클래스에서 this.columnData.renderer.extraProps 로 접근 가능합니다.</p>
-  기본값(default) : <code>null</code>.</td>
+ 기본값(default) : <code>null</code></td>
 </tr>
 <tr id="jsClass ">
 <td class="summaryTableSignatureCol">
@@ -117,7 +119,7 @@ var columnLayout = [ {
  <p>사용자가 그리드의 렌더러로 작성한 클래스를 설정합니다.</p>
  <p>작성한 클래스는 AUIGrid.Class 를 이용하여 AUIGrid.RendererBase 클래스를 확장(extend)하여 작성하여야 합니다.</p>
  <p><a href="../../samples/renderer_custom_desc.html?ren_desc&theme=default" target="_blank">관련 내용 보기</a></p>
-  기본값(default) : <code>null</code>.</td>
+ 기본값(default) : <code>null</code></td>
 </tr>
 </table>
 </div>

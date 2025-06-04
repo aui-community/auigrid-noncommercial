@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,106 +28,95 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
-<style type="text/css">
+<style>
 	.my-align-right {
 		text-align: right;
 		color: #22741C;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/country_phone_1000.json");
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "orderId",
-		headerText: "Order ID",
-		filter: { showIcon: true }
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		filter: { showIcon: true }
-	}, {
-		dataField: "name",
-		headerText: "Name",
-		filter: { showIcon: true }
-	}, {
-		dataField: "phone",
-		headerText: "Phone",
-		filter: { showIcon: true }
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		filter: { showIcon: true }
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		filter: { showIcon: true },
-		styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-			if (item._$isGroupSumField) { // 썸머리 행인 경우
-				return "my-align-right";
-			}
-			return null;
-		}
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		style: "my-align-right"
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-			if (item._$isGroupSumField) { // 썸머리 행인 경우
-				return "my-align-right";
-			}
-			return null;
-		}
+		requestGridData("./data/country_phone_1000.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "orderId",
+			headerText: "Order ID",
+			filter: { showIcon: true }
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			filter: { showIcon: true }
+		}, {
+			dataField: "name",
+			headerText: "Name",
+			filter: { showIcon: true }
+		}, {
+			dataField: "phone",
+			headerText: "Phone",
+			filter: { showIcon: true }
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			filter: { showIcon: true }
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			filter: { showIcon: true },
+			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (item._$isGroupSumField) { // 썸머리 행인 경우
+					return "my-align-right";
+				}
+			}
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			style: "my-align-right"
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (item._$isGroupSumField) { // 썸머리 행인 경우
+					return "my-align-right";
+				}
+			}
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
-
 			enableFilter: true,
-
 			// 차례로 country, product, name 순으로 그룹핑을 합니다.
 			// 즉, 각 나라별, 각 제품을 구매한 사용자로 그룹핑
 			groupingFields: ["country", "product", "name"],
-
 			// 썸머리 텍스트 설정(기본값: 합계)
 			summaryText: "소계",
-
 			// 합계(소계) 설정
 			groupingSummary: {
 				// 합계 필드는 "price", "color", "date" 3 개에 대하여 실시 합니다.
 				dataFields: ["price", "color", "date"],
-
 				// 그룹핑 썸머리 행의 구체적 설정
 				rows: [{
 					// 사용자 정의 계산 함수
 					// items (Array) : 소계의 대상이 되는 행들
 					// dataField (String) : 소계 대상 필드 (데모 상에서는 "price", "color", "date" 가 대상임)
 					expFunction: function (items, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-						var sum = 0;
-						var count = 0;
+						let sum = 0;
+						let count = 0;
 						if (items.length <= 0) return sum;
 
 						// 합계 필드 3개 설정했기에 3개를 나눠서 실행
@@ -153,21 +139,15 @@
 					}
 				}]
 			},
-
 			// 최초 보여질 때 모두 열린 상태로 출력 여부
 			displayTreeOpen: true,
-
 			// 그룹핑 후 셀 병합 실행
 			enableCellMerge: true,
-
 			// 브랜치에 해당되는 행을 출력 여부
 			showBranchOnGrouping: false,
-
 			// 그리드 ROW 스타일 함수 정의
 			rowStyleFunction: function (rowIndex, item) {
-
 				if (item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
-
 					// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
 					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
 					switch (item._$depth) {  // 계층형의 depth 비교 연산
@@ -181,18 +161,13 @@
 							return "aui-grid-row-depth-default-style";
 					}
 				}
-
-				return null;
 			} // end of rowStyleFunction
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
 	}
-
 </script>
-
 </head>
 <body>
 
@@ -209,8 +184,8 @@
 // items (Array) : 소계의 대상이 되는 행들
 // dataField (String) : 소계 대상 필드 (데모 상에서는 "price", "color", "date" 가 대상임)
 expFunction : function(items, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-	var sum = 0;
-	var count = 0;
+	let sum = 0;
+	let count = 0;
 	// 합계 필드 3개 설정했기에 3개를 나눠서 실행
 	switch(dataField){
 	case "price": // 합계 계산
@@ -232,7 +207,6 @@ expFunction : function(items, dataField) { // 여기서 실제로 출력할 값�
 </pre>
 		</div>
 	</div>
-
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:380px; margin:0 auto;"></div>
@@ -243,6 +217,5 @@ expFunction : function(items, dataField) { // 여기서 실제로 출력할 값�
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

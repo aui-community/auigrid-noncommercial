@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-left-column {
 		text-align: left;
@@ -45,136 +43,127 @@
 		text-align: center;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// AUIGrid 에 데이터 삽입합니다.
 		AUIGrid.setGridData(myGridID, gridData);
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "f1",
-		headerText: "왼쪽 정렬",
-		width: 100,
-		style: "my-left-column",
-		editRenderer: {
-			type: "InputEditRenderer",
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-			textAlign: "left",// 인푸터 텍스트 왼쪽 정렬(기본값)
-			regExp: '^[\d]+|\.?[\d]{0,2}?$'
-		}
-	}, {
-		dataField: "f2",
-		headerText: "가운데 정렬",
-		width: 100,
-		style: "my-center-column",
-		editRenderer: {
-			type: "InputEditRenderer",
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-			textAlign: "center" // 인푸터의 텍스트 정렬 가운데 설정
-		}
-	}, {
-		dataField: "f3",
-		headerText: "오른쪽 정렬",
-		width: 100,
-		style: "my-right-column",
-		headerTooltip: { // 헤더 툴팁 표시 HTML 양식
-			show: true,
-			tooltipHtml: "글자수 10개로 제한"
-		},
-		editRenderer: {
-			type: "InputEditRenderer",
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-			textAlign: "right", // 인푸터의 텍스트 정렬 오른쪽 설정
-			maxlength: 10
-		}
-	}, {
-		dataField: "f4",
-		headerText: "숫자 입력",
-		dataType: "numeric",
-		style: "my-right-column",
-		width: 100,
-		headerTooltip: { // 헤더 툴팁 표시 HTML 양식
-			show: true,
-			tooltipHtml: "숫자만 입력 가능 설정<br/>입력 시 편집 인푸터 오른쪽 정렬<br/>천단위 구분자 자동 삽입"
-		},
-		editRenderer: {
-			type: "InputEditRenderer",
-			onlyNumeric: true, // 0~9만 입력가능
-			allowPoint: true, // 소수점( . ) 도 허용할지 여부
-			allowNegative: true, // 마이너스 부호(-) 허용 여부
-			textAlign: "right", // 오른쪽 정렬로 입력되도록 설정
-			autoThousandSeparator: true // 천단위 구분자 삽입 여부
-		}
-	}, {
-		dataField: "f5",
-		headerText: "영어 대소문자만 가능<br/>(정규식)",
-		width: 130,
-		editRenderer: {
-			type: "InputEditRenderer",
-			regExp: "^[a-zA-Z]+$"
-		}
-	}, {
-		dataField: "f6",
-		headerText: "영어 대소문자만 가능(정규식)<br/>소문자 입력 시 자동 대문자화",
-		width: 180,
-		editRenderer: {
-			type: "InputEditRenderer",
-			regExp: "^[a-zA-Z]+$",
-			autoUpperCase: true // 소문자 입력되면 자동 대문자화
-		}
-	}, {
-		dataField: "f7",
-		headerText: "숫자만 가능(정규식)",
-		width: 120,
-		dataType: "numeric",
-		style: "my-right-column",
-		editRenderer: {
-			type: "InputEditRenderer",
-			regExp: "^[0-9]+$"
-		}
-	}, {
-		dataField: "f8",
-		headerText: "숫자, 소수점은 최대 2자리 가능(정규식)",
-		width: 160,
-		dataType: "numeric",
-		style: "my-right-column",
-		editRenderer: {
-			type: "InputEditRenderer",
-			regExp: '^[0-9]+\\.?[0-9]{0,2}?$'
-		}
-	}, {
-		dataField: "f9",
-		headerText: "한글만 가능(정규식)",
-		width: 140,
-		editRenderer: {
-			type: "InputEditRenderer",
-			regExp: "[ㄱ-힣]+$"
-		}
-	}];
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "f1",
+			headerText: "왼쪽 정렬",
+			width: 100,
+			style: "my-left-column",
+			editRenderer: {
+				type: "InputEditRenderer",
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				textAlign: "left",// 인푸터 텍스트 왼쪽 정렬(기본값)
+				regExp: '^[\d]+|\.?[\d]{0,2}?$'
+			}
+		}, {
+			dataField: "f2",
+			headerText: "가운데 정렬",
+			width: 100,
+			style: "my-center-column",
+			editRenderer: {
+				type: "InputEditRenderer",
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				textAlign: "center" // 인푸터의 텍스트 정렬 가운데 설정
+			}
+		}, {
+			dataField: "f3",
+			headerText: "오른쪽 정렬",
+			width: 100,
+			style: "my-right-column",
+			headerTooltip: { // 헤더 툴팁 표시 HTML 양식
+				show: true,
+				tooltipHtml: "글자수 10개로 제한"
+			},
+			editRenderer: {
+				type: "InputEditRenderer",
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				textAlign: "right", // 인푸터의 텍스트 정렬 오른쪽 설정
+				maxlength: 10
+			}
+		}, {
+			dataField: "f4",
+			headerText: "숫자 입력",
+			dataType: "numeric",
+			style: "my-right-column",
+			width: 100,
+			headerTooltip: { // 헤더 툴팁 표시 HTML 양식
+				show: true,
+				tooltipHtml: "숫자만 입력 가능 설정<br/>입력 시 편집 인푸터 오른쪽 정렬<br/>천단위 구분자 자동 삽입"
+			},
+			editRenderer: {
+				type: "InputEditRenderer",
+				onlyNumeric: true, // 0~9만 입력가능
+				allowPoint: true, // 소수점( . ) 도 허용할지 여부
+				allowNegative: true, // 마이너스 부호(-) 허용 여부
+				textAlign: "right", // 오른쪽 정렬로 입력되도록 설정
+				autoThousandSeparator: true // 천단위 구분자 삽입 여부
+			}
+		}, {
+			dataField: "f5",
+			headerText: "영어 대소문자만 가능<br/>(정규식)",
+			width: 130,
+			editRenderer: {
+				type: "InputEditRenderer",
+				regExp: "^[a-zA-Z]+$"
+			}
+		}, {
+			dataField: "f6",
+			headerText: "영어 대소문자만 가능(정규식)<br/>소문자 입력 시 자동 대문자화",
+			width: 180,
+			editRenderer: {
+				type: "InputEditRenderer",
+				regExp: "^[a-zA-Z]+$",
+				autoUpperCase: true // 소문자 입력되면 자동 대문자화
+			}
+		}, {
+			dataField: "f7",
+			headerText: "숫자만 가능(정규식)",
+			width: 120,
+			dataType: "numeric",
+			style: "my-right-column",
+			editRenderer: {
+				type: "InputEditRenderer",
+				regExp: "^[0-9]+$"
+			}
+		}, {
+			dataField: "f8",
+			headerText: "숫자, 소수점은 최대 2자리 가능(정규식)",
+			width: 160,
+			dataType: "numeric",
+			style: "my-right-column",
+			editRenderer: {
+				type: "InputEditRenderer",
+				regExp: '^[0-9]+\\.?[0-9]{0,2}?$'
+			}
+		}, {
+			dataField: "f9",
+			headerText: "한글만 가능(정규식)",
+			width: 140,
+			editRenderer: {
+				type: "InputEditRenderer",
+				regExp: "[ㄱ-힣]+$"
+			}
+		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
-
+		const gridProps = {
 			selectionMode: "multipleCells",
-
 			headerHeight: 40,
-
 			editable: true,
-
 			// 상태 칼럼 사용
 			showStateColumn: true
 		};
@@ -183,26 +172,27 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
 		// 에디팅 시작 이벤트 바인딩
-		// 에디팅 정상 종료 직전 이벤트 바인딩
-		// 에디팅 정상 종료 이벤트 바인딩
-		// 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, ["cellEditBegin", "cellEditEnd", "cellEditCancel"], auiCellEditingHandler);
-	};
+		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+			const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginDesc").textContent = msg;
+		});
 
-	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditBegin") {
-			document.getElementById("editBeginDesc").innerText = "에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value + ", which : " + event.which;
-		} else if (event.type == "cellEditEnd") {
-			document.getElementById("editBeginEnd").innerText = "에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value + ", which : " + event.which;
-		} else {
-			document.getElementById("editBeginEnd").innerText = "에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value + ", which : " + event.which;
-		}
-	};
+		// 에디팅 정상 종료 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+			const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
+
+		// 에디팅 취소 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+			const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
+	}
 
 	// 그리드 데이터
-	var gridData = [{ "f1": "Korea", "f2": "Blue", "f3": "IPhone 5S", "f4": 3258731, "f5": "Korea", "f6": "BLUE", "f7": 3258731, "f8": 234322.12, "f9": "안녕하세요" }, { "f1": "USA", "f2": "Gray", "f3": "Galaxy S5", "f4": 4119848, "f5": "USA", "f6": "GRAY", "f7": 4119848, "f8": 1255323.12, "f9": "가나다라" }, { "f1": "UK", "f2": "Green", "f3": "IPad Air", "f4": 6224630, "f5": "UK", "f6": "GREEN", "f7": 6224630, "f8": 12321.12, "f9": "아자차카" }, { "f1": "Japan", "f2": "Orange", "f3": "Galaxy Note3", "f4": 7942665, "f5": "Japan", "f6": "ORANGE", "f7": 7942665, "f8": 123.12, "f9": "감사합니다" }, { "f1": "China", "f2": "Pink", "f3": "LG G3", "f4": 5181529, "f5": "China", "f6": "PINK", "f7": 5181529, "f8": 123.12, "f9": "안녕하세요" }, { "f1": "France", "f2": "Violet", "f3": "Nexus 10", "f4": 5106071, "f5": "France", "f6": "VIOLET", "f7": 5106071, "f8": 123.12, "f9": "고맙습니다" }, { "f1": "Italy", "f2": "Yellow", "f3": "IPhone 5S", "f4": 3891990, "f5": "Italy", "f6": "YELLOW", "f7": 3891990, "f8": 123.12, "f9": "안녕하세요" }, { "f1": "Singapore", "f2": "Red", "f3": "Galaxy S5", "f4": 3692250, "f5": "Singapore", "f6": "RED", "f7": 3692250, "f8": 123.12, "f9": "고맙습니다" }, { "f1": "Ireland", "f2": "Blue", "f3": "IPad Air", "f4": 7976759, "f5": "Ireland", "f6": "BLUE", "f7": 7976759, "f8": 123.12, "f9": "안녕하세요" }, { "f1": "Taiwan", "f2": "Gray", "f3": "Galaxy Note3", "f4": 8070724, "f5": "Taiwan", "f6": "GRAY", "f7": 8070724, "f8": 123.12, "f9": "아자차카" }, { "f1": "Korea", "f2": "Green", "f3": "LG G3", "f4": 6408315, "f5": "Korea", "f6": "GREEN", "f7": 6408315, "f8": 123.12, "f9": "가나다라" }, { "f1": "USA", "f2": "Orange", "f3": "Nexus 10", "f4": 8905405, "f5": "USA", "f6": "ORANGE", "f7": 8905405, "f8": 123.12, "f9": "아자차카" }, { "f1": "UK", "f2": "Pink", "f3": "IPhone 5S", "f4": 6384926, "f5": "UK", "f6": "PINK", "f7": 6384926, "f8": 123.12, "f9": "가나다라" }, { "f1": "Japan", "f2": "Violet", "f3": "Galaxy S5", "f4": 8802489, "f5": "Japan", "f6": "VIOLET", "f7": 8802489, "f8": 123.12, "f9": "아자차카" }, { "f1": "China", "f2": "Yellow", "f3": "IPad Air", "f4": 4048114, "f5": "China", "f6": "YELLOW", "f7": 4048114, "f8": 123.12, "f9": "가나다라" }, { "f1": "France", "f2": "Red", "f3": "Galaxy Note3", "f4": 2877805, "f5": "France", "f6": "RED", "f7": 2877805, "f8": 123.12, "f9": "아자차카" }, { "f1": "Italy", "f2": "Blue", "f3": "LG G3", "f4": 5448276, "f5": "Italy", "f6": "BLUE", "f7": 5448276, "f8": 123.12, "f9": "가나다라" }, { "f1": "Singapore", "f2": "Gray", "f3": "Nexus 10", "f4": 3157277, "f5": "Singapore", "f6": "GRAY", "f7": 3157277, "f8": 123.12, "f9": "아자차카" }, { "f1": "Ireland", "f2": "Green", "f3": "IPhone 5S", "f4": 3681850, "f5": "Ireland", "f6": "GREEN", "f7": 3681850, "f8": 123.12, "f9": "가나다라" }, { "f1": "Taiwan", "f2": "Orange", "f3": "Galaxy S5", "f4": 4199650, "f5": "Taiwan", "f6": "ORANGE", "f7": 4199650, "f8": 123.12, "f9": "아자차카" }];
+	const gridData = [{ "f1": "Korea", "f2": "Blue", "f3": "IPhone 16", "f4": 3258731, "f5": "Korea", "f6": "BLUE", "f7": 3258731, "f8": 234322.12, "f9": "안녕하세요" }, { "f1": "USA", "f2": "Gray", "f3": "Galaxy S25", "f4": 4119848, "f5": "USA", "f6": "GRAY", "f7": 4119848, "f8": 1255323.12, "f9": "가나다라" }, { "f1": "UK", "f2": "Green", "f3": "IPhone 16 Pro", "f4": 6224630, "f5": "UK", "f6": "GREEN", "f7": 6224630, "f8": 12321.12, "f9": "아자차카" }, { "f1": "Japan", "f2": "Orange", "f3": "Galaxy Note21", "f4": 7942665, "f5": "Japan", "f6": "ORANGE", "f7": 7942665, "f8": 123.12, "f9": "감사합니다" }, { "f1": "China", "f2": "Pink", "f3": "Galaxy S25 Ultra", "f4": 5181529, "f5": "China", "f6": "PINK", "f7": 5181529, "f8": 123.12, "f9": "안녕하세요" }, { "f1": "France", "f2": "Violet", "f3": "Galaxy zFlip", "f4": 5106071, "f5": "France", "f6": "VIOLET", "f7": 5106071, "f8": 123.12, "f9": "고맙습니다" }, { "f1": "Italy", "f2": "Yellow", "f3": "IPhone 16", "f4": 3891990, "f5": "Italy", "f6": "YELLOW", "f7": 3891990, "f8": 123.12, "f9": "안녕하세요" }, { "f1": "Singapore", "f2": "Red", "f3": "Galaxy S25", "f4": 3692250, "f5": "Singapore", "f6": "RED", "f7": 3692250, "f8": 123.12, "f9": "고맙습니다" }, { "f1": "Ireland", "f2": "Blue", "f3": "IPhone 16 Pro", "f4": 7976759, "f5": "Ireland", "f6": "BLUE", "f7": 7976759, "f8": 123.12, "f9": "안녕하세요" }, { "f1": "Taiwan", "f2": "Gray", "f3": "Galaxy Note21", "f4": 8070724, "f5": "Taiwan", "f6": "GRAY", "f7": 8070724, "f8": 123.12, "f9": "아자차카" }, { "f1": "Korea", "f2": "Green", "f3": "Galaxy S25 Ultra", "f4": 6408315, "f5": "Korea", "f6": "GREEN", "f7": 6408315, "f8": 123.12, "f9": "가나다라" }, { "f1": "USA", "f2": "Orange", "f3": "Galaxy zFlip", "f4": 8905405, "f5": "USA", "f6": "ORANGE", "f7": 8905405, "f8": 123.12, "f9": "아자차카" }, { "f1": "UK", "f2": "Pink", "f3": "IPhone 16", "f4": 6384926, "f5": "UK", "f6": "PINK", "f7": 6384926, "f8": 123.12, "f9": "가나다라" }, { "f1": "Japan", "f2": "Violet", "f3": "Galaxy S25", "f4": 8802489, "f5": "Japan", "f6": "VIOLET", "f7": 8802489, "f8": 123.12, "f9": "아자차카" }, { "f1": "China", "f2": "Yellow", "f3": "IPhone 16 Pro", "f4": 4048114, "f5": "China", "f6": "YELLOW", "f7": 4048114, "f8": 123.12, "f9": "가나다라" }, { "f1": "France", "f2": "Red", "f3": "Galaxy Note21", "f4": 2877805, "f5": "France", "f6": "RED", "f7": 2877805, "f8": 123.12, "f9": "아자차카" }, { "f1": "Italy", "f2": "Blue", "f3": "Galaxy S25 Ultra", "f4": 5448276, "f5": "Italy", "f6": "BLUE", "f7": 5448276, "f8": 123.12, "f9": "가나다라" }, { "f1": "Singapore", "f2": "Gray", "f3": "Galaxy zFlip", "f4": 3157277, "f5": "Singapore", "f6": "GRAY", "f7": 3157277, "f8": 123.12, "f9": "아자차카" }, { "f1": "Ireland", "f2": "Green", "f3": "IPhone 16", "f4": 3681850, "f5": "Ireland", "f6": "GREEN", "f7": 3681850, "f8": 123.12, "f9": "가나다라" }, { "f1": "Taiwan", "f2": "Orange", "f3": "Galaxy S25", "f4": 4199650, "f5": "Taiwan", "f6": "ORANGE", "f7": 4199650, "f8": 123.12, "f9": "아자차카" }];
 </script>
-
 </head>
 <body>
 
@@ -250,6 +240,5 @@ editRenderer : {
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

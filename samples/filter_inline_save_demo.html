@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,93 +28,86 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-colum-right {
 		text-align: right;
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_kor_500.json");
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name",
-		filter: {
-			showIcon: true, // 기본 필터 메뉴 아이콘 표시
-			useInlineExtra: true // AND OR NOT 확장 인라인 필터 사용 (기본값 : false)
-		},
-		width: 200
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		filter: {
-			showIcon: true, // 기본 필터 메뉴 아이콘 표시
-			useInlineExtra: true // AND OR NOT 확장 인라인 필터 사용 (기본값 : false)
-		},
-		width: 200
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		filter: {
-			showIcon: true, // 기본 필터 메뉴 아이콘 표시
-			useInlineExtra: true // AND OR NOT 확장 인라인 필터 사용 (기본값 : false)
-		},
-		width: 200
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric",
-		filter: {
-			showIcon: false, // 기본 필터 메뉴 아이콘 표시
-			inline: false // 인라인 필터 input 표시 안함
-		},
-		width: 120
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		style: "my-colum-right",
-		filter: {
-			showIcon: false, // 기본 필터 메뉴 아이콘 표시
-			inline: false // 인라인 필터 input 표시 안함
-		}
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		filter: {
-			showIcon: false, // 기본 필터 메뉴 아이콘 표시
-			inline: false // 인라인 필터 input 표시 안함
-		}
+		requestGridData("./data/normal_kor_500.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Name",
+			filter: {
+				showIcon: true, // 기본 필터 메뉴 아이콘 표시
+				useInlineExtra: true // AND OR NOT 확장 인라인 필터 사용 (기본값 : false)
+			},
+			width: 200
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			filter: {
+				showIcon: true, // 기본 필터 메뉴 아이콘 표시
+				useInlineExtra: true // AND OR NOT 확장 인라인 필터 사용 (기본값 : false)
+			},
+			width: 200
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			filter: {
+				showIcon: true, // 기본 필터 메뉴 아이콘 표시
+				useInlineExtra: true // AND OR NOT 확장 인라인 필터 사용 (기본값 : false)
+			},
+			width: 200
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric",
+			filter: {
+				showIcon: false, // 기본 필터 메뉴 아이콘 표시
+				inline: false // 인라인 필터 input 표시 안함
+			},
+			width: 120
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			style: "my-colum-right",
+			filter: {
+				showIcon: false, // 기본 필터 메뉴 아이콘 표시
+				inline: false // 인라인 필터 input 표시 안함
+			}
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			filter: {
+				showIcon: false, // 기본 필터 메뉴 아이콘 표시
+				inline: false // 인라인 필터 input 표시 안함
+			}
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			// 필터링 가능 여부
 			enableFilter: true,
-
 			// 인라인 필터 행을 표시할지 여부
 			showInlineFilter: true,
-
 			// 인라인 필터에서 필터 값 입력 시 반응 딜레이(기본값: 300)
 			// 예로 300 설정 시 사용자가 입력 종료 300ms 이후 필터링 실행
 			// 0 설정하면 매 입력마다 필터링 실행.
@@ -130,58 +120,49 @@
 
 		// ready 이벤트 바인딩
 		AUIGrid.bind(myGridID, "ready", function (evt) {
-			var inlineTextStr = getLocalStorageValue("inlineTexts"); // 인라인 필터링 텍스트
-			var inlineTexts = JSON.parse(inlineTextStr);
+			const inlineTextStr = getLocalStorageValue("inlineTexts"); // 인라인 필터링 텍스트
+			const inlineTexts = JSON.parse(inlineTextStr);
 
 			// 인라인 필터링 텍스트들 설정 시킴
 			AUIGrid.setFilterInlineTexts(myGridID, inlineTexts);
 		});
-	};
-
+	}
 
 	// 필터 정보를 localStorage 에 저장
 	function saveLocalStorage() {
-
 		// 인라인 필터의 텍스트 값들 얻기.
-		var inlineTexts = AUIGrid.getFilterInlineTexts(myGridID);
-
+		const inlineTexts = AUIGrid.getFilterInlineTexts(myGridID);
 		if (inlineTexts.length <= 0) {
 			alert("현재 인라인 필터링 된 상태가 아닙니다.");
 			return;
 		}
-
-		if (typeof (Storage) != "undefined") { // Check browser support
-			var str = JSON.stringify(inlineTexts);
-
-			localStorage.setItem("inlineTexts", str); // locaStorage에 보관
-
-			alert("인라인 필터링 상태가 보관되었습니다.\r\n브라우저를 종료하거나 F5 로 갱신했을 때 현재 필터링 상태로 그리드가 출력됩니다.");
-		} else {
+		if (typeof (Storage) === "undefined") {
 			alert("localStorage 를 지원하지 않는 브라우저입니다.");
 			return;
 		}
-	};
+
+		const str = JSON.stringify(inlineTexts);
+		localStorage.setItem("inlineTexts", str); // locaStorage에 보관
+		alert("인라인 필터링 상태가 보관되었습니다.\r\n브라우저를 종료하거나 F5 로 갱신했을 때 현재 필터링 상태로 그리드가 출력됩니다.");
+	}
 
 	//localStorage 정보 삭제
 	function resetLocalStorage() {
-		if (typeof (Storage) != "undefined") { // Check browser support
-			localStorage.removeItem("inlineTexts");
-			alert("인라인 필터링 상태를 초기화했습니다.\r\n브라우저를 종료하거나 F5 로 갱신했을 때 필터링 없이 원래 상태로 출력됩니다.");
-		} else {
+		if (typeof (Storage) === "undefined") {
 			alert("localStorage 를 지원하지 않는 브라우저입니다.");
 			return;
 		}
-	};
+		localStorage.removeItem("inlineTexts");
+		alert("인라인 필터링 상태를 초기화했습니다.\r\n브라우저를 종료하거나 F5 로 갱신했을 때 필터링 없이 원래 상태로 출력됩니다.");
+	}
 
 	function getLocalStorageValue(key) {
-		if (typeof (Storage) != "undefined") { // Check browser support
-			return localStorage.getItem(key);
-		} else {
+		if (typeof (Storage) === "undefined") {
 			alert("localStorage 를 지원하지 않는 브라우저입니다.");
+			return;
 		}
-	};
-
-
+		return localStorage.getItem(key);
+	}
 </script>
 
 </head>
@@ -197,7 +178,7 @@
 		<div class="src_cover">
 			<pre>
 // 인라인 필터의 텍스트들 얻기.
-var inlineTexts = AUIGrid.getFilterInlineTexts(myGridID);
+let inlineTexts = AUIGrid.getFilterInlineTexts(myGridID);
 
 ... 
 
@@ -210,7 +191,7 @@ AUIGrid.setFilterInlineTexts(myGridID, inlineTexts);</pre>
 		<div id="grid_wrap" style="width:100%;height:320px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -218,6 +199,5 @@ AUIGrid.setFilterInlineTexts(myGridID, inlineTexts);</pre>
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,263 +28,249 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-color {
 		color: #00aa00;
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
 	//-- 드랍다운리스트에 출력할 리스트들...서버 사이드(PHP, JSP, ASP 등)에서 해당 리스트를 매핑하십시오.
-	var groupList = ["A", "B", "C"];
-
-	var groupAList = ["A-1", "A-2", "A-3", "A-4"];
-
-	var groupBList = ["B-1", "B-2", "B-3", "B-4", "B-5"];
-
-	var groupCList = ["C-1", "C-2", "C-3", "C-4", "C-5"];
-
-	var posList = ["회장", "사장", "부사장", "상무", "전무", "이사", "부장", "차장", "과장", "대리", "사원", "인턴", "임시1", "임시2", "임시3", "임시4", "임시5"];
-
-	var colorList = ["Black", "White", "Red", "Blue"];
-
+	const groupList = ["A", "B", "C"];
+	const groupAList = ["A-1", "A-2", "A-3", "A-4"];
+	const groupBList = ["B-1", "B-2", "B-3", "B-4", "B-5"];
+	const groupCList = ["C-1", "C-2", "C-3", "C-4", "C-5"];
+	const posList = ["회장", "사장", "부사장", "상무", "전무", "이사", "부장", "차장", "과장", "대리", "사원", "인턴", "임시1", "임시2", "임시3", "임시4", "임시5"];
+	const colorList = ["Black", "White", "Red", "Blue"];
 	// key-value 를 갖는 구조
-	var keyValueList = [{ "code": "001", "value": "경영기획본부" }, { "code": "002", "value": "경영본부" }, { "code": "003", "value": "인사부" }, { "code": "004", "value": "영업본부" }];
-
+	const keyValueList = [{ "code": "001", "value": "경영기획본부" }, { "code": "002", "value": "경영본부" }, { "code": "003", "value": "인사부" }, { "code": "004", "value": "영업본부" }];
 	// 드랍다운 리스트로 출력할 데이터
-	var myList = [{
+	const myList = [{
 		"id": "#Cust0",
-		"date": "2014/10/01",
+		"date": "2024/10/01",
 		"name": "Steve",
 		"country": "USA",
 		"flag": "usa.png",
-		"product": "IPad Air",
+		"product": "IPhone 16 Pro",
 		"color": "Green"
 	}, {
 		"id": "#Cust1",
-		"date": "2014/09/30",
+		"date": "2024/09/30",
 		"name": "홍길동",
 		"country": "Korea",
 		"flag": "korea.png",
-		"product": "LG G3",
+		"product": "Galaxy S25 Ultra",
 		"color": "Pink"
 	}, {
 		"id": "#Cust2",
-		"date": "2014/09/29",
+		"date": "2024/09/29",
 		"name": "Yamaha",
 		"country": "Japan",
 		"flag": "japan.png",
-		"product": "IPad Air",
+		"product": "IPhone 16 Pro",
 		"color": "Yellow"
 	}, {
 		"id": "#Cust3",
-		"date": "2014/09/28",
+		"date": "2024/09/28",
 		"name": "Natasha",
 		"country": "UK",
 		"flag": "uk.png",
-		"product": "Galaxy Note3",
+		"product": "Galaxy Note21",
 		"color": "Orange"
 	}, {
 		"id": "#Cust4",
-		"date": "2014/09/27",
+		"date": "2024/09/27",
 		"name": "Thuwai",
 		"country": "China",
 		"flag": "china.png",
-		"product": "LG G3",
+		"product": "Galaxy S25 Ultra",
 		"color": "Violet"
 	}, {
 		"id": "#Cust5",
-		"date": "2014/09/26",
+		"date": "2024/09/26",
 		"name": "Anna",
 		"country": "USA",
 		"flag": "usa.png",
-		"product": "Galaxy S5",
+		"product": "Galaxy S25",
 		"color": "Gray"
 	}];
-	//--                   
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
+		createAUIGrid();
+		// 랜덤 데이터 생성하여 그리드에 삽입
+		AUIGrid.setGridData(myGridID, genRandomData());
+	}
 
-		// 랜덤 데이터 생성
-		genRandomData();
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "position",
-		headerText: "직급",
-		width: 160,
-		renderer: {
-			type: "IconRenderer",
-			iconWidth: 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-			iconHeight: 16,
-			iconPosition: "aisleRight",
-			iconTableRef: { // icon 값 참조할 테이블 레퍼런스
-				"default": "./assets/list-icon.png" // default
-			},
-			onClick: function (event) {
-				// 아이콘을 클릭하면 수정으로 진입함.
-				AUIGrid.openInputer(event.pid);
-			}
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			showEditorBtn: false,
-			showEditorBtnOver: false, // 마우스 오버 시 에디터버턴 보이기
-			multipleMode: true, // 다중 선택 모드(기본값 : false)
-			showCheckAll: true, // 다중 선택 모드에서 전체 체크 선택/해제 표시(기본값:false);
-			delimiter: "/", // 다중 선택시 구분자 (기본값 : 컴마(,))
-			list: posList
-		}
-	}, {
-		dataField: "id",
-		headerText: "이름",
-		headerTooltip: { show: true, tooltipHtml: "드랍다운리스트를 사용자 정의하여 추가 정보와 같이 출력 시킴. key-value 모드" },
-		width: 160,
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-			var keyField = this.editRenderer.keyField;
-			var valueField = this.editRenderer.valueField;
-			var list = this.editRenderer.list;
-			var valueArr = value.split(", "); // 구분자 기본값은 ", " 임.
-			// valueArr에 해당하는 name 값(valueField 지정 값)을 myList(editRenderer.list)에서 찾고 매핑
-			var tempValueArr = list.filter(v => valueArr.includes(v[keyField])) // value에 포함된 id 값(keyField 값)인지 확인
-				.map(v => v[valueField]); // 매칭된 name 값(valueField) 추출
-			return tempValueArr.filter(Boolean).join(", "); // 빈 문자열 제거 후 보여주기
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-			multipleMode: true, // 다중 선택 모드(기본값 : false)
-			showCheckAll: true, // 다중 선택 모드에서 전체 체크 선택/해제 표시(기본값:false);
-			keyField: "id",
-			valueField: "name",
-			list: myList,
-			// 드랍 리스트의 개별 아이템에 대하여 출력할 양식을 HTML 로 작성하여 반환하면 리스트로 출력됩니다.
-			listTemplateFunction: function (rowIndex, columnIndex, text, item, dataField, listItem) {
-				var html = '<div style="display:block;margin-left:20px;text-align:left;white-space:nowrap">';
-				html += '<img src="./assets/' + listItem.flag + '" width="30" height="20" style="vertical-align:middle;padding-right:10px;"/>';
-				for (var n in listItem) {
-					if (n != "flag") {
-						html += '<span style="display:inline-block;width:80px;">' + listItem[n] + '</span>';
-					}
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "position",
+			headerText: "직급",
+			width: 160,
+			renderer: {
+				type: "IconRenderer",
+				iconWidth: 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+				iconHeight: 16,
+				iconPosition: "aisleRight",
+				iconTableRef: { // icon 값 참조할 테이블 레퍼런스
+					"default": "./assets/list-icon.png" // default
+				},
+				onClick: function (event) {
+					// 아이콘을 클릭하면 수정으로 진입함.
+					AUIGrid.openInputer(event.pid);
 				}
-				html += '</div>';
-				return html;
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				showEditorBtn: false,
+				showEditorBtnOver: false, // 마우스 오버 시 에디터버턴 보이기
+				multipleMode: true, // 다중 선택 모드(기본값 : false)
+				showCheckAll: true, // 다중 선택 모드에서 전체 체크 선택/해제 표시(기본값:false);
+				delimiter: "/", // 다중 선택시 구분자 (기본값 : 컴마(,))
+				list: posList
 			}
-		}
-	}, {
-		dataField: "color",
-		headerText: "컬러(다중선택=false)",
-		width: 140,
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "오른쪽의 조건 리스트를 위한 칼럼으로 다중 선택 모드 false 처리"
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-			list: colorList
-		}
-	}, {
-		dataField: "color2",
-		headerText: "조건 리스트",
-		width: 140,
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "특정 조건에 따라 다르게 리스트 출력<br>컬러 값에 따라 리스트가 다르게 나옵니다."
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-			showCheckAll: true, // 다중 선택 모드에서 전체 체크 선택/해제 표시(기본값:false);
-			multipleMode: true, // 다중 선택 모드(기본값 : false)
-			// 같은 행의 color 값을 보고 출력시킬 list 를 결정함.
-			listFunction: function (rowIndex, columnIndex, item, dataField) {
-				if (item.color == "Black") {
-					return ["어두움", "단순함", "악함", "더러움"];
-				} else if (item.color == "White") {
-					return ["밝음", "순수함", "선함", "깨끗함"];
-				} else if (item.color == "Red") {
-					return ["강렬함", "열정적임"];
-				} else {
+		}, {
+			dataField: "id",
+			headerText: "이름",
+			headerTooltip: { show: true, tooltipHtml: "드랍다운리스트를 사용자 정의하여 추가 정보와 같이 출력 시킴. key-value 모드" },
+			width: 160,
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				const keyField = this.editRenderer.keyField;
+				const valueField = this.editRenderer.valueField;
+				const list = this.editRenderer.list;
+				const valueArr = value.split(", "); // 구분자 기본값은 ", " 임.
+				// valueArr에 해당하는 name 값(valueField 지정 값)을 myList(editRenderer.list)에서 찾고 매핑
+				const tempValueArr = list.filter(v => valueArr.includes(v[keyField])) // value에 포함된 id 값(keyField 값)인지 확인
+					.map(v => v[valueField]); // 매칭된 name 값(valueField) 추출
+				return tempValueArr.filter(Boolean).join(", "); // 빈 문자열 제거 후 보여주기
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				multipleMode: true, // 다중 선택 모드(기본값 : false)
+				showCheckAll: true, // 다중 선택 모드에서 전체 체크 선택/해제 표시(기본값:false);
+				keyField: "id",
+				valueField: "name",
+				list: myList,
+				// 드랍 리스트의 개별 아이템에 대하여 출력할 양식을 HTML 로 작성하여 반환하면 리스트로 출력됩니다.
+				listTemplateFunction: function (rowIndex, columnIndex, text, item, dataField, listItem) {
+					const spans = Object.entries(listItem).filter(([key]) => key !== "flag")
+						.map(([key, value]) => `<span style="display:inline-block;width:80px;overflow:hidden;text-overflow:ellipsis;">${value}</span>`)
+						.join("");
+					return (`<div style="display:block;text-align:left;white-space:nowrap">
+								<img src="./assets/${listItem.flag}" width="30" height="20" style="padding-right:10px;"/>
+								${spans}
+							</div>`);
+				}
+			}
+		}, {
+			dataField: "color",
+			headerText: "컬러(다중선택=false)",
+			width: 140,
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "오른쪽의 조건 리스트를 위한 칼럼으로 다중 선택 모드 false 처리"
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				list: colorList
+			}
+		}, {
+			dataField: "color2",
+			headerText: "조건 리스트",
+			width: 140,
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "특정 조건에 따라 다르게 리스트 출력<br>컬러 값에 따라 리스트가 다르게 나옵니다."
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				showCheckAll: true, // 다중 선택 모드에서 전체 체크 선택/해제 표시(기본값:false);
+				multipleMode: true, // 다중 선택 모드(기본값 : false)
+				// 같은 행의 color 값을 보고 출력시킬 list 를 결정함.
+				listFunction: function (rowIndex, columnIndex, item, dataField) {
+					if (item.color === "Black") {
+						return ["어두움", "단순함", "악함", "더러움"];
+					} else if (item.color === "White") {
+						return ["밝음", "순수함", "선함", "깨끗함"];
+					} else if (item.color === "Red") {
+						return ["강렬함", "열정적임"];
+					}
 					return ["차분함", "시원함", "희망적임"];
 				}
 			}
-		}
-	}, {
-		dataField: "dept",
-		headerText: "부서명",
-		width: 140,
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "key-value 형태의 수정 예제. 실제 데이터는 001, 002 와 같이 구성됨."
-		},
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-			var keyField = this.editRenderer.keyField;
-			var valueField = this.editRenderer.valueField;
-			var list = this.editRenderer.list;
-			var valueArr = value.split(", "); // 구분자 기본값은 ", " 임.
-			// valueArr에 해당하는 name 값(valueField 지정 값)을 myList(editRenderer.list)에서 찾고 매핑
-			// 리스트 순서와 무관
-			var tempValueArr = valueArr.map(val => {
-				var found = list.find(v => v[keyField] === val);
-				return found ? found[valueField] : ""; // 값이 있으면 name, 없으면 빈 문자열
-			});
-			return tempValueArr.filter(Boolean).sort().join(", "); // 빈 문자열 제거 후 정렬 시켜서 보여주기
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			multipleMode: true, // 다중 선택 모드(기본값 : false)
-			list: keyValueList, //key-value Object 로 구성된 리스트
-			keyField: "code", // key 에 해당되는 필드명
-			valueField: "value" // value 에 해당되는 필드명
-		}
-	}, {
-		dataField: "group",
-		headerText: "그룹",
-		width: 140,
-		editRenderer: {
-			type: "DropDownListRenderer",
-			descendants: ["leaf"], // 자손 필드들
-			descendantDefaultValues: ["-"], // 변경 시 자손들에게 기본값 지정
-			list: groupList
-		}
-	}, {
-		dataField: "leaf",
-		headerText: "그룹 하위",
-		width: 140,
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-			var valueArr = value.split(", "); // 구분자 기본값은 ", " 임.
-			return valueArr.filter(Boolean).sort().join(", "); // 정렬시켜서 보여주기.
-		},
-		editRenderer: {
-			type: "DropDownListRenderer",
-			multipleMode: true, // 다중 선택 모드(기본값 : false)
-			listFunction: function (rowIndex, columnIndex, item, dataField) {
-				if (item.group == "A") { // 그룹 필드에서 선택된 값 비교
-					return groupAList;
-				} else if (item.group == "B") {
-					return groupBList;
-				} else {
+		}, {
+			dataField: "dept",
+			headerText: "부서명",
+			width: 140,
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "key-value 형태의 수정 예제. 실제 데이터는 001, 002 와 같이 구성됨."
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				const keyField = this.editRenderer.keyField;
+				const valueField = this.editRenderer.valueField;
+				const list = this.editRenderer.list;
+				const valueArr = value.split(", "); // 구분자 기본값은 ", " 임.
+				// valueArr에 해당하는 name 값(valueField 지정 값)을 myList(editRenderer.list)에서 찾고 매핑
+				// 리스트 순서와 무관
+				const tempValueArr = valueArr.map(val => {
+					const found = list.find(v => v[keyField] === val);
+					return found ? found[valueField] : ""; // 값이 있으면 name, 없으면 빈 문자열
+				});
+				return tempValueArr.filter(Boolean).sort().join(", "); // 빈 문자열 제거 후 정렬 시켜서 보여주기
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				multipleMode: true, // 다중 선택 모드(기본값 : false)
+				list: keyValueList, //key-value Object 로 구성된 리스트
+				keyField: "code", // key 에 해당되는 필드명
+				valueField: "value" // value 에 해당되는 필드명
+			}
+		}, {
+			dataField: "group",
+			headerText: "그룹",
+			width: 140,
+			editRenderer: {
+				type: "DropDownListRenderer",
+				descendants: ["leaf"], // 자손 필드들
+				descendantDefaultValues: ["-"], // 변경 시 자손들에게 기본값 지정
+				list: groupList
+			}
+		}, {
+			dataField: "leaf",
+			headerText: "그룹 하위",
+			width: 140,
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				const valueArr = value.split(", "); // 구분자 기본값은 ", " 임.
+				return valueArr.filter(Boolean).sort().join(", "); // 정렬시켜서 보여주기.
+			},
+			editRenderer: {
+				type: "DropDownListRenderer",
+				multipleMode: true, // 다중 선택 모드(기본값 : false)
+				listFunction: function (rowIndex, columnIndex, item, dataField) {
+					if (item.group === "A") { // 그룹 필드에서 선택된 값 비교
+						return groupAList;
+					} else if (item.group === "B") {
+						return groupBList;
+					}
 					return groupCList;
 				}
 			}
-		}
-	}];
+		}];
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
-
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			rowIdField: "index",       // 각 행의 고유 ID 필드
 			editable: true,            // 편집 가능 여부
 			showRowCheckColumn: true,  // 엑스트라 체크박스 출력 여부
@@ -300,38 +283,33 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
 		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler);
+		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+			const logEle = document.getElementById("elapse");
+			logEle.textContent = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+		});
 	}
 
-	// 편집 핸들러
-	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditEnd") {
-			document.getElementById("ellapse").innerText = "Editing End : ( " + event.rowIndex + ", " + event.columnIndex + ") : " + event.value;
-		}
-	};
-
-	// 체크된 아이템 얻기
+	//체크된 아이템 얻기
 	function getCheckedRowItems() {
-		var checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 		if (checkedItems.length <= 0) {
 			alert("체크된 항목 없음!!");
 			return;
 		}
-		var str = "";
-		var rowItem = checkedItems[0].item;
-
-		for (var p in rowItem) {
-			str += p + " : " + rowItem[p] + ", ";
+		let str = "";
+		for (let i = 0, len = checkedItems.length; i < len; i++) {
+			const rowItem = checkedItems[i];
+			str += Object.entries(rowItem.item)
+				.map(([key, value]) => `${key} : ${value}`)
+				.join(", ");
 		}
 		alert(str);
-	};
+	}
 
 	// 그리드에 삽입할 데이터 생성
 	function genRandomData() {
-		var data = [];
-
-		for (var i = 1; i <= 100; i++) {
+		const data = [];
+		for (let i = 1; i <= 100; i++) {
 			data.push({
 				index: i,
 				id: "#Cust" + i % myList.length,
@@ -344,11 +322,9 @@
 			});
 		}
 		//console.log(JSON.stringify(data));
-		data[0].dept += ", 003";
-		AUIGrid.setGridData(myGridID, data);
-	};
+		return data;
+	}
 </script>
-
 </head>
 <body>
 
@@ -365,8 +341,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -374,6 +349,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

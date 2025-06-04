@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,14 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<!-- jQuery -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<!-- jQuery ajax form -->
-<!--  https://malsup.com/jquery/form/ -->
-<script src="https://malsup.github.com/jquery.form.js"></script>
-
-<style type="text/css">
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-column {
 		text-align: right;
@@ -64,248 +55,201 @@
 		height: 20px;
 		border-radius: 3px;
 	}
-
-	.percent {
-		position: absolute;
-		display: inline-block;
-		top: 3px;
-		left: 48%;
-	}
 </style>
-
-<script type="text/javascript">
-	function documentReady() { };
-
+<script>
 	//파일 저장 캐시
-	var myFileCaches = {};
+	let myFileCaches = {};
 
 	// 최근 그리드 파일 선택 행 아이템 보관 변수
-	var recentGridItem = null;
+	let recentGridItem = null;
 
-	var myGridID = null;
+	// AUIGrid 생성 후 반환 ID
+	let myGridID = null;
 
-	$(document).ready(function () {
+	// 시작점
+	function init() {
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid();
+		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+		requestGridData("./data/normal_50.json");
 
-		// 파일 선택하기
-		$('#file').on('change', function (evt) {
-			var data = null;
-			var file = evt.target.files[0];
-			if (typeof file == "undefined") {
+		// 파일 선택 이벤트 등록
+		const fileInput = document.getElementById('fileSelector');
+		fileInput.addEventListener('change', (event) => {
+			const file = event.target.files[0];
+			if (!file) {
 				alert("파일 선택 시 취소!!");
 
-				delete myFileCaches[recentGridItem.id];
-
-				AUIGrid.updateRowsById(myGridID, {
-					id: recentGridItem.id,
-					selectedFile: ""
-				});
+				if (recentGridItem?.id) {
+					delete myFileCaches[recentGridItem.id];
+					AUIGrid.updateRowsById(myGridID, {
+						id: recentGridItem.id,
+						selectedFile: ""
+					});
+				}
 				return;
 			}
 
-			if (file.size > 2048000) {
+			if (file.size > 2 * 1024 * 1024) {
 				alert("개별 파일은 2MB 를 초과해선 안됩니다.");
 				return;
 			}
 
-			// 서버로 보낼 파일 캐시에 보관
 			myFileCaches[recentGridItem.id] = {
 				name: recentGridItem.name,
 				country: recentGridItem.country,
-				file: file
+				file
 			};
 
-			alert("업로드 할 파일 선택 : \r\n" + file.name + "\r\n" + recentGridItem.name + ", " + recentGridItem.country + ", " + recentGridItem.product + ", " + recentGridItem.color + ", " + recentGridItem.price);
+			alert(`업로드 할 파일 선택:\n${file.name}\n${recentGridItem.name}, ${recentGridItem.country}, ${recentGridItem.product}, ${recentGridItem.color}, ${recentGridItem.price}`);
 
-			// 선택 파일명 그리드에 출력 시킴
 			AUIGrid.updateRowsById(myGridID, {
 				id: recentGridItem.id,
 				selectedFile: file.name
 			});
-
-			$(this).val("");
+			// 초기화		
+			event.target.value = ""
 		});
-
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-
-	});
-
-
-	//칼럼 레이아웃
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name",
-		width: 140
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		width: 140
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		width: 140
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		width: 140
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		style: "right_style",
-		dataType: "numeric",
-		width: 140
-	}, {
-		dataField: "selectedFile",
-		headerText: "선택 파일명",
-		width: 160,
-		styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-			if (typeof value == "undefined" || value == "") {
-				return null;
-			}
-			return "my-file-selected";
-		},
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-			if (typeof value == "undefined" || value == "") {
-				return "선택 파일 없음";
-			}
-			return value;
-		}
-	}, {
-		dataField: "null",
-		headerText: "파일",
-		width: 160,
-		renderer: {
-			type: "ButtonRenderer",
-			labelText: "파일 선택",
-			onClick: function (event) {
-				myButtonClick(event.item);
-			}
-		}
 	}
-	];
 
-	//AUIGrid 를 생성합니다.
 	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Name",
+			width: 140
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			width: 140
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			width: 140
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			width: 140
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			style: "right_style",
+			dataType: "numeric",
+			width: 140
+		}, {
+			dataField: "selectedFile",
+			headerText: "선택 파일명",
+			width: 160,
+			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (typeof value === "undefined" || value === "") {
+					return null;
+				}
+				return "my-file-selected";
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				if (typeof value === "undefined" || value === "") {
+					return "선택 파일 없음";
+				}
+				return value;
+			}
+		}, {
+			dataField: "null",
+			headerText: "파일",
+			width: 160,
+			renderer: {
+				type: "ButtonRenderer",
+				labelText: "파일 선택",
+				onClick: function (event) {
+					myButtonClick(event.item);
+				}
+			}
+		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			rowIdField: "id",
-			enableSorting: false
+			enableSorting: false,
+			rowHeight: 34
 		};
 
-		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+	}
 
-		// 그리드 데이터 삽입
-		requestData("./data/getJson.php?count=30");
-	};
-
-	//그리드의 셀 버턴 클릭 처리
 	function myButtonClick(item) {
 		recentGridItem = item; // 그리드의 클릭한 행 아이템 보관
-		var input = $("#file");
-		input.trigger('click'); // 파일 브라우저 열기
-	};
+		document.getElementById('fileSelector').click(); // 파일 브라우저 열기
+	}
 
-	//선택한 파일 서버로 전송
 	function submitFiles() {
-
-		var noFile = true;
-
-		// jQuery Ajax Form 사용
-		var formData = new FormData();
-
-		$.each(myFileCaches, function (n, v) {
-			//	formData.append("ids[]", n); // 추가 정보들
-			//	formData.append("names[]", v.name); // 추가 정보들
-			//	formData.append("countries[]", v.country); // 추가 정보들
-			formData.append("uploadfiles[]", v.file);
-			noFile = false;
-		});
-
-		if (noFile) {
+		if (Object.keys(myFileCaches).length === 0) {
 			alert("서버로 전송할 파일이 없습니다. 먼저 선택하십시오.!!");
 			return;
 		}
 
-		var bar = $('.bar');
-		var percent = $('.percent');
-		var status = $('#status');
-
-		$.ajax({
-			url: './data/upload.php',
-			processData: false,
-			contentType: false,
-			data: formData,
-			cache: false,
-			dataType: 'json',
-			type: 'POST',
-			beforeSend: function () {
-				status.empty();
-				var percentVal = '0%';
-				bar.width(percentVal)
-				percent.html(percentVal);
-			},
-			xhr: function () {
-				var myXhr = $.ajaxSettings.xhr();
-				if (myXhr.upload) {
-					myXhr.upload.addEventListener('progress', function (evt) {
-						if (evt.lengthComputable) {
-							var percentComplete = (evt.loaded / evt.total) * 100;
-							var percentVal = percentComplete + '%';
-							bar.width(percentVal)
-							percent.html(percentVal);
-						}
-					}, false);
-				} else {
-					console.log("Upload progress is not supported.");
-				}
-				return myXhr;
-			},
-			success: function () {
-				var percentVal = '100%';
-				bar.width(percentVal)
-				percent.html(percentVal);
-			},
-			complete: function (xhr) {
-				status.html('전송 완료!!<br/>' + xhr.responseText);
-			}
+		const formData = new FormData();
+		Object.entries(myFileCaches).forEach(([id, { file }]) => {
+			formData.append("uploadfiles[]", file);
 		});
-	};
 
+		const bar = document.querySelector('.bar');
+		const status = document.getElementById('status');
 
+		const xhr = new XMLHttpRequest();
+		xhr.open("POST", "./data/upload.php", true);
+
+		xhr.upload.onprogress = (e) => {
+			if (e.lengthComputable) {
+				const percentComplete = Math.round((e.loaded / e.total) * 100);
+				const percentText = `${percentComplete}%`;
+				bar.style.width = percentText;
+			}
+		};
+
+		xhr.onloadstart = () => {
+			bar.style.width = '0%';
+			status.innerHTML = '';
+		};
+
+		xhr.onload = () => {
+			bar.style.width = '100%';
+			status.innerHTML = `전송 완료!!<br/>${xhr.responseText}`;
+		};
+
+		xhr.onerror = () => {
+			status.innerHTML = '전송 실패!';
+		};
+
+		xhr.send(formData);
+	}
 </script>
-
 </head>
 <body>
 
 <div id="main">
 	<div class="desc">
 		<p>그리드의 개별 행에 파일 선택을 할 수 있도록 작성한 데모입니다.</p>
-		<p>그리드에서 파일을 선택하고, 종합적으로 모든 선택 파일을 ajaxForm 을 통하여 서버로 전송합니다.</p>
-
+		<p>그리드에서 파일을 선택하고, 종합적으로 모든 선택 파일을 서버로 전송합니다.</p>
 		<p><span class="btn" onclick="submitFiles();">파일 전체 서버로 보내기</span></p>
-
+		<p style="color:#f00;">전송한 파일들은 당사 서버에 저장되지 않습니다.</p>
 		<!-- 파일 input , 감춰놓기 -->
-		<input type="file" id="file" style="visibility:hidden;"></input>
-
-		<div class="progress">
-			<div class="bar"></div>
-			<div class="percent">0%</div>
-		</div>
-
-		<div id="status"></div>
-		<a href="https://auisoft.net/blog/auigrid/file.html" target="_blank">일괄 업로드가 아닌 개별 파일 선택하면 바로 서버로 보내는 샘플 보기</a>
+		<input type="file" id="fileSelector" style="display:none;"></input>
+		<p>
+			<a href="https://auisoft.net/blog/auigrid/file-drop-demo.html" target="_blank">파일 드래그&amp;드랍으로 업로드 시키기</a>
+		</p>
+		<p>
+			<a href="https://auisoft.net/blog/auigrid/file.html" target="_blank">일괄 업로드가 아닌 개별 파일 선택하면 바로 서버로 보내는 샘플 보기</a>
+		</p>
 	</div>
-
 	<div>
-
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<!-- 업로드 진행 상태 바 -->
+		<div class="upload-status">
+			<div class="bar" style="height: 6px; background: #3b82f6; width: 0%; transition: width 0.3s;"></div>
+			<div id="status"></div>
+		</div>
 	</div>
 </div>
 <div id="footer">
@@ -313,6 +257,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

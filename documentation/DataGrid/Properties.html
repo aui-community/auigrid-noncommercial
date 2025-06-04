@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
@@ -16,6 +16,8 @@
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <script src="../static/doc.js" type="text/javascript"></script>
+
+
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -23,7 +25,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.14 Documentation</span>
+<span id="title">AUIGrid 3.0.16 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -54,7 +56,7 @@
   <p>이 속성은 fillValueGroupingSummary=true 설정이 선행되어야 합니다.</p>
   <p>Also See : <a href="#fillValueGroupingSummary">fillValueGroupingSummary</a> | <a href="../../samples/grouping_summary_type3.html?gs_t3&theme=default&s=2300" target="_blank">관련 데모 보기</a></p>
   <p></p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="applyRestPercentWidth">
 <td class="summaryTableSignatureCol">
@@ -68,7 +70,7 @@
   <li>applyRestPercentWidth = true 인 경우 :  전체 그리드 사이즈에서 100 픽셀을 제외한 공간에서 각각 50% 씩 칼럼 사이즈로 할당합니다.</li>
   </ul>
   <p>이 속성은 칼럼의 width 속성을 명시적 사이즈와 퍼센티지 사이즈를 혼용해서 사용할 때만 유효합니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="autoEditBeginMode">
 <td class="summaryTableSignatureCol">
@@ -78,7 +80,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>터치가 지원되는 모바일 기기(아이폰, 아이패드, 안드로이드 기기 등)로 접속 시 셀 편집을 탭(tap)하여 수정하게 만들지 여부를 지정합니다.</p>
 <p>즉, autoEditBeginMode=true 설정하면 editBeginMode 가 "doubleClick" 이라도 모바일 기기로 접속하면 탭으로 수정 가능합니다.(PC는 기존 더블클릭 유지함)</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="autoEditCompleteMode">
 <td class="summaryTableSignatureCol">
@@ -89,7 +91,7 @@
  <p>그리드 셀을 수정 중일 때 그리드 외의 HTML 바탕을 mouseDown 한 경우 수정을 종료 시킬지 여부를 지정합니다.</p>
  <p>이 속성이 true 라면 그리드 셀 외의 다른 HTML 엘리먼트를 mouseDown 한 경우 편집 종료 이벤트가 발생합니다.</p>
  <p>즉, 그리드 외의 다른 영역을 mouseDown 한 경우 자동 편집 종료가 됩니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="autoEditCompleteOnResize">
 <td class="summaryTableSignatureCol">
@@ -100,7 +102,7 @@
  <p>그리드 셀을 수정 중일 때 global resize 이벤트가 발생한 경우  수정을 종료 시킬지 여부를 지정합니다.</p>
  <p>global resize 이벤트는 일반적으로 최상위 계층인 window 창의 크기가 변경된 경우를 의미 합니다.</p>
  <p>터치 디바이스의 경우 소프트 키보드의 유무에 의해 global resize 이벤트가 발생하기 때문에 이 속성은 false 로 처리됩니다.</p> 
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="autoGridHeight">
 <td class="summaryTableSignatureCol">
@@ -114,7 +116,7 @@
  <p>wordWrap 을 true 로 설정한 경우 이 속성은 무시됩니다. (단, usePaging=true, wordWrap=true 인 경우 autoGridHeight 은 사용 가능)</p>
  <p>그리드의 세로 스크롤이 없이 데이터를 모두 출력하므로 많은 양의 데이터를 초기에 넣지 마십시오. 퍼포먼스에 악영향을 미칩니다.</p>
  <p>Also See : <a href="#wordWrap">wordWrap</a>, <a href="#usePaging">usePaging</a> | <a href="../../samples/auto_grid_height.html?r_fm&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="autoScrollSize">
 <td class="summaryTableSignatureCol">
@@ -124,7 +126,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>터치가 지원되는 모바일 기기(아이폰, 아이패드, 안드로이드 기기 등)에서 스크롤 높이(수직 스크롤인 경우 너비)를 자동으로 작게 만들지 여부를 지정합니다.</p>
 <p>만약 true 로 설정한다면 모바일 기기에서는 scrollHeight4Mobile 설정값으로 스크롤 크기가 적용되고 일반 데스크탑에서는 scrollHeight 설정값으로 스크롤 크기가 자동 적용 됩니다.</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="blankNumericToNullOnEditing">
 <td class="summaryTableSignatureCol">
@@ -135,7 +137,7 @@
  <p>dataType을 "numeric" 으로 설정한 셀을 수정할 때 사용자가 입력한 빈 값("")을 명시적인 null 로 처리할지 여부를 지정합니다.</p>
  <p>기본적으로 사용자가 빈 값을 입력하면 "numeric" 필드로 설정했기 때문에 0 으로 수정 완료 처리됩니다.</p>
  <p>true 인 경우 빈 값을 null 로 false 인 경우 빈 값을 0 으로 적용 시킵니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="blankToNullOnEditing">
 <td class="summaryTableSignatureCol">
@@ -146,7 +148,7 @@
  <p>수정할 때 사용자가 입력한 빈 값("")을 명시적인 null 로 처리할지 여부를 지정합니다.</p>
  <p>기본적으로 사용자가 빈 값을 입력하면 "" 로 수정 완료 처리됩니다.</p>
  <p>true 인 경우 빈 값을 null 로 false 인 경우 빈 값을 "" 로 적용 시킵니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="cellColMergeFunction">
 <td class="summaryTableSignatureCol">
@@ -162,16 +164,16 @@
 <li>item : 해당 행에 출력되고 있는 행 아이템 객체 (Object)</li>
 </ul>
  <p>Return : (Boolean) true 를 반환하면 가로 병합 실행, false 를 반환하면 가로 병합 하지 않습니다.</p> 
-<pre>
+<pre><code class="language-javascript">
  cellColMergeFunction : function(rowIndex, column, item) {
-   if(item.name == "Anna") { // 이름이 "Anna" 행은 가로 병합 하지 않습니다.
+   if(item.name === "Anna") { // 이름이 "Anna" 행은 가로 병합 하지 않습니다.
         return false; // false 를 반환하면 가로 병합 하지 않음
    }
    return true;
-}</pre>
+}</code></pre>
 <p>주의 : 이 속성의 값으로 지정된 함수는 렌더링 시 빈번히 호출됩니다. 따라서 이곳에서 DOM 검색이나, 복잡한 로직은 삼가하십시오. 성능에 영향을 미칩니다.</p>
 <p><a href="../../samples/merge_column2.html?mer_c&theme=default" target="_blank">관련 데모 보기</a></p> 
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="cellMergePolicy">
 <td class="summaryTableSignatureCol">
@@ -187,7 +189,7 @@
  <li>withNull : null 도 하나의 값으로 간주하여 다수의 null 을 병합된 하나의 공백으로 출력 시킵니다.</li>
  <li>valueWithNull : null 이 상단의 값과 함께 병합되어 출력 시킵니다.</li>
  </ul>
-  기본값(default) : <code>"default"</code>.</td>
+ 기본값(default) : <code>"default"</code></td>
 </tr>
 <tr id="cellMergeRowSpan">
 <td class="summaryTableSignatureCol">
@@ -199,7 +201,7 @@
   <p>이 속성을 false 로 설정하면 실제 rowspan 은 처리하지 않고 상단에만 값을 출력하고 그 아래 대상의 셀은 빈 값으로 보이게 처리합니다.</p>
   <p>false 설정하면 실제 rowspan 을 하지 않았기 때문에 병합된 셀 블럭이 아닌 개별 셀을 선택하고 수정 할 수 있습니다.</p>
   <p><a href="../../samples/merge_row.html?mer_r&theme=default&s=75" target="_blank">관련 데모 보기</a></p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="checkHeaderText">
 <td class="summaryTableSignatureCol">
@@ -208,7 +210,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.12<br>
  <p>엑스트라 체크박스의 헤더에 표시되는 전체 체크박스를 표시하지 않을 때 출력할 텍스트를 지정합니다.</p>
-  기본값(default) : <code>""</code>.</td>
+ 기본값(default) : <code>""</code></td>
 </tr>
 <tr id="contextMenuHeaderItems">
 <td class="summaryTableSignatureCol">
@@ -219,18 +221,17 @@
  <p>헤더 컨텍스트 메뉴 아이템을 사용자 정의 할 수 있는 속성입니다.</p>
  <p>Object 를 배열 요소로 갖는 배열을 정의하십시오. Object 가 하나의 컨텍스트 메뉴 아이템이 됩니다.</p>
  <p>다음은 사용자 정의한 컨텍스트 아이템들 예시입니다.</p>
- <pre>
-  var myContextMenus = [ {
-       // label 에 $value 를 설정하면 마우스가 있는 곳의 헤더 텍스트 값으로 대체됩니다.
-       label : "$value (커스텀)",  callback : contextItemHeaderHandler 
-     }, {
-       label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-     }, {
-      label: "오름 차순 정렬", callback: contextItemHeaderHandler
-     }, {
-      label: "내름 차순 정렬", callback: contextItemHeaderHandler
-  }];
- </pre>
+ <pre><code class="language-javascript">// 헤더 컨텍스트 메뉴 사용자 정의
+ const myContextMenus = [{
+     // label 에 $value 를 설정하면 마우스가 있는 곳의 헤더 텍스트 값으로 대체됩니다.
+     label : "$value (커스텀)",  callback : contextItemHeaderHandler 
+ }, {
+     label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+ }, {
+     label: "오름 차순 정렬", callback: contextItemHeaderHandler
+ }, {
+     label: "내름 차순 정렬", callback: contextItemHeaderHandler
+ }];</code></pre>
  <ul>
  <li>label (String) : 컨텍스트 메뉴에 표시될 텍스트 입니다. label 에 $value 를 설정하면 마우스가 있는 곳 헤더 텍스트 값으로 대체되어 출력됩니다.</li>
  <li>style (String) : 개별 아이템의 스타일을 지정합니다. 유효값은 CSS 의 클래스 선언자명입니다.</li>
@@ -251,7 +252,7 @@
  </li>
  </ul>
   <p><a href="../../samples/context_header.html?cuh&theme=default&s=4200" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>Array</code>.</td>
+ 기본값(default) : <code>Array</code></td>
 </tr>
 <tr id="contextMenuItems">
 <td class="summaryTableSignatureCol">
@@ -262,18 +263,17 @@
  <p>컨텍스트 메뉴 아이템을 사용자 정의 할 수 있는 속성입니다.</p>
  <p>Object 를 배열 요소로 갖는 배열을 정의하십시오. Object 가 하나의 컨텍스트 메뉴 아이템이 됩니다.</p>
  <p>다음은 사용자 정의한 컨텍스트 아이템들 예시입니다.</p>
- <pre>
-  var myContextMenus = [ {
-       // label 에 $value 를 설정하면 마우스가 있는 곳의 value 값으로 대체됩니다.
-       label : "$value (커스텀)",  callback : contextItemHandler 
-     }, {
-       label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-     }, {
-       label : "Export To Excel", callback : contextItemHandler
-     }, {
-       label : "Open Google.com", callback : contextItemHandler
-  }];
- </pre>
+ <pre><code class="language-javascript">// 컨텍스트 메뉴 사용자 정의
+ const myContextMenus = [{
+     // label 에 $value 를 설정하면 마우스가 있는 곳의 value 값으로 대체됩니다.
+     label : "$value (커스텀)",  callback : contextItemHandler 
+ }, {
+     label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+ }, {
+     label : "Export To Excel", callback : contextItemHandler
+ }, {
+     label : "Open Google.com", callback : contextItemHandler
+ }];</code></pre>
  <ul>
  <li>label (String) : 컨텍스트 메뉴에 표시될 텍스트 입니다. label 에 $value 를 설정하면 마우스가 있는 곳의 value 값으로 대체되어 출력됩니다.</li>
  <li>style (String) : 개별 아이템의 스타일을 지정합니다. 유효값은 CSS 의 클래스 선언자명입니다.</li>
@@ -294,7 +294,7 @@
  </li>
  </ul>
   <p><a href="../../samples/context_user.html?cur&theme=default&s=3775" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>Array</code>.</td>
+ 기본값(default) : <code>Array</code></td>
 </tr>
 <tr id="copyDisplayFunction">
 <td class="summaryTableSignatureCol">
@@ -306,14 +306,14 @@
  <p>예를 들어 실 데이터는 1000 이나, 그리드에 의해 "1,000원" 으로 포매팅되어 출력되고 있을 때 Ctrl+C 로 복사할 대상이 1000 또는 "1,000원" 인지를 동적으로 결정하게 됩니다.</p>
  <p>copyDisplayFunction 는 copyDisplayValue 속성보다 우선 순위가 높습니다. 따라서 copyDisplayFunction 를 지정하면 copyDisplayValue 는 무시됩니다.</p>
  <p>copyDisplayFunction는 함수를 지정해야 하며 함수 형태는 다음과 같습니다. </p>
-  <pre>
+  <pre><code class="language-javascript">
   copyDisplayFunction : function(rowIndex, columnIndex, value, item, columnItem) {
     // 드랍다운 리스트를 에디터로 작성한 경우는 포매팅된 값을 복사하도록 지시
-    if(columnItem.editRenderer && columnItem.editRenderer.type == "DropDownListRenderer") {
+    if(columnItem.editRenderer && columnItem.editRenderer.type === "DropDownListRenderer") {
          return true
     }
     return false; // 그 외는 일반 원래 값 복사하도록 지시
- }</pre>
+ }</code></pre>
  <ul> 
  <li>rowIndex : 행 인덱스</li>
  <li>columnIndex : 칼럼 인덱스</li>
@@ -322,7 +322,7 @@
  <li>columnItem : 해당 셀에 출력되고 있는 칼럼 아이템 객체 즉, 칼럼 레이아웃에서 정의한 객체 (Object)</li>
  </ul>
  <p>Return : (Boolean) true 를 반환하면 포매팅된 값을, false 반환하면 원래(실제) 값을 복사하게 결정합니다.</p> 
-  기본값(default) : <code>null</code>.</td>
+ 기본값(default) : <code>null</code></td>
 </tr>
 <tr id="copyDisplayValue">
 <td class="summaryTableSignatureCol">
@@ -333,7 +333,7 @@
  <p>그리드의 셀 또는 행을 복사(Ctrl+C) 할 때 원래 데이터 값을 복사할지 그리드에 의해 포매팅된 값을 복사할지 여부를 나타냅니다.</p>
  <p>예를 들어 실 데이터는 1000 이나, 그리드에 의해 "1,000원" 으로 포매팅되어 출력되고 있을 때 Ctrl+C 로 복사할 대상이 1000 또는 "1,000원" 인지를 지정합니다.</p>
  <p>copyDisplayValue = true 인 경우 "1,000원" 이 복사됩니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="copySingleCellOnRowMode">
 <td class="summaryTableSignatureCol">
@@ -344,7 +344,19 @@
  <p>셀렉션모드(selectionMode) 가 "singleRow" 또는 "multipleRows" 인 경우 복사(Ctrl+C) 할 때 단일 셀을 복사할지 여부를 지정합니다.</p>
  <p>기본적으로 "singleRow", "multipleRows" 인 경우, 행 단위로 복사가 이루어집니다.</p>
  <p>그러나 행 모드인 경우 선택된 단일 셀을 복사하고자 한다면 이 속성을 true 설정하십시오.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
+</tr>
+<tr id="copyWithHeaderText">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">copyWithHeaderText</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.16<br>
+ <p>블럭 단위로 셀 값들을 복사(Copy)할 때 상단의 헤더 텍스트도 같이 복사 시킬지 여부를 지정합니다.</p>
+ <p>헤더가 그룹(계층형)으로 작성된 경우 계층 관계가 모두 포함되지 않습니다. 최하단에 속하는 실질적 헤더 텍스트만 포함됩니다.</p>
+ <p>단일 셀 값 복사할 때는 헤더 텍스트가 추가되지 않습니다.(최소 2개 이상이 선택된 경우만 포함 시킴)</p>
+ <p><a href="../../samples/editing_copy_with_header.html?ecopy&s=6340" target="_blank">관련 데모 보기</a></p>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="defaultColumnWidth">
 <td class="summaryTableSignatureCol">
@@ -354,7 +366,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>칼럼의 가로 사이즈(width) 기본(default)값을 지정합니다.</p>
 <p>기본값은  칼럼 레이아웃에서 width 속성을 지정하지 않은 칼럼에게 적용됩니다.</p>
- 기본값(default) : <code>80</code>.</td>
+기본값(default) : <code>80</code></td>
 </tr>
 <tr id="dependentColSpan">
 <td class="summaryTableSignatureCol">
@@ -365,7 +377,7 @@
  <p>칼럼 헤더의 가로 병합(colSpan)을 설정한 경우 칼럼 감추기/보이기 메소드로 병합된 칼럼을 감추기/보이기 할 때 가로 병합 대상이 된 칼럼도 같이 감추기/보이기 할지 여부를 지정합니다.</p>
  <p>이 속성을 true 설정한 경우 칼럼 감추기/보이기 메소드 사용 시 가로병합에 해당되는 칼럼 모두가 감추기/보이기 됩니다.</p>
  <p>Also See : <a href="./Methods.html#hideColumnByDataField">hideColumnByDataField</a> | <a href="./Methods.html#showColumnByDataField">showColumnByDataField</a></p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="dialogId">
 <td class="summaryTableSignatureCol">
@@ -376,7 +388,7 @@
  <p>기본 내장 태그인 dialog(HTMLDialogElement) 를 Modal로 이용하여 그 안에 그리드를 출력하는 경우 dialogId 를 설정합니다.</p>
  <p>그리드 속성 dialogId 를 설정하면 기존 body 의 자식으로 붙던 레이어들이 dialog를 기준으로 표시됩니다.</p>
  <p>dialog 에 그리드를 출력한 경우 반드시 dialogId 를 설정해야 드랍다운리스트, 달력, 필터 등의 레이어들이 dialog 상단에 표시됩니다.</p>
-  기본값(default) : <code>""</code>.</td>
+ 기본값(default) : <code>""</code></td>
 </tr>
 <tr id="dispatchSelectionChangeMoving">
 <td class="summaryTableSignatureCol">
@@ -387,7 +399,7 @@
  <p>selectionChange 이벤트가 마우스를 누른 채 이동하는 경우도 발생할지 여부를 지정합니다.</p>
  <p>즉, 마우스를 누르고 드래깅하여 다중 셀을 선택하고 있는 경과를 그대로 selectionChange 이벤트로 송출할지 여부를 지정합니다.</p>
  <p>기본값은 마우스를 누르고 이동한 후 최종적으로 뗀 경우(mouseUp 한 경우)에만 발생합니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="displaySummaryTreeBranch">
 <td class="summaryTableSignatureCol">
@@ -397,7 +409,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.13<br>
  <p>그룹핑 할 때 소계 행(SummaryRows)을 따로 만들지 않고 그룹핑 트리 브랜치에 소계를 같이 출력할지 여부를 지정합니다.</p>
  <p><a href="../../samples/grouping_summary_tree_type_sum.html?gs_tree2&theme=default&s=2600" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="displayTreeOpen">
 <td class="summaryTableSignatureCol">
@@ -409,7 +421,7 @@
 <p>이 값이 true 라면 모두 열린 상태이고, false 라면 최상위 브랜치만 표시됩니다.</p>
 <p>참고 : treeLazyMode 를 사용하는 경우 이 속성은 무시됩니다.</p>
  <p>Also See : <a href="#treeLazyMode">treeLazyMode</a>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="dragKnobColumnWidth">
 <td class="summaryTableSignatureCol">
@@ -418,7 +430,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.10.0<br>
  <p>행 드래그&amp;드랍을 도와주는 엑스트라 칼럼의 너비를 지정합니다.</p>
-  기본값(default) : <code>32</code>.</td>
+ 기본값(default) : <code>32</code></td>
 </tr>
 <tr id="dragRowsText">
 <td class="summaryTableSignatureCol">
@@ -427,7 +439,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.4<br>
  <p>행 드래깅 시 마우스 커서 옆에 출력되는 텍스트를 지정합니다.</p>
-  기본값(default) : <code>"$value 행(들)"</code>.</td>
+ 기본값(default) : <code>"$value 행(들)"</code></td>
 </tr>
 <tr id="dropAcceptableGridIDs">
 <td class="summaryTableSignatureCol">
@@ -440,7 +452,7 @@
  <p>이 속성을 null 로 설정하면 모든 그리드 간의 드래그&amp;드랍을 허용합니다. 단, 모든 그리드의 속성 enableDrop=true 설정했을 경우입니다.</p>
  <p>만약 이 속성을 dropAcceptableGridIDs=["#grid_wrap2"] 로 설정한다면 #grid_wrap2 에 있는 그리드에만 드랍을 허용합니다.</p>
  <p>Also See : <a href="#dropToOthers">dropToOthers</a>, <a href="#enableDrop">enableDrop</a> | <a href="../../samples/dragdrop_rows_to_grid3.html?ddgrid3&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>null</code>.</td>
+ 기본값(default) : <code>null</code></td>
 </tr>
 <tr id="dropToOthers">
 <td class="summaryTableSignatureCol">
@@ -452,7 +464,7 @@
  <p>그리드와 그리드 간의 드래그&amp;드랍을 위해선 반드시 이 속성을 true 설정해야 합니다.</p>
  <p>드래깅 하는 그리드와 드랍 받는 그리드는 동일한 문서 객체 모델(DOM)에 존재해야 합니다. 이종간의 문서 객체 모델(DOM) 에서 드래그&amp;드랍은 불가능합니다.</p>
  <p>Also See : <a href="#enableDrag">enableDrag</a>, <a href="#enableDrop">enableDrop</a> | <a href="../../samples/dragdrop_rows_to_grid.html?ddgrid&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="editable">
 <td class="summaryTableSignatureCol">
@@ -461,7 +473,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>편집 수정 가능 여부를 지정합니다.</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="editableMergedCellsAll">
 <td class="summaryTableSignatureCol">
@@ -475,7 +487,7 @@
  <p>붙여 넣기(Paste)까지 병합 전체에 대해 적용되기를 희망한다면 selectionMode 를 "multipleCells" 로 설정해야 합니다.</p>
  <p>참고 :  이 속성을 true 처리하면 <a href="#selectionMultiOnMerge">selectionMultiOnMerge = true</a>, <a href="#separatedSelectionOnMerge">separatedSelectionOnMerge = false</a>로 강제 됩니다.</p>
  <p><a href="../../samples/merge_edit_all.html?mer_r2&theme=default&s=0" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="editableOnFixedCell">
 <td class="summaryTableSignatureCol">
@@ -485,7 +497,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>편집 가능(editable=true) 상태에서 고정 칼럼, 고정 행을 설정했을 때 해당 셀 편집 가능 여부를 지정합니다.</p>
   <p>editableOnFixedCell = true 로 설정한다면, 고정 칼럼, 행으로 지정된 셀을 편집 할 수 있습니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="editableOnGroupFields">
 <td class="summaryTableSignatureCol">
@@ -497,7 +509,7 @@
  <p>그룹핑 상태에서 셀 수정, 행 추가, 삭제를 하고자 하는 경우 editableOnGroupFields 속성을 true 설정해야 합니다.</p>
  <p>그룹핑을 했을 때 수정이 필요한 경우 cellMergeRowSpan 속성도 true을 권장합니다.</p>
  <p>Also See : <a href="#cellMergeRowSpan">cellMergeRowSpan</a> | <a href="../../samples/editing_grouping_summary.html?egs&theme=default&s=5425" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="editBeginMode">
 <td class="summaryTableSignatureCol">
@@ -508,7 +520,7 @@
 <p>마우스로 편집, 수정 모드로 들어가는 정책을 지정합니다.</p>
 <p>더블클릭과 클릭 중 택할 수 있습니다. 유효값: doubleClick, click, none</p>
 <p>키보드로 편집, 수정 모드 들어가는 방법은 F2입니다.</p>
- 기본값(default) : <code>"doubleClick"</code>.</td>
+기본값(default) : <code>"doubleClick"</code></td>
 </tr>
 <tr id="editingOnKeyDown">
 <td class="summaryTableSignatureCol">
@@ -518,7 +530,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 기본적으로 편집 가능 상태(editable = true)일 때 수정 모드 진입은 F2, 더블클릭(클릭)입니다. 그러나 엑셀과 같이 바로 해당 셀에서 어떤 키(any keys)를 누르든 수정 가능 상태로 만들지 여부를 나타냅니다.</p>
  <p> 바로 편집 가능 상태로 진입한 경우 엔터/탭 키 완료는 물론 키보드 방향 키로도 편집 완료가 가능합니다.(엑셀 UI)</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableCellMerge">
 <td class="summaryTableSignatureCol">
@@ -528,7 +540,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>칼럼 셀 병합(cell merge) 가능 여부를 지정합니다.</p>
 <p>셀 병합은 가로 병합, 세로 병합 중 한가지만 가능합니다. 가로 병합과 세로 병합을 같이 사용하여 혼합된 병합으로 출력은 불가능합니다. </p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="enableClipboard">
 <td class="summaryTableSignatureCol">
@@ -537,7 +549,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>그리드 데이터 복사하기(Ctrl+C), 붙여넣기(Ctrl+V) 활성화 여부를 지정합니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableColumnResize">
 <td class="summaryTableSignatureCol">
@@ -550,7 +562,7 @@
 <p>만약 헤더의 경계선을 더블 클릭한 경우 모든 행들의 셀 값 중 가장 길이(length)가 큰 텍스트로 사이즈가 결정됩니다.</p>
 <p>헤더에 HTML 을 표현한 경우 무시됩니다.</p>
 <p>또한 TempleteRenderer 를 사용하는 경우 더블클릭을 통한 리사이징은 무시합니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableDrag">
 <td class="summaryTableSignatureCol">
@@ -562,7 +574,7 @@
  <p>만약 현재 그리드가 정렬된 상태이거나 필터링된 상태라면 그 상태에서는 행 드래깅이 불가능합니다.</p>
  <p>정렬 및 필터링이 해제된 상태여야 합니다.</p>
  <p><a href="../../samples/dragdrop_rows.html?ddrows&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="enableDragByCellDrag">
 <td class="summaryTableSignatureCol">
@@ -574,7 +586,7 @@
  <p>이 속성을 설정하면 selectionMode 가 "multipleCells" 또는 "multipleRows" 인 경우 다중 셀(행) 선택을 하지 않고 바로 드래깅 행위를 하게 됩니다.</p> 
  <p>속성 enableDrag=true 설정이 선행되어야 합니다.</p>
  <p>Also See : <a href="#enableDrag">enableDrag</a> | <a href="../../samples/dragdrop_rows.html?ddrows&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="enableDrop">
 <td class="summaryTableSignatureCol">
@@ -586,7 +598,17 @@
  <p>만약 이 속성을 false 설정하면 어떤 경우라도 드랍을 허용하지 않습니다.</p>
  <p>드랍을 받을 수 있는 최상위 속성입니다.</p>
  <p>Also See : <a href="#enableDrag">enableDrag</a> | <a href="../../samples/dragdrop_rows_to_grid3.html?ddgrid3&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
+</tr>
+<tr id="enableDropTreeChild">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">enableDropTreeChild</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.15.14<br>
+ <p>트리 그리드(계층형 그리드)에서 드래그&amp;드랍을 할 때 드랍의 행위로 단순 행 이동이 아닌 자식(child)으로 드랍 행 이동도 가능하게 할지 여부를 지정합니다.</p>
+ <p><a href="../../samples/dragdrop_tree_as_child.html?ddtree&theme=default&s=7767" target="_blank">관련 데모 보기</a></p>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="enableFilter">
 <td class="summaryTableSignatureCol">
@@ -595,7 +617,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 칼럼 필드 필터링 기능 활성화 여부를 지정합니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableFocus">
 <td class="summaryTableSignatureCol">
@@ -605,7 +627,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>그리드에 키보드 포커스 설정을 할지 여부를 지정합니다.</p>
   <p>만약, enableFocus 를 false 로 지정하면 키포드 포커싱을 받지 못하기 때문에 키보드로 바로 셀 값 수정 및 화살표 키로 이동 등 키보드 이용을 사용할 수 없습니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableHScrollByOnlyShiftKey">
 <td class="summaryTableSignatureCol">
@@ -615,7 +637,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.15.11<br>
  <p>마우스 휠이 수평 스크롤에 반응 할 때 반드시 Shift Key 를 누를 경우만 해당되는지 여부를 지정합니다.</p>
  <p>만약 이 속성을 false 설정하면 세로 스크롤이 없는 그리드인 경우 Shift Key 없이 단순 마우스 휠로 세로 스크롤 대신 가로 스크롤에 반응 합니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableHScrollByWheel">
 <td class="summaryTableSignatureCol">
@@ -625,7 +647,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.14<br>
  <p>마우스 휠(wheel)이 수평 스크롤에 반응할지 여부를 지정합니다. enableHScrollByOnlyShiftKey 설정이 없다면 기본값은 Shift + 휠인 경우 수평 스크롤이 반응합니다.</p>
  <p>만약, enableMouseWheel=false 설정하면 enableHScrollByWheel 는 무시됩니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableLongTap">
 <td class="summaryTableSignatureCol">
@@ -634,7 +656,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.2<br>
  <p>터치 기기(touch devices)에서 길게 누르기(Long Tap) 이벤트를 활성화 할지 여부를 지정합니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="enableMouseWheel">
 <td class="summaryTableSignatureCol">
@@ -644,7 +666,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>마우스 휠(wheel) 활성화 여부를 지정합니다.</p>
  <p>이 속성을 false 로 설정하면, 마우스 휠로 그리드의 스크롤이 반응하지 않습니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableMovingColumn">
 <td class="summaryTableSignatureCol">
@@ -655,7 +677,7 @@
  <p> 칼럼 헤더를 드래그앤드랍으로 자리를 옮기는 기능 활성화 여부를 지정합니다.</p>
  <p>만약 enableMovingColumn = true 라면, 사용자가 칼럼 헤더를 드래깅하여 자리를 바꿀 수 있습니다.</p>
  <p>단, 고정 칼럼(fixedColumnCount)으로 설정된 칼럼은 드래깅으로 변경 불가능합니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="enableMultipleDrag">
 <td class="summaryTableSignatureCol">
@@ -667,7 +689,7 @@
  <p>selectionMode 를 "multipleCells" 또는 "multipleRows" 인 경우 유효합니다. 또한 속성 enableDrag=true 설정이 선행되어야 합니다.</p>
  <p>만약 계층형 그리드(TreeGrid)인 경우 계층형 그리드는 기본적으로 다수 행 드래깅을 지원하지 않으므로 이 속성은 false 처리 됩니다.</p> 
  <p>Also See : <a href="#selectionMode">selectionMode</a>, <a href="#enableDrag">enableDrag</a> | <a href="../../samples/dragdrop_rows_to_grid.html?ddgrid&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableMultipleSorting">
 <td class="summaryTableSignatureCol">
@@ -677,7 +699,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>다중 칼럼 필드 정렬(Sorting) 여부를 지정합니다. (선행 : enableSorting 속성 true 설정)</p>
  <p>이 값이 true 라면 multiSortingKey( 기본 : shiftKey )에 따라 다중 칼럼 헤더 클릭 시 멀티 정렬이 실행됩니다.</p> 
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableRestore">
 <td class="summaryTableSignatureCol">
@@ -689,7 +711,7 @@
   <p>enableRestore 를 true 로 설정한 경우, 행 상태 칼럼(showStateColumn=true) 의 상태 아이콘을 클릭하면 복구가 됩니다.</p>
   <p>즉, 수정을 한 경우 연필 아이콘이 나오는데 이를 클릭하면 수정 전으로 복구되고, 추가된 행인 경우 플러스 아이콘이 나오는데 이를 클릭하면 추가 취소로 복구됩니다.</p>
   <p>마찬가지로 삭제 아이콘을 클릭하면 삭제 취소로 복구됩니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableRightDownFocus">
 <td class="summaryTableSignatureCol">
@@ -699,7 +721,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>마우스 오른쪽 버턴 클릭 할 때 클릭 한 지점의 셀이 선택되도록 할지 여부를 지정합니다.</p>
   <p>즉, 컨텍스트 메뉴를 보기 위해 오른쪽 클릭을 한 경우 클릭 지점이 왼쪽 클릭과 같이 셀 선택을 할지를 나타냅니다.</p> 
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="enableRowCheckShiftKey">
 <td class="summaryTableSignatureCol">
@@ -708,7 +730,23 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.9.0<br>
  <p>엑스트라 체크박스(showRowCheckColumn)에서 쉬프트키(ShiftKey)를 누른 채 클릭해서 다중 체크하게 할지 여부를 지정합니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
+</tr>
+<tr id="enableSelectionAll">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">enableSelectionAll</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.16<br>
+ <p>그리드의 현재 데이터의 셀을 전체 선택(Ctrl + A) 활성화 여부를 지정합니다.</p>
+ <p>selectionMode 를 "multipleCell" 또는 "multipleRows" 로 설정 해야 합니다.</p>
+ <p>이 속성을 활성화 하면 Ctrl + A 단축키로 전체 선택을 할 수 있으며 행번호 칼럼의 헤더인 "No" 를 클릭하여 전체 선택을 할 수 있습니다.</p>
+ <p>수천 개 이상의 데이터를 전체 선택할 경우, 브라우저 성능 저하, 일시적인 멈춤 현상 또는 스크립트 중단 등의 문제가 발생할 수 있습니다. 따라서 해당 기능은 데이터 양을 고려하여 신중하게 사용해야 합니다.</p>
+ <p>주의 : 수천 개 이상의 셀 데이터를 전체 선택할 경우 브라우저 성능 저하 또는 일시적인 멈춤 현상, 스크립트 중지 등이 발생할 수 있습니다.</p>
+ <p>참고 : 이 속성을 활성화 하면 simplifySelectionEvent 는 true 로 강제됩니다.</p>
+ <p>See Also : <a href="./Properties.html#selectionMode">selectionMode</a> | <a href="./Properties.html#simplifySelectionEvent">simplifySelectionEvent</a></p>
+ <p><a href="../../samples/selection_all_column.html?secac&theme=default&s=8500" target="_blank">관련 데모 보기</a></p>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="enableSorting">
 <td class="summaryTableSignatureCol">
@@ -717,7 +755,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>정렬 가능 여부를 지정합니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enableSummaryMerge">
 <td class="summaryTableSignatureCol">
@@ -728,7 +766,7 @@
  <p>그룹핑 합계 필드(소계) 셀 가로 병합 실행 여부를 지정합니다.</p>
  <p>선행적으로 그리드 속성인 enableCellMerge 을 true 설정 해야 합니다.</p>
  <p>참고 : keepColumnOrderOnGrouping 를 true 설정한 경우 이 속성은 무시됩니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="enableUndoRedo">
 <td class="summaryTableSignatureCol">
@@ -738,7 +776,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>편집 가능 그리드(editable=true)에서 실행 취소(Undo), 다시 실행(Redo) 기능을 사용할지 여부를 지정합니다.</p>
   <p>enableUndoRedo 를 true 로 설정하면, Ctrl+Z, Ctrl+Y 단축키가 활성화 됩니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="enterKeyColumnBase">
 <td class="summaryTableSignatureCol">
@@ -747,7 +785,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>엔터키가 다음 행으로 이동하지 않고, 다음 칼럼으로 이동할지 여부를 지정합니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="excludeFixedRowsOnSorting">
 <td class="summaryTableSignatureCol">
@@ -757,7 +795,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>고정 행(fixedRows) 를 지정한 경우, 정렬(sorting)을 할 때 고정 행으로 설정된 행이 정렬에서 제외 될지 여부를 지정합니다.</p>
   <p>excludeFixedRowsOnSorting=true 인 경우 고정 행으로 지정된 행은 항상 그대로 유지됩니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="exportURL">
 <td class="summaryTableSignatureCol">
@@ -765,10 +803,8 @@
 <span class="signatureLink">exportURL</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
-<p>엑셀(xlsx), CSV, TXT 등으로 내보내기(Export) 할 때 내보내기 된 내용물을 다운로드 형식으로 응답해 줄 서버단 URL 주소를 지정합니다.</p>
-<p>해당 서버단 파일은 PHP, JSP 등이 될 수 있습니다. 제공된 샘플의 server_script 폴더에 샘플 JSP, PHP, ASP 가 있습니다.</p>
-<p>해당 파일을 WAS 에 업로드 할 해당 주소를 지정해 주십시오.</p>
- 기본값(default) : <code>null</code>.</td>
+<p><strong>[deprecated Ver 3.0.15.16] </strong></p>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="extraColumnOrders">
 <td class="summaryTableSignatureCol">
@@ -780,13 +816,13 @@
  <p>엑스트라 렌더러는 드래깅 손잡이(showDragKnobColumn), 행 번호(showRowNumColumn), 행 상태(showStateColumn), 행 체크박스(showRowCheckColumn) 4가지가 존재합니다.</p>
  <p>엑스트라 렌더러 활성화 속성 이름을 배열에 지정하면 해당 순서에 맞게 출력 시킵니다.</p>
  <p>예로 작성하면 다음과 같습니다.</p>
- <pre>
+ <pre><code class="language-javascript">
  // 엑스트라 체크박스 칼럼을 맨 앞으로, 나머지 칼럼은 기본 순서 유지 (나머지 칼럼 유지는 배열에 지정하지 않으면 유지 시킴)
  extraColumnOrders = ["showDragKnobColumn"];
  
  // 엑스트라 체크박스, 행 번호, 상태, 드래깅 손잡이 순으로 순서 지정하기
- extraColumnOrders = ["showRowCheckColumn", "showRowNumColumn", "showStateColumn", "showDragKnobColumn"];</pre>
-  기본값(default) : <code>["showDragKnobColumn", "showRowNumColumn", "showStateColumn", "showRowCheckColumn"]</code>.</td>
+ extraColumnOrders = ["showRowCheckColumn", "showRowNumColumn", "showStateColumn", "showDragKnobColumn"];</code></pre>
+ 기본값(default) : <code>["showDragKnobColumn", "showRowNumColumn", "showStateColumn", "showRowCheckColumn"]</code></td>
 </tr>
 <tr id="fillColumnSizeMode">
 <td class="summaryTableSignatureCol">
@@ -798,7 +834,7 @@
  <p>이 속성을 true 로 설정하면 어떤 경우도 가로 스크롤이 생성되지 않습니다. 또한 모든 칼럼들의 너비(width)는 비율로 계산되어 적용됩니다.</p>
  <p>참고 : fillColumnSizeMode 를 true 로 설정하면 fixedColumnCount 속성은 무시됩니다.</p>
  <p>Also See : <a href="#fixedColumnCount">fixedColumnCount</a> | <a href="../../samples/column_fill_mode.html?c_fm&theme=default" target="_blank">관련 데모 보기</a></p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="fillValueGroupingSummary">
 <td class="summaryTableSignatureCol">
@@ -809,7 +845,7 @@
   <p>그룹핑 소계 행(Summary Rows)의 앞 부분에 값을 채울지 여부를 지정합니다.</p>
   <p>이 속성을 true 설정하면 그룹핑 소계 행에서 그룹핑 필드에 해당되는 셀도 세로 병합의 대상이 됩니다.</p>
   <p><a href="../../samples/grouping_summary_type2.html?gs_t2&theme=default&s=2300" target="_blank">관련 데모 보기</a></p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="filterCancelText">
 <td class="summaryTableSignatureCol">
@@ -818,7 +854,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 필터 메뉴에 표현 할 "취 소" 텍스트를 대체할 다른 텍스트를 지정합니다.</p>
-  기본값(default) : <code>"취 소"</code>.</td>
+ 기본값(default) : <code>"취 소"</code></td>
 </tr>
 <tr id="filterCheckAllText">
 <td class="summaryTableSignatureCol">
@@ -827,7 +863,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 필터 메뉴에 표현 할 "전체선택" 텍스트를 대체할 다른 텍스트를  지정합니다.</p>
-  기본값(default) : <code>"(전체선택)"</code>.</td>
+ 기본값(default) : <code>"(전체선택)"</code></td>
 </tr>
 <tr id="filterClearText">
 <td class="summaryTableSignatureCol">
@@ -836,7 +872,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 필터 메뉴에 표현 할 "필터 초기화" 텍스트를  대체할 다른 텍스트를  지정합니다.</p>
-  기본값(default) : <code>"필터 초기화"</code>.</td>
+ 기본값(default) : <code>"필터 초기화"</code></td>
 </tr>
 <tr id="filterItemMoreMessage">
 <td class="summaryTableSignatureCol">
@@ -846,7 +882,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 칼럼의 필터링 아이콘 클릭 시 나오는 필터링 메뉴에서 실제 값들이 더 많다는 메세지를 출력할 수 있습니다.</p>
  <p> 즉, 실제 필터링 가능한 값이 filterMenuItemMaxCount 보다 큰 경우 filterItemMoreMessage 가 하단에 출력됩니다.</p>
-  기본값(default) : <code>"Too many items...Search words"</code>.</td>
+ 기본값(default) : <code>"Too many items...Search words"</code></td>
 </tr>
 <tr id="filterLayerHeight">
 <td class="summaryTableSignatureCol">
@@ -855,7 +891,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>헤더의 필터 아이콘을 클릭했을 때 나오는 필터 기본 메뉴의 높이를 픽셀 단위로 지정합니다.</p>
-   기본값(default) : <code>320</code>.</td>
+  기본값(default) : <code>320</code></td>
 </tr>
 <tr id="filterLayerWidth">
 <td class="summaryTableSignatureCol">
@@ -864,7 +900,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>헤더의 필터 아이콘을 클릭했을 때 나오는 필터 기본 메뉴의 너비를 픽셀 단위로 지정합니다.</p>
-   기본값(default) : <code>260</code>.</td>
+  기본값(default) : <code>260</code></td>
 </tr>
 <tr id="filterMenuItemMaxCount">
 <td class="summaryTableSignatureCol">
@@ -875,7 +911,7 @@
  <p> 칼럼의 필터링 아이콘 클릭 시 나오는 필터링 메뉴에서 해당 칼럼의 값들이 많을 경우 모두 체크 박스로 출력되지 않습니다.</p>
  <p> filterMenuItemMaxCount 은 필터링 가능한 체크박스의 최대값을 지정합니다. </p>
  <p> 보이지 않는 값들을 필터링하고자 할 때 자동완성(auto complete) 기능으로 검색하여 체크박스 선택하십시오.</p>
-  기본값(default) : <code>50</code>.</td>
+ 기본값(default) : <code>50</code></td>
 </tr>
 <tr id="filterNoValuePosition">
 <td class="summaryTableSignatureCol">
@@ -886,7 +922,7 @@
  <p> 필터 메뉴에 표현 될 "필드 값 없음" 의 위치를 지정합니다.</p>
  <p> 그리드의 데이터 중 값이 없는 셀이 있는 경우 "필드 값 없음" 으로 필터 메뉴에 출력되는데 이 "필드 값 없음"이 표시 될 위치를 최상단에 위치시키고자 한다면 "top" 로 설정하십시오.</p>
  <p> 유효값은 "top" 와 "bottom" 입니다.</p>
-  기본값(default) : <code>"bottom"</code>.</td>
+ 기본값(default) : <code>"bottom"</code></td>
 </tr>
 <tr id="filterNoValueText">
 <td class="summaryTableSignatureCol">
@@ -895,7 +931,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 그리드의 데이터 중 값이 없는 셀이 있는 경우 필터 메뉴에 표현 할 "필드 값 없음" 텍스트를 대체할 다른 텍스트를  지정합니다.</p>
-  기본값(default) : <code>"(필드 값 없음)"</code>.</td>
+ 기본값(default) : <code>"(필드 값 없음)"</code></td>
 </tr>
 <tr id="filterNumberOperatorList">
 <td class="summaryTableSignatureCol">
@@ -904,7 +940,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Array &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>필터 유형이 numeric 인 경우 필터링 체크박스에 표시할 비교 연산자명을 지정합니다.</p>
-  기본값(default) : <code>["같다(=)", "크다(&gt;)", "크거나 같다(&gt;=)", "작다(&lt;)", "작거나 같다(&lt;=)", "같지 않다(!=)"]</code>.</td>
+ 기본값(default) : <code>["같다(=)", "크다(&gt;)", "크거나 같다(&gt;=)", "작다(&lt;)", "작거나 같다(&lt;=)", "같지 않다(!=)"]</code></td>
 </tr>
 <tr id="filterOkText">
 <td class="summaryTableSignatureCol">
@@ -913,7 +949,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 필터 메뉴에 표현 할 "확 인" 텍스트를 대체할 다른 텍스트를 지정합니다.</p>
-  기본값(default) : <code>"확인"</code>.</td>
+ 기본값(default) : <code>"확인"</code></td>
 </tr>
 <tr id="filterSearchCheckAllText">
 <td class="summaryTableSignatureCol">
@@ -922,7 +958,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 필터 메뉴에 표현 할 "검색 전체선택" 텍스트를 대체할 다른 텍스트를 지정합니다.</p>
-  기본값(default) : <code>"(검색 전체선택)"</code>.</td>
+ 기본값(default) : <code>"(검색 전체선택)"</code></td>
 </tr>
 <tr id="filterSearchPlaceholder">
 <td class="summaryTableSignatureCol">
@@ -931,7 +967,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.9.4<br>
   <p>헤더의 필터 아이콘을 클릭했을 때 나오는 필터 기본 메뉴의 검색 입력 필드(input filed)의 placeholder 텍스트를 지정합니다.</p>
-   기본값(default) : <code>"검색"</code>.</td>
+  기본값(default) : <code>"검색"</code></td>
 </tr>
 <tr id="fixedColumnCount">
 <td class="summaryTableSignatureCol">
@@ -941,7 +977,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>고정 칼럼의 개수를 지정합니다.</p>
 <p>고정 칼럼은 수평 스크롤에 영향을 받지 않고 항상 표시되는 칼럼을 말합니다.(틀 고정)</p>
- 기본값(default) : <code>0</code>.</td>
+기본값(default) : <code>0</code></td>
 </tr>
 <tr id="fixedRowCount">
 <td class="summaryTableSignatureCol">
@@ -952,7 +988,7 @@
 <p>고정 행(row)의 개수를 지정합니다.</p>
 <p>고정 행은 수직 스크롤에 영향을 받지 않고 항상 표시되는 행을 말합니다.(틀 고정)</p>
 <p>참고 : 페이징 모드(usePaging=true)인 경우 fixedRowCount 속성은 무시됩니다.</p>
- 기본값(default) : <code>0</code>.</td>
+기본값(default) : <code>0</code></td>
 </tr>
 <tr id="flat2tree">
 <td class="summaryTableSignatureCol">
@@ -963,7 +999,7 @@
   <p>그리드에 입력되는 데이터가 계층구조의 데이터는 아니지만, id, parent 구조를 갖는 일반 데이터인 경우 트리 그리드로 출력할지 여부를 나타냅니다.</p>
   <p>일반 데이터의 순서(order)는 중요합니다. 부모 행은 반드시 자식 행보다 앞에 있어야 합니다.</p>
   <p>flat2tree 속성은 반드시 treeIdField, treeIdRefField 가 선행적으로 설정되어야 합니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="footerHeight">
 <td class="summaryTableSignatureCol">
@@ -972,7 +1008,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>푸터의 높이를 지정합니다.</p>
- 기본값(default) : <code>30</code>.</td>
+기본값(default) : <code>30</code></td>
 </tr>
 <tr id="footerHeights">
 <td class="summaryTableSignatureCol">
@@ -982,15 +1018,15 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Array &nbsp; <span class="label">Version: </span>3.0.7<br>
 <p>푸터의 행 개수를 다수로 설정한 경우 개별 푸터 행 높이를 지정합니다.</p>
 <p>예를 들어 3개의 푸터 행이라면(즉, 푸터 행의 개수가 3개) 다음과 같이 배열로 개별 3개를 지정합니다.</p>
-<pre>
-var gridPros = {
+<pre><code class="language-javascript">
+const gridPros = {
       footerHeights : [24, 24, 50],
       ....
-};</pre>
+};</code></pre>
 <p>만약  footerHeights 를 지정하지 않은 경우 기본 푸터 높이 속성인 footerHeight 값을 따르게 됩니다.</p>
 <p>이 말은 다시 말해 footerHeights 의 배열 인자가 정수가 아닌 경우 headerHeight 이 적용됩니다.</p>
 <p><a href="../../samples/footer-multiple.html?fmul&theme=default&s=1425" target="_blank">관련 데모 보기</a></p>
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="footerPosition">
 <td class="summaryTableSignatureCol">
@@ -1001,7 +1037,7 @@ var gridPros = {
   <p>푸터의 위치를 지정합니다. 기본적으로 푸터는 그리드 하단에 출력합니다.</p>
   <p>그러나 푸터를 그리드 상단에 위치시켜 Header Summary 기능으로 활용하고자 한다면 이 값을 "top"으로 지정하십시오.</p>
   <p>유효값은 "top", "bottom" 입니다.</p>
-   기본값(default) : <code>"bottom"</code>.</td>
+  기본값(default) : <code>"bottom"</code></td>
 </tr>
 <tr id="footerRowCount">
 <td class="summaryTableSignatureCol">
@@ -1011,7 +1047,7 @@ var gridPros = {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.7<br> 
  <p>푸터를 설정한 경우 푸터 행의 개수를 지정합니다.</p>
  <p><a href="../../samples/footer-multiple.html?fmul&theme=default&s=1425" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>1</code>.</td>
+ 기본값(default) : <code>1</code></td>
 </tr>
 <tr id="footerVGap">
 <td class="summaryTableSignatureCol">
@@ -1020,7 +1056,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>푸터와 메인 그리드 사이의 간격, 공백을 지정합니다.</p>
- 기본값(default) : <code>4</code>.</td>
+기본값(default) : <code>4</code></td>
 </tr>
 <tr id="forceTreeView">
 <td class="summaryTableSignatureCol">
@@ -1032,7 +1068,7 @@ var gridPros = {
  <p>계층형 그리드(트리 그리드)는 삽입하는 데이터가 계층형인 경우 트리 그리드로 출력을 시키는게 기본입니다.</p>
  <p>그러나 forceTreeView = true 설정하면 데이터와 무관하게 계층형(트리 그리드)로 출력 시킵니다.</p>
  <p><a href="../../samples/dragdrop_tree_to_grid_copy.html?ddtreegridcp&theme=default&s=7000" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="groupingFields">
 <td class="summaryTableSignatureCol">
@@ -1046,7 +1082,7 @@ var gridPros = {
 <p>그룹핑을 설정한 후 각 그룹별 소계(Summary Rows) 출력이 가능합니다.</p>
 <p>Also See : <a href="#groupingSummary">groupingSummary</a> | <a href="../../samples/grouping_summary_type1.html?gs_t1&theme=default&s=2450" target="_blank">관련 데모 보기</a></p>
 <p>참고 : 설정한 그룹핑의 개수만큼 해당 계층이 형성됩니다. 계층이 많아지면 그룹핑 시 많은 시간이 필요합니다. 계층이 많은 경우 퍼포먼스에 악영향을 끼칩니다.</p> 
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="groupingMessage">
 <td class="summaryTableSignatureCol">
@@ -1055,7 +1091,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>그리드 상단에 그룹핑 가능한 패널에 표시되는 메세지를 지정합니다.</p>
- 기본값(default) : <code>"Drag a column header and drop here to group by that"</code>.</td>
+기본값(default) : <code>"Drag a column header and drop here to group by that"</code></td>
 </tr>
 <tr id="groupingPanelHeight">
 <td class="summaryTableSignatureCol">
@@ -1064,7 +1100,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>그리드 상단에 그룹핑 가능한 패널의 높이를 지정합니다.</p>
- 기본값(default) : <code>40</code>.</td>
+기본값(default) : <code>40</code></td>
 </tr>
 <tr id="groupingSummary">
 <td class="summaryTableSignatureCol">
@@ -1105,7 +1141,7 @@ var gridPros = {
 </li>
 </ul>
 <p>다음은  groupingSummary 설정 예제입니다.</p>
-<pre>
+<pre><code class="language-javascript">
   // 차례로 country, product, name 순으로 그룹핑을 합니다.
   // 즉, 각 나라별, 각 제품을 구매한 사용자로 그룹핑
   groupingFields : ["country", "product", "name"],
@@ -1127,10 +1163,10 @@ var gridPros = {
        }, {
           operation: "COUNT", text : "$value 개수"
        }]
- }</pre>
+ }</code></pre>
 <p>Also See : <a href="#groupingFields">groupingFields</a></p>
 <p>참고 : 설정한 그룹핑(groupingFields)의 개수만큼 해당 계층이 형성되며 소계(groupingSummary)는 모든 계층에 대한 소계를 구하게 되어합니다. 계층이 많은 경우 퍼포먼스에 악영향을 끼칩니다.</p>
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="groupingSummaryPosition">
 <td class="summaryTableSignatureCol">
@@ -1142,7 +1178,7 @@ var gridPros = {
   <p>소계 행의 출력 위치는 기본적으로 하단에 출력됩니다. 상단에 출력하고자 한다면 "top" 을 설정하십시오.</p>
   <p>유효값은 "top", "bottom" 입니다.</p>
   <p><a href="../../samples/grouping_summary_top_type1.html?gs_postop&theme=default&s=2300" target="_blank">관련 데모 보기</a></p>
-   기본값(default) : <code>"bottom"</code>.</td>
+  기본값(default) : <code>"bottom"</code></td>
 </tr>
 <tr id="headerHeight">
 <td class="summaryTableSignatureCol">
@@ -1151,7 +1187,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>헤더의 높이를 지정합니다.</p>
- 기본값(default) : <code>26</code>.</td>
+기본값(default) : <code>26</code></td>
 </tr>
 <tr id="headerHeights">
 <td class="summaryTableSignatureCol">
@@ -1161,14 +1197,14 @@ var gridPros = {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Array &nbsp; <span class="label">Version: </span>2.11.0<br>
 <p>헤더를 그룹형(계층형)으로 작성한 경우, 계층(depth) 별로 개별 헤더 높이를 지정합니다.</p>
 <p>예를 들어 헤더 계층이 3계층이라면(즉, 헤더 행의 개수가 3개) 다음과 같이 배열로 개별 3개를 지정합니다.</p>
-<pre>
-var gridPros = {
+<pre><code class="language-javascript">
+const gridPros = {
       headerHeights : [24, 24, 50],
       ....
-};</pre>
+};</code></pre>
 <p>만약 그룹형 헤더일 때 headerHeights 를 지정하지 않은 경우 기본 헤더 높이 속성인 headerHeight 값을 따르게 됩니다.</p>
 <p>이 말은 다시 말해 headerHeights 의 배열 인자가 정수가 아닌 경우 headerHeight 이 적용됩니다.</p>
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="height">
 <td class="summaryTableSignatureCol">
@@ -1177,7 +1213,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>그리드의 세로 사이즈를 픽셀 단위로 지정합니다. 이 세로 사이즈를 지정하지 않으면 부모 DIV 의 height 만큼 할당됩니다.(즉, 부모 height의 100%)</p>
-  기본값(default) : <code>NaN</code>.</td>
+ 기본값(default) : <code>NaN</code></td>
 </tr>
 <tr id="hoverMode">
 <td class="summaryTableSignatureCol">
@@ -1187,7 +1223,7 @@ var gridPros = {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.13<br>
 <p>마우스 오버 시 표시될 모드를 지정합니다. 유효 속성값은 다음과 같습니다.</p>
 <p>"singleCell", "singleRow", "none"</p>
- 기본값(default) : <code>"singleCell"</code>.</td>
+기본값(default) : <code>"singleCell"</code></td>
 </tr>
 <tr id="hScrollPosition">
 <td class="summaryTableSignatureCol">
@@ -1197,7 +1233,7 @@ var gridPros = {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <P>수평 스크롤의 위치를 나타냅니다.</P>
 <P>이 값은 픽셀입니다.</P>
- 기본값(default) : <code>0</code>.</td>
+기본값(default) : <code>0</code></td>
 </tr>
 <tr id="ignoreColumnMinWidth">
 <td class="summaryTableSignatureCol">
@@ -1207,7 +1243,7 @@ var gridPros = {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>칼럼을 사용자가 드래깅으로 리사이징(resizing) 할 때 칼럼의 minWidth 속성이 설정되었다면 해당 minWidth 를 무시할지 여부를 지정합니다.</p>
   <p>기본적으로 칼럼의 가로 사이즈는 minWidth 값보다 작아지지 않습니다. 그러나 ignoreColumnMinWidth=true 설정을 하면 minWith 는 무시됩니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="independentAllCheckBox">
 <td class="summaryTableSignatureCol">
@@ -1219,7 +1255,7 @@ var gridPros = {
  <p>독립적인 행위란, 기본적으로 전체 선택/해제를 할 경우 개별 행들의 체크 박스가 선택/해제가 이루어집니다.</p>
  <p>그러나 independentAllCheckBox=true 설정 시 전체 선택/해제 이벤트만 발생 할 뿐 개별 행들의 체크 박스를 선택/해제 하지 않습니다.</p>
  <p>전체 선택/해제를 원하는 방식으로 사용자 정의하고자 한다면 independentAllCheckBox 를 true 설정하여 rowAllCheckClick 이벤트를 바인딩하여 제어하십시오.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="inlineFilterDelay">
 <td class="summaryTableSignatureCol">
@@ -1231,7 +1267,7 @@ var gridPros = {
  <p>예로 500 설정 시 사용자가 입력 종료 500ms 시간이 지난 이후 필터링을 실행합니다.</p>
  <p>0을 설정하면 매 입력마다 필터링을 실행합니다.</p>
  <p>많은 수의 데이터나 사용자의 매 입력의 불필요한 필터링을 원치 않으면 300~500 설정을 권합니다.</p>
-  기본값(default) : <code>300</code>.</td>
+ 기본값(default) : <code>300</code></td>
 </tr>
 <tr id="isColumnOriented">
 <td class="summaryTableSignatureCol">
@@ -1241,7 +1277,7 @@ var gridPros = {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>isColumnOriented = true 설정이라면 Home, End 키가 칼럼의 시작과 끝으로 각각 이동 합니다.</p>
   <p>키보드의 Home, End 키가 칼럼이 아닌 행의 시작과 끝으로 이동하고자 한다면 이 속성을 false 설정하십시오.</p> 
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="isFitColumnSizeHeaderText">
 <td class="summaryTableSignatureCol">
@@ -1252,7 +1288,7 @@ var gridPros = {
   <p>칼럼과 칼럼 사이의 구분자를 더블 클릭 할 때 해당 칼럼의 셀 내용에 맞게 사이즈가 최적화 됩니다.</p>
   <p>이 때 헤더 텍스트도 고려할지 여부를 지정합니다.</p>
   <p>만약, 이 속성을 false 처리하면 헤더 텍스트는 무시하고 실제 셀 텍스트에 맞게 칼럼의 사이즈가 조정됩니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="isGenNewRowsOnPaste">
 <td class="summaryTableSignatureCol">
@@ -1263,7 +1299,7 @@ var gridPros = {
   <p>다수의 행을 클립 보드 붙여넣기(Ctrl+V) 할 때 그리드의 마지막 하단 행보다 클립보드 양이 많은 경우, 새 행을 만들고 붙여넣기 할지 여부를 지정합니다.</p>
   <p>기본값은 클립보드의 양이 많은 경우 자동으로 그리드에 새 행을 추가하고 모든 클립보드 데이터를 붙여 넣습니다.</p>
   <p>그러나 isGenNewRowsOnPaste=false 처리 시 그리드 출력 행보다 많은 클립보드 데이터는 무시하게 됩니다. 즉, 새 행을 만들지 않습니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="isRowAllCheckCurrentView">
 <td class="summaryTableSignatureCol">
@@ -1276,7 +1312,7 @@ var gridPros = {
  <p>페이징 모드(usePaging = true)에서 현재 페이지의 행들 대상으로 전체 체크 설정/해제 하고자 한다면 이 속성을 설정하십시오.</p>
  <p>현재 데이터에 변화가 생긴 경우 전체 체크는 풀립니다</p>
  <p>참고 : 계층형 그리드(트리 그리드)에서 해당 속성 설정은 무시됩니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="keepColumnOrderOnGrouping">
 <td class="summaryTableSignatureCol">
@@ -1289,7 +1325,7 @@ var gridPros = {
   <p>이 속성을 true 설정하면 그룹핑 할 때 칼럼 순서의 변화 없이 기존 칼럼 순서 그대로 유지하며 그룹핑이 됩니다.</p>
   <p>참고 :  이 속성을 true 처리하면 <a href="#fillValueGroupingSummary">fillValueGroupingSummary</a>, <a href="#adjustSummaryPosition">adjustSummaryPosition</a>, <a href="#enableSummaryMerge">enableSummaryMerge</a> 속성들은 비활성화(false 설정) 됩니다.</p>
   <p><a href="../../samples/grouping_keep_column_order.html?gskorc&theme=default&s=2623" target="_blank">관련 데모 보기</a></p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="keepEditing">
 <td class="summaryTableSignatureCol">
@@ -1300,7 +1336,7 @@ var gridPros = {
 <p>편집 가능 상태(editable = true)일 때 F2 또는 클릭(더블클릭)으로 수정 모드로 들어간 경우,  탭키나 엔터키로 수정을 완료 한다면 다음 셀을 수정 가능 상태로 만들지 여부를 나타냅니다.</p>
 <p>만약 keepEditing = true 로 설정한 경우, 다음 셀이 바로 수정 가능한 상태로 입력 창이 열리게 됩니다.</p>
 <p>터치 기반의 모바일 디바이스에서는 무시됩니다.</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="keepOrderingOnGrouping">
 <td class="summaryTableSignatureCol">
@@ -1314,7 +1350,7 @@ var gridPros = {
   <p>Number 체제의 작은 값이 위에 나옵니다. 이런 경우 원래 데이터의 순서대로 나오게 하는 속성이 keepOrderingOnGrouping=true 입니다.</p>
   <p>주의 : 이 속성은 일반적으로 불필요 합니다. 데이터의 값이 Number 인 경우(또는 Number 로 캐스팅해도 같은 경우) true 설정하십시오.</p>
   <p>데이터의 개수가 많은 경우 그리드 그룹핑 성능에 영향을 미치므로 무조건적인 true는 피하십시오.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="lastColumnScrollOnClick">
 <td class="summaryTableSignatureCol">
@@ -1323,7 +1359,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.12.10<br>
  <p>수평 스크롤이 있는 그리드에서 현재 화면의 칼럼이 반절 가려진 경우 마우스로 셀을 클릭할 때 온전하게 보이도록 스크롤을 자동으로 이동할지 여부를 지정합니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="lastRowScrollOnClick">
 <td class="summaryTableSignatureCol">
@@ -1332,7 +1368,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.12.4<br>
  <p>수직 스크롤이 있는 그리드에서 현재 화면의 최하단 행(반절 가려진 행)을 마우스로 클릭 시 온전하게 해당 행이 보이도록 스크롤을 자동으로 내릴지 여부를 지정합니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="longTapDelay">
 <td class="summaryTableSignatureCol">
@@ -1342,7 +1378,7 @@ var gridPros = {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.2<br>
  <p>터치 기기(touch devices)에서 길게 누르기(Long Tap)를 할 때 이 속성 값의 시간(ms단위)만큼 누르고 있을 경우 발생합니다.</p>
  <p>선행 조건으로 enableLongTap 를 true 로 설정해야 하며 단위는 ms입니다.(최소값:500)</p>
-  기본값(default) : <code>700</code>.</td>
+ 기본값(default) : <code>700</code></td>
 </tr>
 <tr id="mergeByFormatValue">
 <td class="summaryTableSignatureCol">
@@ -1353,7 +1389,7 @@ var gridPros = {
  <p>셀 병합(merge)을 할 때 포매팅한 결과 값을 기준으로 병합 할지 여부를 지정합니다.</p>
  <p>포매팅한 결과 값의 의미는 실제 데이터가 아닌 labelFunction, formatString 등으로 가공된 최종 뷰(view)적인 표현 값을 의미합니다.</p>
  <p>만약 false 설정한다면 실 데이터 모델의 값 기준(dataField 값 기준)으로 병합 여부를 결정 짓습니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="minColumnWidth">
 <td class="summaryTableSignatureCol">
@@ -1363,7 +1399,7 @@ var gridPros = {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>칼럼의 최소 사이즈를 지정합니다.</p>
 <p>여기서 지정한 칼럼 사이즈보다 칼럼은 작아지지 않습니다.</p>
- 기본값(default) : <code>12</code>.</td>
+기본값(default) : <code>12</code></td>
 </tr>
 <tr id="multiSortingKey">
 <td class="summaryTableSignatureCol">
@@ -1376,7 +1412,7 @@ var gridPros = {
  <p>유효값은 "shiftKey", "ctrlKey", "always" 입니다.</p>
  <p>"always" 값은 단순 클릭만으로 항상 다중 정렬이 실행됩니다.</p>
  <p><a href="../../samples/sorting_demo.html?st_base&theme=default" target="_blank">관련 데모 보기</a></p> 
-  기본값(default) : <code>"shiftKey"</code>.</td>
+ 기본값(default) : <code>"shiftKey"</code></td>
 </tr>
 <tr id="noDataMessage">
 <td class="summaryTableSignatureCol">
@@ -1385,7 +1421,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> showAutoNoDataMessage 가 true 인 경우 출력시킬 메세지를 지정합니다.</p>
-  기본값(default) : <code>"No Data to display"</code>.</td>
+ 기본값(default) : <code>"No Data to display"</code></td>
 </tr>
 <tr id="notBeginEventNewRowsOnPaste">
 <td class="summaryTableSignatureCol">
@@ -1398,7 +1434,7 @@ var gridPros = {
   <p>true 를 설정한다면 cellEditBegin 이벤트를 송출하지 않습니다.</p>
   <p>false 를 설정한다면 cellEditBegin 이벤트가 송출됩니다.</p>
   <p>Also See : <a href="#uneditableNewRowsOnPaste">uneditableNewRowsOnPaste</a></p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="nullsLastOnSorting">
 <td class="summaryTableSignatureCol">
@@ -1409,7 +1445,7 @@ var gridPros = {
  <p>정렬(sorting) 할 때 빈값(undefined, null, "")에 해당되는 값은 오름차순, 내림차순과 관계 없이 항상 아래에 위치시킬지 여부를 지정합니다.</p>
  <p>만약 nullsLastOnSorting=fasle 설정한다면 빈값에 해당되는 값은 오름차순 시 상단에, 내림차순 시 하단에 위치합니다.</p>
  <p><a href="/demo/bigdata.html?big&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="onlyEnterKeyEditEnd">
 <td class="summaryTableSignatureCol">
@@ -1418,7 +1454,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>이 속성을 true 설정하면 셀을 수정하고 완료를 하기 위해 엔터(Enter) 키를 입력할 때 수정 완료 행위만 하고 다음 행으로 선택자를 내리지 않습니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="onlyTreeLastDepthSorting">
 <td class="summaryTableSignatureCol">
@@ -1427,7 +1463,7 @@ var gridPros = {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>트리 그리드(계층형 데이터 그리드)에서 정렬을 할 때 최하단의 Depth 에 해당되는 행(rows)만 정렬을 실행할지 여부를 지정합니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="orderAscOnGrouping">
 <td class="summaryTableSignatureCol">
@@ -1438,7 +1474,7 @@ var gridPros = {
  <p>그룹핑을 할 때 데이터의 순서를 그룹핑 필드의 값 오름차순으로 출력 시킬지 여부를 지정합니다.</p>
  <p>이 속성을 true 설정하면 그룹핑 필드 설정된 칼럼의 데이터 순서는 오름차순으로 출력됩니다.</p>
  <p>실제 그리드 정렬(sorting)과는 무관한 단순 출력 방식 지정 입니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="pageRowCount">
 <td class="summaryTableSignatureCol">
@@ -1449,7 +1485,7 @@ var gridPros = {
  <p>페이징을 사용하는 경우 한 페이지에 출력되는 행의 수를 지정합니다.</p>
  <P>지정할 수 있는 최대값은 500입니다.</p>
  <p>이 값을 높이 설정하면 개수만큼 모든 행의 DOM 을 작성하기 때문에 퍼포먼스에 악영향을 미칩니다.</p> 
-  기본값(default) : <code>20</code>.</td>
+ 기본값(default) : <code>20</code></td>
 </tr>
 <tr id="pageRowSelectValues">
 <td class="summaryTableSignatureCol">
@@ -1460,7 +1496,7 @@ var gridPros = {
  <p>페이징의 행의 개수를 변경할 수 있는 select 의 option들을 지정합니다.</p>
  <p>반드시 정수형의 배열을 설정해야 합니다.</p>
  <p>Also See : <a href="./Events.html#showPageRowSelect">showPageRowSelect</a> | <a href="/demo/paging_rowcount_select_demo.html?pg_rc&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>[10, 20, 30, 40, 50]</code>.</td>
+ 기본값(default) : <code>[10, 20, 30, 40, 50]</code></td>
 </tr>
 <tr id="pagingBottomGap">
 <td class="summaryTableSignatureCol">
@@ -1470,7 +1506,7 @@ var gridPros = {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.10.0<br>
  <p>페이징 모드(usePaging=true)인 경우 세로 스크롤 최하단의 여백을 추가로 지정합니다.</p>
  <p>예로 속성의 값을 10으로 설정하면 10 픽셀만큼 추가로 세로 스크롤을 통해  더 내릴 수 있습니다.</p>
-  기본값(default) : <code>1</code>.</td>
+ 기본값(default) : <code>1</code></td>
 </tr>
 <tr id="pagingInfoLabelFunction">
 <td class="summaryTableSignatureCol">
@@ -1487,14 +1523,14 @@ var gridPros = {
 <li>currentBottomNumber : 현재 페이지에서 최하단의 행 번호</li>
 <li>dataLen : 총 데이터 수</li>
 </ul>
-<pre> 
+<pre><code class="language-javascript"> 
 pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber, currentBottomNumber, dataLen) {
    // 로직 처리
    return "현재 : " + currentPage + " / 전체 : " + totalPageCount + "( " + currentTopNumber + "~" + currentBottomNumber + " )";
 } 
-</pre>
+</code></pre>
 <p>함수의 반환값이 곧 출력값이 됩니다.</p>
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="pagingMode">
 <td class="summaryTableSignatureCol">
@@ -1505,7 +1541,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>페이징을 사용하는 경우 페이징의 방식을 지정합니다. 유효값은 "default", "simple", "button" 입니다.</p>
  <p>"simple" 로 설정한 경우 이전, 다음 버턴과 현재페이지/전체페이지 만 출력됩니다.</p>
  <p>"button" 로 설정한 경우 페이징 패널 없이 그리드 하단에 오버레이되어 이전, 다음 버턴만 출력됩니다.</p>
-  기본값(default) : <code>"default"</code>.</td>
+ 기본값(default) : <code>"default"</code></td>
 </tr>
 <tr id="pagingPanelHeight">
 <td class="summaryTableSignatureCol">
@@ -1514,7 +1550,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>페이징을 사용하는 경우 페이징이 출력되는 하단의 페이징 영역이 높이를 지정합니다.</p>
-  기본값(default) : <code>34</code>.</td>
+ 기본값(default) : <code>34</code></td>
 </tr>
 <tr id="preventDelKeyMap">
 <td class="summaryTableSignatureCol">
@@ -1525,7 +1561,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>수정 가능한 그리드에서 Del 키, Ctrl + X 키로 값을 삭제 불가능한 렌더러(renderer), 에디트렌더러(editRenderer) 의 유형(type) 을 정의합니다.</p>
  <p>여기서 정의한 renderer, editRenderer는 Del 키, Ctrl + X 키로 값을 삭제 할 수 없습니다.</p>
  <p>다음은 기본값으로 정의된 모습니다.</p>
- <pre>
+ <pre><code class="language-javascript">
  preventDelKeyMap = {
      DropDownListRenderer : true,
      LinkRenderer : true,
@@ -1534,9 +1570,9 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
      BTCalendarRenderer : true,
      CheckBoxEditRenderer : true,
      SwitchRendererer : true
- };</pre>
+ };</code></pre>
  <p>즉, editRenerer(또는 renderer) 의 type 이 "DropDownListRenderer", "LinkRenderer", "CalendarRenderer", "JQCalendarRenderer", "BTCalendarRenderer", "CheckBoxEditRenderer" 는 Del 키, Ctrl + X 키로 삭제 할 수 없습니다.</p>
-  기본값(default) : <code>Object</code>.</td>
+ 기본값(default) : <code>Object</code></td>
 </tr>
 <tr id="processValidData">
 <td class="summaryTableSignatureCol">
@@ -1555,7 +1591,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>데이터 수가 10만, 20만 등 대용량일 경우 processValidData 를 true 로 설정했다면 퍼포먼스가 낮아질 수 있으니 JSON 데이터 작성 시 2번 형태로 작성하십시오.(1번 형태는 anti-pattern임)</p>
  <p>XML 데이터를 사용할 경우는 반드시 processValidData 를 true 로 설정해야 비교 연산 시 숫자 연산을 하게 됩니다.</p>
  <p>만약 정렬 기능과 같이 비교 연산을 사용하지 않는 경우 processValidData 를 false 로 설정하는게 유리합니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="remoterPlaceholder">
 <td class="summaryTableSignatureCol">
@@ -1565,7 +1601,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>리모트 리스트 렌더러를 사용할 때 사용자가 입력 전 출력시킬 placeholder 텍스트를 지정합니다.</p>
   <p>placeholder 는 브라우저에 의존적입니다. 따라서 무시될 수 있습니다.(브라우저 영향)</p>
-   기본값(default) : <code>"검색어를 입력하세요."</code>.</td>
+  기본값(default) : <code>"검색어를 입력하세요."</code></td>
 </tr>
 <tr id="resetHScroll">
 <td class="summaryTableSignatureCol">
@@ -1574,7 +1610,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>데이터 변경 시 수평 스크롤의 위치를 초기화 할지 여부를 나타냅니다. 이 속성을 false 로 설정하면 데이터 변경 시 수평 스크롤의 위치가 변하지 않습니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="resetVScroll">
 <td class="summaryTableSignatureCol">
@@ -1583,7 +1619,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>데이터 변경 시 수직 스크롤의 위치를 초기화 할지 여부를 나타냅니다. 이 속성을 false 로 설정하면 데이터 변경 시 수직 스크롤의 위치가 변하지 않습니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="reverseRowNum">
 <td class="summaryTableSignatureCol">
@@ -1593,7 +1629,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>행번호 칼럼에서 행 번호를 반대로 출력할지 여부를 나타냅니다.</p>
   <p>reverseRowNum 을 true 로 설정하면 행번호 칼럼의 넘버링이 큰수에서 작은수로 출력됩니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="rowCheckableFunction">
 <td class="summaryTableSignatureCol">
@@ -1609,15 +1645,15 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <li>item : 해당 행에 출력되고 있는 행 아이템 객체 (Object)</li>
 </ul>
  <p>Return : (Boolean) true 를 반환하면 사용자가 자유롭게 체크 변경이 가능하며, false 반환 시 불가 상태(초기 유지)로 만듭니다.</p> 
-<pre>
+<pre><code class="language-javascript">
  rowCheckableFunction : function(rowIndex, isChecked, item) {
-   if(item.name == "Anna") { // 이름이 "Anna" 인 경우 행 체크 유지 설정(즉, 사용자가 체크 변경 불가)
+   if(item.name === "Anna") { // 이름이 "Anna" 인 경우 행 체크 유지 설정(즉, 사용자가 체크 변경 불가)
         return false;
    }
    return true;
-}</pre>
+}</code></pre>
 <p><a href="../../samples/extra_renderer_checkbox.html?erchk&theme=default" target="_blank">관련 데모 보기</a></p> 
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="rowCheckableWithDisabled">
 <td class="summaryTableSignatureCol">
@@ -1628,7 +1664,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>엑스트라 체크박스 체커블 함수(rowCheckableFunction)을 정의한 경우, checkable 이 아닌 체크박스를 disabled 처리도 함께 시킬지 여부를 지정합니다.</p>
  <p>rowCheckableFunction 으로 정의된 함수를 그리드가 렌더링 시 빈번히 호출됩니다. </p>
  <p>따라서 rowCheckableFunction 으로 정의된 함수의 로직이 복잡하다면, 이 속성 rowCheckableWithDisabled = false 처리 후 rowCheckDisabledFunction 을 따로 정의하십시오.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="rowCheckColumnWidth">
 <td class="summaryTableSignatureCol">
@@ -1638,7 +1674,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>엑스트라 행 체크박스 칼럼의 가로 사이즈(width)를 지정합니다.</p>
 <p>showRowCheckColumn=true 설정인 경우만 유효합니다.</p>
- 기본값(default) : <code>25</code>.</td>
+기본값(default) : <code>25</code></td>
 </tr>
 <tr id="rowCheckDependingTree">
 <td class="summaryTableSignatureCol">
@@ -1649,7 +1685,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>트리 그리드에서 엑스트라 행 체크 박스를 사용하는 경우, 부모를 체크 할 때 그 자손들도 체크하게 할지 여부를 지정합니다.</p>
  <p>즉, 부모를 체크하면 하위 자손들도 체크되고, 체크 해제 하면 그 하위 자손들도 체크 해제 됩니다.</p>
  <p>이 속성은 트리 그리드에서만 유효합니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="rowCheckDisabledFunction">
 <td class="summaryTableSignatureCol">
@@ -1665,16 +1701,16 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <li>item : 해당 행에 출력되고 있는 행 아이템 객체 (Object)</li>
 </ul>
  <p>Return : (Boolean) false 를 반환하면 비활성화(disabled) 상태로  만듭니다.</p> 
-<pre>
+<pre><code class="language-javascript">
  rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-   if(item.name == "Anna") { // 이름이 "Anna" 인 경우 엑스트라 행 체크박스 비활성화 처리함.
+   if(item.name === "Anna") { // 이름이 "Anna" 인 경우 엑스트라 행 체크박스 비활성화 처리함.
         return false;
    }
    return true; // 일반 활성화 된 체크박스로 표현
-}</pre>
+}</code></pre>
 <p>주의 : 이 속성의 값으로 지정된 함수는 렌더링 시 빈번히 호출됩니다. 따라서 이곳에서 DOM 검색이나, 복잡한 로직은 삼가하십시오. 성능에 영향을 미칩니다.</p>
 <p><a href="../../samples/extra_renderer_checkbox.html?erchk&theme=default" target="_blank">관련 데모 보기</a></p>
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="rowCheckMergeField">
 <td class="summaryTableSignatureCol">
@@ -1686,7 +1722,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>예로 이 속성을 "name" 으로 설정하면 그리드의 "name" 칼럼과 동일하게 엑스트라 체크박스를 세로 병합시켜 출력 시킵니다.</p>
  <p>따라서 엑스트라 체크박스를 세로 병합하기 위해서는 미리 그 기준이 되는 칼럼을 병합 시켜야 합니다.</p>
  <p><a href="../../samples/extra_renderer_checkbox_merge.html?erchkmr&theme=default&s=5400" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>""</code>.</td>
+ 기본값(default) : <code>""</code></td>
 </tr>
 <tr id="rowCheckToRadio">
 <td class="summaryTableSignatureCol">
@@ -1696,7 +1732,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>엑스트라 행 체크박스 대신 라디오버턴 그룹으로 변환시켜 출력할지 여부를 지정합니다.</p>
 <p>showRowCheckColumn=true 설정인 경우만 유효합니다.</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="rowCheckVisibleFunction">
 <td class="summaryTableSignatureCol">
@@ -1713,16 +1749,16 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <li>item : 해당 행에 출력되고 있는 행 아이템 객체 (Object)</li>
 </ul>
  <p>Return : (Boolean) true 를 반환하면 체크박스가 정상 표시되며 false 를 반환하면 체크박스가 숨기기 상태(hidden)가 됩니다.</p> 
-<pre>
+<pre><code class="language-javascript">
  rowCheckVisibleFunction : function(rowIndex, isChecked, item) {
-   if(item.name == "Anna") { // 이름이 "Anna" 인 경우 엑스트라 행 체크박스 숨기기 처리
+   if(item.name === "Anna") { // 이름이 "Anna" 인 경우 엑스트라 행 체크박스 숨기기 처리
         return false; // false 를 반환하면 체크박스가 숨기기 상태(hidden)가 됩니다.
    }
    return true; 
-}</pre>
+}</code></pre>
 <p>주의 : 이 속성의 값으로 지정된 함수는 렌더링 시 빈번히 호출됩니다. 따라서 이곳에서 DOM 검색이나, 복잡한 로직은 삼가하십시오. 성능에 영향을 미칩니다.</p>
 <p><a href="../../samples/extra_renderer_checkbox_all2.html?erchkta&theme=default" target="_blank">관련 데모 보기</a></p> 
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="rowHeight">
 <td class="summaryTableSignatureCol">
@@ -1731,7 +1767,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0<br>
 <p>행의 높이를 지정합니다. 행의 높이는 20보다 작아질 수 없습니다. (즉, 행 높이 최소값은 20) </p>
- 기본값(default) : <code>26</code>.</td>
+기본값(default) : <code>26</code></td>
 </tr>
 <tr id="rowIdField">
 <td class="summaryTableSignatureCol">
@@ -1746,7 +1782,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <p>예로 rowIdField 를 "id" 로 설정한 경우 모든 데이터의 개별 행에 id 필드가 존재해야 하며 그 값들은 모두 고유값이여야 합니다.</p>
 <p>이 필드를 지정하면 그리드가 빨리 생성됩니다. 10만 행(rows) 데이터 이상에서는 빠른 렌더링을 위해 설정을 추천합니다.</p>
 <p>편집 모드(editable=true)에서 rowIdField 로 지정된 필드는 수정이 불가능해집니다.</p>
- 기본값(default) : <code>"_$uid"</code>.</td>
+기본값(default) : <code>"_$uid"</code></td>
 </tr>
 <tr id="rowIdTrustMode">
 <td class="summaryTableSignatureCol">
@@ -1760,7 +1796,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>예로 rowIdField 를 id 로 설정한 경우 행 추가되는 Object 의 id 필드는 기존 데이터의 id 필드와 중복되지 않는 온전한 값으로 존재한다고 믿습니다.</p>
  <p>참고 : rowIdField 를 설정하지 않은 경우 이 속성은 무시됩니다.</p>
  <p>Also See : <a href="#rowIdField">rowIdField</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="rowNumColumnWidth">
 <td class="summaryTableSignatureCol">
@@ -1770,7 +1806,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>행 줄번호(로우 넘버링) 칼럼의 가로 사이즈(width)를 지정합니다.</p>
 <p>showRowNumColumn=true 설정인 경우만 유효합니다.</p>
- 기본값(default) : <code>40</code>.</td>
+기본값(default) : <code>40</code></td>
 </tr>
 <tr id="rowNumHeaderText">
 <td class="summaryTableSignatureCol">
@@ -1779,7 +1815,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>행번호 칼럼 설정한 경우(showRowNumColumn=true) 행번호 칼럼의 헤더에 출력할 텍스트를 지정합니다.</p>
-   기본값(default) : <code>"No."</code>.</td>
+  기본값(default) : <code>"No."</code></td>
 </tr>
 <tr id="rowPosition">
 <td class="summaryTableSignatureCol">
@@ -1790,7 +1826,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <p>현재 행(row) 의 위치를 나타냅니다.</p>
 <p>rowPosition 이 곧 현재 화면에 보이는 그리드의 최상단 행의 인덱스와 같습니다.</P>
 <p>페이징 모드인 경우는 현재 페이지의 최상단 행의 인덱스와 같습니다.</p>
- 기본값(default) : <code>0</code>.</td>
+기본값(default) : <code>0</code></td>
 </tr>
 <tr id="rowSelectionWithMerge">
 <td class="summaryTableSignatureCol">
@@ -1799,7 +1835,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.8.0<br>
  <p><strong>[deprecated Ver 3.0.13] </strong></p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="rowStyleFunction">
 <td class="summaryTableSignatureCol">
@@ -1813,17 +1849,17 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <li>rowIndex : 행 인덱스</li>
 <li>item : 해당 인덱스의 행 아이템</li>
 </ul>
-<pre>
+<pre><code class="language-javascript">
  rowStyleFunction : function(rowIndex, item) {
-   var myCss = "my-Css";
+   const myCss = "my-Css";
    // 로직 처리
    return myCss;
-}</pre>
+}</code></pre>
 <p>함수의 반환값은 CSS 에서 이미 선언되어 있는 CSS 클래스여야 합니다.</p>
 <p>다중의 CSS 클래스는 지원하지 않습니다. 예를 들어 "right-style bold-style font12-style" 과 같은 구조는 지원하지 않습니다.</p>
 <p>엑셀 내보내기 시에는 해당 스타일의 글자 색상(color), 배경색(background-color), 이탤릭체(font-style: italic), 볼드체(font-weight: bold), 언더라인(text-decoration: underline)만 적용됩니다.</p>
 <p><a href="../../samples/styling.html?st1&theme=default" target="_blank">관련 데모 보기</a></p> 
- 기본값(default) : <code>null</code>.</td>
+기본값(default) : <code>null</code></td>
 </tr>
 <tr id="scaleFactor">
 <td class="summaryTableSignatureCol">
@@ -1834,11 +1870,11 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>그리드 상위 태그의 CSS transform 에 scale을 한 경우 그리드에 동일한 scale 값을 지정하여 일관된 좌표 공간이 되도록 설정합니다.</p>
  <p>이는 그리드 상위 태그의 CSS transform 에 scale 과 matrix를 설정한 경우만 유효합니다.</p>
  <p>예로 80%의 scale 을 설정했다면 상위 태그의 CSS transform 은 다음과 같고 그리드 속성 scaleFactor 는 동일한 값인 0.8 을 설정해야 합니다.</p>
- <pre>
+ <pre><code class="language-javascript">
     1. transform: scale(0.8);
-    2. transform: matrix(0.8, 0, 0, 0.8, 0, 0);</pre>
+    2. transform: matrix(0.8, 0, 0, 0.8, 0, 0);</code></pre>
  <p>
-  기본값(default) : <code>1</code>.</td>
+ 기본값(default) : <code>1</code></td>
 </tr>
 <tr id="scrollHeight">
 <td class="summaryTableSignatureCol">
@@ -1847,7 +1883,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>스크롤의 높이(수직 스크롤인 경우 너비)를 지정합니다.</p>
- 기본값(default) : <code>14</code>.</td>
+기본값(default) : <code>14</code></td>
 </tr>
 <tr id="scrollHeight4Mobile">
 <td class="summaryTableSignatureCol">
@@ -1856,7 +1892,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>autoScrollSize=true 설정한 경우, 터치가 지원되는 모바일 화면(아이에서의 스크롤 높이(수직 스크롤인 경우 너비)를 지정합니다.</p>
- 기본값(default) : <code>4</code>.</td>
+기본값(default) : <code>4</code></td>
 </tr>
 <tr id="scrollThumbHeight">
 <td class="summaryTableSignatureCol">
@@ -1865,7 +1901,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>스크롤 썸(thumb)의 높이(수직 스크롤인 경우 너비)를 지정합니다.</p>
- 기본값(default) : <code>10</code>.</td>
+기본값(default) : <code>10</code></td>
 </tr>
 <tr id="searchByFormatValue">
 <td class="summaryTableSignatureCol">
@@ -1877,7 +1913,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>기본은 그리드의 포매팅된 값이 아닌 원본 데이터 값을 검색합니다.</p>
  <p>예로 그리드에 드랍다운리스트의 key-value 모드로 001 을 "영업본부" 로 출력하고 있는 경우 검색을 할 때 검색의 대상이 되는 값은 원본 데이터는 001 입니다.</p>
  <p>그러나  searchByFormatValue 을 설정한다면 사용자가 "영업본부" 로 검색하면 001에 대한 셀을 찾아 갑니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="selectionMode">
 <td class="summaryTableSignatureCol">
@@ -1893,7 +1929,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <li>"multipleRows : 선택 단위가 행(row) 단위로 지정되며 다수의 행을 선택할 수 있습니다.</li>
 <li>"none" : 그리드에서 제공하는 선택 기능을 해제 시킵니다. "none"을 설정하면 일반 HTML 에서 기본 제공하는 사용자 텍스트 선택을 하게 만듭니다.</li>
 </ul>
- 기본값(default) : <code>"singleCell"</code>.</td>
+기본값(default) : <code>"singleCell"</code></td>
 </tr>
 <tr id="selectionMultiOnMerge">
 <td class="summaryTableSignatureCol">
@@ -1902,7 +1938,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.13<br>
  selectionMode 를 "multipleCells" 로 설정한 경우, 세로 병합된 셀 1개을 선택할 때 자동으로 해당 세로 병합된 셀 전체가 선택되게 할지 여부를 지정합니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="separatedSelectionOnMerge">
 <td class="summaryTableSignatureCol">
@@ -1912,7 +1948,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.9.0<br>
  <p>세로 병합된 셀을 선택했을 때 병합된 셀의 첫번째 셀 선택이 아닌 직접적으로 선택된 셀을 구분해서 선택할지 여부를 지정합니다.</p>
  <p>예로 3개의 셀이 세로 병합된 경우 가운데 셀을 클릭하면 병합되었기 때문에 첫번째 셀이 선택됩니다. 이 속성을 false 처리하면 가운데 셀만 선택시킵니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="showAutoNoDataMessage">
 <td class="summaryTableSignatureCol">
@@ -1922,7 +1958,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p> 그리드가 표현할 데이터가 존재 하지 않을 때 자동으로 메세지를 출력할지 여부를 지정합니다.</p>
  <p> 출력 메세지는 noDataMessage 속성의 값이 출력되니 메세지를 변경하고자 할 때는 noDataMessage 를 변경하십시오.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showBranchOnGrouping">
 <td class="summaryTableSignatureCol">
@@ -1933,7 +1969,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>그룹핑 시 브랜치(branch)에 해당되는 행 출력 여부를 지정합니다.</p>
   <p>그룹핑을 지정하면 계층 구조(트리 구조)로 데이터가 변하게 됩니다. 이 때 그룹핑의 브랜치에 해당되는 행이 동적으로 생성됩니다.</p>
   <p>이 속성을 false 로 지정하면 그룹핑 시 브랜치 행이 표시되지 않습니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showDragKnobColumn">
 <td class="summaryTableSignatureCol">
@@ -1943,7 +1979,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.10.0<br>
  <p>행 드래그&amp;드랍을 도와주는 엑스트라 칼럼을 최좌측에 생성합니다.</p>
  <p>생성된 엑스트라 칼럼의 셀을 드래깅하여 행을 이동 시킬 수 있습니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="showDragRowsTooltip">
 <td class="summaryTableSignatureCol">
@@ -1952,7 +1988,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.11<br>
  <p>드래깅으로 행을 이동할 때 보여지는 툴팁의 표시 여부를 지정합니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showEditedCellMarker">
 <td class="summaryTableSignatureCol">
@@ -1961,7 +1997,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>수정 가능한 상태(editable = true) 인 경우 셀을 수정하면 해당 셀에 수정된 표시(마크)를 출력할지 여부를 나타냅니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showFooter">
 <td class="summaryTableSignatureCol">
@@ -1970,7 +2006,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>푸터 출력 여부를 지정합니다.</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="showFullFixedRule">
 <td class="summaryTableSignatureCol">
@@ -1980,7 +2016,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.8.0<br>
  <p>고정 칼럼 세로 선이 그리드 행 개수와 상관없이 그리드 높이에 맞게 출력 시킬 지 여부를 지정합니다.</p>
  <p>만약 showFullFixedRule 속성을 true 로 지정하면, 고정 칼럼 세로 선은 항상 그리드 최하단까지 출력됩니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="showHeader">
 <td class="summaryTableSignatureCol">
@@ -1989,7 +2025,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>헤더 출력 여부를 지정합니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showInlineFilter">
 <td class="summaryTableSignatureCol">
@@ -1999,7 +2035,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.11.0<br>
  <p>그리드 헤더 하단에 필터값을 바로 입력할 수 있는 입력 행을 출력 시킬지 여부를 지정합니다.</p>
  <p>인라인 필터 행에 값을 입력하면 매 입력마다 필터링이 됩니다.(선행 속성 enableFilter = true 설정)</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="showPageButtonCount">
 <td class="summaryTableSignatureCol">
@@ -2009,7 +2045,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>페이징을 사용하는 경우 출력되는 페이지의 버턴 개수를 지정합니다.</p>
  <p>지정할 수 있는 최대값은 20입니다.</p>
-  기본값(default) : <code>10</code>.</td>
+ 기본값(default) : <code>10</code></td>
 </tr>
 <tr id="showPageRowSelect">
 <td class="summaryTableSignatureCol">
@@ -2019,7 +2055,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.5<br>
  <p>페이징을 사용할 때 1 페이지에 출력할 행의 개수를 변경할 수 있는 select UI 를 하단에 출력할지 여부를 지정합니다.</p>
  <p>Also See : <a href="./Events.html#pageRowSelectValues">pageRowSelectValues</a> | <a href="/demo/paging_rowcount_select_demo.html?pg_rc&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="showRowAllCheckBox">
 <td class="summaryTableSignatureCol">
@@ -2028,7 +2064,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>엑스트라 행 체크박스(showRowCheckColumn=true)를 설정한 경우, 헤더 부분에 전체 선택 체크박스를 표시할지 여부를 지정합니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showRowBgStyles">
 <td class="summaryTableSignatureCol">
@@ -2037,7 +2073,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.10.9<br>
  <p>그리드 홀수 행, 짝수 행에 각각의 지정된 배경색 스타일이 적용될지 여부를 지정합니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showRowCheckColumn">
 <td class="summaryTableSignatureCol">
@@ -2047,7 +2083,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>엑스트라 행 체크박스 출력 여부를 지정합니다.</p>
 <p>이 속성 값이 true 이면 최좌측에 체크박스 칼럼이 생성됩니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showRowNumColumn">
 <td class="summaryTableSignatureCol">
@@ -2057,7 +2093,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>행 줄번호(로우 넘버링) 칼럼의 출력 여부를 지정합니다.</p>
 <p>이 속성 값이 true 이면 최좌측에 행번호 칼럼이 생성됩니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showSelectionBorder">
 <td class="summaryTableSignatureCol">
@@ -2066,7 +2102,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>셀 선택 시 선택된 셀에 테두리(border) 를 표시할지 여부를 나타냅니다.</p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="showStateColumn">
 <td class="summaryTableSignatureCol">
@@ -2077,7 +2113,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
    <p>그리드 좌측에 행의 상태를 나타내는 칼럼 출력 여부를 결정합니다.</p>
    <p>editable 을 true 로 설정한 경우 삭제, 수정, 추가 행에 대한 정보가 이 칼럼에 아이콘을 출력됩니다.</p>
    <p>만약 editable 을 false 로 설정한 경우 showStateColumn = true 를 설정하면 선택행에 대한 정보가 아이콘으로 출력됩니다.</p>
-    기본값(default) : <code>false</code>.</td>
+   기본값(default) : <code>false</code></td>
 </tr>
 <tr id="showTooltip">
 <td class="summaryTableSignatureCol">
@@ -2086,7 +2122,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>그리드 툴팁 표시 여부를 지정합니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="simplifySelectionEvent">
 <td class="summaryTableSignatureCol">
@@ -2097,9 +2133,10 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>selectionChange 이벤트 발생 시 간소화된 정보만 받을지 여부를 지정합니다.</p>
  <p>간소화한 경우  selectionChange 이벤트의 파라메터 요소인 event.selectedItems 를 포함시키지 않습니다.</p>
  <p>selectionChange 이벤트가 발생될 때 선택한 셀이 수천~수만을 넘어 가면 퍼포먼스에 악영향을 미칩니다.</p>
- <p>선택한 셀을 모두 보고자 하는 경우가 아니라면 true 설정을 권장합니다.</p>
- <p>Also See : <a href="./Events.html#selectionChange">selectionChange</a></p>
-  기본값(default) : <code>false</code>.</td>
+ <p>선택한 셀을 모두 확인하고자 하는 경우가 아니라면 true 설정을 권장합니다.</p>
+ <p>해당 속성 true 설정하더라도 원하는 시점에 선택한 셀 모두를 확인하는 getSelectedItems 메소드로 확인 할 수 있습니다. 따라서 일반적인 경우가 아니라면 true 설정을 권장합니다.</p>
+ <p>Also See : <a href="./Events.html#selectionChange">selectionChange</a> | a href="./Methods.html#getSelectedItems">getSelectedItems</a></p>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="skipReadonlyColumns">
 <td class="summaryTableSignatureCol">
@@ -2109,7 +2146,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>개별 칼럼에 editable=false 를 설정한 경우 키보드 방향키(또는 Tab, Home, End)가 해당 칼럼(읽기 전용 칼럼)을 건너 뛰어 셀렉션을 표현할지 여부를 지정합니다.</p>
   <p>주의 : cellEditBegin 이벤트로 동적 편집 불가 설정은 한 셀에 대해서는 적용되지 않습니다.</p> 
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="skipUneditableOnPaste">
 <td class="summaryTableSignatureCol">
@@ -2117,11 +2154,13 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <span class="signatureLink">skipUneditableOnPaste</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.11.16<br>
- <p>다수 값을 붙여 넣기 할 때 수정 불가능한 칼럼은 값 자체를 무시할지 여부를 지정합니다.</p>
- <p>예로 A, B, C 칼럼이 존재하고 B칼럼이 수정 불가 일 때 1, 2, 3 으로 대표되는 값을 A열에서 붙여 넣기 하면</p>
+ <p>다수 값을 붙여넣기(Paste) 할 때 명시적으로 수정 불가능한 칼럼은 값 자체를 무시할지 여부를 지정합니다.</p>
+ <p>명시적으로 수정 불가능한 칼럼은 editable = false 와 같이 설정한 경우를 의미합니다. 동적으로 수정 여부가 결정되는 경우 이 속성과 관계가 없습니다.</p>
+ <p>예로 A, B, C 칼럼이 존재하고 B칼럼이 수정 불가 일 때 1, 2, 3 으로 대표되는 값을 A열에서 붙여넣기 하면</p>
  <p>true 인 경우에는 A열에 1, B열 수정 불가, C열은 3으로 붙여 넣기 됩니다. 즉, 해당 열이 수정 불가라 그 자리에 들어가야 할 값 자체를 무시합니다.</p>
- <p>false 인 경우에는 A열에 1, B열 수정 불가, C열은 그 다음 값인 2로 붙여 넣기 합니다. </p>
-  기본값(default) : <code>true</code>.</td>
+ <p>false 인 경우에는 A열에 1, B열 수정 불가, C열은 그 다음 값인 2로 붙여 넣기 합니다. 이와 같이 건너뛰기는 명시적으로 수정 불가 설정한 칼럼에만 가능합니다.</p>
+ <p>참고 : 이 속성을 false 설정하면 붙여넣기로 새행을 만들지 않습니다. 즉, isGenNewRowsOnPaste = false 로 강제됩니다.</p>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="softRemovePolicy">
 <td class="summaryTableSignatureCol">
@@ -2133,7 +2172,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>그러나 서버에서 가져온 원래 데이터(그리드에 최초에 삽입한 데이터)가 아닌 사용자가 추가한 행을 삭제할 때, 사용자가 추가한 행은 softRemoveRowMode 를 적용하지 않을 수 있습니다.</p>
   <p>즉, 사용자가 추가한 행은 삭제 표시가 아닌 바로 제거하도록 할려면 softRemovePolicy="exceptNew" 를 설정하십시오.</p>
   <p>softRemovePolicy 의 유효값은 "all", "exceptNew" 입니다.</p>
-   기본값(default) : <code>"exceptNew"</code>.</td>
+  기본값(default) : <code>"exceptNew"</code></td>
 </tr>
 <tr id="softRemoveRowMode">
 <td class="summaryTableSignatureCol">
@@ -2146,7 +2185,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>softRemoveRowMode=true 인 경우, 삭제된 행은 복구(삭제 취소) 할 수 있습니다.(restoreSoftRows 메소드 참고)</p>
   <p>속성 dropToOthers 을 true 로 설정한 경우 softRemoveRowMode 는 강제적으로 false 입니다.</p>
   <p>Also See : <a href="#dropToOthers">dropToOthers</a></p>
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="sortableByFormatValue">
 <td class="summaryTableSignatureCol">
@@ -2159,7 +2198,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>뷰(View)적 정렬을 위해서는 데이터와 뷰의 관계가 1:1 관계여야 합니다. 즉, key : value 의 관계가 1:1 관계여야 합니다.</p>
  <p>여기서 정렬을 할 때 기본은 데이터 기반으로 정렬이 됩니다. 그러나 이 속성을 true 설정하면 보여지는 값인 value 기반으로 정렬을 실행합니다.</p>
  <p>데이터 기반의 정렬보다 퍼포먼스에 영향을 미치므로 무조건적인 true 설정은 피하십시오.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="sortingSequence">
 <td class="summaryTableSignatureCol">
@@ -2171,7 +2210,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>헤더 클릭하여 정렬을 할 때 기본 순서는 오름차순, 내림차순, 원복의 순서 입니다.</p>
  <p>이 순서를 변경하거나 항목에서 제외 시킬 수 있습니다.</p>
  <p>예로 작성하면 다음과 같습니다.</p>
- <pre>
+ <pre><code class="language-javascript">
  // 정렬 순서 : 첫 정렬을 내림차순부터, 오름차순, 원복의 순서 설정.
  sortingSequence = [0, -1, 1];
  
@@ -2179,8 +2218,8 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  sortingSequence = [1, -1];
  
  // 정렬 순서 : 내림차순만 사용. 내림 차순 이후 원복의 순서 설정. 즉, 오름차순은 사용하지 않음. 
- sortingSequence = [0, -1]; </pre>
-  기본값(default) : <code>[0, 1, -1]</code>.</td>
+ sortingSequence = [0, -1]; </code></pre>
+ 기본값(default) : <code>[0, 1, -1]</code></td>
 </tr>
 <tr id="stateColumnWidth">
 <td class="summaryTableSignatureCol">
@@ -2189,7 +2228,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>행 상태 칼럼(showStateColumn = true)을 설정한 경우 해당 칼럼의 가로 사이즈를 지정합니다.</p>
-   기본값(default) : <code>16</code>.</td>
+  기본값(default) : <code>16</code></td>
 </tr>
 <tr id="summaryMergePolicy">
 <td class="summaryTableSignatureCol">
@@ -2203,7 +2242,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <li>"default" : 그룹핑 필드 자신의 이전에서만 가로 병합 실행</li>
  <li>"all" : 그룹핑 필드 지정 개수 만큼 병합 실행</li>
  </ul>
-  기본값(default) : <code>"default"</code>.</td>
+ 기본값(default) : <code>"default"</code></td>
 </tr>
 <tr id="summaryText">
 <td class="summaryTableSignatureCol">
@@ -2212,7 +2251,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>groupingSummary 속성을 설정하였을 때 합계 필드에 출력되는 텍스트를 지정합니다.</p>
-  기본값(default) : <code>"합계"</code>.</td>
+ 기본값(default) : <code>"합계"</code></td>
 </tr>
 <tr id="tooltipSensitivity">
 <td class="summaryTableSignatureCol">
@@ -2223,7 +2262,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>툴팁 표시를 설정한 경우(showTooltip:true 설정) 툴팁이 표시되는 시간을 ms 로 지정합니다.</p>
   <p>즉, 특정 셀에 마우스 오버를 한 경우 tooltipSensitivity 값 이후에 툴팁이 출력됩니다.</p>
   <p>예를 들어 tooltipSensitivity=1000 을 지정한 경우 1 초 후 툴팁이 표시됩니다. 마우스 오버 시 바로 툴팁 표시를 원하면 0 을 설정하십시오.</p>
-   기본값(default) : <code>700</code>.</td>
+  기본값(default) : <code>700</code></td>
 </tr>
 <tr id="treeColumnIndex">
 <td class="summaryTableSignatureCol">
@@ -2232,7 +2271,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>계층형 그리드(트리 그리드) 에서 트리 아이콘을 출력시킬 칼럼 인덱스를 지정합니다.</p>
- 기본값(default) : <code>0</code>.</td>
+기본값(default) : <code>0</code></td>
 </tr>
 <tr id="treeIconFunction">
 <td class="summaryTableSignatureCol">
@@ -2250,20 +2289,20 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <li>item (Object) : 행 아이템</li>
  </ul>
  <p>Return : (String) 아이콘으로 출력하고자 하는 아이콘의 주소값(이미지 소스)</p> 
-  <pre>
+  <pre><code class="language-javascript">
    function signature : 
    function(rowIndex, isBranch, isOpen, depth, item) {
-      var imgSrc = null;
-      if(item.charge == "Lawrence") {
+      const imgSrc = null;
+      if(item.charge === "Lawrence") {
           imgSrc = "./assets/man1.png";
       } else {
           imgSrc = "./assets/man2.png";
       }
       return imgSrc;
     }    
-   </pre>
+   </code></pre>
  <p><a href="../../samples/treeData_icon.html?trn6&theme=default" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>null</code>.</td>
+ 기본값(default) : <code>null</code></td>
 </tr>
 <tr id="treeIdField">
 <td class="summaryTableSignatureCol">
@@ -2274,7 +2313,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>그리드에 입력되는 데이터가 계층구조의 데이터는 아니지만, 트리 그리드로 출력하고자 할 때 행이 id, parent 필드를 갖어야 합니다.</p>
   <p>이 때 id에 해당되는 데이터의 필드명을 treeIdField 값으로 지정하십시오.</p> 
   <p>이 속성은 flat2tree, treeIdRefField 속성과 관련이 있습니다.</p>
-   기본값(default) : <code>null</code>.</td>
+  기본값(default) : <code>null</code></td>
 </tr>
 <tr id="treeIdRefField">
 <td class="summaryTableSignatureCol">
@@ -2285,7 +2324,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>그리드에 입력되는 데이터가 계층구조의 데이터는 아니지만, 트리 그리드로 출력하고자 할 때 행이 id, parent 필드를 갖어야 합니다.</p>
   <p>이 때 내 부모행에 해당되는 참고필드를 treeIdRefField 값으로 지정하십시오.</p> 
   <p>이 속성은 flat2tree, treeIdField 속성과 관련이 있습니다.</p>
-   기본값(default) : <code>null</code>.</td>
+  기본값(default) : <code>null</code></td>
 </tr>
 <tr id="treeLazyMode">
 <td class="summaryTableSignatureCol">
@@ -2299,7 +2338,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>이 속성은 수정 가능한 그리드(editable = true)인 경우 사용이 불가능합니다. 오로지 조회용 그리드 속성입니다.</p>
  <p>수정 가능한 그리드에서의 하위 행 추가는 addTreeRow 메소드를 사용하십시오.</p>
  <p><a href="../../samples/treeData_lazy_loading.html?trn_lz" target="_blank">관련 데모 보기</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="treeLevelIndent">
 <td class="summaryTableSignatureCol">
@@ -2308,7 +2347,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>계층형 그리드(트리 그리드) 에서 자식 행과 부모 행의 왼쪽 간격(indent)를 지정합니다.</p>
- 기본값(default) : <code>18</code>.</td>
+기본값(default) : <code>18</code></td>
 </tr>
 <tr id="treeOpenRecursivly">
 <td class="summaryTableSignatureCol">
@@ -2318,7 +2357,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>계층형 그리드(트리 그리드) 에서 열기/닫기 실행 시 재귀적으로(recursivly) 열/닫을 실행할지 결정합니다.</p>
 <p>재귀란 바로 아래 자식 뿐 아니라 자손까지 영향을 미칠지를 나타냅니다.</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="triggerSelectionChangeOnCell">
 <td class="summaryTableSignatureCol">
@@ -2330,7 +2369,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>즉, 1번 행의 0번째 칼럼을 선택 한 후 1번 행의 1번째 칼럼으로 선택을 바꿨다면 "singleRow" 또는 "multipleRows" 에선 selectionChange 이벤트가 발생하지 않습니다.</p>
   <p>그러나 triggerSelectionChangeOnCell 속성을 true 로 설정하면  "singleRow" 또는 "multipleRows" 에서도 selectionChange 이벤트가 발생하게 됩니다.</p>
   <p>행 선택자를 지정 한 후, 같은 행에서 다른 칼럼으로 이동할 때 selectionChange 이벤트를 발생하고자 한다면 이 속성을 true 설정 하십시오.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="undoRedoStackSize">
 <td class="summaryTableSignatureCol">
@@ -2341,7 +2380,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>실행 취소(Undo), 다시 실행(Redo) 기능을 사용할 때 Undo, Redo 가능한 커맨드 스택의 총량(Stack length)을 지정합니다.</p>
   <p>예를 들어 이 속성의 값을 30 으로 설정하면, 30개의 커맨드만 관리 됩니다.</p>
   <p>0인 경우 길이의 제한은 없습니다. 그러나, 내부적으로 필요에 의해 스택 사이즈 초기화가 이루어집니다.</p>
-   기본값(default) : <code>0</code>.</td>
+  기본값(default) : <code>0</code></td>
 </tr>
 <tr id="uneditableNewRowsOnPaste">
 <td class="summaryTableSignatureCol">
@@ -2353,7 +2392,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>false 인 경우에는 붙여넣기로 새행이 생길 때 클립보드 데이터가 적용됩니다.</p>
  <p>true 인 경우에는 붙여넣기로 새행이 생길 때 클립보드 데이터 적용되지 않습니다.</p>
  <p>Also See : <a href="#notBeginEventNewRowsOnPaste">notBeginEventNewRowsOnPaste</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="updatableAnyField">
 <td class="summaryTableSignatureCol">
@@ -2364,7 +2403,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>updateRow 메소드로 어떤 필드든 변경 시킬 수 있는지 여부를 지정합니다.</p>
  <p>만약 true 설정하면 그리드 칼럼 레이아웃에서 정의한 칼럼이 아닌 경우임에도 임의의 필드를 수정할 수 있게 합니다.</p>
  <p>임의의 필드를 수정하면 그 행은 수정된 행 상태로 변경됩니다. 따라서 getEditedRowItems 메소드를 통해 얻을 수 있습니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="updownArrowEditEnd">
 <td class="summaryTableSignatureCol">
@@ -2375,7 +2414,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
   <p>편집 가능 그리드에서 "F2 또는 (더블)클릭" 으로 편집 상태로 들어간 경우 위, 아래 화살표 키가 편집 완료 역할 할지 여부를 지정합니다.</p>
   <p>기본적으로 "F2 또는 (더블)클릭" 으로 편집 상태 들어간 경우는 해당 입력기(inputer) 안에서 키보드가 이동합니다.</p>
   <p>이 속성은 editRenderer 의 기본 유형(default type)인 InputEditRenderer 에만 유효합니다.</p> 
-   기본값(default) : <code>true</code>.</td>
+  기본값(default) : <code>true</code></td>
 </tr>
 <tr id="useContextHeaderMenu">
 <td class="summaryTableSignatureCol">
@@ -2386,7 +2425,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
  <p>헤더 컨텍스트 메뉴 사용 여부를 지정합니다.</p>
  <p>헤더 컨텍스트 메뉴의 기본 메뉴는 존재하지 않습니다. 반드시 contextMenuHeaderItems 속성을 설정하여 헤더 컨텍스트 메뉴를 구성하십시오.</p>
  <p>Also See : <a href="#useContextHeaderMenu">useContextHeaderMenu</a></p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="useContextMenu">
 <td class="summaryTableSignatureCol">
@@ -2396,7 +2435,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>컨텍스트 메뉴 사용 여부를 지정합니다.</p>
  <p>컨텍스트 메뉴를 사용한다면 기본적으로 필터 메뉴가 생성됩니다. 기본 컨텍스트 메뉴를 사용하고자 한다면 enableFilter = true 설정도 함께 해주십시오.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="useGroupingPanel">
 <td class="summaryTableSignatureCol">
@@ -2406,7 +2445,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>그리드 상단에 그룹핑 가능한 패널 사용 여부를 지정합니다.</p>
 <p>이 속성이 true 이면 칼럼 헤더를 드래그하여 그룹핑 패널에 드랍하면 그룹핑을 사용자가 할 수 있습니다.</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="usePaging">
 <td class="summaryTableSignatureCol">
@@ -2415,7 +2454,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>페이징을 사용 여부를 지정합니다.</p>
-  기본값(default) : <code>false</code>.</td>
+ 기본값(default) : <code>false</code></td>
 </tr>
 <tr id="usePagingPanel">
 <td class="summaryTableSignatureCol">
@@ -2425,7 +2464,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.14<br>
  <p>페이징 모드(usePaging=true)에서 하단에 출력되는 페이징 패널(페이징 이동 버턴이 출력되는 하단 영역)을 출력할지 여부를 지정합니다.</p>
  <p>이 속성을 false 설정하면 페이징 모드 하단에 페이징 패널을 출력시키지 않습니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="useSummaryExpData">
 <td class="summaryTableSignatureCol">
@@ -2435,7 +2474,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>그룹핑 합계필드(groupingSummary)를 사용할 때 합계 필드에 사용되는 데이터가 칼럼의 expFunction 에 의해 생성된 데이터를 사용할지 여부를 나타냅니다.</p>
   <p>즉, 의존적 칼럼 관계로 생성된 데이터를 그룹핑 합계 필드에 활용하고자 하는 경우 이 속성을 true 설정하십시오.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="wheelDefaultOnLast">
 <td class="summaryTableSignatureCol">
@@ -2445,7 +2484,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.11<br>
 <p>마우스 휠을 움직일 때 그리드의 스크롤이 최하단 또는 최상단으로 간 경우 그리드 밖의 스크롤에 영향을 줄지 여부를 결정합니다.</p>
 <p>이 속성을 true 로 설정하면, 최하단 또는 최상단으로 간 경우 그리드 밖의 스크롤이 휠에 반응합니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 <tr id="wheelSensitivity">
 <td class="summaryTableSignatureCol">
@@ -2455,7 +2494,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>페이징 모드가 아닌 일반 그리드에서 마우스 휠(wheel)에 의한 수직 스크롤의 반응도를 결정합니다.</p>
 <p>예를 들어 이 속성의 값을 2로 주면 마우스 휠로 반응하는 행의 개수가 2로 변경됩니다.</p>
- 기본값(default) : <code>3</code>.</td>
+기본값(default) : <code>3</code></td>
 </tr>
 <tr id="width">
 <td class="summaryTableSignatureCol">
@@ -2464,7 +2503,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>그리드의 가로 사이즈를 픽셀 단위로 지정합니다. 이 가로 사이즈를 지정하지 않으면 부모 DIV 의 width 만큼 할당됩니다.(즉, 부모 width의 100%)</p>
-  기본값(default) : <code>NaN</code>.</td>
+ 기본값(default) : <code>NaN</code></td>
 </tr>
 <tr id="widthFitGap">
 <td class="summaryTableSignatureCol">
@@ -2474,7 +2513,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.11.2<br>
  <p>칼럼의 최적의 사이즈를 구할 때 적용되는 추가 픽셀을 지정합니다.</p>
  <p>예로 칼럼과 칼럼의 경계를 더블 클릭하여 크기(width)를 내용물에 맞출 때 추가로 적용 시킬 픽셀 사이즈를 적용 시킵니다.</p>
-  기본값(default) : <code>1</code>.</td>
+ 기본값(default) : <code>1</code></td>
 </tr>
 <tr id="wordWrap">
 <td class="summaryTableSignatureCol">
@@ -2487,7 +2526,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 <p>칼럼 레이아웃에서 설정한 열의 개수와 보여지는 행의 개수(실제 데이터 개수가 아닌 화면에 보이는 행의 개수)에 비례하여 퍼포먼스는 낮아집니다.</p>
 <p>wordWrap 되는 개별 행의 높이가 그리드의 영역의 2/3 보다 커질 수 없습니다. 만약 커지게 된다면 페이징 모드(usePaging = true)와 함께 사용하십시오.</p>
 <p>따라서 wordWrap 사용은 꼭 필요한 상황에 최소한으로 사용하십시오</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="wrapSelectionMove">
 <td class="summaryTableSignatureCol">
@@ -2497,7 +2536,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
   <p>마지막 칼럼에서 오른쪽 화살표 키 또는 Tab 키를 누른 경우 다음 행의 시작 칼럼으로 이동할지 여부를 나타냅니다.</p>
   <p>반대로 시작 칼럼에서 왼쪽 화살표 키 또는 Shift+Tab 키를 누른 경우 이전 행의 마지막 칼럼으로 이동 여부입니다.</p>
-   기본값(default) : <code>false</code>.</td>
+  기본값(default) : <code>false</code></td>
 </tr>
 <tr id="zeroBazeAtRowNum">
 <td class="summaryTableSignatureCol">
@@ -2507,7 +2546,7 @@ pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>2.7.0<br>
 <p>행 줄번호(로우 넘버링)의 시작을 0에서 시작할지, 1에서 시작할지 여부를 지정합니다.</p>
 <p>true 인 경우 0에서부터 시작합니다.</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 </table>
 </div>

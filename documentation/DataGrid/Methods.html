@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
@@ -16,6 +16,8 @@
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <script src="../static/doc.js" type="text/javascript"></script>
+
+
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -23,7 +25,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.14 Documentation</span>
+<span id="title">AUIGrid 3.0.16 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -35,18 +37,17 @@
 </div>
 <div id="desc_top">
 <p></p>
- <p>AUIGrid 에서 호출 가능한 메소드 리스트입니다.</p>
+<p>AUIGrid 에서 호출 가능한 메소드 리스트입니다.</p>
 <p></p>
 <a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
-<div class="mxmlSyntax" id="mxmlSyntax"><pre>
- AUIGrid.setFixedRowCount("create() 메소드 호출 시 사용한 pid", columnCount);
-</pre>
- <p>모든 그리드 메소드는 create() 메소드 호출 시 사용한 pid 를 기본 파라메터로 삽입해야 합니다.</p>
- <p>파라메터 첫번째 인자는 pid 입니다.(샘플 상 myGridID 변수)</p>
- <p><b>문서에서 pid 파라메터는 기본으로 설명에서 생략되었습니다.</b></p>
- <p>즉, setFixedRowCount 메소드에 대한 설명으로 파라메터는 columnCount 1개로 설명되지만 실제적으로 2개를 삽입해야 합니다.</p>
- <p>첫번째 인자는 pid 이고, 설명된 columnCount 가 2번째 인자가 됩니다.</p>
- <p>문서상에 정리된 파라메터를 실제 적용시 주의해 주십시오.</p>
+<div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">AUIGrid.setFixedRowCount(pid, columnCount);
+</code></pre>
+<p>모든 그리드 메소드는 create() 메소드 호출 시 사용한 pid 를 기본 파라메터로 삽입해야 합니다.</p>
+<p>파라메터 첫번째 인자는 pid 입니다.(샘플 상 myGridID 변수)</p>
+<p><b>문서에서 pid 파라메터는 기본으로 설명에서 생략되었습니다.</b></p>
+<p>즉, setFixedRowCount 메소드에 대한 설명으로 파라메터는 columnCount 1개로 설명되지만 실제적으로 2개를 삽입해야 합니다.</p>
+<p>첫번째 인자는 pid 이고, 설명된 columnCount 가 2번째 인자가 됩니다.</p>
+<p>문서상에 정리된 파라메터를 실제 적용시 주의해 주십시오.</p>
 </div>
 </div>
 </div>
@@ -85,7 +86,7 @@
  <li>values : (Array or String) 행 아이템에서 체크하고자 하는 필드의 값(value), 복수의 값을 체크하고자 한다면 배열로 설정(예: ["Anna", "Steve"])</li>
  </ul>
  <p>예를 들어 이름(name) 이 "Anna" 라는 사람을 기존에 누적해서 체크하고자 한다면 다음과 같습니다.</p>
- <pre>AUIGrid.addCheckedRowsByValue(myGridID, "name", "Anna");</pre>
+ <pre><code class="language-javascript">AUIGrid.addCheckedRowsByValue(myGridID, "name", "Anna");</code></pre>
  <p>참고 : 기존 체크 항목을 제거하고 새로 설정하는 값으로만 체크하고자 한다면 <a href="#setCheckedRowsByValue">setCheckedRowsByValue</a> 메소드를 사용하십시오.</p>
  <p><a href="../../samples/extra_renderer_checkbox.html?erchk&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
@@ -96,21 +97,20 @@
 <span class="signatureLink">addColumn</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0<br>
-  <p>그리드 열(column) 을 추가, 삽입합니다.</p>
-  <p>추가 하는 열(column) 은 반드시 dataField 를 지정해야 하며, 해당 dataField 는 기존과 중복되지 않는 고유 값이여야 합니다.</p>
-  <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 열(column)을 추가할 수 있습니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>cItem (Object or Array) : 삽입하고자 하는 열 객체(columnm Object), 복수의 열을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
-  <li>columnIndex (Number or String) : 삽입될 열의 인덱스, columnIndex 에 다음 문자를 설정한 경우.
-  <p>"first" : 맨처음, "last" : 맨끝, "selectionLeft" : 선택 열 왼쪽에,  "selectionRight" : 선택 열 오른쪽에 추가 열이 삽입됩니다.</li>
-  </ul>
-  <pre>
-  var cItem = { dataField : "myNumField1", dataType : "numeric", formatString : "#,##0" };
-  예1 : AUIGrid.addColumn(myGridID, cItem, 5); // columnIndex 5 에 1열 추가
-  예2 : AUIGrid.addColumn(myGridID, cItem, "last"); // 맨끝에 1열 추가
-  예3 : AUIGrid.addColumn(myGridID, cItem, "selectionRight"); // 선택 열 오른쪽에 1열 추가</pre>
-  </td>
+ <p>그리드 열(column) 을 추가, 삽입합니다.</p>
+ <p>추가 하는 열(column) 은 반드시 dataField 를 지정해야 하며, 해당 dataField 는 기존과 중복되지 않는 고유 값이여야 합니다.</p>
+ <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 열(column)을 추가할 수 있습니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>cItem (Object or Array) : 삽입하고자 하는 열 객체(columnm Object), 복수의 열을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
+ <li>columnIndex (Number or String) : 삽입될 열의 인덱스, columnIndex 에 다음 문자를 설정한 경우.
+ <p>"first" : 맨처음, "last" : 맨끝, "selectionLeft" : 선택 열 왼쪽에,  "selectionRight" : 선택 열 오른쪽에 추가 열이 삽입됩니다.</li>
+ </ul>
+ <pre><code class="language-javascript">const cItem = { dataField : "myNumField1", dataType : "numeric", formatString : "#,##0" };
+ 예1 : AUIGrid.addColumn(myGridID, cItem, 5); // columnIndex 5 에 1열 추가
+ 예2 : AUIGrid.addColumn(myGridID, cItem, "last"); // 맨끝에 1열 추가
+ 예3 : AUIGrid.addColumn(myGridID, cItem, "selectionRight"); // 선택 열 오른쪽에 1열 추가</code></pre>
+ </td>
 </tr>
 <tr id="addRow">
 <td class="summaryTableSignatureCol">
@@ -118,26 +118,25 @@
 <span class="signatureLink">addRow</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드 행(row) 아이템을 추가, 삽입합니다.</p>
-  <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 아이템을 추가할 수 있습니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>items (Object or Array) : 삽입하고자 하는 행 아이템, 복수의 행을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
-  <li>rowIndex (Number or String) : 삽입될 행의 인덱스, rowIndex 에 다음 문자를 설정한 경우.
-  <p>"first" : 첫 행, "last" : 최하단, "selectionUp" : 선택행 위, "selectionDown" : 선택행 아래에 추가행이 삽입됩니다.</li>
-  </ul>
-  <pre>
-  var item = { "name" : "새 이름", "country" : "새 나라", "price" : 0 };
-  예1 : AUIGrid.addRow(myGridID, item, 5); // rowIndex 5 에 1행 추가
-  예2 : AUIGrid.addRow(myGridID, item, "last"); // 최하단에 1행 추가
-  예3 : AUIGrid.addRow(myGridID, item, "selectionDown"); // 선택한 행 아래에 1행 추가
-  주의 : 복수의 행을 추가하기 위해 반복문 안에 addRow 메소드를 사용하지 마십시오. 
-  배열로 묶어 한번의 addRow 메소드로 처리하십시오.
-  var items = [ {...}, {...}, ... ]; //복수의 Object 
-  예4 : AUIGrid.addRow(myGridID, items, "last"); // 배열로 묶어 한번의 다수의 행 추가.</pre>
-  <p>참고 : 일반 그리드의 행 추가입니다. 트리 그리드(계층형 그리드) 의 행 추가는 addTreeRow() 메소드를 참고하십시오.</p>
-  <p>Also See : <a href="#addTreeRow">addTreeRow</a> | <a href="../../samples/editing_rowcrud.html?ecrud&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 행(row) 아이템을 추가, 삽입합니다.</p>
+ <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 아이템을 추가할 수 있습니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>items (Object or Array) : 삽입하고자 하는 행 아이템, 복수의 행을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
+ <li>rowIndex (Number or String) : 삽입될 행의 인덱스, rowIndex 에 다음 문자를 설정한 경우.
+ <p>"first" : 첫 행, "last" : 최하단, "selectionUp" : 선택행 위, "selectionDown" : 선택행 아래에 추가행이 삽입됩니다.</li>
+ </ul>
+ <pre><code class="language-javascript">const item = { "name" : "새 이름", "country" : "새 나라", "price" : 0 };
+ 예1 : AUIGrid.addRow(myGridID, item, 5); // rowIndex 5 에 1행 추가
+ 예2 : AUIGrid.addRow(myGridID, item, "last"); // 최하단에 1행 추가
+ 예3 : AUIGrid.addRow(myGridID, item, "selectionDown"); // 선택한 행 아래에 1행 추가
+ 주의 : 복수의 행을 추가하기 위해 반복문 안에 addRow 메소드를 사용하지 마십시오. 
+ 배열로 묶어 한번의 addRow 메소드로 처리하십시오.
+ const items = [{...}, {...}, ... ]; //복수의 Object 
+ 예4 : AUIGrid.addRow(myGridID, items, "last"); // 배열로 묶어 한번의 다수의 행 추가.</code></pre>
+ <p>참고 : 일반 그리드의 행 추가입니다. 트리 그리드(계층형 그리드) 의 행 추가는 addTreeRow() 메소드를 참고하십시오.</p>
+ <p>Also See : <a href="#addTreeRow">addTreeRow</a> | <a href="../../samples/editing_rowcrud.html?ecrud&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="addTreeColumn">
 <td class="summaryTableSignatureCol">
@@ -145,23 +144,21 @@
 <span class="signatureLink">addTreeColumn</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0<br>
-  <p>그리드에서 특정 열(column)의 자식으로 열을 추가, 삽입합니다.</p>
-  <p>추가 하는 열(column) 은 반드시 dataField 를 지정해야 하며, 해당 dataField 는 기존과 중복되지 않는 고유 값이여야 합니다.</p>
-  <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 열(column)을 추가할 수 있습니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>cItem (Object or Array) : 삽입하고자 하는 열 객체(columnm Object), 복수의 열을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
-  <li>parentDataField (String) : 부모 dataField 명, 해당 dataField 의 자식으로 칼럼이 추가됩니다.</li>
-  <li>columnIndex (Number or String) : 삽입될 열의 인덱스, columnIndex 에 다음 문자를 설정한 경우. "first" : 맨처음, "last" : 맨끝에 추가 열이 삽입됩니다.</li>
-  </ul>
-  <pre>
-  var cItem = { dataField : "myNumField1", dataType : "numeric", formatString : "#,##0" };
-  // "myGroupField" 를 dataField 로 갖는 칼럼을 찾아 해당 칼럼의 자식 인덱스 1 에 1열 추가
-  예1 : AUIGrid.addTreeColumn(myGridID, cItem, "myGroupField", 1); 
-  
-  // "myGroupField" 를 dataField 로 갖는 칼럼을 찾아 해당 칼럼의 맨끝에 1열 추가
-  예2 : AUIGrid.addTreeColumn(myGridID, cItem, "myGroupField, "last");</pre>
-  </td>
+ <p>그리드에서 특정 열(column)의 자식으로 열을 추가, 삽입합니다.</p>
+ <p>추가 하는 열(column) 은 반드시 dataField 를 지정해야 하며, 해당 dataField 는 기존과 중복되지 않는 고유 값이여야 합니다.</p>
+ <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 열(column)을 추가할 수 있습니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>cItem (Object or Array) : 삽입하고자 하는 열 객체(columnm Object), 복수의 열을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
+ <li>parentDataField (String) : 부모 dataField 명, 해당 dataField 의 자식으로 칼럼이 추가됩니다.</li>
+ <li>columnIndex (Number or String) : 삽입될 열의 인덱스, columnIndex 에 다음 문자를 설정한 경우. "first" : 맨처음, "last" : 맨끝에 추가 열이 삽입됩니다.</li>
+ </ul>
+ <pre><code class="language-javascript">const cItem = { dataField : "myNumField1", dataType : "numeric", formatString : "#,##0" };
+ // "myGroupField" 를 dataField 로 갖는 칼럼을 찾아 해당 칼럼의 자식 인덱스 1 에 1열 추가
+ 예1 : AUIGrid.addTreeColumn(myGridID, cItem, "myGroupField", 1); 
+ // "myGroupField" 를 dataField 로 갖는 칼럼을 찾아 해당 칼럼의 맨끝에 1열 추가
+ 예2 : AUIGrid.addTreeColumn(myGridID, cItem, "myGroupField, "last");</code></pre>
+ </td>
 </tr>
 <tr id="addTreeRow">
 <td class="summaryTableSignatureCol">
@@ -169,17 +166,17 @@
 <span class="signatureLink">addTreeRow</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>트리 그리드 행(row) 아이템을 추가, 삽입합니다.</p>
-  <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 아이템을 추가할 수 있습니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>items (Object or Array) : 삽입하고자 하는 행 아이템, 복수의 행을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
-  <li>parentRowId (String) : 추가될 행의 부모 행 고유 값(rowIdField 값).
-  <li>rowPosition (String) : 삽입될 행의 위치 값, 유효값은 다음과 같습니다.
-  <p>"first" : 첫 행, "last" : 최하단, "selectionUp" : 선택행 위, "selectionDown" : 선택행 아래에 추가행이 삽입됩니다.</li>
-  </ul>
-  <p><a href="../../samples/editing_treeData.html?etd&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>트리 그리드 행(row) 아이템을 추가, 삽입합니다.</p>
+ <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 아이템을 추가할 수 있습니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>items (Object or Array) : 삽입하고자 하는 행 아이템, 복수의 행을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
+ <li>parentRowId (String) : 추가될 행의 부모 행 고유 값(rowIdField 값).
+ <li>rowPosition (String) : 삽입될 행의 위치 값, 유효값은 다음과 같습니다.
+ <p>"first" : 첫 행, "last" : 최하단, "selectionUp" : 선택행 위, "selectionDown" : 선택행 아래에 추가행이 삽입됩니다.</li>
+ </ul>
+ <p><a href="../../samples/editing_treeData.html?etd&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="addTreeRowByIndex">
 <td class="summaryTableSignatureCol">
@@ -187,14 +184,14 @@
 <span class="signatureLink">addTreeRowByIndex</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.10<br>
-  <p>트리 그리드 행(row) 아이템을 특정 행 위치(rowIndex)에 추가, 삽입합니다.</p>
-  <p>지정된 행 위치에 맞게 부모-자식 관계가 자동 설정됩니다. 만약 부모-자식 관계를 명확히 하고자 하는 경우 addTreeRow 메소드를 사용하십시오.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>items (Object or Array) : 삽입하고자 하는 행 아이템, 복수의 행을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
-  <li>rowIndex (Number) : 추가될 행이 위치할 행 인덱스(rowIndex)</li>
-  </ul>
-  </td>
+ <p>트리 그리드 행(row) 아이템을 특정 행 위치(rowIndex)에 추가, 삽입합니다.</p>
+ <p>지정된 행 위치에 맞게 부모-자식 관계가 자동 설정됩니다. 만약 부모-자식 관계를 명확히 하고자 하는 경우 addTreeRow 메소드를 사용하십시오.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>items (Object or Array) : 삽입하고자 하는 행 아이템, 복수의 행을 삽입하고자 하는 경우 Object 를 배열로 묶으십시오.</li>
+ <li>rowIndex (Number) : 추가될 행이 위치할 행 인덱스(rowIndex)</li>
+ </ul>
+ </td>
 </tr>
 <tr id="addUncheckedRowsByIds">
 <td class="summaryTableSignatureCol">
@@ -233,13 +230,13 @@
 <span class="signatureLink">appendData</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>기존 그리드 데이터의 하단에 추가로 데이터를 붙입니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>additionalData (Array) : 추가시키고자 하는 데이터</li>
-  </ul>
-  <p><a href="../../samples/lazy_loading.html?lazy&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>기존 그리드 데이터의 하단에 추가로 데이터를 붙입니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>additionalData (Array) : 추가시키고자 하는 데이터</li>
+ </ul>
+ <p><a href="../../samples/lazy_loading.html?lazy&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="bind">
 <td class="summaryTableSignatureCol">
@@ -254,16 +251,15 @@
  <li>function : (Function) 이벤트 핸들러 함수</li>
  </ul>
  <p>예를 들면 cellClick 이벤트를 핸들링하고 싶다면 다음과 같습니다.</p>
- <pre>
- AUIGrid.bind(myGridID, "cellClick", function( event ) {
-       alert("rowIndex : " + event.rowIndex + ", "columnIndex : " + event.columnIndex + " clicked");
+ <pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellClick", function( event ) {
+       console.log("rowIndex : " + event.rowIndex + ", "columnIndex : " + event.columnIndex + " clicked");
  });
  
  // 복수의 이벤트를 한번에 핸들링 하기 (이벤트 유형을 배열로 설정)
  AUIGrid.bind(myGridID, ["cellClick", "headerClick", "footerClick"], function( event ) {
-       if(event.type == "cellClick") alert("You clicked cell : " + event.value);
-       else if(event.type == "headerClick") alert("You clicked header : " + event.headerText);
- });</pre>
+       if(event.type === "cellClick") console.log("You clicked cell : " + event.value);
+       else if(event.type === "headerClick") console.log("You clicked header : " + event.headerText);
+ });</code></pre>
  <p><a href="../../samples/cell_click.html?c_click&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
@@ -273,13 +269,13 @@
 <span class="signatureLink">changeColumnLayout</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0<br>
-  <p>그리드의 칼럼 레이아웃(columnLayout) 을 변경합니다.</p>
-  <p>최초에 출력된 그리드를 다른 칼럼 구조를 갖는 칼럼 레이아웃으로 변경합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>columnLayout : (Array-Object) 변경하고자 하는 새로운 칼럼 레이아웃</li>
-  </ul>
-  </td>
+ <p>그리드의 칼럼 레이아웃(columnLayout) 을 변경합니다.</p>
+ <p>최초에 출력된 그리드를 다른 칼럼 구조를 갖는 칼럼 레이아웃으로 변경합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>columnLayout : (Array-Object) 변경하고자 하는 새로운 칼럼 레이아웃</li>
+ </ul>
+ </td>
 </tr>
 <tr id="changeFooterLayout">
 <td class="summaryTableSignatureCol">
@@ -287,13 +283,13 @@
 <span class="signatureLink">changeFooterLayout</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0<br>
-  <p>그리드의 푸터 레이아웃(footerLayout) 을 변경합니다.</p>
-  <p>최초에 출력된 그리드의 푸터를 다른 푸터로 변경합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>footerLayout : (Array-Object) 변경하고자 하는 새로운 푸터 레이아웃</li>
-  </ul>
-  </td>
+ <p>그리드의 푸터 레이아웃(footerLayout) 을 변경합니다.</p>
+ <p>최초에 출력된 그리드의 푸터를 다른 푸터로 변경합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>footerLayout : (Array-Object) 변경하고자 하는 새로운 푸터 레이아웃</li>
+ </ul>
+ </td>
 </tr>
 <tr id="clearFilter">
 <td class="summaryTableSignatureCol">
@@ -351,9 +347,9 @@
 <span class="signatureLink">clearUndoRedoStack</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-   <p>실행 취소(Undo), 다시 실행(Redo) 커맨드 스택을 초기화 합니다.</p>
-   <p>Also See : <a href="#undo">undo</a>, <a href="#redo">redo</a>, <a href="#redo">redoable</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
-   </td>
+ <p>실행 취소(Undo), 다시 실행(Redo) 커맨드 스택을 초기화 합니다.</p>
+ <p>Also See : <a href="#undo">undo</a>, <a href="#redo">redo</a>, <a href="#redo">redoable</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="closeFilterLayer">
 <td class="summaryTableSignatureCol">
@@ -361,12 +357,11 @@
 <span class="signatureLink">closeFilterLayer</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.9.3<br>
-  <p>그리드 필터를 설정한 경우, 필터 레이어(필터 메뉴)가 오픈되어 있을 때 닫도록 지시합니다.</p>
-  <pre>
-    // 필터 레이어(필터 메뉴)가 열린 경우 닫습니다.
-    AUIGrid.closeFilterLayer(myGridID);</pre>
-  <p>Also See : <a href="#openFilterLayer">openFilterLayer</a>, <a href="#isOpenFilterLayer">isOpenFilterLayer</a> | <a href="../../samples/filter_menu_external_demo.html?ft_ex&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 필터를 설정한 경우, 필터 레이어(필터 메뉴)가 오픈되어 있을 때 닫도록 지시합니다.</p>
+ <pre><code class="language-javascript">// 필터 레이어(필터 메뉴)가 열린 경우 닫습니다.
+ AUIGrid.closeFilterLayer(myGridID);</code></pre>
+ <p>Also See : <a href="#openFilterLayer">openFilterLayer</a>, <a href="#isOpenFilterLayer">isOpenFilterLayer</a> | <a href="../../samples/filter_menu_external_demo.html?ft_ex&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="collapseAll">
 <td class="summaryTableSignatureCol">
@@ -437,26 +432,25 @@
 <span class="signatureLink">exportToCsv</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.13<br>
-  <p>그리드에 출력된 현재 데이터를 다운로드 가능한 CSV 형태로 내보내기 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>exportProps (Object) : 내보내기 할 때 파일명 등을 지정할 수 있는 파라메터입니다.</li>
-  </ul>
-  <p>■ exportProps 파라메터 설명 ■</p>
-  <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
-  <ul>
-  <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
-  <li>alwaysQuotes (Boolean) : 쌍따옴표를 모든 값에 붙일지 여부를 지정합니다. 값에 컴마가 있는지 확인하여 붙이는 경우(이 속성 false 설정한 경우) 퍼포먼스가 낮을 수 있습니다.</li> 
-  <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
-  <li>fileName (String) : 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
-  <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false, IE &lt;10 에서 사용 불가)</li>
-  <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 CSV 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
-  <li>localAsText (Boolean) : localControl 를 true 설정한 경우 localControlFunc 의 파라메터를 Blob 대신 String 으로 대체할지 여부를 지정합니다.(기본값 : false)</li>
-  <li>postToServer (Boolean) : exportURL 속성에 지정한 URL (즉, 서버)로 작성된 데이터를 보낼지를 지정합니다.(기본값 : false, 단, IE &lt; 10 은 항상 true) </li>
-  <li>progressBar (Boolean) : 내보내기 진행 상황을 퍼센티지로 보여줄지 여부를 나타냅니다.(기본값 : false)</li>
-  </ul>
-  <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
- </td>
+ <p>그리드에 출력된 현재 데이터를 다운로드 가능한 CSV 형태로 내보내기 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>exportProps (Object) : 내보내기 할 때 파일명 등을 지정할 수 있는 파라메터입니다.</li>
+ </ul>
+ <p>■ exportProps 파라메터 설명 ■</p>
+ <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
+ <ul>
+ <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
+ <li>alwaysQuotes (Boolean) : 쌍따옴표를 모든 값에 붙일지 여부를 지정합니다. 값에 컴마가 있는지 확인하여 붙이는 경우(이 속성 false 설정한 경우) 퍼포먼스가 낮을 수 있습니다.</li> 
+ <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
+ <li>fileName (String) : 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
+ <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false)</li>
+ <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 CSV 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
+ <li>localAsText (Boolean) : localControl 를 true 설정한 경우 localControlFunc 의 파라메터를 Blob 대신 String 으로 대체할지 여부를 지정합니다.(기본값 : false)</li>
+ <li>progressBar (Boolean) : 내보내기 진행 상황을 퍼센티지로 보여줄지 여부를 나타냅니다.(기본값 : false)</li>
+ </ul>
+ <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
+</td>
 </tr>
 <tr id="exportToJson">
 <td class="summaryTableSignatureCol">
@@ -464,24 +458,23 @@
 <span class="signatureLink">exportToJson</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.13<br>
-  <p>그리드에 출력된 현재 데이터를 다운로드 가능한 JSON 형태로 내보내기 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>exportProps (Object) : 내보내기 할 때 파일명 등을 지정할 수 있는 파라메터입니다.</li>
-  </ul>
-  <p>■ exportProps 파라메터 설명 ■</p>
-  <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
-  <ul>
-  <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
-  <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
-  <li>fileName (String) : 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
-  <li>keyValueMode (Boolean) : 내보내기 할 때 Row 데이터를 칼럼 인덱스에 맞는 배열로 할 지 key-value 로 짝을 갖는 Object 요소 배열로 할지 여부를 나타냅니다.</li>
-  <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false, IE &lt;10 에서 사용 불가)</li>
-  <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 JSON 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
-  <li>localAsText (Boolean) : localControl 를 true 설정한 경우 localControlFunc 의 파라메터를 Blob 대신 String 으로 대체할지 여부를 지정합니다.(기본값 : false)</li>
-  <li>postToServer (Boolean) : exportURL 속성에 지정한 URL (즉, 서버)로 작성된 데이터를 보낼지를 지정합니다.(기본값 : false, 단, IE &lt; 10 은 항상 true) </li>
-  </ul>
-  <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
+ <p>그리드에 출력된 현재 데이터를 다운로드 가능한 JSON 형태로 내보내기 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>exportProps (Object) : 내보내기 할 때 파일명 등을 지정할 수 있는 파라메터입니다.</li>
+ </ul>
+ <p>■ exportProps 파라메터 설명 ■</p>
+ <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
+ <ul>
+ <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
+ <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
+ <li>fileName (String) : 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
+ <li>keyValueMode (Boolean) : 내보내기 할 때 Row 데이터를 칼럼 인덱스에 맞는 배열로 할 지 key-value 로 짝을 갖는 Object 요소 배열로 할지 여부를 나타냅니다.</li>
+ <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false)</li>
+ <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 JSON 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
+ <li>localAsText (Boolean) : localControl 를 true 설정한 경우 localControlFunc 의 파라메터를 Blob 대신 String 으로 대체할지 여부를 지정합니다.(기본값 : false)</li>
+ </ul>
+ <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
 <tr id="exportToObject">
@@ -490,17 +483,17 @@
 <span class="signatureLink">exportToObject</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드에 출력된 현재 데이터를 자바스크립트 Array-Object 로 내보내기 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>keyValueMode (Boolean) : 내보내기 할 때 Row 데이터를 칼럼 인덱스에 맞는 배열로 할 지 key-value 로 짝을 갖는 Object 요소 배열로 할지 여부를 나타냅니다.</li>
-  </ul>
-  <p>keyValueMode 를 true 로 지정한 경우 한 행의 구조는 다음과 같습니다.</p>
-  <pre> [ {"name" : "Anna", "country" : "USA" .... } ] </pre>
-  <p>keyValueMode 를 false 로 지정한 경우 한 행의 구조는 다음과 같습니다.</p>
-  <pre> [ "Anna", "USA", .... ] </pre>
-  <p>Return : (Array) 그리드의 Array-Object 데이터</p> 
-  <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
+ <p>그리드에 출력된 현재 데이터를 자바스크립트 Array-Object 로 내보내기 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>keyValueMode (Boolean) : 내보내기 할 때 Row 데이터를 칼럼 인덱스에 맞는 배열로 할 지 key-value 로 짝을 갖는 Object 요소 배열로 할지 여부를 나타냅니다.</li>
+ </ul>
+ <p>keyValueMode 를 true 로 지정한 경우 한 행의 구조는 다음과 같습니다.</p>
+ <pre><code class="language-javascript"> [{"name" : "Anna", "country" : "USA" .... }] </code></pre>
+ <p>keyValueMode 를 false 로 지정한 경우 한 행의 구조는 다음과 같습니다.</p>
+ <pre><code class="language-javascript"> [ "Anna", "USA", .... ] </code></pre>
+ <p>Return : (Array) 그리드의 Array-Object 데이터</p> 
+ <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
 <tr id="exportToPdf">
@@ -509,72 +502,71 @@
 <span class="signatureLink">exportToPdf</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.12<br>
-  <p>그리드에 출력된 현재 데이터를 다운로드 가능한 PDF 로 내보내기 합니다.</p>
-  <p>PDF 로 내보내기 시 셀 병합 관련 속성은 무시되며 동일한 행 높이만 내보내기 됩니다. wordWrap 의 가변적인 행 높이로 내보내기 불가능합니다.</p>
-  <p>또한 그리드에 설정된 스타일 중 글자 색상, 배경색, 이탤릭체, 볼드체, 언더라인 만 고려되어 내보내기 됩니다.</p>
-  <p>최소한의 PDF 내보내기 기능만을 제공합니다.</p>
-  <p>HTML5 를 완전히 지원하는 브라우저에서 사용 가능합니다.(IE 인 경우 10 이상)</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>exportProps (Object) : PDF로 내보내기 할 때 파일명, 상단, 하단 추가 텍스트를 지정할 수 있는 파라메터입니다.</li>
-  </ul>
-  <p>■ exportProps 파라메터 작성 설명 ■</p>
-  <p>exportProps 파라메터는 Object 로  그 요소는 다음과 같습니다.</p>
-  <p style="font-weight:bold;">fontPath 는 반드시 지정해야 PDF 저장이 가능합니다.</p>
-  <ul>
-  <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
-  <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
-  <li>fontPath (String) : PDF 파일 작성 시 사용할 글꼴(Font) URL 경로입니다.(필수)</li>
-  <li>compress (Boolean) : PDF 파일 작성 시 압축을 할 지 여부를 지정합니다.(기본값: false)</li>
-  <li>fileName (String) : PDF로 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
-  <li>isRowStyleFront(Boolean) : 행에 적용된 스타일이 열에 적용된 스타일 보다 상위에 적용될지 여부를 지정합니다.(기본값 : true)</li>
-  <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false, IE &lt;10 에서 사용 불가)</li>
-  <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 PDF 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
-  <li>postToServer (Boolean) : exportURL 속성에 지정한 URL (즉, 서버)로 작성된 데이터를 보낼지를 지정합니다.(기본값 : false) </li>
-  <li>headers (Array) : 그리드 상단에 표시할 추가 행들을 지정합니다. 제목이나 부제목과 같은 내용이 될 수 있습니다.</li>
-  <li>footers (Array) : 그리드 하단에 표시할 추가 행들을 지정합니다.</li>
-  </ul>
-  <p>headers 와 footer 는 Array 이며 요소로는 Object 를 갖으며 개별 요소(1개의 Object)가 1행을 나타냅니다.</p>
-  <p>Object 는 "text", "height", "style" 의 필드를 갖으며 다음은 이에 대한 설명입니다.</p>
-  <ul>
-  <li>text (String) : PDF에 표시할 텍스트입니다.</li>
-  <li>height (Number) : PDF에서 행의 높이를 지정합니다.(px 단위, 실제 PDF는 pt 입니다. 그리드가 px 를 pt 로 변환하므로 px 단위로 지정하십시오.)
-  <li>style (Object) : 행의 스타일을 지정합니다. (유효값 : fontSize, textAlign, underline, background, color)</li>
-  </ul>
-  <p>종합하여 exportToPdf 메소드 사용 예는 다음과 같습니다.</p>
-  <pre>
-  // PDF 내보내기 속성
-  var exportProps = {
-         // 저장하기 파일명
-         fileName : "2020년_지역별_매출_내역(AUIGrid)",
-         // 폰트 경로 지정 (필수)
-         fontPath : "./pdfkit/jejugothic-regular.ttf",
-         // 헤더 내용
-         headers : [ {
-              text : "", height:20 // 첫행 빈줄
-         }, {
-              text : "2020년 지역별 매출 내역", height:24, style : 
-                   { fontSize:20, textAlign:"center", underline:true, background:"#DAD9FF"}
-         }, {
-              text : "작성자 : 에이유아이", style : { textAlign:"right"}
-         }, {
-              text : "작성일 : 2021. 01. 29", style : { textAlign:"right"}
-         }, {
-              text : "", height:5, style : { background:"#555555"} // 빈줄 색깔 경계 만듬
-         }],
-         // 푸터 내용
-         footers : [ {
-              text : "", height:5, style : { background:"#555555"} // 빈줄 색깔 경계 만듬
-         }, {
-              text : "참고 : 문의 사항은 전산팀으로 연락 하십시오.", style : { fontSize:15, color:"#2F9D27"}
-         }, {
-              text : "Copyright 2021 AUISoft", height:24, style : 
-                   { textAlign:"right", color:"#ffffff", background:"#222222"}
-         }]
-  };
-  // 내보내기 실행
-  AUIGrid.exportToPdf(myGridID, exportProps);</pre>
-  <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
+ <p>그리드에 출력된 현재 데이터를 다운로드 가능한 PDF 로 내보내기 합니다.</p>
+ <p>PDF 로 내보내기 시 셀 병합 관련 속성은 무시되며 동일한 행 높이만 내보내기 됩니다. wordWrap 의 가변적인 행 높이로 내보내기 불가능합니다.</p>
+ <p>또한 그리드에 설정된 스타일 중 글자 색상, 배경색, 이탤릭체, 볼드체, 언더라인 만 고려되어 내보내기 됩니다.</p>
+ <p>최소한의 PDF 내보내기 기능만을 제공합니다.</p>
+ <p>HTML5 를 완전히 지원하는 브라우저에서 사용 가능합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>exportProps (Object) : PDF로 내보내기 할 때 파일명, 상단, 하단 추가 텍스트를 지정할 수 있는 파라메터입니다.</li>
+ </ul>
+ <p>■ exportProps 파라메터 작성 설명 ■</p>
+ <p>exportProps 파라메터는 Object 로  그 요소는 다음과 같습니다.</p>
+ <p style="font-weight:bold;">fontPath 는 반드시 지정해야 PDF 저장이 가능합니다.</p>
+ <ul>
+ <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
+ <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
+ <li>fontPath (String) : PDF 파일 작성 시 사용할 글꼴(Font) URL 경로입니다.(필수)</li>
+ <li>compress (Boolean) : PDF 파일 작성 시 압축을 할 지 여부를 지정합니다.(기본값: false)</li>
+ <li>fileName (String) : PDF로 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
+ <li>isRowStyleFront(Boolean) : 행에 적용된 스타일이 열에 적용된 스타일 보다 상위에 적용될지 여부를 지정합니다.(기본값 : true)</li>
+ <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false)</li>
+ <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 PDF 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
+ <li>postToServer (Boolean) : exportURL 속성에 지정한 URL (즉, 서버)로 작성된 데이터를 보낼지를 지정합니다.(기본값 : false) </li>
+ <li>headers (Array) : 그리드 상단에 표시할 추가 행들을 지정합니다. 제목이나 부제목과 같은 내용이 될 수 있습니다.</li>
+ <li>footers (Array) : 그리드 하단에 표시할 추가 행들을 지정합니다.</li>
+ </ul>
+ <p>headers 와 footer 는 Array 이며 요소로는 Object 를 갖으며 개별 요소(1개의 Object)가 1행을 나타냅니다.</p>
+ <p>Object 는 "text", "height", "style" 의 필드를 갖으며 다음은 이에 대한 설명입니다.</p>
+ <ul>
+ <li>text (String) : PDF에 표시할 텍스트입니다.</li>
+ <li>height (Number) : PDF에서 행의 높이를 지정합니다.(px 단위, 실제 PDF는 pt 입니다. 그리드가 px 를 pt 로 변환하므로 px 단위로 지정하십시오.)
+ <li>style (Object) : 행의 스타일을 지정합니다. (유효값 : fontSize, textAlign, underline, background, color)</li>
+ </ul>
+ <p>종합하여 exportToPdf 메소드 사용 예는 다음과 같습니다.</p>
+ <pre><code class="language-javascript">// PDF 내보내기 속성
+ const exportProps = {
+        // 저장하기 파일명
+        fileName : "2024년_지역별_매출_내역(AUIGrid)",
+        // 폰트 경로 지정 (필수)
+        fontPath : "./pdfkit/jejugothic-regular.ttf",
+        // 헤더 내용
+        headers : [{
+             text : "", height:20 // 첫행 빈줄
+        }, {
+             text : "2024년 지역별 매출 내역", height:24, style : 
+                  { fontSize:20, textAlign:"center", underline:true, background:"#DAD9FF"}
+        }, {
+             text : "작성자 : 에이유아이", style : { textAlign:"right"}
+        }, {
+             text : "작성일 : 2025. 03. 29", style : { textAlign:"right"}
+        }, {
+             text : "", height:5, style : { background:"#555555"} // 빈줄 색깔 경계 만듬
+        }],
+        // 푸터 내용
+        footers : [{
+             text : "", height:5, style : { background:"#555555"} // 빈줄 색깔 경계 만듬
+        }, {
+             text : "참고 : 문의 사항은 전산팀으로 연락 하십시오.", style : { fontSize:15, color:"#2F9D27"}
+        }, {
+             text : "Copyright AUISoft", height:24, style : 
+                  { textAlign:"right", color:"#ffffff", background:"#222222"}
+        }]
+ };
+ // 내보내기 실행
+ AUIGrid.exportToPdf(myGridID, exportProps);</code></pre>
+ <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
 <tr id="exportToTxt">
@@ -583,24 +575,23 @@
 <span class="signatureLink">exportToTxt</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.13<br>
-  <p>그리드에 출력된 현재 데이터를 다운로드 가능한 TXT 형태로 내보내기 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>exportProps (Object) : 내보내기 할 때 파일명 등을 지정할 수 있는 파라메터입니다.</li>
-  </ul>
-  <p>■ exportProps 파라메터 설명 ■</p>
-  <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
-  <ul>
-  <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
-  <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
-  <li>fileName (String) : 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
-  <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false, IE &lt;10 에서 사용 불가)</li>
-  <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 TXT 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
-  <li>localAsText (Boolean) : localControl 를 true 설정한 경우 localControlFunc 의 파라메터를 Blob 대신 String 으로 대체할지 여부를 지정합니다.(기본값 : false)</li>
-  <li>postToServer (Boolean) : exportURL 속성에 지정한 URL (즉, 서버)로 작성된 데이터를 보낼지를 지정합니다.(기본값 : false, 단, IE &lt; 10 은 항상 true) </li>
-  <li>progressBar (Boolean) : 내보내기 진행 상황을 퍼센티지로 보여줄지 여부를 나타냅니다.(기본값 : false)</li>
-  </ul>
-  <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
+ <p>그리드에 출력된 현재 데이터를 다운로드 가능한 TXT 형태로 내보내기 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>exportProps (Object) : 내보내기 할 때 파일명 등을 지정할 수 있는 파라메터입니다.</li>
+ </ul>
+ <p>■ exportProps 파라메터 설명 ■</p>
+ <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
+ <ul>
+ <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
+ <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
+ <li>fileName (String) : 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
+ <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false)</li>
+ <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 TXT 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
+ <li>localAsText (Boolean) : localControl 를 true 설정한 경우 localControlFunc 의 파라메터를 Blob 대신 String 으로 대체할지 여부를 지정합니다.(기본값 : false)</li>
+ <li>progressBar (Boolean) : 내보내기 진행 상황을 퍼센티지로 보여줄지 여부를 나타냅니다.(기본값 : false)</li>
+ </ul>
+ <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
 <tr id="exportToXlsx">
@@ -609,114 +600,112 @@
 <span class="signatureLink">exportToXlsx</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.14<br>
-  <p>그리드에 출력된 현재 데이터를 다운로드 가능한 엑셀(xlsx) 로 내보내기 합니다.</p>
-  <p>엑셀 보내내기 시 그리드의 전반적인 내용이 그대로 내보내기 됩니다.</p>
-  <p>그러나 그리드에 설정된 모든 스타일이 다 엑셀로 내보내기 되는 것이 아닙니다.</p>
-  <p>글자 색상(color), 배경색(background-color), 이탤릭체(font-style: italic), 볼드체(font-weight: bold), 언더라인(text-decoration: underline)만 고려되어 내보내기 됩니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>exportProps (Object) : 엑셀로 내보내기 할 때 파일명, 상단, 하단 추가 텍스트를 지정할 수 있는 파라메터입니다.</li>
-  </ul>
-  <p>■ exportProps 파라메터 작성 설명 ■</p>
-  <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
-  <ul>
-  <li>afterRequestCallback (Function) : 엑셀로 내보내기 후 호출될 콜백함수를 지정합니다.</li>
-  <li>beforeRequestCallback (Function) : 엑셀로 내보내기 전 호출될 콜백함수를 지정합니다.</li>
-  <li>baseFontSize (Number) : 엑셀의 기본 글꼴 크기를 명시적으로 지정합니다.</li>
-  <li>columnSizeOfDataField (Object) 엑셀 내보내기할 때 칼럼 사이즈의 크기를 지정합니다.</li> 
-  <li>compress (Boolean) : 엑셀 파일 작성 시 압축을 할 지 여부를 지정합니다.(기본값 : false)</li>
-  <li>exceptColumnFields (Array) : 엑셀로 저장 할 때 포함 시키지 않을 칼럼들의 dataField 를 지정합니다.</li>
-  <li>exportWithStyle (Boolean) : 엑셀로 내보내기 할 때 스타일 정보(폰트 및 컬러 등)을 함께 내보내기 할지 여부를 나타냅니다. (단, IE8 의 경우 항상 false)</li>
-  <li>fileName (String) : 엑셀로 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
-  <li>fontFamily (String) : 엑셀로 저장 시 적용될 폰트명을 지정하십시오.(기본값: "맑은 고딕") 예를 들어 Arial 폰트로 적용하고자 한다면 "Arial" 로 설정하십시오.</li>
-  <li>isRowStyleFront(Boolean) : 행에 적용된 스타일이 열에 적용된 스타일 보다 상위에 적용될지 여부를 지정합니다.(기본값 : true)</li>
-  <li>localControl(Boolean) : 다운로딩 처리가 아닌 엑셀 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false, IE &lt;10 에서 사용 불가)</li>
-  <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 엑셀 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
-  <li>postToServer (Boolean) : exportURL 속성에 지정한 URL (즉, 서버)로 작성된 xlsx 데이터를 보낼지를 지정합니다.(기본값 : false, 단, IE &lt; 10 은 항상 true) </li>
-  <li>preserveSpace (Boolean) : 값의 앞 또는 뒤에 공백이 존재할 때 해당 공백을 유지할지 여부를 지정합니다.(기본값:false)</li> 
-  <li>progressBar (Boolean) : 내보내기 진행 상황을 퍼센티지로 보여줄지 여부를 나타냅니다.(기본값 : false)</li>
-  <li>rowHeight (Number) : 엑셀에서의 행 높이를 명시적으로 지정합니다. wordWrap 인 경우 무시됩니다. 기본값은 그리드 속성 rowHeight 값을 따릅니다.</li>
-  <li>sheetName (String) : 엑셀로 내보내기 할 때 엑셀의 시트명을 지정합니다. (기본값 : Sheet 1) </li>
-  <li>showRowNumColumn (Boolean) : 엑셀로 내보내기 할 때 행번호 칼럼을 보여줄지 여부를 나타냅니다. 기본값은 그리드 속성 showRowNumColumn 값을 따릅니다.</li>
-  <li>fixedColumnCount (Number) : 엑셀로 내보내기 할 때 엑셀 상의 틀고정 열(column)을 임의로 지정합니다.</li>
-  <li>fixedRowCount (Number) : 엑셀로 내보내기 할 때 엑셀 상의 틀고정 행(row)을 임의로 지정합니다.</li>
-  <li>headers (Array) : 그리드 상단에 표시할 추가 행들을 지정합니다. 제목이나 부제목과 같은 내용이 될 수 있습니다.</li>
-  <li>footers (Array) : 그리드 하단에 표시할 추가 행들을 지정합니다.</li>
-  <li>rectangles (Array) : 엑셀의 텍스트 상자를 지정합니다.</li>
-  </ul>
-  <p>headers 와 footer 는 Array 이며 요소로는 Object 를 갖으며 개별 요소(1개의 Object)가 엑셀에서 1행을 나타냅니다.</p>
-  <p>Object 는 text, height, style 의 필드를 갖으며 다음은 이에 대한 설명입니다.</p>
-  <ul>
-  <li>text (String) : 엑셀에 표시할 텍스트입니다.</li>
-  <li>height (Number) : 엑셀에서 행의 높이를 지정합니다.(px 단위, 실제 엑셀은 pt 입니다. 그리드가 px 를 pt 로 변환하므로 px 단위로 지정하십시오.)
-  <li>style (Object) : 행의 스타일을 지정합니다.
-  <ul><li>fontSize (Number) : 폰트 사이즈</li>
-  <li>textAlign (String) : 텍스트 정렬 (유효값 : "left", "center", "right")</li>
-  <li>verticalAlign (String) : 텍스트의 수직 정렬 (유효값 : "top", "middle", "bottom") </li> 
-  <li>color (String) : 폰트 색상 RGB</li>
-  <li>background (String) : 배경 색상 RGB</li>
-  <li>fontStyle (String) : 이탤릭 스타일 여부 (유효값: "normal", "italic")</li>
-  <li>fontWeight (String) : 볼드체 스타일 여부(유효값 : "normal", "bold)</li>
-  <li>underline (Boolean) : 언더라인 여부</li></ul></li>
-  </ul>
-  <p>rectangles 는 Object 로 그 요소는 text, dimension, style 의 필드를 갖습니다. 이에 대한 설명입니다.</p>
-  <ul>
-  <li> text (String) : 텍스트 상자에 출력할 텍스트입니다.</li>
-  <li> dimension (Object) : 텍스트 상자 위치에 관한 정보입니다.
-  <ul><li> fromColIdx (Number) : 상자가 위치할 시작 columnIndex (즉, 가로의 시작 점) </li>
-  <li>toColIdx (Number) : 상자가 끝날 columnIndex(즉, 가로의 끝점) </li>
-  <li>fromRowIdx (Number) : 상자가 위치할 시작 rowIndex(즉, 세로의 시작 점) </li>
-  <li>toRowIdx (Number) : 상자가 끝날 rowIndex(즉, 세로의 끝점) </li>
-  <li>fromRowOff, toRowOff, fromColOff, toColOff  (Number) : 각각 해당 인덱스에서 몇 px 만큼의 여백을 가질지 지정 (즉, offset 값) </li>
-  </ul></li>
-  <li> style: 텍스트 상자의 스타일을 지정합니다.
-  <ul><li>fontSize (Number) : 폰트 사이즈</li>
-  <li>textAlign (String) : 텍스트 정렬 (유효값 : "left", "center", "right")</li>
-  <li>verticalAlign (String) : 텍스트의 수직 정렬 (유효값 : "top", "middle", "bottom") </li> 
-  <li>color (String) : 폰트 색상 RGB</li>
-  <li>background (String) : 배경 색상 RGB</li>
-  <li>fontStyle (String) : 이탤릭 스타일 여부 (유효값: "normal", "italic")</li>
-  <li>fontWeight (String) : 볼드체 스타일 여부(유효값 : "normal", "bold")</li>
-  <li>underline (Boolean) : 언더라인 여부</li>
-  <li>borderColor (String) : 테두리 색상 RGB</li>
-  <li>borderThickness (Number) : 테두리 두께</li></ul></li>
-  </ul>
-  <p>종합하여 exportToXlsx 메소드 사용 예는 다음과 같습니다.</p>
-  <pre>
-  // 엑셀 내보내기 속성
-  var exportProps = {
-         // 저장하기 파일명
-         fileName : "2018년_지역별_매출_내역(AUIGrid)",
-         // 저장 할 때 dataField 가 name, product 인 칼럼들 저장에서 제외시킴.
-         exceptColumnFields : ["name", "product"],
-         // price 칼럼의 너비를 200 으로 지정하여 내보내기
-         columnSizeOfDataField : { "price" : 200 },
-         // 헤더 내용
-         headers : [ {
-              text : "", height:20 // 첫행 빈줄
-         }, {
-              text : "2018년 지역별 매출 내역", height:24, style : 
-                   { fontSize:20, textAlign:"center", fontWeight:"bold", underline:true, background:"#DAD9FF"}
-         }, {
-              text : "작성자 : 에이유아이", style : { textAlign:"right"}
-         }, {
-              text : "작성일 : 2019. 03. 29", style : { textAlign:"right"}
-         }, {
-              text : "", height:5, style : { background:"#555555"} // 빈줄 색깔 경계 만듬
-         }],
-         // 푸터 내용
-         footers : [ {
-              text : "", height:5, style : { background:"#555555"} // 빈줄 색깔 경계 만듬
-         }, {
-              text : "참고 : 문의 사항은 전산팀으로 연락 하십시오.", style : { fontSize:15, color:"#2F9D27"}
-         }, {
-              text : "Copyright 2019 AUISoft", height:24, style : 
-                   { textAlign:"right", fontWeight:"bold", color:"#ffffff", background:"#222222"}
-         }]
-  };
-  // 내보내기 실행
-  AUIGrid.exportToXlsx(myGridID, exportProps);</pre>
-  <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a> | <a href="../../samples/export_user_header_footer.html?exp_u" target="_blank">관련 데모 보기</a></p>
+ <p>그리드에 출력된 현재 데이터를 다운로드 가능한 엑셀(xlsx) 로 내보내기 합니다.</p>
+ <p>엑셀 보내내기 시 그리드의 전반적인 내용이 그대로 내보내기 됩니다.</p>
+ <p>그러나 그리드에 설정된 모든 스타일이 다 엑셀로 내보내기 되는 것이 아닙니다.</p>
+ <p>글자 색상(color), 배경색(background-color), 이탤릭체(font-style: italic), 볼드체(font-weight: bold), 언더라인(text-decoration: underline)만 고려되어 내보내기 됩니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>exportProps (Object) : 엑셀로 내보내기 할 때 파일명, 상단, 하단 추가 텍스트를 지정할 수 있는 파라메터입니다.</li>
+ </ul>
+ <p>■ exportProps 파라메터 작성 설명 ■</p>
+ <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
+ <ul>
+ <li>afterRequestCallback (Function) : 엑셀로 내보내기 후 호출될 콜백함수를 지정합니다.</li>
+ <li>beforeRequestCallback (Function) : 엑셀로 내보내기 전 호출될 콜백함수를 지정합니다.</li>
+ <li>baseFontSize (Number) : 엑셀의 기본 글꼴 크기를 명시적으로 지정합니다.</li>
+ <li>columnSizeOfDataField (Object) 엑셀 내보내기할 때 칼럼 사이즈의 크기를 지정합니다.</li> 
+ <li>compress (Boolean) : 엑셀 파일 작성 시 압축을 할 지 여부를 지정합니다.(기본값 : false)</li>
+ <li>exceptColumnFields (Array) : 엑셀로 저장 할 때 포함 시키지 않을 칼럼들의 dataField 를 지정합니다.</li>
+ <li>exportWithStyle (Boolean) : 엑셀로 내보내기 할 때 스타일 정보(폰트 및 컬러 등)을 함께 내보내기 할지 여부를 나타냅니다.</li>
+ <li>fileName (String) : 엑셀로 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
+ <li>fontFamily (String) : 엑셀로 저장 시 적용될 폰트명을 지정하십시오.(기본값: "맑은 고딕") 예를 들어 Arial 폰트로 적용하고자 한다면 "Arial" 로 설정하십시오.</li>
+ <li>isRowStyleFront(Boolean) : 행에 적용된 스타일이 열에 적용된 스타일 보다 상위에 적용될지 여부를 지정합니다.(기본값 : true)</li>
+ <li>localControl(Boolean) : 다운로딩 처리가 아닌 엑셀 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false)</li>
+ <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 엑셀 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
+ <li>preserveSpace (Boolean) : 값의 앞 또는 뒤에 공백이 존재할 때 해당 공백을 유지할지 여부를 지정합니다.(기본값:false)</li> 
+ <li>progressBar (Boolean) : 내보내기 진행 상황을 퍼센티지로 보여줄지 여부를 나타냅니다.(기본값 : false)</li>
+ <li>rowHeight (Number) : 엑셀에서의 행 높이를 명시적으로 지정합니다. wordWrap 인 경우 무시됩니다. 기본값은 그리드 속성 rowHeight 값을 따릅니다.</li>
+ <li>sheetName (String) : 엑셀로 내보내기 할 때 엑셀의 시트명을 지정합니다. (기본값 : Sheet 1) </li>
+ <li>showRowNumColumn (Boolean) : 엑셀로 내보내기 할 때 행번호 칼럼을 보여줄지 여부를 나타냅니다. 기본값은 그리드 속성 showRowNumColumn 값을 따릅니다.</li>
+ <li>fixedColumnCount (Number) : 엑셀로 내보내기 할 때 엑셀 상의 틀고정 열(column)을 임의로 지정합니다.</li>
+ <li>fixedRowCount (Number) : 엑셀로 내보내기 할 때 엑셀 상의 틀고정 행(row)을 임의로 지정합니다.</li>
+ <li>headers (Array) : 그리드 상단에 표시할 추가 행들을 지정합니다. 제목이나 부제목과 같은 내용이 될 수 있습니다.</li>
+ <li>footers (Array) : 그리드 하단에 표시할 추가 행들을 지정합니다.</li>
+ <li>rectangles (Array) : 엑셀의 텍스트 상자를 지정합니다.</li>
+ </ul>
+ <p>headers 와 footer 는 Array 이며 요소로는 Object 를 갖으며 개별 요소(1개의 Object)가 엑셀에서 1행을 나타냅니다.</p>
+ <p>Object 는 text, height, style 의 필드를 갖으며 다음은 이에 대한 설명입니다.</p>
+ <ul>
+ <li>text (String) : 엑셀에 표시할 텍스트입니다.</li>
+ <li>height (Number) : 엑셀에서 행의 높이를 지정합니다.(px 단위, 실제 엑셀은 pt 입니다. 그리드가 px 를 pt 로 변환하므로 px 단위로 지정하십시오.)
+ <li>style (Object) : 행의 스타일을 지정합니다.
+ <ul><li>fontSize (Number) : 폰트 사이즈</li>
+ <li>textAlign (String) : 텍스트 정렬 (유효값 : "left", "center", "right")</li>
+ <li>verticalAlign (String) : 텍스트의 수직 정렬 (유효값 : "top", "middle", "bottom") </li> 
+ <li>color (String) : 폰트 색상 RGB</li>
+ <li>background (String) : 배경 색상 RGB</li>
+ <li>fontStyle (String) : 이탤릭 스타일 여부 (유효값: "normal", "italic")</li>
+ <li>fontWeight (String) : 볼드체 스타일 여부(유효값 : "normal", "bold)</li>
+ <li>underline (Boolean) : 언더라인 여부</li></ul></li>
+ </ul>
+ <p>rectangles 는 Object 로 그 요소는 text, dimension, style 의 필드를 갖습니다. 이에 대한 설명입니다.</p>
+ <ul>
+ <li> text (String) : 텍스트 상자에 출력할 텍스트입니다.</li>
+ <li> dimension (Object) : 텍스트 상자 위치에 관한 정보입니다.
+ <ul><li> fromColIdx (Number) : 상자가 위치할 시작 columnIndex (즉, 가로의 시작 점) </li>
+ <li>toColIdx (Number) : 상자가 끝날 columnIndex(즉, 가로의 끝점) </li>
+ <li>fromRowIdx (Number) : 상자가 위치할 시작 rowIndex(즉, 세로의 시작 점) </li>
+ <li>toRowIdx (Number) : 상자가 끝날 rowIndex(즉, 세로의 끝점) </li>
+ <li>fromRowOff, toRowOff, fromColOff, toColOff  (Number) : 각각 해당 인덱스에서 몇 px 만큼의 여백을 가질지 지정 (즉, offset 값) </li>
+ </ul></li>
+ <li> style: 텍스트 상자의 스타일을 지정합니다.
+ <ul><li>fontSize (Number) : 폰트 사이즈</li>
+ <li>textAlign (String) : 텍스트 정렬 (유효값 : "left", "center", "right")</li>
+ <li>verticalAlign (String) : 텍스트의 수직 정렬 (유효값 : "top", "middle", "bottom") </li> 
+ <li>color (String) : 폰트 색상 RGB</li>
+ <li>background (String) : 배경 색상 RGB</li>
+ <li>fontStyle (String) : 이탤릭 스타일 여부 (유효값: "normal", "italic")</li>
+ <li>fontWeight (String) : 볼드체 스타일 여부(유효값 : "normal", "bold")</li>
+ <li>underline (Boolean) : 언더라인 여부</li>
+ <li>borderColor (String) : 테두리 색상 RGB</li>
+ <li>borderThickness (Number) : 테두리 두께</li></ul></li>
+ </ul>
+ <p>종합하여 exportToXlsx 메소드 사용 예는 다음과 같습니다.</p>
+ <pre><code class="language-javascript">// 엑셀 내보내기 속성
+ const exportProps = {
+        // 저장하기 파일명
+        fileName : "2024년_지역별_매출_내역(AUIGrid)",
+        // 저장 할 때 dataField 가 name, product 인 칼럼들 저장에서 제외시킴.
+        exceptColumnFields : ["name", "product"],
+        // price 칼럼의 너비를 200 으로 지정하여 내보내기
+        columnSizeOfDataField : { "price" : 200 },
+        // 헤더 내용
+        headers : [{
+             text : "", height:20 // 첫행 빈줄
+        }, {
+             text : "2024년 지역별 매출 내역", height:24, style : 
+                  { fontSize:20, textAlign:"center", fontWeight:"bold", underline:true, background:"#DAD9FF"}
+        }, {
+             text : "작성자 : 에이유아이", style : { textAlign:"right"}
+        }, {
+             text : "작성일 : 2025. 03. 29", style : { textAlign:"right"}
+        }, {
+             text : "", height:5, style : { background:"#555555"} // 빈줄 색깔 경계 만듬
+        }],
+        // 푸터 내용
+        footers : [{
+             text : "", height:5, style : { background:"#555555"} // 빈줄 색깔 경계 만듬
+        }, {
+             text : "참고 : 문의 사항은 전산팀으로 연락 하십시오.", style : { fontSize:15, color:"#2F9D27"}
+        }, {
+             text : "Copyright AUISoft", height:24, style : 
+                  { textAlign:"right", fontWeight:"bold", color:"#ffffff", background:"#222222"}
+        }]
+ };
+ // 내보내기 실행
+ AUIGrid.exportToXlsx(myGridID, exportProps);</code></pre>
+ <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a> | <a href="../../samples/export_user_header_footer.html?exp_u" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
 <tr id="exportToXlsxMulti">
@@ -725,41 +714,40 @@
 <span class="signatureLink">exportToXlsxMulti</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.6<br>
-  <p>다수의 그리드에 출력된 현재 데이터를 1개의 엑셀(xlsx) 파일에 각각의 엑셀 시트(Sheets)로 내보내기 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>subGridIds (Array) : 시트(Sheets)에 각각 같이 내보내기 할 서브 그리드들의 pid 배열</li>
-  <li>exportProps (Array) : 각각 그리드들의 내보내기 속성 정의 배열</li>
-  </ul>
-  <p>■ exportProps 파라메터 작성 설명 ■</p>
-  <p>exportProps 파라메터는 Object 를 요소로 갖는 Array 를 정의합니다. 개별 Object 는 다음의 속성을 갖습니다.</p>
-  <p>배열의 첫번째 요소는 1번 시트로 마스터 그리드에 해당되고, 두번째 요소부터 서브 그리드에 해당됩니다.</p>
-  <p>마스터 그리드의 exportProps 작성은 <a href="#exportToXlsx">exportToXlsx</a> 의 exportProps 를 참고하십시오.</p>
-  <p>다음은 서브 그리드들에서 작성 가능한 exportProps 에 대한 구체적인 속성입니다.</p>
-  <ul>
-  <li>exceptColumnFields (Array) : 엑셀로 저장 할 때 포함 시키지 않을 칼럼들의 dataField 를 지정합니다.</li>
-  <li>exportWithStyle (Boolean) : 엑셀로 내보내기 할 때 스타일 정보(폰트 및 컬러 등)을 함께 내보내기 할지 여부를 나타냅니다. (단, IE8 의 경우 항상 false)</li>
-  <li>isRowStyleFront(Boolean) : 행에 적용된 스타일이 열에 적용된 스타일 보다 상위에 적용될지 여부를 지정합니다.(기본값 : true)</li>
-  <li>sheetName (String) : 엑셀로 내보내기 할 때 엑셀의 시트명을 지정합니다. (기본값 : Sheet 1) </li>
-  <li>fixedColumnCount (Number) : 엑셀로 내보내기 할 때 엑셀 상의 틀고정 열(column)을 임의로 지정합니다.</li>
-  <li>fixedRowCount (Number) : 엑셀로 내보내기 할 때 엑셀 상의 틀고정 행(row)을 임의로 지정합니다.</li>
-  <li>headers (Array) : 그리드 상단에 표시할 추가 행들을 지정합니다. 제목이나 부제목과 같은 내용이 될 수 있습니다.</li>
-  <li>footers (Array) : 그리드 하단에 표시할 추가 행들을 지정합니다.</li>
-  </ul>
-  <pre>
-  var exportProps = [{
-      sheetName : "일반 데이터"
-  }, {
-      sheetName : "그룹핑 셀병합 Type 1"
-  }, {
-      sheetName : "그룹핑 셀병합 Type 2",
-  }, {
-      sheetName : "그룹핑 셀병합 Type 3"
-  }];
-  // 다수의 그리드를 1개의 엑셀로 내보내기 하기
-  AUIGrid.exportToXlsxMulti(myGridID1, [myGridID2, myGridID3, myGridID4], exportProps);</pre>
-  <p><a href="../../samples/export_xlsx_multi.html?exp_multi&theme=default&s=7300" target="_blank">관련 데모 보기</a></p>
- </td>
+ <p>다수의 그리드에 출력된 현재 데이터를 1개의 엑셀(xlsx) 파일에 각각의 엑셀 시트(Sheets)로 내보내기 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>subGridIds (Array) : 시트(Sheets)에 각각 같이 내보내기 할 서브 그리드들의 pid 배열</li>
+ <li>exportProps (Array) : 각각 그리드들의 내보내기 속성 정의 배열</li>
+ </ul>
+ <p>■ exportProps 파라메터 작성 설명 ■</p>
+ <p>exportProps 파라메터는 Object 를 요소로 갖는 Array 를 정의합니다. 개별 Object 는 다음의 속성을 갖습니다.</p>
+ <p>배열의 첫번째 요소는 1번 시트로 마스터 그리드에 해당되고, 두번째 요소부터 서브 그리드에 해당됩니다.</p>
+ <p>마스터 그리드의 exportProps 작성은 <a href="#exportToXlsx">exportToXlsx</a> 의 exportProps 를 참고하십시오.</p>
+ <p>다음은 서브 그리드들에서 작성 가능한 exportProps 에 대한 구체적인 속성입니다.</p>
+ <ul>
+ <li>exceptColumnFields (Array) : 엑셀로 저장 할 때 포함 시키지 않을 칼럼들의 dataField 를 지정합니다.</li>
+ <li>exportWithStyle (Boolean) : 엑셀로 내보내기 할 때 스타일 정보(폰트 및 컬러 등)을 함께 내보내기 할지 여부를 나타냅니다.</li>
+ <li>isRowStyleFront(Boolean) : 행에 적용된 스타일이 열에 적용된 스타일 보다 상위에 적용될지 여부를 지정합니다.(기본값 : true)</li>
+ <li>sheetName (String) : 엑셀로 내보내기 할 때 엑셀의 시트명을 지정합니다. (기본값 : Sheet 1) </li>
+ <li>fixedColumnCount (Number) : 엑셀로 내보내기 할 때 엑셀 상의 틀고정 열(column)을 임의로 지정합니다.</li>
+ <li>fixedRowCount (Number) : 엑셀로 내보내기 할 때 엑셀 상의 틀고정 행(row)을 임의로 지정합니다.</li>
+ <li>headers (Array) : 그리드 상단에 표시할 추가 행들을 지정합니다. 제목이나 부제목과 같은 내용이 될 수 있습니다.</li>
+ <li>footers (Array) : 그리드 하단에 표시할 추가 행들을 지정합니다.</li>
+ </ul>
+ <pre><code class="language-javascript">const exportProps = [{
+     sheetName : "일반 데이터"
+ }, {
+     sheetName : "그룹핑 셀병합 Type 1"
+ }, {
+     sheetName : "그룹핑 셀병합 Type 2",
+ }, {
+     sheetName : "그룹핑 셀병합 Type 3"
+ }];
+ // 다수의 그리드를 1개의 엑셀로 내보내기 하기
+ AUIGrid.exportToXlsxMulti(myGridID1, [myGridID2, myGridID3, myGridID4], exportProps);</code></pre>
+ <p><a href="../../samples/export_xlsx_multi.html?exp_multi&theme=default&s=7300" target="_blank">관련 데모 보기</a></p>
+</td>
 </tr>
 <tr id="exportToXml">
 <td class="summaryTableSignatureCol">
@@ -767,23 +755,22 @@
 <span class="signatureLink">exportToXml</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.13<br>
-  <p>그리드에 출력된 현재 데이터를 다운로드 가능한 XML 형태로 내보내기 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>exportProps (Object) : 내보내기 할 때 파일명 등을 지정할 수 있는 파라메터입니다.</li>
-  </ul>
-  <p>■ exportProps 파라메터 설명 ■</p>
-  <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
-  <ul>
-  <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
-  <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
-  <li>fileName (String) : 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
-  <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false, IE &lt;10 에서 사용 불가)</li>
-  <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 XML 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
-  <li>localAsText (Boolean) : localControl 를 true 설정한 경우 localControlFunc 의 파라메터를 Blob 대신 String 으로 대체할지 여부를 지정합니다.(기본값 : false)</li>
-  <li>postToServer (Boolean) : exportURL 속성에 지정한 URL (즉, 서버)로 작성된 데이터를 보낼지를 지정합니다.(기본값 : false, 단, IE &lt; 10 은 항상 true) </li>
-  </ul>
-  <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
+ <p>그리드에 출력된 현재 데이터를 다운로드 가능한 XML 형태로 내보내기 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>exportProps (Object) : 내보내기 할 때 파일명 등을 지정할 수 있는 파라메터입니다.</li>
+ </ul>
+ <p>■ exportProps 파라메터 설명 ■</p>
+ <p>exportProps 파라메터는 Object 로 그 요소는 다음과 같습니다.</p>
+ <ul>
+ <li>afterRequestCallback (Function) : 내보내기 후 호출될 콜백함수를 지정합니다.</li>
+ <li>beforeRequestCallback (Function) : 내보내기 전 호출될 콜백함수를 지정합니다.</li>
+ <li>fileName (String) : 내보내기 할 때 파일명을 지정하면 해당 파일명을 서버 사이드에서 파라메터로 받을 수 있습니다.</li>
+ <li>localControl(Boolean) : 다운로딩 처리가 아닌 데이터를 Blob 으로 반환할지 여부를 지정합니다.(기본값 : false)</li>
+ <li>localControlFunc(Function) : localControl 를 true 설정한 경우 그리드가 XML 서식 작성 완료 후 Blob 으로 반환하는 함수입니다.</li>
+ <li>localAsText (Boolean) : localControl 를 true 설정한 경우 localControlFunc 의 파라메터를 Blob 대신 String 으로 대체할지 여부를 지정합니다.(기본값 : false)</li>
+ </ul>
+ <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
 <tr id="forceEditingComplete">
@@ -809,9 +796,9 @@
 <span class="signatureLink">getAddedColumnFields</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0<br>
-  <p>그리드에서 추가된 열(column) 의 dataField 들의 묶음(배열)을 반환합니다.</p>
-  <p>사용자가 임의로 열을 추가한 후, 다시 삭제하였다면 추가된 열에 포함되지 않습니다.</p>
-  <p>Return : (Array) 추가된 열의 dataField 들</p> 
+ <p>그리드에서 추가된 열(column) 의 dataField 들의 묶음(배열)을 반환합니다.</p>
+ <p>사용자가 임의로 열을 추가한 후, 다시 삭제하였다면 추가된 열에 포함되지 않습니다.</p>
+ <p>Return : (Array) 추가된 열의 dataField 들</p> 
  </td>
 </tr>
 <tr id="getAddedRowItems">
@@ -820,9 +807,9 @@
 <span class="signatureLink">getAddedRowItems</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드에서 추가된 아이템들의 묶음(배열)을 반환합니다.</p>
-  <p>Return : (Array) 추가된 행 아이템들</p> 
-  <p><a href="../../samples/editing_rowcrud2.html?ecrud2&theme=default" target="_blank">관련 데모 보기</a></p>
+ <p>그리드에서 추가된 아이템들의 묶음(배열)을 반환합니다.</p>
+ <p>Return : (Array) 추가된 행 아이템들</p> 
+ <p><a href="../../samples/editing_rowcrud2.html?ecrud2&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
 <tr id="getAscendantsByRowId">
@@ -847,7 +834,7 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.7.13<br>
  <p>주어진 인덱스에 맞는 그리드 셀의 엘리먼트를 반환합니다.</p>
  <p>셀의 엘리먼트는 TD 엘리먼트를 의미합니다.</p>
-<p>파라메터 설명</p>
+ <p>파라메터 설명</p>
  <ul>
  <li>rowIndex : (Number) 셀의 행 인덱스</li>
  <li>columnIndex : (Number) 셀의 열 인덱스</li>
@@ -861,23 +848,22 @@
 <span class="signatureLink">getCellFormatValue</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.8.1<br>
-  <p>그리드의 특정 셀의 포매팅된 값을 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowIndex (Number) : 얻고자하는 행 인덱스</li>
-  <li>dataField or columnIndex(String or Number) : 얻고자 하는 칼럼의 dataField 또는 칼럼 인덱스</li>
-  </ul>
-  <pre>
-   // 0번째 행의 price 칼럼의 포매팅된 값 얻기
-   var myValue = AUIGrid.getCellFormatValue(myGridID, 0, "price");
-   // 3번째 행의 1 번째 칼럼 즉, (3, 1) 의 셀의 포매팅된 값 얻기
-   var myValue = AUIGrid.getCellFormatValue(myGridID, 3, 1);</pre>
-  <p>Return : 선택 셀 포매팅된 값</p>
-  <p>참고 : getCellValue 과 getCellFormatValue 의 차이는 값의 포매팅 여부 입니다.</p>
-  <p>예를 들어 칼럼에 labelFunction 이나 formatString 으로 값의 출력 형식을 변경했을 때,</p>
-  <p>getCellValue 는 원래 값이 반환되고, getCellFormatValue 는 labelFunction 또는 formatString 이 적용된 값을 반환합니다.</p>
-  <p>Also See : <a href="#getItemByRowIndex">getItemByRowIndex</a>, <a href="#setCellValue">setCellValue</a>, <a href="#getCellValue">getCellValue</a></p>
-  </td>
+ <p>그리드의 특정 셀의 포매팅된 값을 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowIndex (Number) : 얻고자하는 행 인덱스</li>
+ <li>dataField or columnIndex(String or Number) : 얻고자 하는 칼럼의 dataField 또는 칼럼 인덱스</li>
+ </ul>
+ <pre><code class="language-javascript">// 0번째 행의 price 칼럼의 포매팅된 값 얻기
+ const myValue = AUIGrid.getCellFormatValue(myGridID, 0, "price");
+ // 3번째 행의 1 번째 칼럼 즉, (3, 1) 의 셀의 포매팅된 값 얻기
+ const myValue = AUIGrid.getCellFormatValue(myGridID, 3, 1);</code></pre>
+ <p>Return : 선택 셀 포매팅된 값</p>
+ <p>참고 : getCellValue 과 getCellFormatValue 의 차이는 값의 포매팅 여부 입니다.</p>
+ <p>예를 들어 칼럼에 labelFunction 이나 formatString 으로 값의 출력 형식을 변경했을 때,</p>
+ <p>getCellValue 는 원래 값이 반환되고, getCellFormatValue 는 labelFunction 또는 formatString 이 적용된 값을 반환합니다.</p>
+ <p>Also See : <a href="#getItemByRowIndex">getItemByRowIndex</a>, <a href="#setCellValue">setCellValue</a>, <a href="#getCellValue">getCellValue</a></p>
+ </td>
 </tr>
 <tr id="getCellValue">
 <td class="summaryTableSignatureCol">
@@ -885,23 +871,22 @@
 <span class="signatureLink">getCellValue</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.8.0<br>
-  <p>그리드의 특정 셀의 값을 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowIndex (Number) : 얻고자하는 행 인덱스</li>
-  <li>dataField or columnIndex(String or Number) : 얻고자 하는 칼럼의 dataField 또는 칼럼 인덱스</li>
-  </ul>
-  <p>Return : 선택 셀 값</p>
-    <pre>
-   // 0번째 행의 name 칼럼의 값 얻기
-   var myValue = AUIGrid.getCellValue(myGridID, 0, "name");
-   // 3번째 행의 1 번째 칼럼 즉, (3, 1) 의 셀의 값 얻기
-   var myValue = AUIGrid.getCellValue(myGridID, 3, 1);</pre>
-  <p>참고 : getCellValue 과 getCellFormatValue 의 차이는 값의 포매팅 여부 입니다.</p>
-  <p>예를 들어 칼럼에 labelFunction 이나 formatString 으로 값의 출력 형식을 변경했을 때</p>
-  <p>getCellValue 는 원래 값이 반환되고, getCellFormatValue 는 labelFunction 또는 formatString 이 적용된 값을 반환합니다.</p>
-  <p>Also See : <a href="#getItemByRowIndex">getItemByRowIndex</a>, <a href="#setCellValue">setCellValue</a>, <a href="#getCellFormatValue">getCellFormatValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드의 특정 셀의 값을 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowIndex (Number) : 얻고자하는 행 인덱스</li>
+ <li>dataField or columnIndex(String or Number) : 얻고자 하는 칼럼의 dataField 또는 칼럼 인덱스</li>
+ </ul>
+ <p>Return : 선택 셀 값</p>
+ <pre><code class="language-javascript">// 0번째 행의 name 칼럼의 값 얻기
+ const myValue = AUIGrid.getCellValue(myGridID, 0, "name");
+ // 3번째 행의 1 번째 칼럼 즉, (3, 1) 의 셀의 값 얻기
+ const myValue = AUIGrid.getCellValue(myGridID, 3, 1);</code></pre>
+ <p>참고 : getCellValue 과 getCellFormatValue 의 차이는 값의 포매팅 여부 입니다.</p>
+ <p>예를 들어 칼럼에 labelFunction 이나 formatString 으로 값의 출력 형식을 변경했을 때</p>
+ <p>getCellValue 는 원래 값이 반환되고, getCellFormatValue 는 labelFunction 또는 formatString 이 적용된 값을 반환합니다.</p>
+ <p>Also See : <a href="#getItemByRowIndex">getItemByRowIndex</a>, <a href="#setCellValue">setCellValue</a>, <a href="#getCellFormatValue">getCellFormatValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="getCheckedRowItems">
 <td class="summaryTableSignatureCol">
@@ -988,13 +973,13 @@
 <span class="signatureLink">getColumnItemByDataField</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.8.0<br>
-  <p>데이터 필드(dataField)에 맞는 칼럼 레이아웃의  칼럼 객체를 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField : (String) 컬럼이 출력하고 있는 데이터필드명</li>
-  </ul>
-  <p>Return : (Object) 칼럼 레이아웃의 칼럼 객체</p>
-  </td>
+ <p>데이터 필드(dataField)에 맞는 칼럼 레이아웃의  칼럼 객체를 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField : (String) 컬럼이 출력하고 있는 데이터필드명</li>
+ </ul>
+ <p>Return : (Object) 칼럼 레이아웃의 칼럼 객체</p>
+ </td>
 </tr>
 <tr id="getColumnItemByIndex">
 <td class="summaryTableSignatureCol">
@@ -1002,13 +987,13 @@
 <span class="signatureLink">getColumnItemByIndex</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.12.0<br>
-  <p>열 인덱스(columnIndex)에 맞는 칼럼 레이아웃의  칼럼 객체를 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>columnIndex : (Number) 컬럼이 출력되고 있는 인덱스</li>
-  </ul>
-  <p>Return : (Object) 칼럼 레이아웃의 칼럼 객체</p>
-  </td>
+ <p>열 인덱스(columnIndex)에 맞는 칼럼 레이아웃의  칼럼 객체를 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>columnIndex : (Number) 컬럼이 출력되고 있는 인덱스</li>
+ </ul>
+ <p>Return : (Object) 칼럼 레이아웃의 칼럼 객체</p>
+ </td>
 </tr>
 <tr id="getColumnLayout">
 <td class="summaryTableSignatureCol">
@@ -1043,8 +1028,8 @@
 <span class="signatureLink">getCurrentPageData</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11.0<br>
-  <p>페이징 모드(usePaging=true)인 경우 현재 페이지에 출력되는 데이터만 반환합니다.</p>
-  </td>
+ <p>페이징 모드(usePaging=true)인 경우 현재 페이지에 출력되는 데이터만 반환합니다.</p>
+ </td>
 </tr>
 <tr id="getDataFieldByColumnIndex">
 <td class="summaryTableSignatureCol">
@@ -1095,14 +1080,14 @@
 <span class="signatureLink">getEditedRowColumnItems</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드에서 수정된 아이템들의 묶음(배열)을 반환합니다.</p>
-  <p>getEditedRowItems() 과 다르게 이 메소드는 행 아이템 전체를 반환하지 않습니다. 예를들어 칼럼이 총 10개 있다고 했을 때 그 중 2개 칼럼만 수정했다면 해당 2개 칼럼만을 반환합니다.</p>
-  <p>행 아이템 전체를 얻고자 한다면 getEditedRowItems() 메소드를, 행에서 진짜로 수정된 칼럼들만 얻고자 한다면 이 메소드를 사용하십시오.</p>
-  <p>수정된 아이템은 최초의 데이터에서 addRow 메소드로 추가된 아이템을 수정한 경우 포함되지 않습니다.</p>
-  <p>addRow 메소드로 추가된 아이템은 수정했더라도 최종적으로 추가된 아이템에 해당되기 때문입니다.(getAddedRowItems으로 확인 가능)</p>
-  <p>Return : (Array) 수정된 행 아이템들</p>
-  <p>Also See : <a href="#getEditedRowItems">getEditedRowItems</a> | <a href="../../samples/editing_rowcrud2.html?ecrud2&theme=default" target="_blank">관련 데모 보기</a></p>
- </td>
+ <p>그리드에서 수정된 아이템들의 묶음(배열)을 반환합니다.</p>
+ <p>getEditedRowItems() 과 다르게 이 메소드는 행 아이템 전체를 반환하지 않습니다. 예를들어 칼럼이 총 10개 있다고 했을 때 그 중 2개 칼럼만 수정했다면 해당 2개 칼럼만을 반환합니다.</p>
+ <p>행 아이템 전체를 얻고자 한다면 getEditedRowItems() 메소드를, 행에서 진짜로 수정된 칼럼들만 얻고자 한다면 이 메소드를 사용하십시오.</p>
+ <p>수정된 아이템은 최초의 데이터에서 addRow 메소드로 추가된 아이템을 수정한 경우 포함되지 않습니다.</p>
+ <p>addRow 메소드로 추가된 아이템은 수정했더라도 최종적으로 추가된 아이템에 해당되기 때문입니다.(getAddedRowItems으로 확인 가능)</p>
+ <p>Return : (Array) 수정된 행 아이템들</p>
+ <p>Also See : <a href="#getEditedRowItems">getEditedRowItems</a> | <a href="../../samples/editing_rowcrud2.html?ecrud2&theme=default" target="_blank">관련 데모 보기</a></p>
+  </td>
 </tr>
 <tr id="getEditedRowItems">
 <td class="summaryTableSignatureCol">
@@ -1110,11 +1095,11 @@
 <span class="signatureLink">getEditedRowItems</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드에서 수정된 아이템들의 묶음(배열)을 반환합니다.</p>
-  <p>수정된 아이템은 최초의 데이터에서 addRow 메소드로 추가된 아이템을 수정한 경우 포함되지 않습니다.</p>
-  <p>addRow 메소드로 추가된 아이템은 수정했더라도 최종적으로 추가된 아이템에 해당되기 때문입니다.(getAddedRowItems으로 확인 가능)</p>
-  <p>Return : (Array) 수정된 행 아이템들</p>
-  <p>Also See : <a href="#getEditedRowColumnItems">getEditedRowColumnItems</a> | <a href="../../samples/editing_rowcrud2.html?ecrud2&theme=default" target="_blank">관련 데모 보기</a></p>
+ <p>그리드에서 수정된 아이템들의 묶음(배열)을 반환합니다.</p>
+ <p>수정된 아이템은 최초의 데이터에서 addRow 메소드로 추가된 아이템을 수정한 경우 포함되지 않습니다.</p>
+ <p>addRow 메소드로 추가된 아이템은 수정했더라도 최종적으로 추가된 아이템에 해당되기 때문입니다.(getAddedRowItems으로 확인 가능)</p>
+ <p>Return : (Array) 수정된 행 아이템들</p>
+ <p>Also See : <a href="#getEditedRowColumnItems">getEditedRowColumnItems</a> | <a href="../../samples/editing_rowcrud2.html?ecrud2&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
 <tr id="getFilterCache">
@@ -1123,11 +1108,11 @@
 <span class="signatureLink">getFilterCache</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11.2<br>
-  <p>필터링 된 경우 현재 어떤 필드와 값으로 필터링 되었는지에 대한 정보를 반환합니다.</p>
-  <p>이 메소드는 일반적으로 setFilterCache 메소드와 같이 사용 합니다.</p>
-  <p>Return : (Object) 필터링 필드와 현재 필터링 된 값들에 대한 정보</p>
-  <p>Also See : <a href="#setFilterCache">setFilterCache</a></p>
-  </td>
+ <p>필터링 된 경우 현재 어떤 필드와 값으로 필터링 되었는지에 대한 정보를 반환합니다.</p>
+ <p>이 메소드는 일반적으로 setFilterCache 메소드와 같이 사용 합니다.</p>
+ <p>Return : (Object) 필터링 필드와 현재 필터링 된 값들에 대한 정보</p>
+ <p>Also See : <a href="#setFilterCache">setFilterCache</a></p>
+ </td>
 </tr>
 <tr id="getFilterInlineTexts">
 <td class="summaryTableSignatureCol">
@@ -1135,11 +1120,11 @@
 <span class="signatureLink">getFilterInlineTexts</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11.9<br>
-  <p>인라인 필터 행을 표시하여 필터링을 한 경우 해당 인라인 필터의 현재 텍스트들(input 의 값들)을 반환합니다.</p>
-  <p>이 메소드는 일반적으로 setFilterInlineTexts 메소드와 같이 사용 합니다.</p>
-  <p>Return : (Array) 인라인 필터로 필터링 된 칼럼들에 대한 텍스트값들</p>
-  <p>Also See : <a href="#setFilterInlineTexts">setFilterInlineTexts</a> | <a href="../../samples/filter_inline_save_demo.html?ft_ins&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>인라인 필터 행을 표시하여 필터링을 한 경우 해당 인라인 필터의 현재 텍스트들(input 의 값들)을 반환합니다.</p>
+ <p>이 메소드는 일반적으로 setFilterInlineTexts 메소드와 같이 사용 합니다.</p>
+ <p>Return : (Array) 인라인 필터로 필터링 된 칼럼들에 대한 텍스트값들</p>
+ <p>Also See : <a href="#setFilterInlineTexts">setFilterInlineTexts</a> | <a href="../../samples/filter_inline_save_demo.html?ft_ins&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="getFitColumnSizeByDataField">
 <td class="summaryTableSignatureCol">
@@ -1147,15 +1132,15 @@
 <span class="signatureLink">getFitColumnSizeByDataField</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.15.2<br>
-  <p>지정한 칼럼에 대하여 최적의 칼럼 사이즈를 반환합니다.</p>
-  <p>최적의 칼럼 사이즈의 의미는 해당 칼럼에 출력된 텍스트의 길이에 맞는 칼럼 사이즈를 의미합니다.</p>
-  <p>텍스트가 아닌 ImageRenderer, TemplateRenderer 와 같은 렌더러는 설정한 widthFit 값이 적용됩니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField : (String) : 칼럼 데이터 필드명</li>
-  </ul>
-  <p>Return : (Number) 해당 칼럼의 사이즈</p>
-  </td>
+ <p>지정한 칼럼에 대하여 최적의 칼럼 사이즈를 반환합니다.</p>
+ <p>최적의 칼럼 사이즈의 의미는 해당 칼럼에 출력된 텍스트의 길이에 맞는 칼럼 사이즈를 의미합니다.</p>
+ <p>텍스트가 아닌 ImageRenderer, TemplateRenderer 와 같은 렌더러는 설정한 widthFit 값이 적용됩니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField : (String) : 칼럼 데이터 필드명</li>
+ </ul>
+ <p>Return : (Number) 해당 칼럼의 사이즈</p>
+ </td>
 </tr>
 <tr id="getFitColumnSizeList">
 <td class="summaryTableSignatureCol">
@@ -1163,13 +1148,13 @@
 <span class="signatureLink">getFitColumnSizeList</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>현재 출력된 헤더 텍스트를 모함하여 모든 셀들의 길이를 조사하여 최적의 칼럼 사이즈를 배열 형태로 반환합니다.</p>
-  <p>최적의 칼럼 사이즈의 의미는 해당 칼럼에 출력된 텍스트의 길이에 맞는 칼럼 사이즈를 의미합니다.</p>
-  <p>텍스트가 아닌 ImageRenderer, TemplateRenderer 와 같은 렌더러는 설정한 widthFit 값이 적용됩니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>fitToGrid (Boolean) : 모든 칼럼 사이즈들의 총합이 그리드 전체 크기보다 작은 경우 그리드 크기에 맞출지 여부를 지정합니다. (기본값: false)</li>
-  </ul>
+ <p>현재 출력된 헤더 텍스트를 모함하여 모든 셀들의 길이를 조사하여 최적의 칼럼 사이즈를 배열 형태로 반환합니다.</p>
+ <p>최적의 칼럼 사이즈의 의미는 해당 칼럼에 출력된 텍스트의 길이에 맞는 칼럼 사이즈를 의미합니다.</p>
+ <p>텍스트가 아닌 ImageRenderer, TemplateRenderer 와 같은 렌더러는 설정한 widthFit 값이 적용됩니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>fitToGrid (Boolean) : 모든 칼럼 사이즈들의 총합이 그리드 전체 크기보다 작은 경우 그리드 크기에 맞출지 여부를 지정합니다. (기본값: false)</li>
+ </ul>
  <p>Return : (Array) 모든 칼럼들의 크기를 담은 배열</p>
  <p> 참고 : getFitColumnSizeList 메소드로 얻은 값을 setColumnSizeList 메소드로 활용하십시오.</p>
  </td>
@@ -1180,15 +1165,15 @@
 <span class="signatureLink">getFooterData</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>현재 그리드에 출력된 푸터 데이터를 반환합니다.</p>
-  <p>반환형은 Object 를 요소로 갖는 배열입니다.</p>
-  <p>개별 Object 는 다음과 같은 key-value 로 이루어집니다.</p>
-  <ul>
-  <li>index : 출력된 값의 칼럼 인덱스 값 ("#base" 로 행 번호 칼럼에 출력된 푸터 값은 index 가 -1입니다.)</li>
-  <li>value : 푸터의 값이 포매팅 전의 순수 값 (labelFunction 으로 사용자가 임의 지정한 경우 value 는 text 와 같습니다.)</li>
-  <li>text : 실제로 푸터의 셀에 출력된 포매팅 된 값</li>
-  </ul>
-  <p>Return : (Array) 출력된 푸터 데이터</p>
+ <p>현재 그리드에 출력된 푸터 데이터를 반환합니다.</p>
+ <p>반환형은 Object 를 요소로 갖는 배열입니다.</p>
+ <p>개별 Object 는 다음과 같은 key-value 로 이루어집니다.</p>
+ <ul>
+ <li>index : 출력된 값의 칼럼 인덱스 값 ("#base" 로 행 번호 칼럼에 출력된 푸터 값은 index 가 -1입니다.)</li>
+ <li>value : 푸터의 값이 포매팅 전의 순수 값 (labelFunction 으로 사용자가 임의 지정한 경우 value 는 text 와 같습니다.)</li>
+ <li>text : 실제로 푸터의 셀에 출력된 포매팅 된 값</li>
+ </ul>
+ <p>Return : (Array) 출력된 푸터 데이터</p>
  </td>
 </tr>
 <tr id="getFooterFormatValueByDataField">
@@ -1203,9 +1188,8 @@
  <li>dataField : (String) 푸터의 출력 위치 dataField </li>
  </ul>
  <p>Return : (String) 해당 열의 푸터 포매팅된 값</p>
- <pre>
-  // name 열의 푸터  포매팅된 값 얻기
-  var myValue = AUIGrid.getFooterFormatValueByDataField(myGridID, "name");</pre>
+ <pre><code class="language-javascript">// name 열의 푸터  포매팅된 값 얻기
+ const myValue = AUIGrid.getFooterFormatValueByDataField(myGridID, "name");</code></pre>
  <p>참고 : getFooterValueByDataField 과 getFooterFormatValueByDataField 의 차이는 값의 포매팅 여부 입니다.</p>
  </td>
 </tr>
@@ -1231,11 +1215,10 @@
  <ul>
  <li>dataField : (String) 푸터의 출력 위치 dataField </li>
  </ul>
-  <p>Return : (Number or String) 해당 열의 푸터 값</p>
-  <pre>
-   // name 열의 푸터  값 얻기
-   var myValue = AUIGrid.getFooterValueByDataField(myGridID, "name");</pre>
-  <p>참고 : getFooterValueByDataField 과 getFooterFormatValueByDataField 의 차이는 값의 포매팅 여부 입니다.</p>
+ <p>Return : (Number or String) 해당 열의 푸터 값</p>
+ <pre><code class="language-javascript">// name 열의 푸터  값 얻기
+ const myValue = AUIGrid.getFooterValueByDataField(myGridID, "name");</code></pre>
+ <p>참고 : getFooterValueByDataField 과 getFooterFormatValueByDataField 의 차이는 값의 포매팅 여부 입니다.</p>
  </td>
 </tr>
 <tr id="getGridData">
@@ -1265,12 +1248,10 @@
  <li>stateField (String) : 상태 정보가 추가될 필드명</li>
  <li>option (Object) : stateField 의 값으로 사용 될 상태 값들 재정의</li> 
  </ul>
- <pre>
- // 그리드 데이터에 state 필드 상태 정보 포함시켜 반환
- var gridDataWithState = AUIGrid.getGridDataWithState(myGridID, "state");
- 
+ <pre><code class="language-javascript">// 그리드 데이터에 state 필드 상태 정보 포함시켜 반환
+ const gridDataWithState = AUIGrid.getGridDataWithState(myGridID, "state");
  // 추가, 삭제, 수정된 상태 정보 값들을 각각 "a", "r", "e" 로 변경하여 반환 (state 필드에 각각 "a", "r", "e" 로 존재함)
- var gridDataWithState = AUIGrid.getGridDataWithState(myGridID, "state", {added:"a", removed:"r", edited:"e"});</pre>
+ const gridDataWithState = AUIGrid.getGridDataWithState(myGridID, "state", {added:"a", removed:"r", edited:"e"});</code></pre>
  <p>Return : (Array) 상태 정보가 포함된 현재 그리드 행 아이템들</p> 
  </td>
 </tr>
@@ -1290,8 +1271,8 @@
 <span class="signatureLink">getHiddenColumnIndexes</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>현재 그리드에서 숨겨진 칼럼(hidden Columns)이 있는 경우 숨겨진 칼럼들의 칼럼 인덱스(columnIndex) 를 반환합니다.</p>
-  <p>Return : (Array) 숨겨진 칼럼(hidden Columns)들의 칼럼 인덱스를 담은 배열</p>
+ <p>현재 그리드에서 숨겨진 칼럼(hidden Columns)이 있는 경우 숨겨진 칼럼들의 칼럼 인덱스(columnIndex) 를 반환합니다.</p>
+ <p>Return : (Array) 숨겨진 칼럼(hidden Columns)들의 칼럼 인덱스를 담은 배열</p>
  </td>
 </tr>
 <tr id="getIndexesByEvent">
@@ -1300,13 +1281,13 @@
 <span class="signatureLink">getIndexesByEvent</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.12.0<br>
-  <p>자바스크립트 네이티브 마우스 이벤트(Native MouseEvent)를 통해 그리드의 인덱스 정보를 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>mouseEvent : (MouseEvent) 마우스 이벤트</li>
-  </ul>
-  <p>Return : (Object) { startRowIndex, startColumnIndex, endRowIndex, endColumnIndex } 의 key 를 갖는 그리드 인덱스 정보 Object</p>
-  </td>
+ <p>자바스크립트 네이티브 마우스 이벤트(Native MouseEvent)를 통해 그리드의 인덱스 정보를 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>mouseEvent : (MouseEvent) 마우스 이벤트</li>
+ </ul>
+ <p>Return : (Object) { startRowIndex, startColumnIndex, endRowIndex, endColumnIndex } 의 key 를 갖는 그리드 인덱스 정보 Object</p>
+ </td>
 </tr>
 <tr id="getInitCellValue">
 <td class="summaryTableSignatureCol">
@@ -1314,18 +1295,17 @@
 <span class="signatureLink">getInitCellValue</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.14<br>
-  <p>특정 셀(rowId 에 맞는 행, dataField 에 맞는 열 부합하는 셀)이 수정된 경우 최초의 그리드 셀 값을 반환합니다.</p>
-  <p>즉, 수정되기 전 원래의 셀 값을 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowId : (String) 행 아이템의 rowId 값</li>
-  <li>dataField : (String) 열의 dataField</li>
-  </ul>
-  <p>Return : (String or Object) 변경 전 원래 셀의 값</p>
-  <pre>
-   // "#Cust1" 이 행의 ID 이고, 데이터 필드명이 "name" 인 열인 셀의 원래 값 반환
-   var orgValue = AUIGrid.getInitCellValue(myGridID, "#Cust1", "name");</pre>
-  </td>
+ <p>특정 셀(rowId 에 맞는 행, dataField 에 맞는 열 부합하는 셀)이 수정된 경우 최초의 그리드 셀 값을 반환합니다.</p>
+ <p>즉, 수정되기 전 원래의 셀 값을 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowId : (String) 행 아이템의 rowId 값</li>
+ <li>dataField : (String) 열의 dataField</li>
+ </ul>
+ <p>Return : (String or Object) 변경 전 원래 셀의 값</p>
+ <pre><code class="language-javascript">// "#Cust1" 이 행의 ID 이고, 데이터 필드명이 "name" 인 열인 셀의 원래 값 반환
+  const orgValue = AUIGrid.getInitCellValue(myGridID, "#Cust1", "name");</code></pre>
+ </td>
 </tr>
 <tr id="getInitValueItem">
 <td class="summaryTableSignatureCol">
@@ -1333,20 +1313,19 @@
 <span class="signatureLink">getInitValueItem</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.4<br>
-  <p>그리드 행이 수정된 경우 최초의 그리드 행 아이템을 반환합니다. 즉, 수정되기 전 원래의 값을 갖는 행 아이템을 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowId : (String or Array) 행 아이템의 rowId 값</li>
-  </ul>
-  <p>Return : (Object or Array) 수정 전의 행 아이템(들), 만약 해당 행이 수정되지 않았다면 null 반환</p>
-  <pre>
-   // rowId 가 "#Cust0" 인 행의 원본 행 아이템 반환
-   if(AUIGrid.isEditedById(myGridID, "#Cust0")) { // 먼저 수정되었는지 체크
-       var orgItem = AUIGrid.getInitValueItem(myGridID, "#Cust0");
-   }
-   // rowId 가 "#Cust0", "#Cust1"인 행들의 원본 행 아이템들 반환 - 복수 사용 예
-   var orgItems = AUIGrid.getInitValueItem(myGridID, ["#Cust0", "#Cust1"]);</pre>
-  </td>
+ <p>그리드 행이 수정된 경우 최초의 그리드 행 아이템을 반환합니다. 즉, 수정되기 전 원래의 값을 갖는 행 아이템을 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowId : (String or Array) 행 아이템의 rowId 값</li>
+ </ul>
+ <p>Return : (Object or Array) 수정 전의 행 아이템(들), 만약 해당 행이 수정되지 않았다면 null 반환</p>
+ <pre><code class="language-javascript">// rowId 가 "#Cust0" 인 행의 원본 행 아이템 반환
+ if(AUIGrid.isEditedById(myGridID, "#Cust0")) { // 먼저 수정되었는지 체크
+     const orgItem = AUIGrid.getInitValueItem(myGridID, "#Cust0");
+ }
+ // rowId 가 "#Cust0", "#Cust1"인 행들의 원본 행 아이템들 반환 - 복수 사용 예
+ const orgItems = AUIGrid.getInitValueItem(myGridID, ["#Cust0", "#Cust1"]);</code></pre>
+ </td>
 </tr>
 <tr id="getItemByRowId">
 <td class="summaryTableSignatureCol">
@@ -1389,8 +1368,7 @@
  <li>value : (String) 행 아이템에서 얻고자 하는 필드의 값(value)</li>
  </ul>
  <p>예를 들어 이름(name) 이 "Anna" 라는 사람의 행 아이템을 얻고자 한다면 다음과 같습니다.</p>
- <pre>
- var rowItems = AUIGrid.getItemsByValue(myGridID, "name", "Anna");</pre>
+ <pre><code class="language-javascript">const rowItems = AUIGrid.getItemsByValue(myGridID, "name", "Anna");</code></pre>
  <p>Return : (Array) 조건에 맞는 행 아이템 묶음</p>
  <p>참고 : 복수의 값 즉, 이름이 "Anna", "Emma" 등의 복수 값에 대한 행 아이템을 얻고자 한다면 getRowsByValue 메소드를 사용하십시오.</p>
  </td>
@@ -1409,9 +1387,8 @@
  </ul>
  <p>Return : (Number) 셀이 가로 병합된 셀인 경우 병합 마지막 인덱스 반환</p>
  <p>주어진 셀이 가로 병합된 셀이 아닌 경우 -1을 반환합니다.</p>
- <pre>
-  // (10, 0) 셀이 가로 병합된 셀인 경우 병합 마지막 칼럼 인덱스 반환
-  var startRowIndex = AUIGrid.getMergeEndColumnIndex(myGridID, 10, 0);</pre>
+ <pre><code class="language-javascript">// (10, 0) 셀이 가로 병합된 셀인 경우 병합 마지막 칼럼 인덱스 반환
+ const startRowIndex = AUIGrid.getMergeEndColumnIndex(myGridID, 10, 0);</code></pre>
  </td>
 </tr>
 <tr id="getMergeEndRowIndex">
@@ -1428,9 +1405,8 @@
  </ul>
  <p>Return : (Number) 셀이 세로 병합된 셀인 경우 병합 마지막 행 인덱스 반환</p>
  <p>주어진 셀이 세로 병합된 셀이 아닌 경우 -1을 반환합니다.</p>
- <pre>
-  // (10, 0) 셀이 세로 병합된 셀인 경우 병합 마지막 행 인덱스 반환
-  var startRowIndex = AUIGrid.getMergeEndRowIndex(myGridID, 10, 0);</pre>
+ <pre><code class="language-javascript">// (10, 0) 셀이 세로 병합된 셀인 경우 병합 마지막 행 인덱스 반환
+ const startRowIndex = AUIGrid.getMergeEndRowIndex(myGridID, 10, 0);</code></pre>
  </td>
 </tr>
 <tr id="getMergeItems">
@@ -1439,14 +1415,14 @@
 <span class="signatureLink">getMergeItems</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.9.0<br>
-  <p>주어진 셀이 세로 병합된 경우 해당 셀의 세로 병합의 대상이 된 모든 행 아이템을 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowIndex : (Number) 셀의 행 인덱스</li>
-  <li>columnIndex : (Number) 셀의 열 인덱스</li>
-  </ul>
-  <p>Return : (Array) 해당 셀로 세로 병합된 모든 행 아이템들</p>
-  </td>
+ <p>주어진 셀이 세로 병합된 경우 해당 셀의 세로 병합의 대상이 된 모든 행 아이템을 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowIndex : (Number) 셀의 행 인덱스</li>
+ <li>columnIndex : (Number) 셀의 열 인덱스</li>
+ </ul>
+ <p>Return : (Array) 해당 셀로 세로 병합된 모든 행 아이템들</p>
+ </td>
 </tr>
 <tr id="getMergeStartColumnIndex">
 <td class="summaryTableSignatureCol">
@@ -1462,9 +1438,8 @@
  </ul>
  <p>Return : (Number) 셀이 가로 병합된 셀인 경우 병합 시작 인덱스 반환</p>
  <p>주어진 셀이 가로 병합된 셀이 아닌 경우 -1을 반환합니다.</p>
- <pre>
-  // (10, 0) 셀이 가로 병합된 셀인 경우 병합 시작 칼럼 인덱스 반환
-  var startRowIndex = AUIGrid.getMergeStartColumnIndex(myGridID, 10, 0);</pre>
+ <pre><code class="language-javascript">// (10, 0) 셀이 가로 병합된 셀인 경우 병합 시작 칼럼 인덱스 반환
+  const startRowIndex = AUIGrid.getMergeStartColumnIndex(myGridID, 10, 0);</code></pre>
  </td>
 </tr>
 <tr id="getMergeStartRowIndex">
@@ -1481,9 +1456,8 @@
  </ul>
  <p>Return : (Number) 셀이 세로 병합된 셀인 경우 병합 시작 인덱스 반환</p>
  <p>주어진 셀이 세로 병합된 셀이 아닌 경우 -1을 반환합니다.</p>
- <pre>
-  // (10, 0) 셀이 세로 병합된 셀인 경우 병합 시작 행 인덱스 반환
-  var startRowIndex = AUIGrid.getMergeStartRowIndex(myGridID, 10, 0);</pre>
+ <pre><code class="language-javascript">// (10, 0) 셀이 세로 병합된 셀인 경우 병합 시작 행 인덱스 반환
+ const startRowIndex = AUIGrid.getMergeStartRowIndex(myGridID, 10, 0);</code></pre>
  </td>
 </tr>
 <tr id="getOrgCellValue">
@@ -1492,9 +1466,9 @@
 <span class="signatureLink">getOrgCellValue</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.14<br>
-  <p><strong>[deprecated Ver 3.0.4] </strong>수정되기 전의 셀 값을 반환합니다.</p>
-  <p>Also See : <a href="#getInitCellValue">getInitCellValue</a></p>
-  </td>
+ <p><strong>[deprecated Ver 3.0.4] </strong>수정되기 전의 셀 값을 반환합니다.</p>
+ <p>Also See : <a href="#getInitCellValue">getInitCellValue</a></p>
+ </td>
 </tr>
 <tr id="getOrgGridData">
 <td class="summaryTableSignatureCol">
@@ -1514,9 +1488,9 @@
 <span class="signatureLink">getOrgValueItem</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.14<br>
-  <p><strong>[deprecated Ver 3.0.4] </strong>수정되기 전 원래의 값을 갖는 행 아이템을 반환합니다.</p>
-  <p>Also See : <a href="#getInitValueItem">getInitValueItem</a></p>
-  </td>
+ <p><strong>[deprecated Ver 3.0.4] </strong>수정되기 전 원래의 값을 갖는 행 아이템을 반환합니다.</p>
+ <p>Also See : <a href="#getInitValueItem">getInitValueItem</a></p>
+ </td>
 </tr>
 <tr id="getParentColumnByDataField">
 <td class="summaryTableSignatureCol">
@@ -1524,16 +1498,15 @@
 <span class="signatureLink">getParentColumnByDataField</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.10.0<br>
-  <p>헤더를 계층형(그룹형)으로 설정한 경우 자기 자신의 부모에 해당되는 그룹 칼럼을 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField (String) : 칼럼의 데이터 필드명</li>
-  </ul>
-  <p>Return : (Object) 그룹 칼럼 아이템</p>
-  <pre>
-   // name 헤더의 부모에 해당되는 그룹 칼럼 얻기
-   var groupColumn = AUIGrid.getParentColumnByDataField(myGridID, "name");</pre>
-  </td>
+ <p>헤더를 계층형(그룹형)으로 설정한 경우 자기 자신의 부모에 해당되는 그룹 칼럼을 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField (String) : 칼럼의 데이터 필드명</li>
+ </ul>
+ <p>Return : (Object) 그룹 칼럼 아이템</p>
+ <pre><code class="language-javascript">// name 헤더의 부모에 해당되는 그룹 칼럼 얻기
+ const groupColumn = AUIGrid.getParentColumnByDataField(myGridID, "name");</code></pre>
+ </td>
 </tr>
 <tr id="getParentItemByRowId">
 <td class="summaryTableSignatureCol">
@@ -1572,11 +1545,11 @@
 <span class="signatureLink">getRemovedColumnFields</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0<br>
-  <p>그리드에서 삭제된 열(column) 의 dataField 들의 묶음(배열)을 반환합니다.</p>
-  <p>삭제된 열이란 최초 칼럼 레이아웃 작성 시 정의한 칼럼을 삭제 한 것을 말합니다.</p>
-  <p>즉, 사용자가 임의로 추가한 후 삭제하였다면 삭제된 열에 포함되지 않습니다.</p>
-  <p>Return : (Array) 삭제된 열의 dataField 들</p> 
-  </td>
+ <p>그리드에서 삭제된 열(column) 의 dataField 들의 묶음(배열)을 반환합니다.</p>
+ <p>삭제된 열이란 최초 칼럼 레이아웃 작성 시 정의한 칼럼을 삭제 한 것을 말합니다.</p>
+ <p>즉, 사용자가 임의로 추가한 후 삭제하였다면 삭제된 열에 포함되지 않습니다.</p>
+ <p>Return : (Array) 삭제된 열의 dataField 들</p> 
+ </td>
 </tr>
 <tr id="getRemovedItems">
 <td class="summaryTableSignatureCol">
@@ -1584,16 +1557,16 @@
 <span class="signatureLink">getRemovedItems</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드에서 삭제된 아이템들의 묶음(배열)을 반환합니다.</p>
-  <p>기본적으로, 삭제된 아이템은 최초의 데이터에서 addRow 메소드로 추가된 아이템을 삭제한 경우 포함되지 않습니다.</p>
-  <p>즉, 최초 그리드에 삽입된 데이터를 삭제한 행 아이템만 반환합니다.</p>
-  <p>만약, 추가된 행을 삭제 했을 때 그 추가된 행까지 얻고자 한다면 includeAdded 파라메터를 true 로 설정하십시오. 
-  <p>파라메터 설명</p>
-  <ul>
-  <li>includeAdded (Boolean) : 최초의 데이터에서 사용자에 의해 추가된 행을 다시 사용자가 삭제한 경우, 해당 아이템까지 반환 여부</li>
-  </ul>
-  <p>Return : (Array) 삭제된 행 아이템들</p>
-  <p><a href="../../samples/editing_rowcrud2.html?ecrud2&theme=default" target="_blank">관련 데모 보기</a></p>
+ <p>그리드에서 삭제된 아이템들의 묶음(배열)을 반환합니다.</p>
+ <p>기본적으로, 삭제된 아이템은 최초의 데이터에서 addRow 메소드로 추가된 아이템을 삭제한 경우 포함되지 않습니다.</p>
+ <p>즉, 최초 그리드에 삽입된 데이터를 삭제한 행 아이템만 반환합니다.</p>
+ <p>만약, 추가된 행을 삭제 했을 때 그 추가된 행까지 얻고자 한다면 includeAdded 파라메터를 true 로 설정하십시오. 
+ <p>파라메터 설명</p>
+ <ul>
+ <li>includeAdded (Boolean) : 최초의 데이터에서 사용자에 의해 추가된 행을 다시 사용자가 삭제한 경우, 해당 아이템까지 반환 여부</li>
+ </ul>
+ <p>Return : (Array) 삭제된 행 아이템들</p>
+ <p><a href="../../samples/editing_rowcrud2.html?ecrud2&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
 <tr id="getRemovedNewItems">
@@ -1602,9 +1575,9 @@
 <span class="signatureLink">getRemovedNewItems</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드에서 사용자에 의해 추가되어 다시 삭제된 아이템들의 묶음(배열)을 반환합니다.</p>
-  <p>즉, 최초 그리드에 삽입된 데이터가 아닌 addRow 메소드나 Insert 키와 같은 방식으로 최초 이후 추가된 행이 삭제된 경우 그 행 아이템들만 반환합니다.</p>
-  <p>Return : (Array) 추가된 후 삭제된 행 아이템들</p> 
+ <p>그리드에서 사용자에 의해 추가되어 다시 삭제된 아이템들의 묶음(배열)을 반환합니다.</p>
+ <p>즉, 최초 그리드에 삽입된 데이터가 아닌 addRow 메소드나 Insert 키와 같은 방식으로 최초 이후 추가된 행이 삭제된 경우 그 행 아이템들만 반환합니다.</p>
+ <p>Return : (Array) 추가된 후 삭제된 행 아이템들</p> 
  </td>
 </tr>
 <tr id="getRowCount">
@@ -1631,8 +1604,7 @@
  <li>values : (String or Array) dataField 에서 찾고자 하는 값( 복수의 값인 경우 Array )</li>
  </ul>
  <p>예를 들어 "이름이 Anna, Lawrence 인 사람의 행 인덱스 모두 반환" 하고자 한다면 다음과 같습니다.</p>
- <pre>
- var rows = AUIGrid.getRowIndexesByValue(myGridID, "name", ["Anna", "Lawrence"]);</pre>
+ <pre><code class="language-javascript">const rows = AUIGrid.getRowIndexesByValue(myGridID, "name", ["Anna", "Lawrence"]);</code></pre>
  <p>Return : (Array) 해당 dataField 에서 주어진 값(values) 와 일치하는 모든 행 아이템들의 rowIndex</p>
  <p>참고 : 행 아이템을 얻고자 한다면  getRowsByValue 메소드 참고</p>
  </td>
@@ -1662,8 +1634,7 @@
  <li>values : (String or Array) dataField 에서 찾고자 하는 값( 복수의 값인 경우 Array )</li>
  </ul>
  <p>예를 들어 "이름이 Anna, Lawrence 인 사람의 행 아이템 모두 반환" 하고자 한다면 다음과 같습니다.</p>
- <pre>
- var rows = AUIGrid.getRowsByValue(myGridID, "name", ["Anna", "Lawrence"]);</pre>
+ <pre><code class="language-javascript">const rows = AUIGrid.getRowsByValue(myGridID, "name", ["Anna", "Lawrence"]);</code></pre>
  <p>Return : (Array) 해당 dataField 에서 주어진 값(values) 와 일치하는 모든 행 아이템들</p> 
  <p>참고 : 행인덱스을 얻고자 한다면  getRowIndexesByValue 메소드 참고</p>
  </td>
@@ -1685,12 +1656,13 @@
 <span class="signatureLink">getSelectedColIndexes</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.7.4<br> 
-  <p>현재 선택된 셀(들)의 시작 칼럼, 종료 칼럼 인덱스를 반환합니다.</p>
-  <p>Return : (Array) 선택한 셀(들)의 시작 칼럼 인덱스, 종료 칼럼 인덱스 배열</p>
-  <pre>
-   // 선택된 셀의 시작, 종료 칼럼 인덱스 얻기
-   var colIndexes = AUIGrid.getSelectedColIndexes(myGridID);</pre>
-  </td>
+ <p>현재 선택된 셀들이 블럭 형태인 경우 선택한 셀들의 시작 칼럼, 종료 칼럼 인덱스를 반환합니다.</p>
+ <p>Return : (Array) 선택한 셀(들)의 시작 칼럼 인덱스, 종료 칼럼 인덱스 배열</p>
+ <pre><code class="language-javascript">// 선택된 셀의 시작, 종료 칼럼 인덱스 얻기
+ const colIndexes = AUIGrid.getSelectedColIndexes(myGridID);</code></pre>
+ <p>참고 : getSelectedRowIndexes 메소드를 이용하면 선택 블럭의 행, 열 인덱스를 알 수 있습니다.</p>
+ <p>See Also : <a href="#getSelectedRowIndexes">getSelectedRowIndexes</a></p>
+ </td>
 </tr>
 <tr id="getSelectedIndex">
 <td class="summaryTableSignatureCol">
@@ -1710,34 +1682,34 @@
 <div class="summarySignature">
 <span class="signatureLink">getSelectedItems</span>
 </div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.16<br>
  <p>선택 모드(selectionMode)가 "none" 이 아닌 경우 현재 선택된 모든 셀(또는 행) 아이템을 반환합니다.</p>
- <p> 반환값은 배열로 개별 배열 요소는 다음과 같은 요소를 갖는 Object 입니다.</p>
-<ul>
-<li>rowIndex : 행의 인덱스</li>
-<li>columnIndex : 칼럼의 인덱스</li>
-<li>dataField : 선택 칼럼이 출력하고 있는 그리드 데이터의 필드명</li>
-<li>headerText : 선택 칼럼의 헤더 텍스트</li>
-<li>editable : 선택 칼럼의 수정 가능 여부</li>
-<li>value : 선택 셀의 현재 그리드 값</li>
-<li>item : 선택 행 아이템들을 갖는 Object</li>
-</ul>
-<p>사용 예는 다음과 같습니다.</p>
-<pre>
- var selectedItems = AUIGrid.getSelectedItems(myGridID);
- if(selectedItems.length == 0) return;
- // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
- var first = selectedItems[0];
-
- // first 의 값을 보고자 한다면? first.value
- // first 의 행, 칼럼 인덱스를 보고자 한다면? first.rowIndex, first.columnIndex
- // first 의 행 아이템 전체를 보고자 한다면? first.item
- console.log(first);
- alert( JSON.stringify(first) );</pre>
-
+ <p>파라메터 설명</p>
+ <ul>
+ <li>performanceMode : (Boolean) 성능 위주로 빠르게 선텍 셀(또는 행) 아이템을 반환할지 여부를 지정(기본값: false)</li>
+ </ul>
+ <p>성능 위주에서는 개별 아이템을 deep copy 하지 않습니다. 따라서 item 요소를 직접 수정하면 원본 데이터에 영향을 미칩니다. (직접 수정은 절대적으로 하지 않아야 합니다.)</p>
+ <p>또한 성능 위주에서는 반환하는 선택 요소들을 정렬 시키지 않습니다.</p>
+ <p>반환값은 배열로 개별 배열 요소는 다음과 같은 요소를 갖는 Object 입니다.</p>
+ <ul>
+ <li>rowIndex : 행의 인덱스</li>
+ <li>columnIndex : 칼럼의 인덱스</li>
+ <li>dataField : 선택 칼럼이 출력하고 있는 그리드 데이터의 필드명</li>
+ <li>headerText : 선택 칼럼의 헤더 텍스트</li>
+ <li>editable : 선택 칼럼의 수정 가능 여부</li>
+ <li>value : 선택 셀의 현재 그리드 값</li>
+ <li>item : 선택 행 아이템들을 갖는 Object</li>
+ </ul>
+ <p>사용 예는 다음과 같습니다.</p>
+ <pre><code class="language-javascript">// 선택 셀(또는 행) 아이템들 얻기
+ const selectedItems = AUIGrid.getSelectedItems(myGridID);
+ console.log(selectedItems); // 선택 셀(또는 행)들 확인
+ // 선택 셀(또는 행) 아이템들 성능 위주로 얻기 (선택 셀이 수천 개 이상인 경우 성능 위주로 얻는 것을 권장)
+ const selectedItems = AUIGrid.getSelectedItems(myGridID, true);
+ console.log(selectedItems);</code></pre>
  <p>Return : (Array) 선택된 아이템들을 요소로 갖는 배열</p>
  <p><a href="../../samples/selection.html?ex1_6&theme=default" target="_blank">관련 데모 보기</a></p>
- </td>
+</td>
 </tr>
 <tr id="getSelectedPrimeIndexOnMerge">
 <td class="summaryTableSignatureCol">
@@ -1745,11 +1717,25 @@
 <span class="signatureLink">getSelectedPrimeIndexOnMerge</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.15.1<br>
-  <p>셀 병합이 된 경우 다중 선택했을 때 병합된 셀들에 의해 셀렉션에 변화가 생긴 경우 그 변화에 맞게 변경된 프라임 셀 인덱스를 반환합니다.</p>
-  <p>rowIndex 는 반환값의 0 번째, columnIndex 는 반환값의 1 번째 요소입니다.
-  <p>Return : (Array) rowIndex, columnIndex 를 갖는 배열(배열 요소 2개임 0번째는 rowIndex, 1번째는 columnIndex)</p>
-  <p>참고 : 셀 병합(가로 병합, 세로 병합)이 아닌 경우는 getSelectedIndex() 메소드의 반환 값과 동일합니다.</p> 
-  </td>
+ <p>셀 병합이 된 경우 다중 선택했을 때 병합된 셀들에 의해 셀렉션에 변화가 생긴 경우 그 변화에 맞게 변경된 프라임 셀 인덱스를 반환합니다.</p>
+ <p>rowIndex 는 반환값의 0 번째, columnIndex 는 반환값의 1 번째 요소입니다.
+ <p>Return : (Array) rowIndex, columnIndex 를 갖는 배열(배열 요소 2개임 0번째는 rowIndex, 1번째는 columnIndex)</p>
+ <p>참고 : 셀 병합(가로 병합, 세로 병합)이 아닌 경우는 getSelectedIndex() 메소드의 반환 값과 동일합니다.</p> 
+ </td>
+</tr>
+<tr id="getSelectedRowIndexes">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">getSelectedRowIndexes</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.16<br> 
+ <p>현재 선택된 셀들이 블럭 형태인 경우 선택한 셀들의 시작 행, 종료 행 인덱스를 반환합니다.</p>
+ <p>Return : (Array) 선택한 셀(들)의 시작 행 인덱스, 종료 행 인덱스 배열</p>
+ <pre><code class="language-javascript">// 선택된 셀의 시작, 종료 행 인덱스 얻기
+ const colIndexes = AUIGrid.getSelectedRowIndexes(myGridID);</code></pre>
+ <p>참고 : getSelectedColIndexes 메소드를 이용하면 선택 블럭의 행, 열 인덱스를 알 수 있습니다.</p>
+ <p>See Also : <a href="#getSelectedColIndexes">getSelectedColIndexes</a></p>
+ </td>
 </tr>
 <tr id="getSelectedRows">
 <td class="summaryTableSignatureCol">
@@ -1761,10 +1747,8 @@
  <p>셀 선택 모드라 하더라도 해당 셀의 행 아이템이 반환됩니다.</p>
  <p>반환값은 배열로 배열요소는 순수 행 아이템들의 묶음(Array)입니다.</p>
  <p>사용 예는 다음과 같습니다.</p>
- <pre>
-  var selectedRows = AUIGrid.getSelectedRows(myGridID);
-  console.log(selectedRows);</pre>
- 
+ <pre><code class="language-javascript">const selectedRows = AUIGrid.getSelectedRows(myGridID);
+ console.log(selectedRows);</code></pre>
  <p>Return : (Array) 선택된 행 아이템들을 요소로 갖는 배열</p>
  <p>Also See : <a href="#getSelectedItems">getSelectedItems</a></p>
  </td>
@@ -1775,10 +1759,10 @@
 <span class="signatureLink">getSelectedText</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.8.0<br>
-  <p>그리드 선택 셀의 값을 텍스트로 반환합니다.</p>
-  <p>다수의 셀이 선택된 경우 행, 열에 구분은 탭(\t)과 캐리지 리턴(\r\n) 으로 구분된 텍스트를 반환합니다.</p>
-  <p>Return : (String) 선택 셀 값 텍스트</p>
-  </td>
+ <p>그리드 선택 셀의 값을 텍스트로 반환합니다.</p>
+ <p>다수의 셀이 선택된 경우 행, 열에 구분은 탭(\t)과 캐리지 리턴(\r\n) 으로 구분된 텍스트를 반환합니다.</p>
+ <p>Return : (String) 선택 셀 값 텍스트</p>
+ </td>
 </tr>
 <tr id="getSortingFields">
 <td class="summaryTableSignatureCol">
@@ -1796,11 +1780,11 @@
 <span class="signatureLink">getStateCache</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11.0<br>
-  <p>현재 그리드 추가, 삭제, 변경된 상태 정보 캐시를 반환합니다.</p>
-  <p>반환된 정보는 syncGridData 메소드에서 사용할 수 있습니다.</p>
-  <p>Return : (Object)  추가, 삭제, 변경된 상태 정보 캐시</p>
-  <p>Also See : <a href="#syncGridData">syncGridData</a></p>
-  </td>
+ <p>현재 그리드 추가, 삭제, 변경된 상태 정보 캐시를 반환합니다.</p>
+ <p>반환된 정보는 syncGridData 메소드에서 사용할 수 있습니다.</p>
+ <p>Return : (Object)  추가, 삭제, 변경된 상태 정보 캐시</p>
+ <p>Also See : <a href="#syncGridData">syncGridData</a></p>
+ </td>
 </tr>
 <tr id="getTextDataProvider">
 <td class="summaryTableSignatureCol">
@@ -1864,14 +1848,14 @@
 <span class="signatureLink">hideColumnByDataField</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>주어진 파라메터(dataField)에 맞게 출력된 그리드 칼럼을 보이지 않도록 지정합니다.</p>
-  <p>복수의 칼럼을 보이지 않도록 지정하고자 한다면 배열로 설정하십시오. (예: ["name", "country", "product"] )</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField (String or Array) : 칼럼의 데이터 필드명(들)</li>
-  </ul>
-  <p>Also See : <a href="#showColumnByDataField">showColumnByDataField</a> | <a href="../../samples/hide_column.html?ex1_8&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>주어진 파라메터(dataField)에 맞게 출력된 그리드 칼럼을 보이지 않도록 지정합니다.</p>
+ <p>복수의 칼럼을 보이지 않도록 지정하고자 한다면 배열로 설정하십시오. (예: ["name", "country", "product"] )</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField (String or Array) : 칼럼의 데이터 필드명(들)</li>
+ </ul>
+ <p>Also See : <a href="#showColumnByDataField">showColumnByDataField</a> | <a href="../../samples/hide_column.html?ex1_8&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="hideColumnGroup">
 <td class="summaryTableSignatureCol">
@@ -1879,13 +1863,13 @@
 <span class="signatureLink">hideColumnGroup</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.10.0<br>
-  <p>헤더를 계층형(그룹형)으로 설정한 경우 그룹(브랜치)에 해당되는 칼럼에 속한 모든 칼럼(자손 칼럼들)을 보이지 않게 지정합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField (String) : 칼럼의 데이터 필드명</li>
-  </ul>
-  <p>Also See : <a href="#showColumnGroup">showColumnGroup</a> | <a href="../../samples/hide_column.html?ex1_8&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>헤더를 계층형(그룹형)으로 설정한 경우 그룹(브랜치)에 해당되는 칼럼에 속한 모든 칼럼(자손 칼럼들)을 보이지 않게 지정합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField (String) : 칼럼의 데이터 필드명</li>
+ </ul>
+ <p>Also See : <a href="#showColumnGroup">showColumnGroup</a> | <a href="../../samples/hide_column.html?ex1_8&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="hideFooterLater">
 <td class="summaryTableSignatureCol">
@@ -1893,9 +1877,9 @@
 <span class="signatureLink">hideFooterLater</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11.9<br>
-  <p>그리드 생성 시 푸터 출력을 한 경우 이미 출력된 그리드에서 푸터를 표시하지 않게 합니다.</p>
-  <p>Also See : <a href="#showFooterLater">showFooterLater</a></p>
-  </td>
+ <p>그리드 생성 시 푸터 출력을 한 경우 이미 출력된 그리드에서 푸터를 표시하지 않게 합니다.</p>
+ <p>Also See : <a href="#showFooterLater">showFooterLater</a></p>
+ </td>
 </tr>
 <tr id="indentTreeDepth">
 <td class="summaryTableSignatureCol">
@@ -1946,7 +1930,7 @@
  <p>행 인덱스(rowIndex)에 맞는 행 아이템이 추가된 행인지 여부를 반환합니다.</p>
  <p>파라메터 설명</p>
  <ul>
-  <li>rowIndex : (Number) 행 인덱스</li>
+ <li>rowIndex : (Number) 행 인덱스</li>
  </ul>
  <p>Return : (Boolean) 추가된 행인 경우 true 반환.</p>
  </td>
@@ -1957,11 +1941,11 @@
 <span class="signatureLink">isAvailabePdf</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7<br>
-  <p>현재 브라우저에서 그리드의 기능인 PDF 내보내기(Export) 사용 가능 여부를 반환합니다.</p>
-  <p>완전히 HTML5 를 지원하는 브라우저에서 true를 반환합니다. 즉, 완전히 HTML5 를 지원하는 브라우저에서 PDF 내보내기 사용 가능합니다.</p>
-  <p>Return : (Boolean) PDF 내보내기 가능 여부</p>
-  <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>현재 브라우저에서 그리드의 기능인 PDF 내보내기(Export) 사용 가능 여부를 반환합니다.</p>
+ <p>완전히 HTML5 를 지원하는 브라우저에서 true를 반환합니다. 즉, 완전히 HTML5 를 지원하는 브라우저에서 PDF 내보내기 사용 가능합니다.</p>
+ <p>Return : (Boolean) PDF 내보내기 가능 여부</p>
+ <p><a href="../../samples/export.html?exp_0&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="isAvailableLocalDownload">
 <td class="summaryTableSignatureCol">
@@ -1969,11 +1953,11 @@
 <span class="signatureLink">isAvailableLocalDownload</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.11.0<br>
-  <p>엑셀(xlsx), CSV, TXT 등으로 내보내기 할 때 로컬(Local) 자원만을 갖고 다운로딩 처리 가능한지 여부를 반환합니다.</p>
-  <p>완전히 HTML5 를 지원하는 브라우저에서 true를 반환합니다. 즉, 완전히 HTML5 를 지원하는 브라우저에서 서버사이드 거치지 않고 바로 내보내기 가능합니다.</p>
-  <p>Return : (Boolean) 로컬 다운로드 가능 여부</p>
-  <p><a href="../../samples/export_local_server.html?exp_ls&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>엑셀(xlsx), CSV, TXT 등으로 내보내기 할 때 로컬(Local) 자원만을 갖고 다운로딩 처리 가능한지 여부를 반환합니다.</p>
+ <p>완전히 HTML5 를 지원하는 브라우저에서 true를 반환합니다. 즉, 완전히 HTML5 를 지원하는 브라우저에서 서버사이드 거치지 않고 바로 내보내기 가능합니다.</p>
+ <p>Return : (Boolean) 로컬 다운로드 가능 여부</p>
+ <p><a href="../../samples/export_local_server.html?exp_ls&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="isCheckedRowById">
 <td class="summaryTableSignatureCol">
@@ -1997,8 +1981,7 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
  <p>그리드가 생성되었는지 여부를 반환합니다.</p>
- <pre>
-  var isCreated = AUIGrid.isCreated("#myGrid1");</pre>
+ <pre><code class="language-javascript">const isCreated = AUIGrid.isCreated("#myGrid1");</code></pre>
  <p>예를 들어 위와 같이 작성한다면 myGrid1 을 id 로 갖는 Div 에 그리드가 생성되었는지 여부를 반환합니다.</p>
  <p>Return : (Boolean) 생성되었는지 여부</p>  
  </td>
@@ -2026,7 +2009,7 @@
  <p>행 인덱스(rowIndex)에 맞는 행 아이템이 수정된 행인지 여부를 반환합니다.</p>
  <p>파라메터 설명</p>
  <ul>
-  <li>rowIndex : (Number) 행 인덱스</li>
+ <li>rowIndex : (Number) 행 인덱스</li>
  </ul>
  <p>Return : (Boolean) 수정된 행인 경우 true 반환.</p>
  </td>
@@ -2044,10 +2027,9 @@
  <li>dataField : (String) 열의 dataField</li>
  </ul>
  <p>Return : (Boolean) 수정된 셀인 경우 true 반환.</p>
- <pre>
- // "#Cust1" 이 행의 ID 이고, 데이터 필드명이 "name" 인 열인 셀이 현재 수정되었는지 여부 반환
- var isEdited = AUIGrid.isEditedCell(myGridID, "#Cust1", "name");
- alert(isEdited);</pre>
+ <pre><code class="language-javascript">// "#Cust1" 이 행의 ID 이고, 데이터 필드명이 "name" 인 열인 셀이 현재 수정되었는지 여부 반환
+ const isEdited = AUIGrid.isEditedCell(myGridID, "#Cust1", "name");
+ console.log(isEdited);</code></pre>
  </td>
 </tr>
 <tr id="isEditedCellByIndex">
@@ -2059,8 +2041,8 @@
  <p>특정 셀(행, 열 인덱스에에 맞는 셀)이 수정되었는지 여부를 반환합니다.</p>
  <p>파라메터 설명</p>
  <ul>
-  <li>rowIndex : (Number) 셀의 행 인덱스</li>
-  <li>columnIndex : (Number) 셀의 열 인덱스</li>
+ <li>rowIndex : (Number) 셀의 행 인덱스</li>
+ <li>columnIndex : (Number) 셀의 열 인덱스</li>
  </ul>
  <p>Return : (Boolean) 수정된 셀인 경우 true 반환.</p>
  </td>
@@ -2124,13 +2106,13 @@
 <span class="signatureLink">isLazyRequestedByIndex</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.13<br>
-  <p>treeLazyMode 에서 하위(자식) 데이터를 이미 요청하였는지 여부를 반환합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowIndex : (Number) 행 인덱스</li>
-  </ul>
-  <p>Return : (Boolean) 요청 완료하였다면 true, 아직 요청 전이라면 false 반환/p>
-  </td>
+ <p>treeLazyMode 에서 하위(자식) 데이터를 이미 요청하였는지 여부를 반환합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowIndex : (Number) 행 인덱스</li>
+ </ul>
+ <p>Return : (Boolean) 요청 완료하였다면 true, 아직 요청 전이라면 false 반환/p>
+ </td>
 </tr>
 <tr id="isMergedCell">
 <td class="summaryTableSignatureCol">
@@ -2145,9 +2127,8 @@
  <li>columnIndex : (Number) 셀의 열 인덱스</li>
  </ul>
  <p>Return : (Boolean) 주어진 셀이 병합된 셀인지 여부 반환</p>
- <pre>
-  // (10, 0) 셀이 병합된 셀인지 여부 반환
-  var isMerged = AUIGrid.isMergedCell(myGridID, 10, 0);</pre>
+ <pre><code class="language-javascript">// (10, 0) 셀이 병합된 셀인지 여부 반환
+ const isMerged = AUIGrid.isMergedCell(myGridID, 10, 0);</code></pre>
  </td>
 </tr>
 <tr id="isMergedCellByColumn">
@@ -2163,9 +2144,8 @@
  <li>columnIndex : (Number) 셀의 열 인덱스</li>
  </ul>
  <p>Return : (Boolean) 주어진 셀이 가로 병합된 셀인지 여부 반환</p>
- <pre>
-  // (10, 0) 셀이 가로 병합된 셀인지 여부 반환
-  var isMerged = AUIGrid.isMergedCellByColumn(myGridID, 10, 0);</pre>
+ <pre><code class="language-javascript">// (10, 0) 셀이 가로 병합된 셀인지 여부 반환
+ const isMerged = AUIGrid.isMergedCellByColumn(myGridID, 10, 0);</code></pre>
  </td>
 </tr>
 <tr id="isMergedCellByRow">
@@ -2181,9 +2161,8 @@
  <li>columnIndex : (Number) 셀의 열 인덱스</li>
  </ul>
  <p>Return : (Boolean) 주어진 셀이 세로 병합된 셀인지 여부 반환</p>
- <pre>
-  // (10, 0) 셀이 세로 병합된 셀인지 여부 반환
-  var isMerged = AUIGrid.isMergedCellByRow(myGridID, 10, 0);</pre>
+ <pre><code class="language-javascript">// (10, 0) 셀이 세로 병합된 셀인지 여부 반환
+ const isMerged = AUIGrid.isMergedCellByRow(myGridID, 10, 0);</code></pre>
  </td>
 </tr>
 <tr id="isOpenFilterLayer">
@@ -2192,10 +2171,10 @@
 <span class="signatureLink">isOpenFilterLayer</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.9.3<br>
-  <p>그리드 필터를 설정한 경우, 필터 레이어의 현재 오픈 여부를 반환합니다.</p>
-  <p>Return : (Boolean) 현재 열려 있는지 여부 반환</p>
-  <p>Also See : <a href="#openFilterLayer">openFilterLayer</a>, <a href="#closeFilterLayer">closeFilterLayer</a> | <a href="../../samples/filter_menu_external_demo.html?ft_ex&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 필터를 설정한 경우, 필터 레이어의 현재 오픈 여부를 반환합니다.</p>
+ <p>Return : (Boolean) 현재 열려 있는지 여부 반환</p>
+ <p>Also See : <a href="#openFilterLayer">openFilterLayer</a>, <a href="#closeFilterLayer">closeFilterLayer</a> | <a href="../../samples/filter_menu_external_demo.html?ft_ex&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="isRemovedById">
 <td class="summaryTableSignatureCol">
@@ -2220,7 +2199,7 @@
  <p>행 인덱스(rowIndex)에 맞는 행 아이템이 삭제된 행인지 여부를 반환합니다.</p>
  <p>파라메터 설명</p>
  <ul>
-  <li>rowIndex : (Number) 행 인덱스</li>
+ <li>rowIndex : (Number) 행 인덱스</li>
  </ul>
  <p>Return : (Boolean) 삭제된 행인 경우 true 반환.</p>
  </td>
@@ -2271,8 +2250,8 @@
  <li>value : (Object) 고유 값인지 알고자 하는 값(value)</li>
  </ul>
  <p>Return : (Boolean) 검사하는 값이 고유 값이면 true, 중복된 값이 있다면 false 반환.</p>
-  <p>예로 다음처럼 사용할 때</p>
- <pre>AUIGrid.isUniqueValue(myGridID, "name", "ABC");</pre>
+ <p>예로 다음처럼 사용할 때</p>
+ <pre><code class="language-javascript">AUIGrid.isUniqueValue(myGridID, "name", "ABC");</code></pre>
  <p>"name" 이라는 칼럼에 "ABC" 값이 유니크한지를 검사합니다. 즉, "name" 이라는 칼럼에 현재 "ABC" 값이 없는지를 검사합니다.</p>
  <p>검사하려는 값 "ABC"가 존재 하지 않을 때 유니크하게 됩니다.</p>
  <p>따라서 해당 값이 현재 그리드의 "name" 칼럼에 존재하지 하지 않으면 true, 1개 이상 존재하면 false 반환합니다.</p> 
@@ -2325,18 +2304,17 @@
 <span class="signatureLink">moveRowToIndex</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.12.6<br>
-  <p>그리드의 특정 단일 행을 지정한 행 인덱스(rowIndex)로 이동 시킵니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-   <li>rowId : (String) 행 고유 값(rowIdField 값)</li>
-  <li>toRowIndex : (Object) 이동시킬 곳의 행 인덱스</li>
-  </ul>
-  <p>다음은 사용 예를 나타냅니다.</p>
-  <pre>
-  // rowId 가 #Cust0 인 행을 0번 인덱스로 이동 시키기
-  AUIGrid.moveRowToIndex(myGridID, "#Cust0", 3); </pre>
-  <p>참고 : 트리 그리드(계층형 데이터)인 경우 해당 메소드는 무시됩니다.</p>
-  </td>
+ <p>그리드의 특정 단일 행을 지정한 행 인덱스(rowIndex)로 이동 시킵니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowId : (String) 행 고유 값(rowIdField 값)</li>
+ <li>toRowIndex : (Object) 이동시킬 곳의 행 인덱스</li>
+ </ul>
+ <p>다음은 사용 예를 나타냅니다.</p>
+ <pre><code class="language-javascript">// rowId 가 #Cust0 인 행을 0번 인덱스로 이동 시키기
+ AUIGrid.moveRowToIndex(myGridID, "#Cust0", 3); </code></pre>
+ <p>참고 : 트리 그리드(계층형 데이터)인 경우 해당 메소드는 무시됩니다.</p>
+ </td>
 </tr>
 <tr id="openEditDownListLayer">
 <td class="summaryTableSignatureCol">
@@ -2356,17 +2334,16 @@
 <span class="signatureLink">openFilterLayer</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.9.3<br>
-  <p>그리드 필터를 설정한 경우, 지정한 dataField 에 맞는 필터 레이어(필터 메뉴)를 오픈합니다.</p>
-  <p>만약, 동일한 칼럼의 필터 레이어(필터 메뉴)가 이미 열려진 경우, 이 메소드는 닫는 역할(즉, 토글 역할)을 하게 됩니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField (String) : 칼럼의 dataField 명</li>
-  </ul>
-  <pre>
-    // 이름 칼럼의 필터 레이어(필터 메뉴)를 오픈합니다.
-    AUIGrid.openFilterLayer(myGridID, "name");</pre>
-  <p>Also See : <a href="#closeFilterLayer">closeFilterLayer</a>, <a href="#isOpenFilterLayer">isOpenFilterLayer</a> | <a href="../../samples/filter_menu_external_demo.html?ft_ex&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 필터를 설정한 경우, 지정한 dataField 에 맞는 필터 레이어(필터 메뉴)를 오픈합니다.</p>
+ <p>만약, 동일한 칼럼의 필터 레이어(필터 메뉴)가 이미 열려진 경우, 이 메소드는 닫는 역할(즉, 토글 역할)을 하게 됩니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField (String) : 칼럼의 dataField 명</li>
+ </ul>
+ <pre><code class="language-javascript">// 이름 칼럼의 필터 레이어(필터 메뉴)를 오픈합니다.
+ AUIGrid.openFilterLayer(myGridID, "name");</code></pre>
+ <p>Also See : <a href="#closeFilterLayer">closeFilterLayer</a>, <a href="#isOpenFilterLayer">isOpenFilterLayer</a> | <a href="../../samples/filter_menu_external_demo.html?ft_ex&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="openInputer">
 <td class="summaryTableSignatureCol">
@@ -2397,9 +2374,9 @@
 <span class="signatureLink">redo</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-   <p>편집 가능한 그리드에서 enableUndoRedo=true 설정한 경우, 다시 실행(Redo) 를 실행합니다.</p>
-   <p>Also See : <a href="#undo">undo</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
-   </td>
+ <p>편집 가능한 그리드에서 enableUndoRedo=true 설정한 경우, 다시 실행(Redo) 를 실행합니다.</p>
+ <p>Also See : <a href="#undo">undo</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="redoable">
 <td class="summaryTableSignatureCol">
@@ -2407,10 +2384,10 @@
 <span class="signatureLink">redoable</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-   <p> 다시 실행(Redo) 이 가능한지 여부를 반환합니다.</p>
-   <p>Return : (Boolean) 다시 실행 가능 여부</p>
-   <p>Also See : <a href="#undo">undo</a>, <a href="#redo">redo</a>, <a href="#undoable">undoable</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
-   </td>
+ <p> 다시 실행(Redo) 이 가능한지 여부를 반환합니다.</p>
+ <p>Return : (Boolean) 다시 실행 가능 여부</p>
+ <p>Also See : <a href="#undo">undo</a>, <a href="#redo">redo</a>, <a href="#undoable">undoable</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="refresh">
 <td class="summaryTableSignatureCol">
@@ -2432,25 +2409,24 @@
 <span class="signatureLink">refreshRows</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드에 데이터를 삽입해 이미 출력된 모습에서 특정 행들 찾아 갱신(refresh)합니다.</p>
-  <p>예를 들어 변경된 데이터를 DB Select 할 수 있다면, 이 메소드를 통해 특정 행만 갱신할 수 있습니다.</p>
-  <p>기존에 출력된 데이터와 형식이 같아야만 유효합니다.</p>
-  <p>예를 들어 rowIdField 를 id 로 설정한 경우, id 가 20, 21, 30 인 행을 찾아 특정 셀만 업데이트 하고자 한다면 다음과 같습니다.</p>
-  <pre>
-   var items = [ { id : 20, price : 2000, name : "A" },
-                   { id : 21, price : 1000, name : "B" },
-                   { id : 30, price : 4000, name : "C" }];
-   AUIGrid.refreshRows(myGridID, items, "my-flash-style", 200); </pre>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>items (Array or Object) : 복수 또는 1개의 행을 갱신 합니다.</li>
-  <li>flashStyle (String) : 갱신 시 갱신된 셀이 깜빡이도록 표시해 주는 CSS 클래스명(스타일)을 지정합니다.</li>
-  <li>flashTime (Number) :  flashStyle 이 출력되는 시간을 밀리세컨드 단위로 지정합니다. 예를 들어 이 값이 300 이라면 0.3 초 후 flashStyle 이 사라집니다.</li>
-  </ul>
-  <p>기존 데이터 양이 수만행 이상이라면 전체 데이터 갱신(setGridData) 하는게 성능면에서 유리합니다.</p>
-  <p>참고 : refreshRows 메소드는 updateRowsById 메소드와 같은 기능을 합니다.(셀 수정 마커 표시 항상 false, 변경 셀에 깜빡이는 스타일 지정 가능이 다름)</p>
-  <p>Also See : <a href="#updateRowsById">updateRowsById</a></p>
-  </td>
+ <p>그리드에 데이터를 삽입해 이미 출력된 모습에서 특정 행들 찾아 갱신(refresh)합니다.</p>
+ <p>예를 들어 변경된 데이터를 DB Select 할 수 있다면, 이 메소드를 통해 특정 행만 갱신할 수 있습니다.</p>
+ <p>기존에 출력된 데이터와 형식이 같아야만 유효합니다.</p>
+ <p>예를 들어 rowIdField 를 id 로 설정한 경우, id 가 20, 21, 30 인 행을 찾아 특정 셀만 업데이트 하고자 한다면 다음과 같습니다.</p>
+ <pre><code class="language-javascript">const items = [{ id : 20, price : 2000, name : "A" },
+               { id : 21, price : 1000, name : "B" },
+               { id : 30, price : 4000, name : "C" }];
+ AUIGrid.refreshRows(myGridID, items, "my-flash-style", 200); </code></pre>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>items (Array or Object) : 복수 또는 1개의 행을 갱신 합니다.</li>
+ <li>flashStyle (String) : 갱신 시 갱신된 셀이 깜빡이도록 표시해 주는 CSS 클래스명(스타일)을 지정합니다.</li>
+ <li>flashTime (Number) :  flashStyle 이 출력되는 시간을 밀리세컨드 단위로 지정합니다. 예를 들어 이 값이 300 이라면 0.3 초 후 flashStyle 이 사라집니다.</li>
+ </ul>
+ <p>기존 데이터 양이 수만행 이상이라면 전체 데이터 갱신(setGridData) 하는게 성능면에서 유리합니다.</p>
+ <p>참고 : refreshRows 메소드는 updateRowsById 메소드와 같은 기능을 합니다.(셀 수정 마커 표시 항상 false, 변경 셀에 깜빡이는 스타일 지정 가능이 다름)</p>
+ <p>Also See : <a href="#updateRowsById">updateRowsById</a></p>
+ </td>
 </tr>
 <tr id="removeAjaxLoader">
 <td class="summaryTableSignatureCol">
@@ -2468,7 +2444,7 @@
 <span class="signatureLink">removeCheckedRows</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>체크박스 엑스트라 렌더러를 사용한 경우 체크박스에 체크된 행(들)을 그리드에서 삭제 처리 합니다.</p>
+ <p>체크박스 엑스트라 렌더러를 사용한 경우 체크박스에 체크된 행(들)을 그리드에서 삭제 처리 합니다.</p>
  </td>
 </tr>
 <tr id="removeColumn">
@@ -2477,16 +2453,15 @@
 <span class="signatureLink">removeColumn</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0<br>
-  <p>그리드 열(column)을 삭제합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>columnIndex (Number or String) : 삭제하고자 하는 열의 인덱스, columnIndex 대신 "selectedIndex" 문자열을 설정한 경우 현재 선택된 열이 삭제됩니다.</li>
-  </ul>
-  <pre>
-  예1 : AUIGrid.removeColumn(myGridID, 5); // columnIndex 5 삭제
-  예2 : AUIGrid.removeColumn(myGridID, "selectedIndex"); // 현재 선택된 열(들) 삭제
-  예3 : AUIGrid.removeColumn(myGridID, [0,1,2]); // columnIndex 0, 1, 2 삭제(즉, 3개의 열 삭제)</pre>
-  </td>
+ <p>그리드 열(column)을 삭제합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>columnIndex (Number or String) : 삭제하고자 하는 열의 인덱스, columnIndex 대신 "selectedIndex" 문자열을 설정한 경우 현재 선택된 열이 삭제됩니다.</li>
+ </ul>
+ <pre><code class="language-javascript">예1 : AUIGrid.removeColumn(myGridID, 5); // columnIndex 5 삭제
+ 예2 : AUIGrid.removeColumn(myGridID, "selectedIndex"); // 현재 선택된 열(들) 삭제
+ 예3 : AUIGrid.removeColumn(myGridID, [0,1,2]); // columnIndex 0, 1, 2 삭제(즉, 3개의 열 삭제)</code></pre>
+ </td>
 </tr>
 <tr id="removeInfoMessage">
 <td class="summaryTableSignatureCol">
@@ -2504,17 +2479,16 @@
 <span class="signatureLink">removeRow</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드 행(row) 아이템을 삭제합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowIndex (Number or String) : 삭제하고자 하는 행의 인덱스, rowIndex 대신 "selectedIndex" 문자열을 설정한 경우 현재 선택된 행이 삭제됩니다.</li>
-  </ul>
-  <pre>
-  예1 : AUIGrid.removeRow(myGridID, 5); // rowIndex 5 삭제
-  예2 : AUIGrid.removeRow(myGridID, "selectedIndex"); // 현재 선택된 행(들) 삭제
-  예3 : AUIGrid.removeRow(myGridID, [0,1,2]); // rowIndex 0, 1, 2 삭제(즉, 3개의 행 삭제)</pre>
-  <p>Also See : <a href="#removeRowByRowId">removeRowByRowId</a> | <a href="../../samples/editing_remove_rows.html?ermr&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 행(row) 아이템을 삭제합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowIndex (Number or String) : 삭제하고자 하는 행의 인덱스, rowIndex 대신 "selectedIndex" 문자열을 설정한 경우 현재 선택된 행이 삭제됩니다.</li>
+ </ul>
+ <pre><code class="language-javascript">예1 : AUIGrid.removeRow(myGridID, 5); // rowIndex 5 삭제
+ 예2 : AUIGrid.removeRow(myGridID, "selectedIndex"); // 현재 선택된 행(들) 삭제
+ 예3 : AUIGrid.removeRow(myGridID, [0,1,2]); // rowIndex 0, 1, 2 삭제(즉, 3개의 행 삭제)</code></pre>
+ <p>Also See : <a href="#removeRowByRowId">removeRowByRowId</a> | <a href="../../samples/editing_remove_rows.html?ermr&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="removeRowByRowId">
 <td class="summaryTableSignatureCol">
@@ -2522,13 +2496,13 @@
 <span class="signatureLink">removeRowByRowId</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>행 고유 값(rowIdField 값)을 통해 그리드 행(row) 아이템을 삭제합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowId (Array or String) : 삭제하고자 하는 행 고유 값(rowIdField 값). 만약 복수를 삭제하고자 할 때 rowId 값을 배열로 묶으십시오.</li>
-  </ul>
-  <p>Also See : <a href="#removeRow">removeRow</a> | <a href="../../samples/editing_rowcrud.html?ecrud&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>행 고유 값(rowIdField 값)을 통해 그리드 행(row) 아이템을 삭제합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowId (Array or String) : 삭제하고자 하는 행 고유 값(rowIdField 값). 만약 복수를 삭제하고자 할 때 rowId 값을 배열로 묶으십시오.</li>
+ </ul>
+ <p>Also See : <a href="#removeRow">removeRow</a> | <a href="../../samples/editing_rowcrud.html?ecrud&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="removeSoftRows">
 <td class="summaryTableSignatureCol">
@@ -2562,10 +2536,10 @@
 <span class="signatureLink">resetLazyStateByIndex</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.13<br>
-  <p>treeLazyMode 에서 하위(자식) 데이터를 이미 요청한 경우 해당 행의 요청 상태를 초기화 합니다.</p>
-  <p>기존 요청한 하위(자식) 데이터를 초기화(제거)하고 다시 요청할 수 있는 닫혀진 상태로 만듭니다.</p>
-  <p>따라서 다시 요청 아이콘 클릭하면  treeLazyRequest 이벤트가 발생합니다.</p>
-  </td>
+ <p>treeLazyMode 에서 하위(자식) 데이터를 이미 요청한 경우 해당 행의 요청 상태를 초기화 합니다.</p>
+ <p>기존 요청한 하위(자식) 데이터를 초기화(제거)하고 다시 요청할 수 있는 닫혀진 상태로 만듭니다.</p>
+ <p>따라서 다시 요청 아이콘 클릭하면  treeLazyRequest 이벤트가 발생합니다.</p>
+ </td>
 </tr>
 <tr id="resetUpdatedColumns">
 <td class="summaryTableSignatureCol">
@@ -2636,17 +2610,17 @@
 <span class="signatureLink">resize</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드의 크기를 변경합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>width (Number) : 변경시키고자 하는 가로 사이즈 </li>
-  <li>height (Number) : 변경시키고자 하는 세로 사이즈 </li>
-  </ul>
-  <p>만약 파라메터 없이 resize 메소드 호출 시 부모 Div의 크기를 다시 계산하여 그에 맞게 사이즈를 변경합니다.</p>
-  <p>부모(조상) Div 가 보이지 않는 상태(display : none)인 경우 부모 Div 의 크기를 알 수 없습니다. 이런 경우 그리드는 기본 크기로 변경 시킵니다.</p>
-  <p>따라서 파라메터 없이 resize 메소드 호출 시는 반드시 부모 Div 가 DOM 영역에서 보여졌을 때 호출해야 합니다.</p>
-  <p><a href="../../samples/resize_grid.html?rsc0&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드의 크기를 변경합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>width (Number) : 변경시키고자 하는 가로 사이즈 </li>
+ <li>height (Number) : 변경시키고자 하는 세로 사이즈 </li>
+ </ul>
+ <p>만약 파라메터 없이 resize 메소드 호출 시 부모 Div의 크기를 다시 계산하여 그에 맞게 사이즈를 변경합니다.</p>
+ <p>부모(조상) Div 가 보이지 않는 상태(display : none)인 경우 부모 Div 의 크기를 알 수 없습니다. 이런 경우 그리드는 기본 크기로 변경 시킵니다.</p>
+ <p>따라서 파라메터 없이 resize 메소드 호출 시는 반드시 부모 Div 가 DOM 영역에서 보여졌을 때 호출해야 합니다.</p>
+ <p><a href="../../samples/resize_grid.html?rsc0&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="restoreEditedCells">
 <td class="summaryTableSignatureCol">
@@ -2660,14 +2634,12 @@
  <ul>
  <li>cells (Array or String) : 행인덱스와 dataField 를 각각 0, 1 요소로 갖는 배열, "selectedIndex" 문자열을 설정한 경우 현재 선택된 셀들이 복구됩니다</li>
  </ul>
- <pre>
-   // 현재 선택된 셀들 전체 수정 취소(복구)
-   AUIGrid.restoreEditedCells(myGridID, "selectedIndex");
-    // 행인덱스 5 의 dataField="country" 인 셀의 값을 수정 취소(복구)
-   AUIGrid.restoreEditedCells(myGridID, [5, "country"] );
- 
-   // 복수의 셀 값들 지정 예제
-   AUIGrid.restoreEditedCells(myGridID, [[2, "country"], [3, "country"], [3, "product"]] );</pre>
+ <pre><code class="language-javascript">// 현재 선택된 셀들 전체 수정 취소(복구)
+ AUIGrid.restoreEditedCells(myGridID, "selectedIndex");
+ // 행인덱스 5 의 dataField="country" 인 셀의 값을 수정 취소(복구)
+ AUIGrid.restoreEditedCells(myGridID, [5, "country"] );
+ // 복수의 셀 값들 지정 예제
+ AUIGrid.restoreEditedCells(myGridID, [[2, "country"], [3, "country"], [3, "product"]] );</code></pre>
  </td>
 </tr>
 <tr id="restoreEditedRows">
@@ -2682,15 +2654,12 @@
  <ul>
  <li>rowIndex (Number(Array) or String) : 삭제하고자 하는 행의 인덱스, rowIndex 대신 "selectedIndex" 문자열을 설정한 경우 현재 선택된 행이 복구됩니다.</li>
  </ul>
- <pre>
-  // 현재 선택된 행을 수정 취소(복구)
-  AUIGrid.restoreEditedRows(myGridID, "selectedIndex");
- 
-  // 행인덱스 5의 행을 수정 취소(복구)
-  AUIGrid.restoreEditedRows(myGridID, 5);
- 
-  // 행인덱스 5,6,7 의 복수 행을 수정 취소(복구)
-  AUIGrid.restoreEditedRows(myGridID, [5, 6, 7]);</pre>
+ <pre><code class="language-javascript">// 현재 선택된 행을 수정 취소(복구)
+ AUIGrid.restoreEditedRows(myGridID, "selectedIndex");
+ // 행인덱스 5의 행을 수정 취소(복구)
+ AUIGrid.restoreEditedRows(myGridID, 5);
+ // 행인덱스 5,6,7 의 복수 행을 수정 취소(복구)
+ AUIGrid.restoreEditedRows(myGridID, [5, 6, 7]);</code></pre>
  </td>
 </tr>
 <tr id="restoreSoftRows">
@@ -2710,17 +2679,14 @@
  <li>"all" : 그리드의 모든 삭제 표시된 행을 복구합니다.</li>
  <li>rowIndex : 지정된 행 인덱스(들)의 삭제 표시된 행(들)을 복구합니다.(Number or Array)</li>
  </ul></li></ul>
- <pre>
-  // 현재 선택된 행 소프트 삭제 복구
-  AUIGrid.restoreSoftRows(myGridID, "selectedIndex");
- 
-  // 그리드 모든 소프트 삭제 행들 복구 
-  AUIGrid.restoreSoftRows(myGridID, "all");
-   // 행인덱스 5 소프트 삭제 복구 
-  AUIGrid.restoreSoftRows(myGridID, 5);
-  
-  // 행인덱스 5,6,7 소프트 삭제 복구
-  AUIGrid.restoreSoftRows(myGridID, [5, 6, 7]);</pre>
+ <pre><code class="language-javascript">// 현재 선택된 행 소프트 삭제 복구
+ AUIGrid.restoreSoftRows(myGridID, "selectedIndex");
+ // 그리드 모든 소프트 삭제 행들 복구 
+ AUIGrid.restoreSoftRows(myGridID, "all");
+ // 행인덱스 5 소프트 삭제 복구 
+ AUIGrid.restoreSoftRows(myGridID, 5);
+ // 행인덱스 5,6,7 소프트 삭제 복구
+ AUIGrid.restoreSoftRows(myGridID, [5, 6, 7]);</code></pre>
  </td>
 </tr>
 <tr id="rowIdToIndex">
@@ -2752,16 +2718,15 @@
  <li>options : (Object) 검색 옵션</li>
  </ul>
  <p>검색 옵션(options) 은 다음과 같은 필드를 갖습니다.</p>
-  <ul>
-  <li>direction (기본값 : true) : 검색 방향  (true : 다음, false : 이전 검색)</li>
-  <li>caseSensitive (기본값 : false) : 대소문자 구분 여부 (true : 대소문자 구별, false :  무시)</li>
-  <li>wholeWord (기본값 : false) : 온전한 단어 여부</li>
-  <li>wrapSearch (기본값 : true) : 끝에서 되돌리기 여부</li>
+ <ul>
+ <li>direction (기본값 : true) : 검색 방향  (true : 다음, false : 이전 검색)</li>
+ <li>caseSensitive (기본값 : false) : 대소문자 구분 여부 (true : 대소문자 구별, false :  무시)</li>
+ <li>wholeWord (기본값 : false) : 온전한 단어 여부</li>
+ <li>wrapSearch (기본값 : true) : 끝에서 되돌리기 여부</li>
  </ul>
- <pre>
- // 이름(name) 칼럼에서 "anna" 찾기
+ <pre><code class="language-javascript">// 이름(name) 칼럼에서 "anna" 찾기
  //options 를 지정하지 않으면 기본값이 적용됨(기본값은 direction : true, wrapSearch : true)
- AUIGrid.search(myGridID, "name", "anna");</pre>
+ AUIGrid.search(myGridID, "name", "anna");</code></pre>
  </td>
 </tr>
 <tr id="searchAll">
@@ -2779,16 +2744,15 @@
  <li>options : (Object) 검색 옵션</li>
  </ul>
  <p>검색 옵션(options) 은 다음과 같은 필드를 갖습니다.</p>
-  <ul>
-  <li>direction (기본값 : true) : 검색 방향  (true : 다음, false : 이전 검색)</li>
-  <li>caseSensitive (기본값 : false) : 대소문자 구분 여부 (true : 대소문자 구별, false :  무시)</li>
-  <li>wholeWord (기본값 : false) : 온전한 단어 여부</li>
-  <li>wrapSearch (기본값 : true) : 끝에서 되돌리기 여부</li>
+ <ul>
+ <li>direction (기본값 : true) : 검색 방향  (true : 다음, false : 이전 검색)</li>
+ <li>caseSensitive (기본값 : false) : 대소문자 구분 여부 (true : 대소문자 구별, false :  무시)</li>
+ <li>wholeWord (기본값 : false) : 온전한 단어 여부</li>
+ <li>wrapSearch (기본값 : true) : 끝에서 되돌리기 여부</li>
  </ul>
- <pre>
- // 그리드 전체 칼럼에서 "a" 찾기
+ <pre><code class="language-javascript">// 그리드 전체 칼럼에서 "a" 찾기
  //options 를 지정하지 않으면 기본값이 적용됨(기본값은 direction : true, wrapSearch : true)
- AUIGrid.searchAll(myGridID, "a");</pre>
+ AUIGrid.searchAll(myGridID, "a");</code></pre>
  </td>
 </tr>
 <tr id="selectRowsByRowId">
@@ -2826,13 +2790,13 @@
 <span class="signatureLink">setCellMerge</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p> 셀 병합(cell merge) 를 활성화시키거나 비활성화 시킵니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>flag (Boolean) : true 인 경우 셀 병합 활성화, false 인 경우 비활성화</li>
-  </ul>
-  <p><a href="../../samples/merge_row.html?mer_r&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p> 셀 병합(cell merge) 를 활성화시키거나 비활성화 시킵니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>flag (Boolean) : true 인 경우 셀 병합 활성화, false 인 경우 비활성화</li>
+ </ul>
+ <p><a href="../../samples/merge_row.html?mer_r&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="setCellValue">
 <td class="summaryTableSignatureCol">
@@ -2840,22 +2804,20 @@
 <span class="signatureLink">setCellValue</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.8.0<br>
-  <p>그리드의 특정 셀의 값을 변경합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowIndex (Number) : 변경하고자 하는 행 인덱스</li>
-  <li>dataField or columnIndex(String or Number) : 변경하고자 하는 칼럼의 dataField 또는 칼럼 인덱스</li>
-  <li>value (Object) : 변경하고자 하는 값 </li> 
-  </ul>
-  <pre>
-   // 0번째 행의 name 칼럼의 값을 "이름 고침" 으로 변경
-   AUIGrid.setCellValue(myGridID, 0, "name", "이름 고침");
-  
-   // 3번째 행의 1 번째 칼럼 즉, (3, 1) 의 셀의 값을 "이름 고침" 으로 변경
-   AUIGrid.setCellVAlue(myGridID, 3, 1, "이름 고침");</pre>
-  <p>절대 반복문법(for, while 등) 안에서 이 메소드를 사용하지 마십시오.</p><p>다수의 셀 값을 변경하고자 하는 경우 updateRow, updateRows, updateRowsById 메소드를 사용하십시오.</p>
-  <p>Also See : <a href="#updateRow">updateRow</a>, <a href="#updateRows">updateRows</a>, <a href="#updateRowsById">updateRowsById</a>, <a href="#getCellValue">getCellValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드의 특정 셀의 값을 변경합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowIndex (Number) : 변경하고자 하는 행 인덱스</li>
+ <li>dataField or columnIndex(String or Number) : 변경하고자 하는 칼럼의 dataField 또는 칼럼 인덱스</li>
+ <li>value (Object) : 변경하고자 하는 값 </li> 
+ </ul>
+ <pre><code class="language-javascript">// 0번째 행의 name 칼럼의 값을 "이름 고침" 으로 변경
+ AUIGrid.setCellValue(myGridID, 0, "name", "이름 고침");
+ // 3번째 행의 1 번째 칼럼 즉, (3, 1) 의 셀의 값을 "이름 고침" 으로 변경
+ AUIGrid.setCellVAlue(myGridID, 3, 1, "이름 고침");</code></pre>
+ <p>절대 반복문법(for, while 등) 안에서 이 메소드를 사용하지 마십시오.</p><p>다수의 셀 값을 변경하고자 하는 경우 updateRow, updateRows, updateRowsById 메소드를 사용하십시오.</p>
+ <p>Also See : <a href="#updateRow">updateRow</a>, <a href="#updateRows">updateRows</a>, <a href="#updateRowsById">updateRowsById</a>, <a href="#getCellValue">getCellValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="setCheckedRowsByIds">
 <td class="summaryTableSignatureCol">
@@ -2882,7 +2844,7 @@
  <p>엑스트라 행 체크박스가 설정된 경우 특정 행의 dataField 의 값과 일치하는 행에 체크를 표시합니다.</p>
  <p>이 메소드는 기존에 체크된 항목이 제거되고 새로 설정된 값으로만 체크됩니다.</p>
  <p>예를 들어 이름(name) 이 "Anna" 라는 사람만을 체크하고자 한다면 다음과 같습니다.</p>
- <pre>AUIGrid.setCheckedRowsByValue(myGridID, "name", "Anna");</pre>
+ <pre><code class="language-javascript">AUIGrid.setCheckedRowsByValue(myGridID, "name", "Anna");</code></pre>
  <p>파라메터 설명</p>
  <ul>
  <li>dataField : (String) 행 아이템에서 체크하고자 하는 필드명</li>
@@ -2898,18 +2860,16 @@
 <span class="signatureLink">setColumnChildOrder</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.8.0<br>
-  <p>그룹 칼럼의 자식들의 위치 순서를 지정하여 그리드를 출력하도록 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataFields (Array) : 그룹 칼럼의 자식의 순서를 표현하는 dataField 값들</li>
-  </ul>
-  <pre>
-    // c1, c2, c3 를 dataField 로 갖는 칼럼이 Group 으로 되어 있는 경우, 순서를 c3, c1, c2 로 출력 시킴.
-    AUIGrid.setColumnChildOrder(myGridID, ["c3", "c1", "c2"]);
-  
-    // 그룹 칼럼의 자식들 중 c2를 자식들 중 처음으로 위치시킴.
-    AUIGrid.setColumnChildOrder(myGridID, ["c2"] );</pre>
-  </td>
+ <p>그룹 칼럼의 자식들의 위치 순서를 지정하여 그리드를 출력하도록 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataFields (Array) : 그룹 칼럼의 자식의 순서를 표현하는 dataField 값들</li>
+ </ul>
+ <pre><code class="language-javascript">// c1, c2, c3 를 dataField 로 갖는 칼럼이 Group 으로 되어 있는 경우, 순서를 c3, c1, c2 로 출력 시킴.
+ AUIGrid.setColumnChildOrder(myGridID, ["c3", "c1", "c2"]);
+ // 그룹 칼럼의 자식들 중 c2를 자식들 중 처음으로 위치시킴.
+ AUIGrid.setColumnChildOrder(myGridID, ["c2"] );</code></pre>
+ </td>
 </tr>
 <tr id="setColumnOrder">
 <td class="summaryTableSignatureCol">
@@ -2917,18 +2877,16 @@
 <span class="signatureLink">setColumnOrder</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.8.0<br>
-  <p>칼럼의 위치 순서를 지정하여 그리드를 출력하도록 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataFields (Array) : 칼럼의 순서를 표현하는 dataField 값들</li>
-  </ul>
-  <pre>
-    // 칼럼의 순서를 차례로 Counry, Name, Price, Date 순으로 출력시킴.
-    AUIGrid.setColumnOrder(myGridID, ["country", "name", "price", "date"]);
-  
-    // 칼럼의 순서를 Date 를 맨 앞으로 출력하고, 나머지 칼럼은 기존 순서 유지 시킴.
-    AUIGrid.setColumnOrder(myGridID, ["date"] );</pre>
-  </td>
+ <p>칼럼의 위치 순서를 지정하여 그리드를 출력하도록 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataFields (Array) : 칼럼의 순서를 표현하는 dataField 값들</li>
+ </ul>
+ <pre><code class="language-javascript">// 칼럼의 순서를 차례로 Counry, Name, Price, Date 순으로 출력시킴.
+ AUIGrid.setColumnOrder(myGridID, ["country", "name", "price", "date"]);
+ // 칼럼의 순서를 Date 를 맨 앞으로 출력하고, 나머지 칼럼은 기존 순서 유지 시킴.
+ AUIGrid.setColumnOrder(myGridID, ["date"] );</code></pre>
+ </td>
 </tr>
 <tr id="setColumnProp">
 <td class="summaryTableSignatureCol">
@@ -2936,19 +2894,18 @@
 <span class="signatureLink">setColumnProp</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>최초 설정한 칼럼 레이아웃의 columnIndex 에 맞는 칼럼의 속성을 변경합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>columnIndex (Number) : 변경하고자 하는 칼럼 인덱스</li>
-  <li>propObj (Object) : 변경하고자 하는 칼럼의 속성명과 값을 갖는 Object</li>
-  </ul>
-  <p>예를 들어 1 번째 칼럼의 헤더 텍스트(headerText) 와 너비(width) 를 변경하고자 한다면 다음과 같습니다.</p>
-  <pre>
-  // 인덱스 1번째 칼럼의 헤더 명과 너비를 각각 "헤더 텍스트 변경", 100 으로 변경
-  AUIGrid.setColumnProp( myGridID, 1, { headerText : "헤더 텍스트 변경", width : 100 } );</pre>
-  <p>참고 : setColumnProp 으로 renderer, children 등 DOM 이 변경되는 속성의 설정을 바꿀 수는 없습니다. 이런 경우는 destroy 후 다시 새로운 칼럼 레이아웃으로 create 하십시오.</p>
+ <p>최초 설정한 칼럼 레이아웃의 columnIndex 에 맞는 칼럼의 속성을 변경합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>columnIndex (Number) : 변경하고자 하는 칼럼 인덱스</li>
+ <li>propObj (Object) : 변경하고자 하는 칼럼의 속성명과 값을 갖는 Object</li>
+ </ul>
+ <p>예를 들어 1 번째 칼럼의 헤더 텍스트(headerText) 와 너비(width) 를 변경하고자 한다면 다음과 같습니다.</p>
+ <pre><code class="language-javascript">// 인덱스 1번째 칼럼의 헤더 명과 너비를 각각 "헤더 텍스트 변경", 100 으로 변경
+ AUIGrid.setColumnProp( myGridID, 1, { headerText : "헤더 텍스트 변경", width : 100 } );</code></pre>
+ <p>참고 : setColumnProp 으로 renderer, children 등 DOM 이 변경되는 속성의 설정을 바꿀 수는 없습니다. 이런 경우는 destroy 후 다시 새로운 칼럼 레이아웃으로 create 하십시오.</p>
  <p><a href="../../samples/column_change_props.html?col_prop&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ </td>
 </tr>
 <tr id="setColumnPropByDataField">
 <td class="summaryTableSignatureCol">
@@ -2956,22 +2913,20 @@
 <span class="signatureLink">setColumnPropByDataField</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.10.0<br>
-  <p>최초 설정한 칼럼 레이아웃의 데이터필드(dataField)에 맞는 칼럼의 속성을 변경합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField (String) : 변경하고자 하는 칼럼의 데이터필드명</li>
-  <li>propObj (Object) : 변경하고자 하는 칼럼의 속성명과 값을 갖는 Object</li>
-  </ul>
-  <p>예를 들어 "name" 칼럼의 헤더 텍스트(headerText) 와 너비(width) 를 변경하고자 한다면 다음과 같습니다.</p>
-  <pre>
-  // "name" 칼럼의 헤더 명과 너비를 각각 "헤더 텍스트 변경", 100 으로 변경
-  AUIGrid.setColumnPropByDataField( myGridID, "name", { headerText : "헤더 텍스트 변경", width : 100 } );
-  
-  // "myGroupHeader" 를 dataField 로 갖는 그룹 헤더의 헤더 텍스트 변경
-  AUIGrid.setColumnPropByDataField( myGridID, "myGroupHeader", { headerText : "그룹 헤더 텍스트 변경" } );</pre>
-  <p>참고 : setColumnPropByDataField 으로 renderer, children 등 DOM 이 변경되는 속성의 설정을 바꿀 수는 없습니다. 이런 경우는 destroy 후 다시 새로운 칼럼 레이아웃으로 create 하십시오.</p>
-  <p><a href="../../samples/column_change_props.html?col_prop&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>최초 설정한 칼럼 레이아웃의 데이터필드(dataField)에 맞는 칼럼의 속성을 변경합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField (String) : 변경하고자 하는 칼럼의 데이터필드명</li>
+ <li>propObj (Object) : 변경하고자 하는 칼럼의 속성명과 값을 갖는 Object</li>
+ </ul>
+ <p>예를 들어 "name" 칼럼의 헤더 텍스트(headerText) 와 너비(width) 를 변경하고자 한다면 다음과 같습니다.</p>
+ <pre><code class="language-javascript">// "name" 칼럼의 헤더 명과 너비를 각각 "헤더 텍스트 변경", 100 으로 변경
+ AUIGrid.setColumnPropByDataField( myGridID, "name", { headerText : "헤더 텍스트 변경", width : 100 } );
+ // "myGroupHeader" 를 dataField 로 갖는 그룹 헤더의 헤더 텍스트 변경
+ AUIGrid.setColumnPropByDataField( myGridID, "myGroupHeader", { headerText : "그룹 헤더 텍스트 변경" } );</code></pre>
+ <p>참고 : setColumnPropByDataField 으로 renderer, children 등 DOM 이 변경되는 속성의 설정을 바꿀 수는 없습니다. 이런 경우는 destroy 후 다시 새로운 칼럼 레이아웃으로 create 하십시오.</p>
+ <p><a href="../../samples/column_change_props.html?col_prop&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="setColumnSizeList">
 <td class="summaryTableSignatureCol">
@@ -2979,22 +2934,19 @@
 <span class="signatureLink">setColumnSizeList</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드 칼럼의 가로 크기(width size)를 지정할 수 있습니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>sizeList : (Array) 변경할 가로 사이즈들</li>
-  </ul>
-  <p>다음은 사용 예를 나타냅니다.</p>
-  <pre>
-  // 그리드의 칼럼 사이즈들을 강제로 지정합니다.
-  AUIGrid.setColumnSizeList(myGridID, [100, 100, 100, 100, 100, 100, 100, 100, 100]);
-  
-  // 만약 특정 인덱스의 사이즈는 유지하고 싶다면 다음처럼 null 삽입
-  AUIGrid.setColumnSizeList(myGridID, [100, 100, null, null, 100, 100, 100, 100]);
-  
-  // 0, 1번째 칼럼만 100, 100으로 지정합니다. 나머지 칼럼은 기존 유지
-  AUIGrid.setColumnSizeList(myGridID, [100, 100]);</pre>
-  </td>
+ <p>그리드 칼럼의 가로 크기(width size)를 지정할 수 있습니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>sizeList : (Array) 변경할 가로 사이즈들</li>
+ </ul>
+ <p>다음은 사용 예를 나타냅니다.</p>
+ <pre><code class="language-javascript">// 그리드의 칼럼 사이즈들을 강제로 지정합니다.
+ AUIGrid.setColumnSizeList(myGridID, [100, 100, 100, 100, 100, 100, 100, 100, 100]);
+ // 만약 특정 인덱스의 사이즈는 유지하고 싶다면 다음처럼 null 삽입
+ AUIGrid.setColumnSizeList(myGridID, [100, 100, null, null, 100, 100, 100, 100]);
+ // 0, 1번째 칼럼만 100, 100으로 지정합니다. 나머지 칼럼은 기존 유지
+ AUIGrid.setColumnSizeList(myGridID, [100, 100]);</code></pre>
+ </td>
 </tr>
 <tr id="setCsvGridData">
 <td class="summaryTableSignatureCol">
@@ -3002,14 +2954,14 @@
 <span class="signatureLink">setCsvGridData</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드 데이터를 CSV로 설정합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>csvData (String) : 그리드가 표현할 CSV 데이터</li>
-  <li>isSimpleMode (Boolean) : 단순 컴마 구분자로 CSV 가 있는지 여부. 만약 컴마 구분자가 데이터의 값으로 존재한다면 이 속성을 false 로 처리하십시오.</li>
-  </ul>
-  <p>Also See : <a href="#setGridData">setGridData</a>, <a href="#setXmlGridData">setXmlGridData</a> | <a href="../../samples/default_demo_csv.html?cex1_1&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 데이터를 CSV로 설정합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>csvData (String) : 그리드가 표현할 CSV 데이터</li>
+ <li>isSimpleMode (Boolean) : 단순 컴마 구분자로 CSV 가 있는지 여부. 만약 컴마 구분자가 데이터의 값으로 존재한다면 이 속성을 false 로 처리하십시오.</li>
+ </ul>
+ <p>Also See : <a href="#setGridData">setGridData</a>, <a href="#setXmlGridData">setXmlGridData</a> | <a href="../../samples/default_demo_csv.html?cex1_1&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="setEditingInputValue">
 <td class="summaryTableSignatureCol">
@@ -3039,13 +2991,12 @@
  <li>dataField (String) : 칼럼이 출력하고 있는 데이터의 필드명</li>
  <li>filterFunction (Function) : 필터링 비교 함수<br>
  <p>사용 예는 다음과 같습니다.</p>
- <pre>
- // dataField : 칼럼이 출력하고 있는 데이터의 필드명
+ <pre><code class="language-javascript">// dataField : 칼럼이 출력하고 있는 데이터의 필드명
  // value : 행의 dataField 에 맞는 값.
  // item : 행 전체 아이템
  AUIGrid.setFilter(myGridID, "name",  function(dataField, value, item) {
       return value > 10 ? true : false; // 10 보다 큰 값만 출력 
- });</pre>
+ });</code></pre>
  </li>
  </ul>
  </td>
@@ -3065,9 +3016,8 @@
  </li>
  </ul>
  <p>이 메소드의 사용예는 다음과 같습니다.</p>
- <pre>
- // 이름의 값이 Anna, Emma 만 필터링 하기
- AUIGrid.setFilterByValues(myGridID, "name",  ["Anna", "Emma"]);</pre>
+ <pre><code class="language-javascript">// 이름의 값이 Anna, Emma 만 필터링 하기
+ AUIGrid.setFilterByValues(myGridID, "name",  ["Anna", "Emma"]);</code></pre>
  <p>참고 : 정규식 및 비교 문(if) 등으로 필터링을 결정하고자 한다면 <a href="#setFilter">setFilter</a> 메소드를 사용하십시오.</p>
  </td>
 </tr>
@@ -3077,21 +3027,19 @@
 <span class="signatureLink">setFilterCache</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11.9<br>
-  <p>필터링된 일괄 정보를 통하여 그리드를 필터링 상태로 만듭니다.</p>
-  <p>이 메소드는 일반적으로 getFilterCache 메소드와 같이 사용 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>cache (Object) : 필터링 필드와 현재 필터링 된 값들에 대한 정보</li>
-  </ul>
-  <pre>
-  // 필터링 정보 얻기
-  var filterCache = AUIGrid.getFilterCache(myGridID);
-  // var filterCache = {"country" : ["네덜랜드","미국"], "quantity" : ["3"]};
-  
-  // 필터링된 일괄 정보를 통하여 그리드를 필터링 실행하기.
-  AUIGrid.setFilterCache(myGridID, filterCache);</pre>
-  <p>Also See : <a href="#getFilterCache">getFilterCache</a></p>
-  </td>
+ <p>필터링된 일괄 정보를 통하여 그리드를 필터링 상태로 만듭니다.</p>
+ <p>이 메소드는 일반적으로 getFilterCache 메소드와 같이 사용 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>cache (Object) : 필터링 필드와 현재 필터링 된 값들에 대한 정보</li>
+ </ul>
+ <pre><code class="language-javascript">// 필터링 정보 얻기
+ const filterCache = AUIGrid.getFilterCache(myGridID);
+ // const filterCache = {"country" : ["네덜랜드","미국"], "quantity" : ["3"]};
+ // 필터링된 일괄 정보를 통하여 그리드를 필터링 실행하기.
+ AUIGrid.setFilterCache(myGridID, filterCache);</code></pre>
+ <p>Also See : <a href="#getFilterCache">getFilterCache</a></p>
+ </td>
 </tr>
 <tr id="setFilterInlineTexts">
 <td class="summaryTableSignatureCol">
@@ -3099,21 +3047,19 @@
 <span class="signatureLink">setFilterInlineTexts</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11.9<br>
-  <p>인라인 필터 행을 표시하여 필터링 할 수 있는 경우 해당 텍스트들(input 의 값들)을 설정하여 그리드를 필터링 상태로 만듭니다.</p>
-  <p>이 메소드는 일반적으로 getFilterInlineTexts 메소드와 같이 사용 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>inlineTexts (Array) : 인라인 필터의 텍스트들 정보</li>
-  </ul>
-  <pre>
-  // 인라인 필터의 텍스트들 얻기.
-  var inlineTexts = AUIGrid.getFilterInlineTexts(myGridID);
-  // var inlieTexts = [{dataField : "name", text : "a" }, {dataField : "country", text : "대한"}];
-  
-  // 인라인 필터링 텍스트들 설정 시켜 필터링 실행하기.
-  AUIGrid.setFilterInlineTexts(myGridID, inlineTexts);</pre>
-  <p>Also See : <a href="#getFilterInlineTexts">getFilterInlineTexts</a> | <a href="../../samples/filter_inline_save_demo.html?ft_ins&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>인라인 필터 행을 표시하여 필터링 할 수 있는 경우 해당 텍스트들(input 의 값들)을 설정하여 그리드를 필터링 상태로 만듭니다.</p>
+ <p>이 메소드는 일반적으로 getFilterInlineTexts 메소드와 같이 사용 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>inlineTexts (Array) : 인라인 필터의 텍스트들 정보</li>
+ </ul>
+ <pre><code class="language-javascript">// 인라인 필터의 텍스트들 얻기.
+ const inlineTexts = AUIGrid.getFilterInlineTexts(myGridID);
+ // const inlieTexts = [{dataField : "name", text : "a" }, {dataField : "country", text : "대한"}];
+ // 인라인 필터링 텍스트들 설정 시켜 필터링 실행하기.
+ AUIGrid.setFilterInlineTexts(myGridID, inlineTexts);</code></pre>
+ <p>Also See : <a href="#getFilterInlineTexts">getFilterInlineTexts</a> | <a href="../../samples/filter_inline_save_demo.html?ft_ins&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="setFixedColumnCount">
 <td class="summaryTableSignatureCol">
@@ -3151,9 +3097,9 @@
 <span class="signatureLink">setFocus</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드에 키보드 포커싱이 되도록 지정합니다.</p>
-  <p>그리드의 속성인 enableFocus 를 false 로 설정했다면, setFocus 메소드 호출은 의미가 없습니다.</p>
-  </td>
+ <p>그리드에 키보드 포커싱이 되도록 지정합니다.</p>
+ <p>그리드의 속성인 enableFocus 를 false 로 설정했다면, setFocus 메소드 호출은 의미가 없습니다.</p>
+ </td>
 </tr>
 <tr id="setFooter">
 <td class="summaryTableSignatureCol">
@@ -3161,14 +3107,14 @@
 <span class="signatureLink">setFooter</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드의 푸터(footer) 출력을 위해 푸터 레이아웃을 설정합니다.</p>
-  <p>푸터 레이아웃 작성에 대한 자세한 사항은 <a href="../FooterLayout/Footer.html">푸터(Footer) 레이아웃 작성에 대하여</a> 를 참고하십시오.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>footerLayout (Array) : 푸터 출력을 위한 푸터 설정 레이아웃</li>
-  </ul>
-  <p><a href="../../samples/footer-normal.html?ftn&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드의 푸터(footer) 출력을 위해 푸터 레이아웃을 설정합니다.</p>
+ <p>푸터 레이아웃 작성에 대한 자세한 사항은 <a href="../FooterLayout/Footer.html">푸터(Footer) 레이아웃 작성에 대하여</a> 를 참고하십시오.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>footerLayout (Array) : 푸터 출력을 위한 푸터 설정 레이아웃</li>
+ </ul>
+ <p><a href="../../samples/footer-normal.html?ftn&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="setGridData">
 <td class="summaryTableSignatureCol">
@@ -3176,14 +3122,14 @@
 <span class="signatureLink">setGridData</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드 데이터를 설정합니다. 그리드 데이터는 반드시 배열요소가 Object 인 배열(Array) 여야 합니다.</p>
-  <p>만약 XML 을 데이터로 사용하고자 하는 경우 setXmlGridData() 를, CSV 데이터를 사용하고자 한다면 setCsvGridData()를 사용하십시오.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>data (Array) : 그리드가 표현할 데이터 배열</li>
-  </ul>
-  <p>Also See : <a href="#setXmlGridData">setXmlGridData</a>, <a href="#setCsvGridData">setCsvGridData</a> | <a href="../../samples/default_demo_array.html?aex1_1&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 데이터를 설정합니다. 그리드 데이터는 반드시 배열요소가 Object 인 배열(Array) 여야 합니다.</p>
+ <p>만약 XML 을 데이터로 사용하고자 하는 경우 setXmlGridData() 를, CSV 데이터를 사용하고자 한다면 setCsvGridData()를 사용하십시오.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>data (Array) : 그리드가 표현할 데이터 배열</li>
+ </ul>
+ <p>Also See : <a href="#setXmlGridData">setXmlGridData</a>, <a href="#setCsvGridData">setCsvGridData</a> | <a href="../../samples/default_demo_array.html?aex1_1&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="setGroupBy">
 <td class="summaryTableSignatureCol">
@@ -3191,26 +3137,25 @@
 <span class="signatureLink">setGroupBy</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>특정 데이터 필드로 그룹핑을 실행합니다.</p>
-  <p>그룹핑 실행 시 소계 정보를 다시 설정할 수 있습니다. 소계 정보를 재설정하고자 한다면 groupingSummary 를 작성하십시오.</p>
-  <p>groupingSummary 작성은 그리드 속성인 groupingSummary 을 참고하여 작성하십시오.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>groupingFields (Array) : 그룹핑을 하고자 하는 필드명을 요소로 갖는 배열 </li>
-  <li>groupingSummary (Object) : 그룹핑 시 소계를 출력하고자 하는 경우, 소계 정보 객체</li>
-  </ul>
-  <p>사용 예는 다음과 같습니다.</p>
-  <pre>
-  // Country, Product 순으로 그룹핑을 하고자 하는 경우 다음과 같습니다.
-  AUIGrid.setGroupBy(myGridID, ["country", "product"] );
-  
-  // Country 로 그룹핑하고, Price 에 대하여 소계를 출력함. 단, 소계명은 "가격 합계" 로 출력 시킴
-  AUIGrid.setGroupBy(myGridID,  ["country"], {
-          dataFields : [ "price" ],
-          labelTexts : ["가격 합계"]
-  });</pre>
-  <p>See Also : <a href="./Properties.html#groupingSummary">groupingSummary</a> | <a href="../../samples/grouping_custom_api.html?gscus&theme=default&s=2450" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>특정 데이터 필드로 그룹핑을 실행합니다.</p>
+ <p>그룹핑 실행 시 소계 정보를 다시 설정할 수 있습니다. 소계 정보를 재설정하고자 한다면 groupingSummary 를 작성하십시오.</p>
+ <p>groupingSummary 작성은 그리드 속성인 groupingSummary 을 참고하여 작성하십시오.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>groupingFields (Array) : 그룹핑을 하고자 하는 필드명을 요소로 갖는 배열 </li>
+ <li>groupingSummary (Object) : 그룹핑 시 소계를 출력하고자 하는 경우, 소계 정보 객체</li>
+ </ul>
+ <p>사용 예는 다음과 같습니다.</p>
+ <pre><code class="language-javascript">// Country, Product 순으로 그룹핑을 하고자 하는 경우 다음과 같습니다.
+ AUIGrid.setGroupBy(myGridID, ["country", "product"] );
+ 
+ // Country 로 그룹핑하고, Price 에 대하여 소계를 출력함. 단, 소계명은 "가격 합계" 로 출력 시킴
+ AUIGrid.setGroupBy(myGridID,  ["country"], {
+         dataFields : [ "price" ],
+         labelTexts : ["가격 합계"]
+ });</code></pre>
+ <p>See Also : <a href="./Properties.html#groupingSummary">groupingSummary</a> | <a href="../../samples/grouping_custom_api.html?gscus&theme=default&s=2450" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="setHeaderRendererProp">
 <td class="summaryTableSignatureCol">
@@ -3218,24 +3163,23 @@
 <span class="signatureLink">setHeaderRendererProp</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.4<br>
-  <p>최초 설정한 칼럼 레이아웃의 columnIndex 에 맞는 칼럼의 headerRenderer 속성을 변경합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>columnIndex (Number) : 변경하고자 하는 칼럼 인덱스</li>
-  <li>propObj (Object) : 변경하고자 하는 헤더렌더러(headerRenderer)의 속성명과 값을 갖는 Object</li>
-  </ul>
-  <p>예를 들어 1번째 칼럼의 headerRenderer 를 다음처럼 CheckBoxHeaderRenderer 로 정의한 경우 속성 변경이 가능합니다.</p>
-  <pre>
-   dataField : "field2",
-   headerRenderer : { // 헤더 렌더러
-       type : "CheckBoxHeaderRenderer",
-       checked : true, // 최초 체크 여부
-    }
-    
-  // 인덱스 1번째 칼럼의 헤더 체크박스 렌더러의 checked 속성 변경
-   AUIGrid.setHeaderRendererProp(myGridID, 1, {"checked" : false} );</pre>
-  <p>참고 : setHeaderRendererProp 으로 headerRenderer 의 기본인 type 설정을 바꿀 수는 없습니다.</p>
-  </td>
+ <p>최초 설정한 칼럼 레이아웃의 columnIndex 에 맞는 칼럼의 headerRenderer 속성을 변경합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>columnIndex (Number) : 변경하고자 하는 칼럼 인덱스</li>
+ <li>propObj (Object) : 변경하고자 하는 헤더렌더러(headerRenderer)의 속성명과 값을 갖는 Object</li>
+ </ul>
+ <p>예를 들어 1번째 칼럼의 headerRenderer 를 다음처럼 CheckBoxHeaderRenderer 로 정의한 경우 속성 변경이 가능합니다.</p>
+ <pre><code class="language-javascript">}, {
+ dataField : "field2",
+ headerRenderer : { // 헤더 렌더러
+     type : "CheckBoxHeaderRenderer",
+     checked : true, // 최초 체크 여부
+ }
+ // 인덱스 1번째 칼럼의 헤더 체크박스 렌더러의 checked 속성 변경
+ AUIGrid.setHeaderRendererProp(myGridID, 1, {"checked" : false} );</code></pre>
+ <p>참고 : setHeaderRendererProp 으로 headerRenderer 의 기본인 type 설정을 바꿀 수는 없습니다.</p>
+ </td>
 </tr>
 <tr id="setHeaderRendererPropByDataField">
 <td class="summaryTableSignatureCol">
@@ -3243,24 +3187,23 @@
 <span class="signatureLink">setHeaderRendererPropByDataField</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.14.6<br>
-  <p>최초 설정한 칼럼 레이아웃의 dataField 에 맞는 칼럼의 headerRenderer 속성을 변경합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField (String) : 변경하고자 하는 칼럼 데이터 필드명</li>
-  <li>propObj (Object) : 변경하고자 하는 헤더렌더러(headerRenderer)의 속성명과 값을 갖는 Object</li>
-  </ul>
-  <p>예를 들어 dataField 를 "field2" 로 설정한 headerRenderer 를 다음처럼 CheckBoxHeaderRenderer 로 정의한 경우 속성 변경이 가능합니다.</p>
-  <pre>
-   dataField : "field2",
-   headerRenderer : { // 헤더 렌더러
-       type : "CheckBoxHeaderRenderer",
-       checked : true, // 최초 체크 여부
-    }
-    
-  // 칼럼의 헤더 체크박스 렌더러의 checked 속성 변경
-   AUIGrid.setHeaderRendererPropByDataField(myGridID, "field2", {"checked" : false} );</pre>
-  <p>참고 : setHeaderRendererPropByDataField 으로 headerRenderer 의 기본인 type 설정을 바꿀 수는 없습니다.</p>
-  </td>
+ <p>최초 설정한 칼럼 레이아웃의 dataField 에 맞는 칼럼의 headerRenderer 속성을 변경합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField (String) : 변경하고자 하는 칼럼 데이터 필드명</li>
+ <li>propObj (Object) : 변경하고자 하는 헤더렌더러(headerRenderer)의 속성명과 값을 갖는 Object</li>
+ </ul>
+ <p>예를 들어 dataField 를 "field2" 로 설정한 headerRenderer 를 다음처럼 CheckBoxHeaderRenderer 로 정의한 경우 속성 변경이 가능합니다.</p>
+ <pre><code class="language-javascript">}, {
+ dataField : "field2",
+ headerRenderer : { // 헤더 렌더러
+     type : "CheckBoxHeaderRenderer",
+     checked : true, // 최초 체크 여부
+ }
+ // 칼럼의 헤더 체크박스 렌더러의 checked 속성 변경
+ AUIGrid.setHeaderRendererPropByDataField(myGridID, "field2", {"checked" : false} );</code></pre>
+ <p>참고 : setHeaderRendererPropByDataField 으로 headerRenderer 의 기본인 type 설정을 바꿀 수는 없습니다.</p>
+ </td>
 </tr>
 <tr id="setHoverMode">
 <td class="summaryTableSignatureCol">
@@ -3268,12 +3211,12 @@
 <span class="signatureLink">setHoverMode</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.13<br>
-  <p>마우스 오버(hoverMode)를 변경합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>hoverMode (String) : 설정하고자 하는 hoverMode(유효값 : "singleCell", "singleRow", "none")</li>
-  </li>
-  </td>
+ <p>마우스 오버(hoverMode)를 변경합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>hoverMode (String) : 설정하고자 하는 hoverMode(유효값 : "singleCell", "singleRow", "none")</li>
+ </li>
+ </td>
 </tr>
 <tr id="setHScrollPosition">
 <td class="summaryTableSignatureCol">
@@ -3281,11 +3224,11 @@
 <span class="signatureLink">setHScrollPosition</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>수평 스크롤이 생성되어 있을 때 수평 스크롤을 칼럼 인덱스 단위로 이동 시킬 수 있는 메소드입니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>columnIndex (Number) : 수평 스크롤의 시작점이 될 칼럼의 인덱스</li>
-  </ul>
+ <p>수평 스크롤이 생성되어 있을 때 수평 스크롤을 칼럼 인덱스 단위로 이동 시킬 수 있는 메소드입니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>columnIndex (Number) : 수평 스크롤의 시작점이 될 칼럼의 인덱스</li>
+ </ul>
  </td>
 </tr>
 <tr id="setHScrollPositionByPx">
@@ -3294,11 +3237,11 @@
 <span class="signatureLink">setHScrollPositionByPx</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>수평 스크롤이 생성되어 있을 때 수평 스크롤을 픽셀 단위로 이동 시킬 수 있는 메소드입니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>pixel (Number) : 수평 스크롤이 이동할 픽셀 단위의 값</li>
-  </ul>
+ <p>수평 스크롤이 생성되어 있을 때 수평 스크롤을 픽셀 단위로 이동 시킬 수 있는 메소드입니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>pixel (Number) : 수평 스크롤이 이동할 픽셀 단위의 값</li>
+ </ul>
  </td>
 </tr>
 <tr id="setInfoMessage">
@@ -3317,7 +3260,7 @@
 <span class="signatureLink">setPageRowCount</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.5<br>
-  <p>페이징을 사용하는 경우 1 페이지에 출력되는 행의 개수를 변경합니다.</p>
+ <p>페이징을 사용하는 경우 1 페이지에 출력되는 행의 개수를 변경합니다.</p>
  <p>파라메터 설명</p>
  <ul>
  <li>pageRowCount : (Number) 1 페이지에 출력 시킬 행의 개수</li>
@@ -3339,21 +3282,23 @@
  <li>value (Object) : 1개의 속성 값 변경을 위한 파라메터로 1개의 속성의 새로운 값에 해당됩니다.(복수인 경우 의미없음)</li>
  </ul>
  <p>그리드 수정을 토글하고자 할 때 editable 속성을 다음과 같이 변경할 수 있습니다.</p>
- <pre>AUIGrid.setProp(myGridID, "editable" , true ); </pre>
+ <pre><code class="language-javascript">AUIGrid.setProp(myGridID, "editable" , true ); </code></pre>
  <p>복수의 속성을 일괄적으로 변경하고자 하는 경우는 다음과 같습니다.</p>
- <pre>AUIGrid.setProp(myGridID, { "editable" : true, "editBeginMode" : "click" } ); </pre>
+ <pre><code class="language-javascript">AUIGrid.setProp(myGridID, { "editable" : true, "editBeginMode" : "click" } ); </code></pre>
  <p>모든 속성을 이 메소드로 변경할 수 없습니다. 다음은 변경 가능한 속성 리스트입니다.</p>
  <p style="margin-bottom:4px;">칼럼 레이아웃이나 푸터등 큰 변화가 있는 경우 destroy() 후 create() 하십시오.</p>
  <table class="prop_table">
- <tr><td>blankNumericToNullOnEditing </td><td> 수정 적용 시 numeric 칼럼의 빈값을 null 로 수정 완료 처리할 지 여부</td></tr>
- <tr><td>blankToNullOnEditing </td><td> 수정 적용 시 빈 값을 null 로 수정 완료 처리할 지 여부</td></tr>
- <tr><td>copyDisplayValue </td><td> 복사할 때 포매팅 데이터 복사 여부</td></tr>
- <tr><td>contextMenuItems </td><td> 컨텍스트 메뉴 아이템 사용자 정의 할 수 있는 속성</td></tr>
- <tr><td>dropToOthers </td><td> 행 드래깅 하였을 때 드랍이 가능한 그리드가 자신이 아닌 다른 곳에 있는지 여부</td></tr>
- <tr><td>editable </td><td> 수정 가능여부</td></tr>
- <tr><td>enableDrag </td><td> 행 드래깅 가능 여부</td></tr>
- <tr><td>enableDrop </td><td> 행 드랍 가능 여부</td></tr>
- <tr><td>editableOnFixedCell </td><td> 고정 칼럼, 행 지정된 셀 수정 가능여부</td></tr>
+ <tr><td>blankNumericToNullOnEditing<td> 수정 적용 시 numeric 칼럼의 빈값을 null 로 수정 완료 처리할 지 여부</td></tr>
+ <tr><td>blankToNullOnEditing<td> 수정 적용 시 빈 값을 null 로 수정 완료 처리할 지 여부</td></tr>
+ <tr><td>contextMenuItems<td> 컨텍스트 메뉴 아이템 사용자 정의 할 수 있는 속성</td></tr>
+ <tr><td>copyDisplayValue<td> 복사할 때 포매팅 데이터 복사 여부</td></tr>
+ <tr><td>copyWithHeaderText<td> 복사할 때 헤더 텍스트 포함 여부</td></tr>
+ <tr><td>dropToOthers<td> 행 드래깅 하였을 때 드랍이 가능한 그리드가 자신이 아닌 다른 곳에 있는지 여부</td></tr>
+ <tr><td>editable<td> 수정 가능여부</td></tr>
+ <tr><td>enableDrag<td> 행 드래깅 가능 여부</td></tr>
+ <tr><td>enableDrop<td> 행 드랍 가능 여부</td></tr>
+  <tr><td>enableSelectionAll<td> 전체 선택 가능 여부</td></tr>
+ <tr><td>editableOnFixedCell<td> 고정 칼럼, 행 지정된 셀 수정 가능여부</td></tr>
  <tr><td>editBeginMode</td><td>수정 시작모드</td></tr>
  <tr><td>editingOnKeyDown</td><td>바로 키입력으로 수정 가능 여부</td></tr>
  <tr><td>enableColumnResize</td><td>칼럼 크기 조절 가능 여부</td></tr>
@@ -3392,28 +3337,27 @@
 <span class="signatureLink">setRendererProp</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>최초 설정한 칼럼 레이아웃의 columnIndex 에 맞는 칼럼의 renderer 속성을 변경합니다.</p>
-  <p>renderer 속성의 기본인 type 을 제외한 속성을 변경할 수 있습니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>columnIndex (Number) : 변경하고자 하는 칼럼 인덱스</li>
-  <li>propObj (Object) : 변경하고자 하는 렌더러(renderer)의 속성명과 값을 갖는 Object</li>
-  </ul>
-  <p>예를 들어 1번째 칼럼의 renderer 를 다음처럼 BarRenderer 로 정의한 경우 BarRenderer 의 세부 속성 변경이 가능합니다.</p>
-  <pre>
-   dataField : "field2",
-   headerText : "-100 ~ 100 범위",
-   renderer : {
-   type : "BarRenderer",
-         min : -100,
-         max : 100
-   }
-   
-  // 인덱스 1번째 칼럼의 renderer 인 BarRenderer 의 min, max 속성 변경
-  AUIGrid.setRendererProp( myGridID, 1, { min : 0, max : 150 } );</pre>
-  <p>참고 : setRendererProp 으로 renderer 의 기본인 type 설정을 바꿀 수는 없습니다. type 설정을 변경하고자 한다면, 전체 그리드를 destroy 후 다시 create 하여 새로운 칼럼 레이아웃으로 그리드를 재생성 하십시오.</p>
-  <p><a href="../../samples/renderer_bar.html?rbar&theme=default" target="_blank">관련 데모 보기</a></p>   
-  </td>
+ <p>최초 설정한 칼럼 레이아웃의 columnIndex 에 맞는 칼럼의 renderer 속성을 변경합니다.</p>
+ <p>renderer 속성의 기본인 type 을 제외한 속성을 변경할 수 있습니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>columnIndex (Number) : 변경하고자 하는 칼럼 인덱스</li>
+ <li>propObj (Object) : 변경하고자 하는 렌더러(renderer)의 속성명과 값을 갖는 Object</li>
+ </ul>
+ <p>예를 들어 1번째 칼럼의 renderer 를 다음처럼 BarRenderer 로 정의한 경우 BarRenderer 의 세부 속성 변경이 가능합니다.</p>
+ <pre><code class="language-javascript">}, {
+ dataField : "field2",
+ headerText : "-100 ~ 100 범위",
+ renderer : {
+     type : "BarRenderer",
+     min : -100,
+     max : 100
+ }
+ // 인덱스 1번째 칼럼의 renderer 인 BarRenderer 의 min, max 속성 변경
+ AUIGrid.setRendererProp( myGridID, 1, { min : 0, max : 150 } );</code></pre>
+ <p>참고 : setRendererProp 으로 renderer 의 기본인 type 설정을 바꿀 수는 없습니다. type 설정을 변경하고자 한다면, 전체 그리드를 destroy 후 다시 create 하여 새로운 칼럼 레이아웃으로 그리드를 재생성 하십시오.</p>
+ <p><a href="../../samples/renderer_bar.html?rbar&theme=default" target="_blank">관련 데모 보기</a></p>   
+ </td>
 </tr>
 <tr id="setRowPosition">
 <td class="summaryTableSignatureCol">
@@ -3436,11 +3380,24 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.7.7<br>
  <p>그리드 상위 태그의 좌표 공간이 변형(transform)된 경우 그리드에 일관된 좌표 공간이 되도록 동일한 scale 값을 설정합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>scaleFactor (Number) : transform 에 적용될 값</li>
-  </ul>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>scaleFactor (Number) : transform 에 적용될 값</li>
+ </ul>
  <p>See Also : <a href="./Properties.html#scaleFactor">scaleFactor</a></p>
+ </td>
+</tr>
+<tr id="setSelectionAll">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setSelectionAll</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.16<br>
+ <p>그리드의 현재 데이터를 전체 선택합니다. 이 메소드를 사용할 수 있는 조건이 존재합니다.</p>
+ <p>selectionMode 를 "multipleCell" 또는 "multipleRows" 로 설정해야 하며 enableSelectionAll 속성을 반드시 true 설정해야 합니다.</p>
+ <p>위의 2가지 속성이 설정되면 Ctrl + A 단축키로 전체 선택 역시 활성화 됩니다.</p>
+ <p>수천 개 이상의 데이터를 전체 선택할 경우, 브라우저 성능 저하, 일시적인 멈춤 현상 또는 스크립트 중단 등의 문제가 발생할 수 있습니다. 따라서 해당 기능은 데이터 양을 고려하여 신중하게 사용해야 합니다.</p>
+ <p>See Also : <a href="./Properties.html#selectionMode">selectionMode</a> | <a href="./Properties.html#enableSelectionAll">enableSelectionAll</a></p>
  </td>
 </tr>
 <tr id="setSelectionBlock">
@@ -3449,20 +3406,19 @@
 <span class="signatureLink">setSelectionBlock</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드의 셀에 선택 블록(selection block) 을 강제로 지정합니다.</p>
-  <p>이 메소드는 selectionMode 를 "multipleCells" 로 설정했을 때 사용자의 의도대로 출력됩니다.</p>
-  <p>만약 "multipleCells" 가 아닌 다른 값이라면 해당 속성값에 맞게 선택이 자동 변경되어 지정됩니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>startRowIndex (Number) : 블록을 만들 시작 행 인덱스</li>
-  <li>endRowIndex (Number) : 블록을 만들 종료 행 인덱스</li>
-  <li>startColumnIndex (Number) : 블록을 만들 시작 칼럼 인덱스</li>
-  <li>endColumnIndex (Number) : 블록을 만들 종료 칼럼 인덱스</li>    
-  </ul>
-  <pre>
-  // (1,1) 셀에서 시작하여 (4,4) 셀에서 끝나는 선택 블록 지정하기
-  AUIGrid.setSelectionBlock(myGridID, 1, 4, 1, 4);</pre>
-  </td>
+ <p>그리드의 셀에 선택 블록(selection block) 을 강제로 지정합니다.</p>
+ <p>이 메소드는 selectionMode 를 "multipleCells" 로 설정했을 때 사용자의 의도대로 출력됩니다.</p>
+ <p>만약 "multipleCells" 가 아닌 다른 값이라면 해당 속성값에 맞게 선택이 자동 변경되어 지정됩니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>startRowIndex (Number) : 블록을 만들 시작 행 인덱스</li>
+ <li>endRowIndex (Number) : 블록을 만들 종료 행 인덱스</li>
+ <li>startColumnIndex (Number) : 블록을 만들 시작 칼럼 인덱스</li>
+ <li>endColumnIndex (Number) : 블록을 만들 종료 칼럼 인덱스</li>    
+ </ul>
+ <pre><code class="language-javascript">// (1,1) 셀에서 시작하여 (4,4) 셀에서 끝나는 선택 블록 지정하기
+ AUIGrid.setSelectionBlock(myGridID, 1, 4, 1, 4);</code></pre>
+ </td>
 </tr>
 <tr id="setSelectionByIndex">
 <td class="summaryTableSignatureCol">
@@ -3478,6 +3434,28 @@
  <li>columnIndex : (Number) 선택하고자 하는 칼럼 인덱스</li>
  </ul>
  <p><a href="../../samples/selection.html?ex1_6&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
+</tr>
+<tr id="setSelectionColumn">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setSelectionColumn</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.16<br>
+ <p>그리드의 현재 데이터에서 특정 칼럼 전체 선택합니다. 이 메소드를 사용할 수 있는 조건이 존재합니다.</p>
+ <p>selectionMode 를 "multipleCell" 로 설정해야 하며 enableSelectionAll 속성을 반드시 true 설정해야 합니다.</p>
+ <p>수천 개 이상의 데이터를 전체 선택할 경우, 브라우저 성능 저하, 일시적인 멈춤 현상 또는 스크립트 중단 등의 문제가 발생할 수 있습니다. 따라서 해당 기능은 데이터 양을 고려하여 신중하게 사용해야 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>startColIdx (Number) : 전체 선택할 칼럼 시작 인덱스</li>
+ <li>endColIdx (Number) : 전체 선택할 칼럼 종료 인덱스</li>
+ </ul>
+ <pre><code class="language-javascript">// 1번째 칼럼 인덱스 전체 선택
+ AUIGrid.setSelectionColumn(myGridID, 1, 1);
+ // 1, 2, 3 칼럼 인덱스 전체 선택
+ AUIGrid.setSelectionColumn(myGridID, 1, 3);</code></pre>
+ <p>주의 : 수천 개 이상의 셀 데이터를 전체 선택할 경우 브라우저 성능 저하 또는 일시적인 멈춤 현상, 스크립트 중지 등이 발생할 수 있습니다.</p>
+ <p>See Also : <a href="./Properties.html#selectionMode">selectionMode</a> | <a href="./Properties.html#enableSelectionAll">enableSelectionAll</a></p>
  </td>
 </tr>
 <tr id="setSelectionMode">
@@ -3509,13 +3487,12 @@
  <li>onlyLastDepthSorting (Boolean) : 트리 그리드 인 경우 최하단 깊이(depth) 만 정렬 실행할 지 여부, 기본적으로 그리드의 onlyTreeLastDepthSorting 속성을 따름.</li>
  </ul>
  <p>예를 들어 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정하고자 한다면 다음과 같이 설정하십시오.</p>
- <pre>
- var sortingInfo = [];
+ <pre><code class="language-javascript">const sortingInfo = [];
  // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
  sortingInfo[0] = { dataField : "country", sortType : 1 }; // 오름차순 1
  sortingInfo[1] = { dataField : "name", sortType : -1 }; // 내림 차순 -1
  sortingInfo[2] = { dataField : "price", sortType : 1 };
- AUIGrid.setSorting(myGridID, sortingInfo);</pre>
+ AUIGrid.setSorting(myGridID, sortingInfo);</code></pre>
  <p>위와 같이 원하는 개수만큼 다중 정렬 및 단일 정렬 sortingInfo 배열을 만들어 setSorting 파라메터로 지정하십시오.</p>
  </td>
 </tr>
@@ -3525,14 +3502,14 @@
 <span class="signatureLink">setXmlGridData</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드 데이터를 XML로 설정합니다. </p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>xmlData (Object) : 그리드가 표현할 XML 데이터</li>
-  <li>tagName (String) : XML 에서 개별 행(row)을 구성하는 태그명을 지정합니다. 예를 들어 <xmp>"<item><col1>1</col1><col2>2</col2></item>"</xmp> 과 같이 구성된 XML 인 경우 tagName 으로 "item" 을 지정하십시오.(기본값:"row")</li>
-  </ul>
-  <p>Also See : <a href="#setGridData">setGridData</a>, <a href="#setCsvGridData">setCsvGridData</a> | <a href="../../samples/default_demo_xml.html?xex1_1&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 데이터를 XML로 설정합니다. </p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>xmlData (Object) : 그리드가 표현할 XML 데이터</li>
+ <li>tagName (String) : XML 에서 개별 행(row)을 구성하는 태그명을 지정합니다. 예를 들어 <xmp>"<item><col1>1</col1><col2>2</col2></item>"</xmp> 과 같이 구성된 XML 인 경우 tagName 으로 "item" 을 지정하십시오.(기본값:"row")</li>
+ </ul>
+ <p>Also See : <a href="#setGridData">setGridData</a>, <a href="#setCsvGridData">setCsvGridData</a> | <a href="../../samples/default_demo_xml.html?xex1_1&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="showAjaxLoader">
 <td class="summaryTableSignatureCol">
@@ -3560,14 +3537,14 @@
 <span class="signatureLink">showColumnByDataField</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>주어진 파라메터(dataField)에 맞게 출력된 그리드 칼럼을 보이도록 지정합니다.</p>
-  <p>복수의 칼럼을 보이도록 지정하고자 한다면 배열로 설정하십시오. (예: ["name", "country", "product"] )</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField (String or Array) : 칼럼의 데이터 필드명(들)</li>
-  </ul>
-  <p>Also See : <a href="#hideColumnByDataField">hideColumnByDataField</a> | <a href="../../samples/hide_column.html?ex1_8&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>주어진 파라메터(dataField)에 맞게 출력된 그리드 칼럼을 보이도록 지정합니다.</p>
+ <p>복수의 칼럼을 보이도록 지정하고자 한다면 배열로 설정하십시오. (예: ["name", "country", "product"] )</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField (String or Array) : 칼럼의 데이터 필드명(들)</li>
+ </ul>
+ <p>Also See : <a href="#hideColumnByDataField">hideColumnByDataField</a> | <a href="../../samples/hide_column.html?ex1_8&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="showColumnGroup">
 <td class="summaryTableSignatureCol">
@@ -3575,13 +3552,13 @@
 <span class="signatureLink">showColumnGroup</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.10.0<br>
-  <p>헤더를 계층형(그룹형)으로 설정한 경우 그룹(브랜치)에 해당되는 칼럼에 속한 모든 칼럼(자손 칼럼들)을 보이도록 지정합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>dataField (String) : 칼럼의 데이터 필드명</li>
-  </ul>
-  <p>Also See : <a href="#hideColumnGroup">hideColumnGroup</a> | <a href="../../samples/hide_column.html?ex1_8&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>헤더를 계층형(그룹형)으로 설정한 경우 그룹(브랜치)에 해당되는 칼럼에 속한 모든 칼럼(자손 칼럼들)을 보이도록 지정합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>dataField (String) : 칼럼의 데이터 필드명</li>
+ </ul>
+ <p>Also See : <a href="#hideColumnGroup">hideColumnGroup</a> | <a href="../../samples/hide_column.html?ex1_8&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="showFooterLater">
 <td class="summaryTableSignatureCol">
@@ -3589,9 +3566,9 @@
 <span class="signatureLink">showFooterLater</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11.9<br>
-  <p>그리드 생성 시 푸터 출력을 하지 않은 경우 이미 출력된 그리드에서 푸터를 표시하게 합니다.</p>
-  <p>Also See : <a href="#hideFooterLater">hideFooterLater</a></p>
-  </td>
+ <p>그리드 생성 시 푸터 출력을 하지 않은 경우 이미 출력된 그리드에서 푸터를 표시하게 합니다.</p>
+ <p>Also See : <a href="#hideFooterLater">hideFooterLater</a></p>
+ </td>
 </tr>
 <tr id="showInfoMessage">
 <td class="summaryTableSignatureCol">
@@ -3630,12 +3607,12 @@
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.4<br>
  <p>지정한 특정 셀에 메세지를 출력합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>rowIndex (Number) : 행 인덱스</li>
-  <li>columnIndex (Number) : 칼럼 인덱스</li>
-  <li>message (String) : 행, 열로 대표되는 셀에 출력할 메시지</li>
-  </ul>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>rowIndex (Number) : 행 인덱스</li>
+ <li>columnIndex (Number) : 칼럼 인덱스</li>
+ <li>message (String) : 행, 열로 대표되는 셀에 출력할 메시지</li>
+ </ul>
  <p>Also See : <a href="#removeToastMessage">removeToastMessage</a> | <a href="../../samples/validate_grid_data.html?ed_val&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
@@ -3645,24 +3622,21 @@
 <span class="signatureLink">syncGridData</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11.0<br>
-  <p>칼럼 레이아웃이 동일한 타 그리드에서 얻은 데이터를 삽입할 때 상태 정보(추가, 삭제, 수정)까지 모두 동일하게 동기화 시켜 데이터를 삽입합니다.</p>
-  <p>이 메소드는 상태 정보를 갖는 getStateCache 메소드와 같이 사용해야 합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>data (Array) : 삽입할 데이터</li>
-  <li>cache (Object) : getStateCache 메소드로 얻은 상태 정보 캐시</li>
-  </ul>
-  <pre>
-   // 그리드1에서 데이터 얻기
-   var d = AUIGrid.getGridData(myGridID1);
-  
-   // 그리드1의 추가, 삭제, 변경된 정보 캐시 얻기
-   var cache = AUIGrid.getStateCache(myGridID1);
-   
-   // 그리드2에 그리드1과 동일한 데이터 및 상태 정보(추가, 삭제, 변경) 캐시를 동기화 시켜 삽입하기
-   AUIGrid.syncGridData(myGridID2, d, cache);</pre>  
-  <p>Also See : <a href="#getStateCache">getStateCache</a></p>
-  </td>
+ <p>칼럼 레이아웃이 동일한 타 그리드에서 얻은 데이터를 삽입할 때 상태 정보(추가, 삭제, 수정)까지 모두 동일하게 동기화 시켜 데이터를 삽입합니다.</p>
+ <p>이 메소드는 상태 정보를 갖는 getStateCache 메소드와 같이 사용해야 합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>data (Array) : 삽입할 데이터</li>
+ <li>cache (Object) : getStateCache 메소드로 얻은 상태 정보 캐시</li>
+ </ul>
+ <pre><code class="language-javascript">// 그리드1에서 데이터 얻기
+ const d = AUIGrid.getGridData(myGridID1);
+ // 그리드1의 추가, 삭제, 변경된 정보 캐시 얻기
+ const cache = AUIGrid.getStateCache(myGridID1);
+ // 그리드2에 그리드1과 동일한 데이터 및 상태 정보(추가, 삭제, 변경) 캐시를 동기화 시켜 삽입하기
+ AUIGrid.syncGridData(myGridID2, d, cache);</code></pre>  
+ <p>Also See : <a href="#getStateCache">getStateCache</a></p>
+ </td>
 </tr>
 <tr id="unbind">
 <td class="summaryTableSignatureCol">
@@ -3676,8 +3650,7 @@
  <li>type : (String or Array) 언바인딩하고자 하는 이벤트 유형</li>
  </ul>
  <p>예를 들면 cellClick 이벤트를 언바인당하고자 하는 경우 다음과 같습니다.</p>
- <pre>
- AUIGrid.unbind(myGridID, "cellClick"); </pre>
+ <pre><code class="language-javascript">AUIGrid.unbind(myGridID, "cellClick"); </code></pre>
  </td>
 </tr>
 <tr id="undo">
@@ -3686,9 +3659,9 @@
 <span class="signatureLink">undo</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-   <p>편집 가능한 그리드에서 enableUndoRedo=true 설정한 경우, 실행 취소(Undo) 를 실행합니다.</p>
-   <p>Also See : <a href="#redo">redo</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
-   </td>
+ <p>편집 가능한 그리드에서 enableUndoRedo=true 설정한 경우, 실행 취소(Undo) 를 실행합니다.</p>
+ <p>Also See : <a href="#redo">redo</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="undoable">
 <td class="summaryTableSignatureCol">
@@ -3696,10 +3669,10 @@
 <span class="signatureLink">undoable</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-   <p> 실행 취소(Undo) 가 가능한지 여부를 반환합니다.</p>
-   <p>Return : (Boolean) 실행 취소 가능 여부</p>
-   <p>Also See : <a href="#undo">undo</a>, <a href="#redo">redo</a>, <a href="#redo">redoable</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
-   </td>
+ <p> 실행 취소(Undo) 가 가능한지 여부를 반환합니다.</p>
+ <p>Return : (Boolean) 실행 취소 가능 여부</p>
+ <p>Also See : <a href="#undo">undo</a>, <a href="#redo">redo</a>, <a href="#redo">redoable</a> | <a href="../../samples/editing_undo_redo.html?rur1&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="update">
 <td class="summaryTableSignatureCol">
@@ -3726,7 +3699,7 @@
  <p>updateAllToValue 로 값을 변경할 때 updateRow 이벤트 발생지 않고, cellEditedMark 와 stateCoulumn 에 수정 표시가 나타나지 않습니다.</p>
  <p>뿐만 아니라 getEditedRowItems, getEditedRowColumnItems 메소드로 수정된 행을 얻을 수 없습니다. getGridData 메소드를 활용하여 전체 데이터를 얻어야 합니다.</p>
  <p>행 전체에 대하여 특정 필드를 일괄적으로 변경하고자 할 때 사용하십시오. 가장 빠르게 행 전체의 특정 필드를 변경합니다.</p>
-  <p>파라메터 설명</p>
+ <p>파라메터 설명</p>
  <ul>
  <li>dataField : (String) 데이터 필드 명</li>
  <li>value : (Object) 변경할 값
@@ -3740,8 +3713,8 @@
 <span class="signatureLink">updateExpFuncAll</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.14.7<br>
-  <p>칼럼 레이아웃에 정의된 모든 expFunction 을 호출해 재계산하게 합니다.</p>
-  </td>
+ <p>칼럼 레이아웃에 정의된 모든 expFunction 을 호출해 재계산하게 합니다.</p>
+ </td>
 </tr>
 <tr id="updateGrouping">
 <td class="summaryTableSignatureCol">
@@ -3749,12 +3722,12 @@
 <span class="signatureLink">updateGrouping</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.7.0<br> 
-  <p>그룹핑(Grouping) 및 소계(Summary Rows) 를 다시 계산하여 갱신합니다.</p>
-  <p>그룹핑 및 소계를 설정한 경우 그리드 데이터의 값이 변경되어 재그룹핑 및 소계 계산이 필요한 경우 실행하십시오.</p>
-  <p>현재 데이터에 맞게 다시 그룹핑 및 소계를 계산하여 출력합니다.</p>
-  <p>그룹핑 및 소계 설정을 변경하고자 하는 경우 setGroupBy 메소드를 사용하십시오. 이 메소드는 그룹핑 및 소계 설정은 유지하고 단순 갱신만을 합니다.</p>
-  <p>See Also : <a href="#setGroupBy">setGroupBy</a></p>
-  </td>
+ <p>그룹핑(Grouping) 및 소계(Summary Rows) 를 다시 계산하여 갱신합니다.</p>
+ <p>그룹핑 및 소계를 설정한 경우 그리드 데이터의 값이 변경되어 재그룹핑 및 소계 계산이 필요한 경우 실행하십시오.</p>
+ <p>현재 데이터에 맞게 다시 그룹핑 및 소계를 계산하여 출력합니다.</p>
+ <p>그룹핑 및 소계 설정을 변경하고자 하는 경우 setGroupBy 메소드를 사용하십시오. 이 메소드는 그룹핑 및 소계 설정은 유지하고 단순 갱신만을 합니다.</p>
+ <p>See Also : <a href="#setGroupBy">setGroupBy</a></p>
+ </td>
 </tr>
 <tr id="updateRow">
 <td class="summaryTableSignatureCol">
@@ -3762,25 +3735,23 @@
 <span class="signatureLink">updateRow</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드 행(row) 아이템을 수정합니다.</p>
-  <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 아이템을 수정할 수 있습니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>item (Object) : 수정하고자 하는 행 아이템</li>
-  <li>rowIndex (Number or String) : 수정하고자 하는 행의 인덱스, , rowIndex 대신 "selectedIndex" 문자열을 설정한 경우 현재 선택된 행이 수정됩니다.</li>
-  <li>isMarkEdited (Boolean) : 셀 수정 마커(marker) 표시를 할지 여부를 나타냅니다.(기본값 : true)</li>
-  </ul>
-  <p>예를들어, 행인덱스(rowIndex) 5 인 행의 name 필드를 "우리" 로 바꾸고자 한다면 다음과 같습니다.</p>
-  <pre>
-  var item = { name : "우리" }; 
-  AUIGrid.updateRow(myGridID, item, 5);</pre>
-  <p>행인덱스(rowIndex) 5인 행의 name 필드를 "우리", country 필드를 "나라", product 필드를 "제품" 로 바꾸고자 한다면 다음과 같습니다.</p>
-  <pre>
-  var item = { name : "우리", country : "나라", product : "제품" }; 
-  AUIGrid.updateRow(myGridID, item, 5);</pre>
-  <p>절대 반복문법(for, while 등) 안에서 이 메소드를 사용하지 마십시오.</p><p>다수의 행에 대하여 값을 변경하고자 하는 경우 updateRows, updateRowsById 메소드를 사용하십시오.</p>
-  <p>Also See :  <a href="#updateRows">updateRows</a>, <a href="#updateRowsById">updateRowsById</a>, <a href="#updateRowBlockToValue">updateRowBlockToValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 행(row) 아이템을 수정합니다.</p>
+ <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 아이템을 수정할 수 있습니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>item (Object) : 수정하고자 하는 행 아이템</li>
+ <li>rowIndex (Number or String) : 수정하고자 하는 행의 인덱스, , rowIndex 대신 "selectedIndex" 문자열을 설정한 경우 현재 선택된 행이 수정됩니다.</li>
+ <li>isMarkEdited (Boolean) : 셀 수정 마커(marker) 표시를 할지 여부를 나타냅니다.(기본값 : true)</li>
+ </ul>
+ <p>예를들어, 행인덱스(rowIndex) 5 인 행의 name 필드를 "우리" 로 바꾸고자 한다면 다음과 같습니다.</p>
+ <pre><code class="language-javascript">const item = { name : "우리" }; 
+ AUIGrid.updateRow(myGridID, item, 5);</code></pre>
+ <p>행인덱스(rowIndex) 5인 행의 name 필드를 "우리", country 필드를 "나라", product 필드를 "제품" 로 바꾸고자 한다면 다음과 같습니다.</p>
+ <pre><code class="language-javascript">const item = { name : "우리", country : "나라", product : "제품" }; 
+ AUIGrid.updateRow(myGridID, item, 5);</code></pre>
+ <p>절대 반복문법(for, while 등) 안에서 이 메소드를 사용하지 마십시오.</p><p>다수의 행에 대하여 값을 변경하고자 하는 경우 updateRows, updateRowsById 메소드를 사용하십시오.</p>
+ <p>Also See :  <a href="#updateRows">updateRows</a>, <a href="#updateRowsById">updateRowsById</a>, <a href="#updateRowBlockToValue">updateRowBlockToValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="updateRowBlockToValue">
 <td class="summaryTableSignatureCol">
@@ -3798,18 +3769,14 @@
  <li>values : (Object or Array) 변경할 값</li>
  </ul>
  <p>dataFields 와 values 를 배열로 삽입하면 블록 단위의 행 일괄 수정이 가능합니다.</p>
- <pre>
-  // 0~100 행의 name 필드를 "Anna" 로 일괄 수정
-  AUIGrid.updateRowBlockToValue(myGridID, 0, 100, "name", "Anna");
- 
-  // 0~100 행의 name, country 필드를 각각 "Anna", "Korea" 로 일괄 수정
-  AUIGrid.updateRowBlockToValue(myGridID, 0, 100, ["name", "country"], ["Anna", "Korea"]);
- 
-  // 0~100 행의 name 필드를 "Anna", "John", "Kim" 이 3행마다 반복되게 일괄 수정
-  AUIGrid.updateRowBlockToValue(myGridID, 0, 100, "name", [["Anna"], ["John"], ["Kim"]]);
- 
-  // 0~100 행의 name, country 필드를 블럭으로 일괄 수정 
-  AUIGrid.updateRowBlockToValue(myGridID, 0, 100, ["name", "country"], [["Anna", "USA"], ["John", "UK"], ["Kim", "Korea"]]);</pre>
+ <pre><code class="language-javascript">// 0~100 행의 name 필드를 "Anna" 로 일괄 수정
+ AUIGrid.updateRowBlockToValue(myGridID, 0, 100, "name", "Anna");
+ // 0~100 행의 name, country 필드를 각각 "Anna", "Korea" 로 일괄 수정
+ AUIGrid.updateRowBlockToValue(myGridID, 0, 100, ["name", "country"], ["Anna", "Korea"]);
+ // 0~100 행의 name 필드를 "Anna", "John", "Kim" 이 3행마다 반복되게 일괄 수정
+ AUIGrid.updateRowBlockToValue(myGridID, 0, 100, "name", [["Anna"], ["John"], ["Kim"]]);
+ // 0~100 행의 name, country 필드를 블럭으로 일괄 수정 
+ AUIGrid.updateRowBlockToValue(myGridID, 0, 100, ["name", "country"], [["Anna", "USA"], ["John", "UK"], ["Kim", "Korea"]]);</code></pre>
  <p><a href="../../samples/renderer_checkbox_column2.html?rchk2&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
 </tr>
@@ -3819,22 +3786,21 @@
 <span class="signatureLink">updateRows</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.11<br>
-  <p>다수의 행에 대하여 지정한 필드(들)의 값을 일괄적으로 수정합니다.</p>
-  <p>다수의 행에 대해(복수의 필드 값에 대해) 가장 빠르게 변경 시킬 수 있는 메소드입니다.</p>
-  <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 다수의 행 아이템을 수정할 수 있습니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>items (Array) : 수정하고자 하는 복수의 행 아이템</li>
-  <li>rowIndexes (Array) : 수정하고자 하는 행 인덱스(rowIndex) 의 묶음입니다.</li>
-  <li>isMarkEdited (Boolean) : 셀 수정 마커(marker) 표시를 할지 여부를 나타냅니다.(기본값 : true)</li>
-  </ul>
-  <p>rowIndex 각각 1, 2, 3 에 해당되는 3개의 행에 대하여 각각 price, name 2개 필드들을 일괄 수정 시키고자 한다면 다음과 같습니다.</p>
-  <pre>
-  var items = [{ price : 2000, name : "우리" }, { price : 2001, name : "우리-1" }, { price : 2002, name : "우리-2" }];
-  var rowIndexes = [1, 2, 3];
-  AUIGrid.updateRows(myGridID, items, rowIndexes); // 행인덱스(rowIndex) 각각 1, 2, 3 인 행들 한번에 업데이트</pre>
-  <p>Also See :  <a href="#updateRowsById">updateRowsById</a>, <a href="#updateRowBlockToValue">updateRowBlockToValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>다수의 행에 대하여 지정한 필드(들)의 값을 일괄적으로 수정합니다.</p>
+ <p>다수의 행에 대해(복수의 필드 값에 대해) 가장 빠르게 변경 시킬 수 있는 메소드입니다.</p>
+ <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 다수의 행 아이템을 수정할 수 있습니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>items (Array) : 수정하고자 하는 복수의 행 아이템</li>
+ <li>rowIndexes (Array) : 수정하고자 하는 행 인덱스(rowIndex) 의 묶음입니다.</li>
+ <li>isMarkEdited (Boolean) : 셀 수정 마커(marker) 표시를 할지 여부를 나타냅니다.(기본값 : true)</li>
+ </ul>
+ <p>rowIndex 각각 1, 2, 3 에 해당되는 3개의 행에 대하여 각각 price, name 2개 필드들을 일괄 수정 시키고자 한다면 다음과 같습니다.</p>
+ <pre><code class="language-javascript">const items = [{ price : 2000, name : "우리" }, { price : 2001, name : "우리-1" }, { price : 2002, name : "우리-2" }];
+ const rowIndexes = [1, 2, 3];
+ AUIGrid.updateRows(myGridID, items, rowIndexes); // 행인덱스(rowIndex) 각각 1, 2, 3 인 행들 한번에 업데이트</code></pre>
+ <p>Also See :  <a href="#updateRowsById">updateRowsById</a>, <a href="#updateRowBlockToValue">updateRowBlockToValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="updateRowsById">
 <td class="summaryTableSignatureCol">
@@ -3842,24 +3808,22 @@
 <span class="signatureLink">updateRowsById</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>2.7.0<br>
-  <p>그리드 행 고유 값(rowIdField 값)에 해당되는 행(들)의 원하는 필드(들)를 수정합니다.</p>
-  <p>다수의 행에 대해(복수의 필드 값에 대해) 가장 빠르게 변경 시킬 수 있는 메소드입니다.</p>
-  <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 아이템을 수정할 수 있습니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>items (Array or Object) : 복수 또는 1개의 행을 업데이트 합니다.</li>
-  <li>isMarkEdited (Boolean) : 셀 수정 마커(marker) 표시를 할지 여부를 나타냅니다.(기본값 : true)</li>
-  </ul>
-  <p>예를 들어 rowIdField 를 id 로 설정한 경우, id 가 20 인 행을 찾아 특정 셀(price, name 2개만) 업데이트 하고자 한다면 다음과 같습니다.</p>
-  <pre>
-   var item = { id : 20, price : 2000, name : "우리" }; // ID 가 20인 행을 찾아 price=2000, name=우리로 변경
-   AUIGrid.updateRowsById(myGridID, item); // 1개 업데이트</pre>
-  <p>다수의 행을 한번에 변경 시킬려면 다음처럼 배열로 정의하여 사용합니다.</p>
-  <pre>
-  var items = [{ id : 20, price : 2000, name : "우리" }, { id : 21 price : 2001, name : "우리-1" }, { id : 22, price : 2002, name : "우리-2" }];
-  AUIGrid.updateRowsById(myGridID, items); // id 가 각각 20, 21, 22 인 행들 한번에 업데이트</pre>
-  <p>Also See :  <a href="#updateRows">updateRows</a>, <a href="#updateRowBlockToValue">updateRowBlockToValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 행 고유 값(rowIdField 값)에 해당되는 행(들)의 원하는 필드(들)를 수정합니다.</p>
+ <p>다수의 행에 대해(복수의 필드 값에 대해) 가장 빠르게 변경 시킬 수 있는 메소드입니다.</p>
+ <p>그리드의 속성 editable 과 무관하게 이 메소드를 통해 아이템을 수정할 수 있습니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>items (Array or Object) : 복수 또는 1개의 행을 업데이트 합니다.</li>
+ <li>isMarkEdited (Boolean) : 셀 수정 마커(marker) 표시를 할지 여부를 나타냅니다.(기본값 : true)</li>
+ </ul>
+ <p>예를 들어 rowIdField 를 id 로 설정한 경우, id 가 20 인 행을 찾아 특정 셀(price, name 2개만) 업데이트 하고자 한다면 다음과 같습니다.</p>
+ <pre><code class="language-javascript">const item = { id : 20, price : 2000, name : "우리" }; // ID 가 20인 행을 찾아 price=2000, name=우리로 변경
+ AUIGrid.updateRowsById(myGridID, item); // 1개 업데이트</code></pre>
+ <p>다수의 행을 한번에 변경 시킬려면 다음처럼 배열로 정의하여 사용합니다.</p>
+ <pre><code class="language-javascript">const items = [{ id : 20, price : 2000, name : "우리" }, { id : 21 price : 2001, name : "우리-1" }, { id : 22, price : 2002, name : "우리-2" }];
+ AUIGrid.updateRowsById(myGridID, items); // id 가 각각 20, 21, 22 인 행들 한번에 업데이트</code></pre>
+ <p>Also See :  <a href="#updateRows">updateRows</a>, <a href="#updateRowBlockToValue">updateRowBlockToValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="validateChangedGridData">
 <td class="summaryTableSignatureCol">
@@ -3867,28 +3831,25 @@
 <span class="signatureLink">validateChangedGridData</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.6<br>
-  <p>그리드 데이터를 사용자가 수정 또는 행 추가를 한 경우 그 수정, 추가된 행의 필드들 중 빈값(undefined, null, "")에 해당되는 값이 있는지 검사합니다.</p>
-  <p>사용자가 반드시 입력해야 하는 값이 있다면 이 메소드로 체크 할 수 있습니다.</p>
-  <p>빈값에 해당되는 값이 존재한다면 해당 셀에 지정된 메세지를 띄우고 값을 입력 하도록 요구합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>requireFields (String or Array) : 필수로 값이 있어야 하는 dataField 들. 즉, 모두 값이 채워 졌는지 체크 하고자 하는 dataField</li>
-  <li>message (String) : 빈값, null 이 존재할 때 적용 시킬 toast alert 메세지. message 파라메터를 설정하지 않으면 toast 는 출력되지 않음.</li>
-  </ul>
-  <p>Return : (Boolean) 빈값 없이 모두 정상적이라면 true 반환</p> 
-  <pre>
-  // 수정, 추가한 행에 대하여 전체 필드에 대하여 검사
-  // name 과 country 는 필수로 입력되어야 하는 필드임. 이것을 검사
-  var isValid = AUIGrid.validateChangedGridData(myGridID, ["name", "country"], "반드시 유효한 값을 직접 입력해야 합니다.");
-  
-  // 다른 JS 에서 제공하는 toast 나 alert 으로 경고문을 띄우고자 하는 경우 다음처럼 message 파라메터 생략.
-  // AUIGrid.validateChangedGridData(myGridID);
-  
-  if(isValid) {
-   alert("정상적으로 모두 입력됨. 서버로 전송하십시오.");
-  }</pre>
-  <p><a href="../../samples/validate_changed_grid_data.html?ed_val&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 데이터를 사용자가 수정 또는 행 추가를 한 경우 그 수정, 추가된 행의 필드들 중 빈값(undefined, null, "")에 해당되는 값이 있는지 검사합니다.</p>
+ <p>사용자가 반드시 입력해야 하는 값이 있다면 이 메소드로 체크 할 수 있습니다.</p>
+ <p>빈값에 해당되는 값이 존재한다면 해당 셀에 지정된 메세지를 띄우고 값을 입력 하도록 요구합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>requireFields (String or Array) : 필수로 값이 있어야 하는 dataField 들. 즉, 모두 값이 채워 졌는지 체크 하고자 하는 dataField</li>
+ <li>message (String) : 빈값, null 이 존재할 때 적용 시킬 toast alert 메세지. message 파라메터를 설정하지 않으면 toast 는 출력되지 않음.</li>
+ </ul>
+ <p>Return : (Boolean) 빈값 없이 모두 정상적이라면 true 반환</p> 
+ <pre><code class="language-javascript">// 수정, 추가한 행에 대하여 전체 필드에 대하여 검사
+ // name 과 country 는 필수로 입력되어야 하는 필드임. 이것을 검사
+ const isValid = AUIGrid.validateChangedGridData(myGridID, ["name", "country"], "반드시 유효한 값을 직접 입력해야 합니다.");
+ // 다른 JS 에서 제공하는 toast 나 alert 으로 경고문을 띄우고자 하는 경우 다음처럼 message 파라메터 생략.
+ // AUIGrid.validateChangedGridData(myGridID);
+ if(isValid) {
+  console.log("정상적으로 모두 입력됨. 서버로 전송하십시오.");
+ }</code></pre>
+ <p><a href="../../samples/validate_changed_grid_data.html?ed_val&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="validateGridData">
 <td class="summaryTableSignatureCol">
@@ -3896,27 +3857,24 @@
 <span class="signatureLink">validateGridData</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.4<br>
-  <p>그리드 데이터의 필드들 중 빈값(undefined, null, "")에 해당되는 값이 있는지 검사합니다.</p>
-  <p>사용자가 반드시 입력해야 하는 값이 있다면 이 메소드로 체크 할 수 있습니다.</p>
-  <p>빈값에 해당되는 값이 존재한다면 해당 셀에 지정된 메세지를 띄우고 값을 입력 하도록 요구합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>requireFields (String or Array) : 필수로 값이 있어야 하는 dataField 들. 즉, 모두 값이 채워 졌는지 체크 하고자 하는 dataField</li>
-  <li>message (String) : 빈값, null 이 존재할 때 적용 시킬 toast alert 메세지. message 파라메터를 설정하지 않으면 toast 는 출력되지 않음.</li>
-  </ul>
-  <p>Return : (Boolean) 빈값 없이 모두 정상적이라면 true 반환</p> 
-  <pre>
-  // name 과 country 는 필수로 입력되어야 하는 필드임. 이것을 검사
-  var isValid = AUIGrid.validateGridData(myGridID, ["name", "country"], "필수 필드는 반드시 값을 직접 입력해야 합니다.");
-  
-  // 다른 JS 에서 제공하는 toast 나 alert 으로 경고문을 띄우고자 하는 경우 다음처럼 message 파라메터 생략.
-  // AUIGrid.validateGridData(myGridID, ["name", "country"]);
-  
-  if(isValid) {
-   alert("정상적으로 모두 입력됨. 서버로 전송하십시오.");
-  }</pre>
-  <p><a href="../../samples/validate_grid_data.html?ed_val&theme=default" target="_blank">관련 데모 보기</a></p>
-  </td>
+ <p>그리드 데이터의 필드들 중 빈값(undefined, null, "")에 해당되는 값이 있는지 검사합니다.</p>
+ <p>사용자가 반드시 입력해야 하는 값이 있다면 이 메소드로 체크 할 수 있습니다.</p>
+ <p>빈값에 해당되는 값이 존재한다면 해당 셀에 지정된 메세지를 띄우고 값을 입력 하도록 요구합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>requireFields (String or Array) : 필수로 값이 있어야 하는 dataField 들. 즉, 모두 값이 채워 졌는지 체크 하고자 하는 dataField</li>
+ <li>message (String) : 빈값, null 이 존재할 때 적용 시킬 toast alert 메세지. message 파라메터를 설정하지 않으면 toast 는 출력되지 않음.</li>
+ </ul>
+ <p>Return : (Boolean) 빈값 없이 모두 정상적이라면 true 반환</p> 
+ <pre><code class="language-javascript">// name 과 country 는 필수로 입력되어야 하는 필드임. 이것을 검사
+ const isValid = AUIGrid.validateGridData(myGridID, ["name", "country"], "필수 필드는 반드시 값을 직접 입력해야 합니다.");
+ // 다른 JS 에서 제공하는 toast 나 alert 으로 경고문을 띄우고자 하는 경우 다음처럼 message 파라메터 생략.
+ // AUIGrid.validateGridData(myGridID, ["name", "country"]);
+ if(isValid) {
+  console.log("정상적으로 모두 입력됨. 서버로 전송하십시오.");
+ }</code></pre>
+ <p><a href="../../samples/validate_grid_data.html?ed_val&theme=default" target="_blank">관련 데모 보기</a></p>
+ </td>
 </tr>
 <tr id="validateGridDataByFunc">
 <td class="summaryTableSignatureCol">
@@ -3924,31 +3882,29 @@
 <span class="signatureLink">validateGridDataByFunc</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.12.6<br>
-  <p>그리드 데이터의 필드들 중 원하는 조건에 맞지 않는 값이 존재하는지 검사합니다.</p>
-  <p>사용자가 반드시 입력해야 하는 값 또는 수정되어야 하는 값 등이 있다면 이 메소드로 체크 할 수 있습니다.</p>
-  <p>조건에 맞지 않는 값이 존재한다면 해당 셀에 지정된 메세지를 띄우고 값을 입력(변경) 하도록 요구합니다.</p>
-  <p>파라메터 설명</p>
-  <ul>
-  <li>requireFields (String or Array) : 체크하고자 하는 dataField 들.</li>
-  <li>validFunc (Function) : 조건에 맞지 않는 값을 체크 하는 함수.
-  <p>function signature(item, dataField) { }</p></li>
-  <li>message (String) : 조건에 맞지 않는 값이 존재할 때 적용 시킬 toast alert 메세지. message 파라메터를 설정하지 않으면 toast 는 출력되지 않음.</li>
-  <li>onlyByFunc (Boolean) : validFunc 반환값으로만 메세지 출력시킬지 여부. true를 설정하면 requireFields 가 null, "" 인 경우에도 validFunc 함수의 반환값으로만 결정함.</li>
-  </ul>
-  <p>Return : (Boolean) 유효성 검사 통과한다면(모두 정상적이라면) true 반환</p> 
-  <pre>
-  // name 은 필수로 입력되어야 하며 Anna 인 값은 수정되어야 함.
-  var isValid = AUIGrid.validateGridDataByFunc(myGridID, ["name"], function(item, dataField) {
-        var v = item[dataField];
-        if(v === "Anna" || v === null || v === "") { // Anna 값, null 값 존재하면 안됨.
-            return false; // false 반환하면 조건에 맞지 않는 값으로 정해진 toast 메세지 띄움
-        }
-  }, "Anna 값은 수정되어야 하며 공백으로 존재해선 안됩니다.");
-  
-  if(isValid) {
-   alert("정상적으로 모두 입력됨. 서버로 전송하십시오.");
-  }</pre>
-  </td>
+ <p>그리드 데이터의 필드들 중 원하는 조건에 맞지 않는 값이 존재하는지 검사합니다.</p>
+ <p>사용자가 반드시 입력해야 하는 값 또는 수정되어야 하는 값 등이 있다면 이 메소드로 체크 할 수 있습니다.</p>
+ <p>조건에 맞지 않는 값이 존재한다면 해당 셀에 지정된 메세지를 띄우고 값을 입력(변경) 하도록 요구합니다.</p>
+ <p>파라메터 설명</p>
+ <ul>
+ <li>requireFields (String or Array) : 체크하고자 하는 dataField 들.</li>
+ <li>validFunc (Function) : 조건에 맞지 않는 값을 체크 하는 함수.
+ <p>function signature(item, dataField) { }</p></li>
+ <li>message (String) : 조건에 맞지 않는 값이 존재할 때 적용 시킬 toast alert 메세지. message 파라메터를 설정하지 않으면 toast 는 출력되지 않음.</li>
+ <li>onlyByFunc (Boolean) : validFunc 반환값으로만 메세지 출력시킬지 여부. true를 설정하면 requireFields 가 null, "" 인 경우에도 validFunc 함수의 반환값으로만 결정함.</li>
+ </ul>
+ <p>Return : (Boolean) 유효성 검사 통과한다면(모두 정상적이라면) true 반환</p> 
+ <pre><code class="language-javascript">// name 은 필수로 입력되어야 하며 Anna 인 값은 수정되어야 함.
+ const isValid = AUIGrid.validateGridDataByFunc(myGridID, ["name"], function(item, dataField) {
+     const v = item[dataField];
+     if(v === "Anna" || v === null || v === "") { // Anna 값, null 값 존재하면 안됨.
+         return false; // false 반환하면 조건에 맞지 않는 값으로 정해진 toast 메세지 띄움
+     }
+ }, "Anna 값은 수정되어야 하며 공백으로 존재해선 안됩니다.");
+ if(isValid) {
+     console.log("정상적으로 모두 입력됨. 서버로 전송하십시오.");
+ }</code></pre>
+ </td>
 </tr>
 </table>
 </div>

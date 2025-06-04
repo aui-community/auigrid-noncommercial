@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,122 +28,106 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-color {
 		color: #00aa00;
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
-		// 랜덤 데이터 생성
-		genRandomData();
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "position",
-		headerText: "직급",
-		width: 200,
-		editRenderer: {
-			type: "ComboBoxRenderer",
-			autoCompleteMode: true, // 자동완성 모드 설정
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-			historyMode: true, // 히스토리 모드 사용
-			list: [] // 현재 칼럼에 있는 값만을 리스트로 사용하기 위해 list 는 빈 배열.
-		}
-	}, {
-		dataField: "name",
-		headerText: "이름",
-		width: 200,
-		editRenderer: {
-			type: "ComboBoxRenderer",
-			autoCompleteMode: true, // 자동완성 모드 설정
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-			historyMode: true, // 히스토리 모드 사용
-			list: [] // 현재 칼럼에 있는 값만을 리스트로 사용하기 위해 list 는 빈 배열.
-		}
-	}, {
-		dataField: "memo",
-		headerText: "기타",
-		editRenderer: {
-			type: "ComboBoxRenderer",
-			autoCompleteMode: true, // 자동완성 모드 설정
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-			historyMode: true, // 히스토리 모드 사용
-			list: ["추후 연락 바람", "이상 없음", "긴급 사항 발생"] // 기본적으로 출력시킬 list 정의
-		}
-	}];
+		createAUIGrid();
+		// 랜덤 데이터 생성하여 그리드에 데이터 삽입
+		AUIGrid.setGridData(myGridID, genRandomData());
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "position",
+			headerText: "직급",
+			width: 200,
+			editRenderer: {
+				type: "ComboBoxRenderer",
+				autoCompleteMode: true, // 자동완성 모드 설정
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				historyMode: true, // 히스토리 모드 사용
+				list: [] // 현재 칼럼에 있는 값만을 리스트로 사용하기 위해 list 는 빈 배열.
+			}
+		}, {
+			dataField: "name",
+			headerText: "이름",
+			width: 200,
+			editRenderer: {
+				type: "ComboBoxRenderer",
+				autoCompleteMode: true, // 자동완성 모드 설정
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				historyMode: true, // 히스토리 모드 사용
+				list: [] // 현재 칼럼에 있는 값만을 리스트로 사용하기 위해 list 는 빈 배열.
+			}
+		}, {
+			dataField: "memo",
+			headerText: "기타",
+			editRenderer: {
+				type: "ComboBoxRenderer",
+				autoCompleteMode: true, // 자동완성 모드 설정
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				historyMode: true, // 히스토리 모드 사용
+				list: ["추후 연락 바람", "이상 없음", "긴급 사항 발생"] // 기본적으로 출력시킬 list 정의
+			}
+		}];
 
-		var gridProps = {};
-
-		gridProps.rowIdField = "index";
-
-		gridProps.editable = true;
-
-		gridProps.softRemoveRowMode = false;
-
-		// 체크박스 대신 라디오버튼 출력함
-		gridProps.showRowCheckColumn = true;
-
-		gridProps.showStateColumn = true;
-
-		gridProps.rowCheckToRadio = true;
-
-		// 소팅
-		gridProps.enableSorting = true;
+		// 그리드 속성 설정
+		const gridProps = {
+			rowIdField: "index",            // 각 행의 고유 ID 필드
+			editable: true,                 // 편집 가능 여부
+			showRowCheckColumn: true,       // 체크박스 열 표시
+			showStateColumn: true,          // 상태 열 표시
+			rowCheckToRadio: true,          // 체크박스 대신 라디오 버튼 출력
+			enableSorting: true,            // 정렬 기능 활성화
+		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
 		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler);
+		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+			const logEle = document.getElementById("elapse");
+			logEle.textContent = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+		});
 	}
 
-	// 편집 핸들러
-	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditEnd") {
-			document.getElementById("ellapse").innerText = "Editing End : ( " + event.rowIndex + ", " + event.columnIndex + ") : " + event.value;
-		}
-	};
-
-	// 체크된 아이템 얻기
+	//체크된 아이템 얻기
 	function getCheckedRowItems() {
-		var checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 		if (checkedItems.length <= 0) {
 			alert("체크된 항목 없음!!");
 			return;
 		}
-		var str = "";
-		var rowItem = checkedItems[0].item;
-
-		for (var p in rowItem) {
-			str += p + " : " + rowItem[p] + ", ";
+		let str = "";
+		for (let i = 0, len = checkedItems.length; i < len; i++) {
+			const rowItem = checkedItems[i];
+			str += Object.entries(rowItem.item)
+				.map(([key, value]) => `${key} : ${value}`)
+				.join(", ");
 		}
 		alert(str);
 	}
 
 	// 그리드에 삽입할 데이터 생성
 	function genRandomData() {
-		var data = [];
-		var i;
-		var posList = ["회장", "사장", "부사장", "상무", "전무", "이사", "부장", "차장", "과장", "대리", "사원", "인턴"];
-		var names = ["홍길동", "Yamaha", "Steve", "Anna", "Natasha", "Han", "Soo"];
-
+		const data = [];
+		const posList = ["회장", "사장", "부사장", "상무", "전무", "이사", "부장", "차장", "과장", "대리", "사원", "인턴"];
+		const names = ["홍길동", "Yamaha", "Steve", "Anna", "Natasha", "Han", "Soo"];
+		let i;
 		for (i = 0; i < names.length; i++) {
 			data.push({
 				index: i,
@@ -163,13 +144,10 @@
 				memo: ""
 			});
 		}
-
 		//console.log(JSON.stringify(data));
-
-		AUIGrid.setGridData(myGridID, data);
-	};
+		return data;
+	}
 </script>
-
 </head>
 <body>
 
@@ -188,8 +166,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -197,6 +174,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

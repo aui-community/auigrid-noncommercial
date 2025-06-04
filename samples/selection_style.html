@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* ROW -셀력션 백그라운드 스타일 재정의 */
 	#grid_wrap .aui-grid-selection-row-bg {
 		background: #E4F7BA !important;
@@ -59,57 +57,50 @@
 		color: #000 !important;
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_500.json");
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "Client ID",
-		width: 140
-	}, {
-		dataField: "name",
-		headerText: "Name",
-		width: 140
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		width: 150
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		width: 150
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 120
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		width: 120
+		requestGridData("./data/normal_500.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "Client ID",
+			width: 140
+		}, {
+			dataField: "name",
+			headerText: "Name",
+			width: 140
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			width: 150
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			width: 150
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 120
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			width: 120
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
 			rowIdField: "id",
 			showSelectionBorder: true,
@@ -124,7 +115,6 @@
 		AUIGrid.setSelectionMode(myGridID, mode); // 선택 모드 변경
 	}
 </script>
-
 </head>
 <body>
 
@@ -132,12 +122,43 @@
 	<div class="desc">
 		<p>셀 선택(Selection) 시 나타나는 인디케이터를 변경한 모습입니다.</p>
 		<p>대표적인 1개의 셀에 테두리를 치고(showSelectionBorder = true 설정) 셀과 행 선택 영역 스타일을 재정의 한 모습입니다.</p>
+		<div class="src_cover">
+			<pre><xmp><style>
+/* ROW -셀력션 백그라운드 스타일 재정의 */
+#grid_wrap .aui-grid-selection-row-bg {
+	background: #E4F7BA !important;
+	color: #000 !important;
+	font-weight: normal !important;
+}
+
+/* Cell -셀력션 백그라운드 스타일 재정의 */
+#grid_wrap .aui-grid-selection-bg {
+	background: #ECEBFF !important;
+	color: #000 !important;
+	font-weight: normal !important;
+}
+
+/* Cell -셀력션 다중 선택 스타일 재정의 */
+#grid_wrap .aui-grid-selection-others-bg {
+	background: #ECEBFF !important;
+	color: #000 !important;
+	font-weight: normal !important;
+}
+
+/* 셀렉션의 대표 셀 보더 색상 스타일 재정의*/
+#grid_wrap .aui-grid-selection-cell-border-lines {
+	background: #22741C;
+	color: #000 !important;
+}
+</style>
+</xmp></pre>
+		</div>
 		<ul class="nav_u">
-			<li><span onclick="changeSelectionMode('singleRow')" class="btn">singleRow</span></li>
-			<li><span onclick="changeSelectionMode('singleCell')" class="btn">singleCell</span></li>
-			<li><span onclick="changeSelectionMode('multipleRows')" class="btn">multipleRows</span></li>
-			<li><span onclick="changeSelectionMode('multipleCells')" class="btn">multipleCells</span></li>
-			<li><span onclick="changeSelectionMode('none')" class="btn">none</span></li>
+			<li><button onclick="changeSelectionMode('singleRow')" class="btn">singleRow</button></li>
+			<li><button onclick="changeSelectionMode('singleCell')" class="btn">singleCell</button></li>
+			<li><button onclick="changeSelectionMode('multipleRows')" class="btn">multipleRows</button></li>
+			<li><button onclick="changeSelectionMode('multipleCells')" class="btn">multipleCells</button></li>
+			<li><button onclick="changeSelectionMode('none')" class="btn">none</button></li>
 		</ul>
 		<span></span>
 	</div>
@@ -146,8 +167,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -155,6 +175,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

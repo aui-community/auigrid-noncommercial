@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,6 +29,7 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+
 <!-- jQuery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -41,7 +39,7 @@
 <script src="./external/bootstrap-datepicker-1.6.4-dist/locales/bootstrap-datepicker.ko.min.js"></script>
 <link href="./external/bootstrap-datepicker-1.6.4-dist/css/bootstrap-datepicker3.standalone.min.css" rel="stylesheet">
 
-<style type="text/css">
+<style>
 	/* jQuery UI 재정의 */
 	.ui-widget {
 		font-size: 12px;
@@ -53,102 +51,83 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_500.json");
-
+		requestGridData("./data/normal_500.json");
 		// Bootstrap datepicker 달력 사용
 		$("#datepicker").datepicker({ format: "yyyy/mm/dd", language: "ko", autoclose: true });
 		$("#datepicker2").datepicker({ format: "yyyy/mm/dd", language: "ko", autoclose: true });
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name"
-	}, {
-		dataField: "country",
-		headerText: "Country"
-	}, {
-		dataField: "product",
-		headerText: "Product"
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric"
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		style: "my-column"
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		dataType: "date",
-		formatString: "yyyy년 mm월 dd일"
 	}
-	];
-
-	// 푸터 설정
-	var footerLayout = [{
-		positionField: "price",
-		dataField: "price",
-		formatString: "#,##0",
-		operation: "SUM",
-		style: "my-column"
-	}, {
-		positionField: "date",
-		dataField: "date",
-		operation: "COUNT",
-		style: "my-column"
-	}];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Name"
+		}, {
+			dataField: "country",
+			headerText: "Country"
+		}, {
+			dataField: "product",
+			headerText: "Product"
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric"
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			style: "my-column"
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			dataType: "date",
+			formatString: "yyyy년 mm월 dd일"
+		}];
 
-		var gridProps = {
+		// 그리드 푸터 설정
+		const footerLayout = [{
+			positionField: "price",
+			dataField: "price",
+			formatString: "#,##0",
+			operation: "SUM",
+			style: "my-column"
+		}, {
+			positionField: "date",
+			dataField: "date",
+			operation: "COUNT",
+			style: "my-column"
+		}];
 
+		// 그리드 속성 설정
+		const gridProps = {
 			enableColumnResize: false,
-
 			enableMovingColumn: false,
-
 			enableFilter: true,
-
 			useGroupingPanel: true,
-
 			enableCellMerge: true,
-
 			// enableCellMerge 할 때 실제로 rowspan 적용 시킬지 여부
 			// 만약 false 설정하면 실제 병합은 하지 않고 데이터 값만 같은 데이터 출력 시키지 않음. (기본값 : true)
 			cellMergeRowSpan: false,
-
 			showBranchOnGrouping: false,
-
 			displayTreeOpen: true,
-
 			showFooter: true,
-
 			// country, product 로 그룹핑
 			groupingFields: ["country", "product"],
-
 			// 그룹핑 후 합계필드를 출력하도록 설정합니다.
 			groupingSummary: {
 				// 합계 필드는 price 에 대하여 실시 합니다.
 				dataFields: ["price"]
 			},
-
 			// 그리드 ROW 스타일 함수 정의
 			rowStyleFunction: function (rowIndex, item) {
 				if (item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
@@ -165,8 +144,6 @@
 							return "aui-grid-row-depth-default-style";
 					}
 				}
-
-				return null;
 			}
 		};
 
@@ -178,12 +155,11 @@
 	}
 
 	function myCustomFilter() {
+		const start = $("#datepicker").val();
+		const end = $("#datepicker2").val();
 
-		var start = $("#datepicker").val();
-		var end = $("#datepicker2").val();
-
-		var startTime = new Date(start).getTime();
-		var endTime = new Date(end).getTime();
+		let startTime = new Date(start).getTime();
+		let endTime = new Date(end).getTime();
 
 		if (isNaN(startTime)) {
 			startTime = 0;
@@ -199,7 +175,7 @@
 
 			// 날짜 형식이 서버에서 작성된 형태가 yyyy-mm-dd 였으므로 JS Date 가 사용할 수 있도록 형태를 바꿈
 			value = value.replace(/-/g, "/");
-			var valueTime = new Date(value).getTime();
+			let valueTime = new Date(value).getTime();
 			if (startTime <= valueTime && valueTime <= endTime) {
 				return true;
 			}
@@ -207,13 +183,11 @@
 		});
 	}
 
-
 	function clearMyFilterAll() {
 		//  필터링 모두 해제
 		AUIGrid.clearFilterAll(myGridID);
 	}
 </script>
-
 </head>
 <body>
 
@@ -222,7 +196,7 @@
 		<p>필터링을 개발자가 원하는 형태로 필터함수를 사용하여 필터링을 할 수 있습니다.</p>
 		<p>날짜를 기간으로 정해 필터링한 예제입니다</p>
 		<p>그룹핑 썸머리(grouping summary)를 설정한 경우 필터링에 따라 합계가 동적으로 계산됩니다.</p>
-		<p><label><input type="text" id="datepicker" value="2013/01/01"></label> ~ <label><input type="text" id="datepicker2" value="2013/12/31"></label>
+		<p><label><input type="text" id="datepicker" value="2023/01/01"></label> ~ <label><input type="text" id="datepicker2" value="2023/12/31"></label>
 			<span class="btn" onclick="myCustomFilter()">필터링</span><span class="btn" onclick="clearMyFilterAll()">필터링 초기화</span>
 		</p>
 	</div>
@@ -231,8 +205,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -240,6 +213,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

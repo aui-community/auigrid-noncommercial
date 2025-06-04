@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 셀 스타일 정의 */
 	.terrible-style {
 		color: #000;
@@ -64,39 +62,35 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
-		var columnLayout = createColumnData();
-
+	// 시작점
+	function init() {
+		// 칼럼 레이아웃 반환
+		const columnLayout = createColumnData();
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid(columnLayout);
-
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/stress_5000.json");
-
-	};
+		requestGridData("./data/stress_5000.json");
+	}
 
 	// 칼럼 레이아웃을 생성하여 반환합니다.
 	function createColumnData() {
-		var obj;
-		var columnLayout = [{
+		// 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "dept",
 			headerText: "부서코드"
 		}];
 
-		for (var i = 1; i <= 100; i++) { // 칼럼 100개 + 부서 1 총 101개 생성
-			obj = {
+		for (let i = 1; i <= 100; i++) { // 칼럼 100개 + 부서 1 총 101개 생성
+			const column = {
 				width: 70,
 				dataField: "w" + i,
 				headerText: i + "주"
 			};
-			columnLayout.push(obj);
+			columnLayout.push(column);
 		}
 
 		return columnLayout;
@@ -104,31 +98,17 @@
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid(columnLayout) {
-
-		var gridProps = {
-			editable: true
+		// 그리드 속성 설정
+		const gridProps = {
+			editable: true,
+			rowIdField: "dept",
+			fixedColumnCount: 1
 		};
-
-
-		// sorting 지원
-		gridProps.enableSorting = true;
-
-		// Row 체크박스 출력 안함
-		gridProps.showRowCheckColumn = false;
-
-		// id 필드 설정
-		gridProps.rowIdField = "dept";
-
-		// 고정 칼럼 1
-		gridProps.fixedColumnCount = 1;
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	}
-
-
 </script>
-
 </head>
 <body>
 
@@ -143,8 +123,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -152,6 +131,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

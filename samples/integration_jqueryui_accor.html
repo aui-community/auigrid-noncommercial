@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,19 +28,19 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+
 <!-- jQuery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-<style type="text/css">
+<style>
 	.left {
 		text-align: left;
 	}
 </style>
 <script>
 	$(function () {
-		var layout;
-		var accordions = $("#accordion").accordion({
+		const accordions = $("#accordion").accordion({
 			width: 800,
 			heightStyle: "content",
 
@@ -52,7 +49,7 @@
 			// 이러한 이유로 activate 이벤트에서 그리드가 생성되지 않았다면 생성시키는 코드 추가함
 			create: function (event, ui) {
 				this.style.display = "block";
-				var accHeaderId = ui.header.prop("id");
+				const accHeaderId = ui.header.prop("id");
 				switch (accHeaderId) {
 					case "sec-1":
 						createAUIGrid("#myGrid1", "normal");
@@ -66,32 +63,35 @@
 				}
 			},
 			activate: function (event, ui) {
-				var accHeaderId = ui.newHeader.prop("id");
+				const accHeaderId = ui.newHeader.prop("id");
 				switch (accHeaderId) {
-					case "sec-1":
-						var isCreated = AUIGrid.isCreated("#myGrid1");
+					case "sec-1": {
+						const isCreated = AUIGrid.isCreated("#myGrid1");
 						if (isCreated) {
 							AUIGrid.resize("#myGrid1");
 						} else {
 							createAUIGrid("#myGrid1", "normal");
 						}
 						break;
-					case "sec-2":
-						var isCreated = AUIGrid.isCreated("#myGrid2");
+					}
+					case "sec-2": {
+						const isCreated = AUIGrid.isCreated("#myGrid2");
 						if (isCreated) {
 							AUIGrid.resize("#myGrid2");
 						} else {
 							createAUIGrid("#myGrid2", "tree");
 						}
 						break;
-					case "sec-3":
-						var isCreated = AUIGrid.isCreated("#myGrid3");
+					}
+					case "sec-3": {
+						const isCreated = AUIGrid.isCreated("#myGrid3");
 						if (isCreated) {
 							AUIGrid.resize("#myGrid3");
 						} else {
 							createAUIGrid("#myGrid3", "paging");
 						}
 						break;
+					}
 				}
 			}
 		});
@@ -99,14 +99,14 @@
 
 	// 윈도우 리사이징 시 그리드도 사이즈 변경시키기
 	$(window).resize(function () {
-		AUIGrid.resize("#myGrid1");
-		AUIGrid.resize("#myGrid2");
-		AUIGrid.resize("#myGrid3");
+		if (AUIGrid.isCreated("#myGrid1")) AUIGrid.resize("#myGrid1");
+		if (AUIGrid.isCreated("#myGrid2")) AUIGrid.resize("#myGrid2");
+		if (AUIGrid.isCreated("#myGrid3")) AUIGrid.resize("#myGrid3");
 	});
 
 	// 칼럼 레이아웃 생성
 	function getColumnLayout(type) {
-		var columnLayout;
+		let columnLayout;
 		if (type != "tree") {
 			columnLayout = [{
 				dataField: "name",
@@ -185,33 +185,28 @@
 		}
 
 		return columnLayout;
-	};
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid(gridPID, type) {
-
 		// type에 맞는 칼럼 레이아웃 
-		var columnLayout = getColumnLayout(type);
+		const columnLayout = getColumnLayout(type);
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			// singleRow 선택모드
 			selectionMode: "singleRow",
-
 			// 칼럼 리사아징 false 설정
 			enableColumnResize: false,
-
 			displayTreeOpen: true,
-
 			// 행번호 출력 칼럼 사용 안함
 			showRowNumColumn: false,
-
 			// 행 체크 박스 칼럼 사용 안함
 			showRowCheckColumn: false,
 		};
 
 		// 페이징 사용 설정
-		if (type == "paging") {
+		if (type === "paging") {
 			gridProps.usePaging = true;
 		}
 
@@ -219,15 +214,14 @@
 		AUIGrid.create(gridPID, columnLayout, gridProps);
 
 		// 데이터 요청
-		if (type == "tree") {
-			requestData(gridPID, "./data/schedule_tree.json");
+		if (type === "tree") {
+			requestGridData(gridPID, "./data/schedule_tree.json");
 		} else {
-			requestData(gridPID, "./data/normal_100.json");
+			requestGridData(gridPID, "./data/normal_100.json");
 		}
+	}
 
-	};
-
-	function requestData(gridPID, url) {
+	function requestGridData(gridPID, url) {
 
 		AUIGrid.showAjaxLoader(gridPID); // 로딩바 출력
 
@@ -236,9 +230,7 @@
 
 			AUIGrid.removeAjaxLoader(gridPID); // 로딩바 제거
 		});
-	};
-
-	function documentReady() { };
+	}
 </script>
 </head>
 <body>
@@ -255,17 +247,14 @@
 			<div>
 				<div id="myGrid1" style="height:450px;"></div>
 			</div>
-
 			<h3 id="sec-2">트리 그리드</h3>
 			<div>
 				<div id="myGrid2" style="height:450px;"></div>
 			</div>
-
 			<h3 id="sec-3">일반 페이징 그리드</h3>
 			<div>
 				<div id="myGrid3" style="height:450px;"></div>
 			</div>
-
 		</div>
 	</div>
 </div>
@@ -274,6 +263,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

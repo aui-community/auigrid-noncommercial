@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-right {
 		text-align: right;
@@ -43,23 +41,17 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
-		var columnLayout = loadColumnLayout();
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
+		requestGridData("./data/normal_100.json");
+	}
 
 	// 기본(디폴트) 칼럼 레이아웃
 	function getDefaultColumnLayout() {
@@ -102,14 +94,16 @@
 			dataField: "date",
 			headerText: "Date",
 			width: 120
-		}
-		];
-	};
+		}];
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 기존 보관된 칼럼 레이아웃 얻어 오기(없다면 기본 칼럼 레이아웃 작성하여 반환)
+		const columnLayout = loadColumnLayout();
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			enableSorting: true, // 정렬 사용
 			enableMovingColumn: true, // 칼럼 이동 가능 설정
 			showFooter: true
@@ -118,8 +112,8 @@
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 푸터 설정
-		var footerLayout = [{
+		// 그리드 푸터 설정
+		const footerLayout = [{
 			labelText: "∑",
 			positionField: "#base"
 		}, {
@@ -144,11 +138,8 @@
 
 	// 그리드 ready 이벤트 핸들러
 	function auiGridCompleteHandler(event) {
-		var rowIdx = getLocalStorageValue("auigridRow");
-		var hPos = getLocalStorageValue("auigridCol");
-
-		rowIdx = Number(rowIdx); // 이동 시킬 행 인덱스
-		hPos = Number(hPos); // 수평스크롤 값
+		const rowIdx = getLocalStorageValue("auigridRow");
+		const hPos = getLocalStorageValue("auigridCol");
 
 		// ready 이벤트를 바인딩하여 데이터에 맞게 초기 화면설정 작업을 하십시오.
 		AUIGrid.setRowPosition(myGridID, rowIdx); // 수직 스크롤 이동 시킴...행 인덱스
@@ -159,28 +150,28 @@
 	// 데모에서는 HTML5의 localStrage 를 사용하여 보관합니다.
 	// 만약 DB 상에 보관하고자 한다면 해당 정보를 Ajax 요청으로 코딩하십시오.
 	function saveColumnLayout() {
-		if (typeof window.Storage === "undefined") { // Check browser support
+		if (typeof window.Storage === "undefined") {
 			alert("localStorage 를 지원하지 않는 브라우저입니다.");
 			return;
 		}
-		
+
 		// 칼럼 레이아웃 정보 가져오기
-		var columns = AUIGrid.getColumnLayout(myGridID);
-		var columnStr = JSON.stringify(columns);
-		var rowPos = AUIGrid.getRowPosition(myGridID); // 수직 스크롤 값
-		var hPos = AUIGrid.getProp(myGridID, "hScrollPosition"); // 수평 스크롤 값(픽셀)
+		const columns = AUIGrid.getColumnLayout(myGridID);
+		const columnStr = JSON.stringify(columns);
+		const rowPos = AUIGrid.getRowPosition(myGridID); // 수직 스크롤 값
+		const hPos = AUIGrid.getProp(myGridID, "hScrollPosition"); // 수평 스크롤 값(픽셀)
 
 		localStorage.setItem("auigridLayout", columnStr);
 		localStorage.setItem("auigridRow", rowPos);
 		localStorage.setItem("auigridCol", hPos);
 
 		alert("현재 그리드의 상태가 보관되었습니다.\r\n브라우저를 종료하거나 F5 로 갱신했을 때 현재 상태로 그리드가 출력됩니다.");
-	};
+	}
 
 	// localStorage 에 보관된 칼럼 정보를 얻어와 반환합니다.
 	function loadColumnLayout() {
-		var columnLayout = null;
-		var columnStr = getLocalStorageValue("auigridLayout");
+		const columnStr = getLocalStorageValue("auigridLayout");
+		let columnLayout = null;
 		if (columnStr && typeof columnStr !== "undefined") {
 			columnLayout = JSON.parse(columnStr);
 			//감춰진 칼럼에 따라 데모 상에 보이는 체크박스 동기화 시킴.
@@ -193,55 +184,52 @@
 		}
 
 		return columnLayout;
-	};
+	}
 
-	// 레이아웃 정보 삭제
+	// 칼럼 레이아웃 정보 삭제
 	function resetColumnLayout() {
-		if (typeof window.Storage === "undefined") { // Check browser support
+		if (typeof window.Storage === "undefined") {
 			alert("localStorage 를 지원하지 않는 브라우저입니다.");
 			return;
 		}
-		
+
 		localStorage.removeItem("auigridLayout");
 		localStorage.removeItem("auigridRow");
 		localStorage.removeItem("auigridCol");
 		alert("저장된 그리드의 상태를 초기화했습니다.\r\n브라우저를 종료하거나 F5 로 갱신했을 때 원래 상태로 출력됩니다.");
-	};
+	}
 
 	function getLocalStorageValue(key) {
-		if (typeof window.Storage === "undefined") { // Check browser support
+		if (typeof window.Storage === "undefined") {
 			console.log("localStorage 를 지원하지 않는 브라우저입니다.");
 			return null;
 		}
 		return localStorage.getItem(key);
-	};
-
+	}
 
 	// 칼럼 숨김/해제 체크박스 핸들러
 	function checkboxChangeHandler(event) {
-		var target = event.target || event.srcElement;
+		const target = event.target || event.srcElement;
 		if (!target) return;
 
-		var dataField = target.value;
-		var checked = target.checked;
+		const dataField = target.value;
+		const checked = target.checked;
 
 		if (checked) {
 			AUIGrid.showColumnByDataField(myGridID, dataField);
 		} else {
 			AUIGrid.hideColumnByDataField(myGridID, dataField);
 		}
-	};
+	}
 
 	// 감춰진 칼럼에 따라 데모 상에 보이는 체크박스 동기화 시킴.
 	function syncCheckbox(columns) {
 		recursive(columns);
 		function recursive(children) {
-			var c;
-			var dom;
-			for (var i = 0, len = children.length; i < len; i++) {
-				c = children[i];
+			for (let i = 0, len = children.length; i < len; i++) {
+				const c = children[i];
 				if (c.visible === false) {
-					dom = document.getElementById(c.dataField);
+					const dom = document.getElementById(c.dataField);
 					if (dom) dom.checked = false;
 				}
 				if (typeof c.children != "undefined") {
@@ -249,10 +237,26 @@
 				}
 			}
 		}
-	};
+	}
 
+	// 주어진 columnLayout 에서 dataField 에 맞는 칼럼을 찾아 반환
+	function getOwnColumn(columnLayout, dataField) {
+		let retColumn = null;
+		for (let i = 0, len = columnLayout.length; i < len; i++) {
+			let column = columnLayout[i];
+			if (column.dataField === dataField) {
+				retColumn = column;
+				break;
+			}
+			// children 까지 조사하기 위한 재귀
+			if (column.children && column.children.length) {
+				retColumn = getOwnColumn(column.children, dataField);
+				if (retColumn !== null) break;
+			}
+		}
+		return retColumn;
+	}
 </script>
-
 </head>
 <body>
 
@@ -261,7 +265,7 @@
 		<p>칼럼의 자리, 사이즈, 감춰진 칼럼 등의 정보인 칼럼 레이아웃을 보관하고, 브라우저 종료 또는 갱신 시 그대로 유지시키는 데모입니다.</p>
 		<p>칼럼 레이아웃 뿐만 아니라 스크롤이 있는 경우 스크롤의 위치까지 모두 보관하여 다시 방문 시 그대로 유지시킵니다.</p>
 		<p>데모는 localStorage 를 활용하여 상태를 저장하고 있습니다. 개발 기획에 따라 해당 정보를 DB 상에 저장도 가능합니다.</p>
-		<p>브라우저 닫을 때 자동으로 상태 저장을 원하면  beforeunload(pagehide) 이벤트를 활용하십시오.</p>
+		<p>브라우저 닫을 때 자동으로 상태 저장을 원하면 beforeunload(pagehide) 이벤트를 활용하십시오.</p>
 		<ul class="nav_u">
 			<li><input type="checkbox" id="name" value="name" checked="checked" onclick="checkboxChangeHandler(event)"><label for="name">Name</label></li>
 			<li><input type="checkbox" id="country" value="country" checked="checked" onclick="checkboxChangeHandler(event)"><label for="country">Country</label></li>
@@ -281,8 +285,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -290,6 +293,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

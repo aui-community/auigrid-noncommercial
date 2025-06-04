@@ -137,6 +137,7 @@
 
 		// 드랍 완료 이벤트 핸들러
 		const dropEndEventHandler = (e: IGrid.DropEndEvent) => {
+			console.log(e);
 			// 정보 출력
 			const gridDirection: string = '그리드 ' + e.pid + ' → ' + e.pidToDrop;
 			const msg: string = gridDirection + ' 드랍 완료 : ' + e.fromRowIndex + '→' + e.toRowIndex + ' 에 ' + e.items.length + ' 행(들) 드랍 됨';

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.my-right-column {
 		text-align: right;
 	}
@@ -53,69 +51,59 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/country_phone_500.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "orderId",
-		headerText: "Order ID",
-		width: 140
-	}, {
-		dataField: "country",
-		headerText: "Country"
-	}, {
-		dataField: "name",
-		headerText: "Name"
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		filter: { showIcon: true },
-		headerTooltip: { // 헤더 툴팁 표시 HTML 양식
-			show: true,
-			tooltipHtml: '필수로 입력해야 합니다.'
-		},
-		style: "my-column-require-marker" // 칼럼의 사용자 스타일 정의
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		style: "my-right-column"
-	}, {
-		dataField: "phone",
-		headerText: "Phone"
-	}, {
-		dataField: "date",
-		headerText: "Date"
+		requestGridData("./data/country_phone_500.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "orderId",
+			headerText: "Order ID",
+			width: 140
+		}, {
+			dataField: "country",
+			headerText: "Country"
+		}, {
+			dataField: "name",
+			headerText: "Name"
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			filter: { showIcon: true },
+			headerTooltip: { // 헤더 툴팁 표시 HTML 양식
+				show: true,
+				tooltipHtml: '필수로 입력해야 합니다.'
+			},
+			style: "my-column-require-marker" // 칼럼의 사용자 스타일 정의
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			style: "my-right-column"
+		}, {
+			dataField: "phone",
+			headerText: "Phone"
+		}, {
+			dataField: "date",
+			headerText: "Date"
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
-			
 			enableFilter: true,
-
 			showRowNumColumn: true,
-
 			showRowCheckColumn: true,
-
 			// singleRow 선택모드
 			selectionMode: "multipleCells"
 		};
@@ -123,7 +111,6 @@
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	};
-
 </script>
 </head>
 <body>
@@ -131,14 +118,41 @@
 <div id="main">
 	<div class="desc">
 		<p>Proudct 칼럼의 오른쪽 상단에 빨강색 마커를 적용한 모습입니다.</p>
+		<div class="src_cover">
+			<pre>
+/* 칼럼 스타일 정의 */
+.my-column-require-marker {
+	background: #ffffee;
+}
+.my-column-require-marker:after {
+	position: absolute;
+	content: "";
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: linear-gradient(-135deg, #ff0000 6px, transparent 0);
+	pointer-events: none;
+}
+
+....
+// 그리드 칼럼 레이아웃 설정
+const columnLayout = [{
+...
+}, {
+	dataField: "product",
+	headerText: "Product",
+	style: "my-column-require-marker" // 칼럼의 사용자 스타일 정의
+}, {
+...</pre>
+		</div>
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -146,6 +160,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

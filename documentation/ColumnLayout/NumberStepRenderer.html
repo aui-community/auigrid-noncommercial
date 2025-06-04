@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
@@ -16,6 +16,8 @@
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <script src="../static/doc.js" type="text/javascript"></script>
+
+
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -23,7 +25,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.14 Documentation</span>
+<span id="title">AUIGrid 3.0.16 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -40,8 +42,8 @@
 <p><strong>칼럼의 editRenderer 와 renderer 속성의 type 모두 설정 가능합니다.</strong></p>
 <p></p>
 <a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
-<div class="mxmlSyntax" id="mxmlSyntax"><pre>
-var columnLayout = [ {
+<div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">
+const columnLayout = [{
      dataField : "name",
      headerText : "Name",
      width : 140
@@ -57,7 +59,7 @@ var columnLayout = [ {
             textEditable : false
       }
 }];
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
@@ -73,7 +75,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.13<br>
  <p>숫자 입력 시 인푸터에 천단위 표시 컴마를 출력할지 여부를 지정합니다.</p>
-  기본값(default) : <code>true</code>.</td>
+ 기본값(default) : <code>true</code></td>
 </tr>
 <tr id="inputHeight">
 <td class="summaryTableSignatureCol">
@@ -84,7 +86,7 @@ var columnLayout = [ {
 <p>renderer 속성의 type 으로 설정한 경우, 인푸터(inputer)의 높이를 지정합니다.</p>
 <p>지정하지 않은 경우 자동 결정됩니다.</p>
 <p>editRenderer 속성의 type 으로 설정된 경우, 이 속성은 무시됩니다.</p>
- 기본값(default) : <code>NaN</code>.</td>
+기본값(default) : <code>NaN</code></td>
 </tr>
 <tr id="inputMode">
 <td class="summaryTableSignatureCol">
@@ -106,7 +108,7 @@ var columnLayout = [ {
  <li>url : URL 입력에 최적화한 가상 키보드를 제공합니다.</li>
  <li>none : 가상 키보드를 출력하지 않습니다.</li>
  </ul>
-  기본값(default) : <code>"text"</code>.</td>
+ 기본값(default) : <code>"text"</code></td>
 </tr>
 <tr id="isHorizontalStep">
 <td class="summaryTableSignatureCol">
@@ -115,7 +117,7 @@ var columnLayout = [ {
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.7.1<br>
 <p>넘버 감소/증가 버턴(스텝퍼)를 좌,우로 설정할지 여부를 지정합니다.</p>
- 기본값(default) : <code>false</code>.</td>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="max">
 <td class="summaryTableSignatureCol">
@@ -126,7 +128,7 @@ var columnLayout = [ {
 <p>넘버링이 될 수 있는 최대값을 지정합니다.</p>
 <p>이 속성에서 지정한 값보다 커지지 않습니다.</p>
 <p>이 속성을 null 또는 NaN 으로 지정하면 최대 입력 제한을 두지 않습니다.</p>
- 기본값(default) : <code>100</code>.</td>
+기본값(default) : <code>100</code></td>
 </tr>
 <tr id="min">
 <td class="summaryTableSignatureCol">
@@ -137,7 +139,7 @@ var columnLayout = [ {
 <p>넘버링이 될 수 있는 최소값을 지정합니다.</p>
 <p>이 속성에서 지정한 값보다 작아지지 않습니다.</p>
 <p>이 속성을 null 또는 NaN 으로 지정하면 최소 입력 제한을 두지 않습니다.</p>
- 기본값(default) : <code>0</code>.</td>
+기본값(default) : <code>0</code></td>
 </tr>
 <tr id="sensitivity">
 <td class="summaryTableSignatureCol">
@@ -147,7 +149,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.11.10<br>
  <p>넘버 감소/증가 버턴(스텁퍼)를 계속 누르고 있는 경우 넘버의 증가/감소 민감도를 지정합니다.</p>
  <p>예로 해당 민감도를 300 으로 설정하면 계속 누르고 있을 때 0.3초마다 넘버는 증가/감소하게 됩니다.</p>
-  기본값(default) : <code>100</code>.</td>
+ 기본값(default) : <code>100</code></td>
 </tr>
 <tr id="step">
 <td class="summaryTableSignatureCol">
@@ -157,7 +159,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Number<br>
 <p>넘버링의 단계를 지정합니다.</p>
 <p>예를 이 속성을 1로 설정하면 1씩 증가 하거나, 감소합니다.</p>
- 기본값(default) : <code>1</code>.</td>
+기본값(default) : <code>1</code></td>
 </tr>
 <tr id="textAlign">
 <td class="summaryTableSignatureCol">
@@ -167,7 +169,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.3<br>
 <p>넘버스텝퍼의 인푸터(inputer)에서 입력 텍스트의 정렬을 지정합니다.</p>
 <p>유효값은 "left", "right", "center" 입니다.</p>
- 기본값(default) : <code>"right"</code>.</td>
+기본값(default) : <code>"right"</code></td>
 </tr>
 <tr id="textEditable">
 <td class="summaryTableSignatureCol">
@@ -177,7 +179,7 @@ var columnLayout = [ {
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean<br>
 <p>넘버스텝퍼를 마우스가 아닌 키보드로 편집할 수 있는지 여부를 지정합니다.</p>
 <p>이 값이 false 이면 키보드로 편집할 수 없습니다.</p>
- 기본값(default) : <code>true</code>.</td>
+기본값(default) : <code>true</code></td>
 </tr>
 </table>
 </div>

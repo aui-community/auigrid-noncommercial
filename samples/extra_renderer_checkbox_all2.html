@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-left {
 		text-align: left;
@@ -43,66 +41,55 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "Client ID",
-		disableGrouping: true
-	}, {
-		dataField: "name",
-		headerText: "Name",
-		styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-			if (value == "Anna") {
-				return "disable-check-style";
-			}
-			return null;
-		}
-	}, {
-		dataField: "product",
-		headerText: "Product"
-	}, {
-		dataField: "date",
-		headerText: "Date"
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric"
+		requestGridData("./data/normal_100.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "Client ID",
+			disableGrouping: true
+		}, {
+			dataField: "name",
+			headerText: "Name",
+			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (value === "Anna") {
+					return "disable-check-style";
+				}
+			}
+		}, {
+			dataField: "product",
+			headerText: "Product"
+		}, {
+			dataField: "date",
+			headerText: "Date"
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric"
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			// 체크박스 표시 설정
 			showRowCheckColumn: true,
-
 			// 전체 선택 체크박스가 독립적인 역할을 할지 여부
 			independentAllCheckBox: true,
-
 			// 엑스트라 체크박스 visible 함수
 			// 이 함수는 렌더링 시 빈번히 호출됩니다. 무리한 DOM 작업 하지 마십시오. (성능에 영향을 미침)
 			rowCheckVisibleFunction: function (rowIndex, isChecked, item) {
-				if (item.name == "Anna") { // 이름이 Anna 인 경우 
+				if (item.name === "Anna") { // 이름이 Anna 인 경우 
 					return false; // false 반환하면 보이지 않게 처리됨
 				}
 				return true;
@@ -112,24 +99,19 @@
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-
 		// 전체 체크박스 클릭 이벤트 바인딩
 		AUIGrid.bind(myGridID, "rowAllChkClick", function (event) {
-			if (event.checked) {
-				// name 의 값들 얻기
-				var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "name");
-				// Anna 제거하기
-				uniqueValues.splice(uniqueValues.indexOf("Anna"), 1);
-				AUIGrid.setCheckedRowsByValue(event.pid, "name", uniqueValues);
+			const { pid, checked } = event;
+			if (checked) {
+				const allNames = AUIGrid.getColumnDistinctValues(pid, "name"); // 모든 이름 얻기
+				const filtered = allNames.filter(name => name !== "Anna"); // Anna 는 제거
+				AUIGrid.setCheckedRowsByValue(pid, "name", filtered);
 			} else {
-				AUIGrid.setCheckedRowsByValue(event.pid, "name", []);
+				AUIGrid.setCheckedRowsByValue(pid, "name", []);
 			}
 		});
-
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -143,7 +125,7 @@
 // 엑스트라 체크박스 visible 함수
 // 이 함수는 렌더링 시 빈번히 호출됩니다. 무리한 DOM 작업 하지 마십시오. (성능에 영향을 미침)
 rowCheckVisibleFunction : function(rowIndex, isChecked, item) {
-	if(item.name == "Anna") { // 이름이 Anna 인 경우 
+	if(item.name === "Anna") { // 이름이 Anna 인 경우 
 		return false; // false 반환하면 보이지 않게 처리됨
 	}
 	return true;
@@ -155,8 +137,7 @@ rowCheckVisibleFunction : function(rowIndex, isChecked, item) {
 		<div id="grid_wrap" style="width:100%;height:380px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -164,6 +145,5 @@ rowCheckVisibleFunction : function(rowIndex, isChecked, item) {
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,10 +29,11 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style type="text/css">
+<style>
 	/* 기본 칼럼 스타일 재정의 */
 	.aui-grid-default-column {
 		text-align: right;
@@ -55,198 +53,189 @@
 		color: #00aa00;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/revenue_region.json");
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "region",
-		headerText: "지역<br>(지역 별 매출)",
-		style: "my-column-style",
-		width: 120
-	}, {
-		dataField: "p1201",
-		headerText: "'12 1월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1202",
-		headerText: "'12 2월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1203",
-		headerText: "'12 3월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1204",
-		headerText: "'12 4월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1205",
-		headerText: "'12 5월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1206",
-		headerText: "'12 6월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1207",
-		headerText: "'12 7월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1208",
-		headerText: "'12 8월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1209",
-		headerText: "'12 9월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1210",
-		headerText: "'12 10월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1211",
-		headerText: "'12 11월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1212",
-		headerText: "'12 12월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}];
-
-	// 푸터 설정
-	var footerLayout = [];
-
-	// 첫 번째 푸터 행 정의 
-	footerLayout[0] = [{
-		labelText: "∑",
-		positionField: "#base",
-		style: "my-column-style",
-		rowSpan: 4 // 셀 세로 4개 병합
-	}, {
-		positionField: "region",
-		style: "my-footer-style",
-		labelText: "최소값"
-	}, {
-		positionField: "p1201", dataField: "p1201",
-		labelText: "개별 세로(3)", style: "my-footer-style",
-		rowSpan: 3 // 셀 세로 3개 병합
-	}, {
-		positionField: "p1202", dataField: "p1202",
-		labelText: "개별 세로(2)", style: "my-footer-style",
-		rowSpan: 2 // 셀 세로 2개 병합
-	}, {
-		positionField: "p1203", dataField: "p1203",
-		operation: "MIN", formatString: "#,##0"
-	}, {
-		positionField: "p1204", dataField: "p1204",
-		labelText: "2X2 블럭-상", style: "my-footer-style",
-		rowSpan: 2, colSpan: 2 // 가로, 세로 혼합 병합 (블럭 병합)
-	}, {
-		positionField: "p1206", dataField: "p1206",
-		operation: "MIN", formatString: "#,##0"
-	}, {
-		positionField: "p1209", dataField: "p1209",
-		operation: "MIN", formatString: "#,##0"
-	}, {
-		positionField: "p1210", dataField: "p1210",
-		labelText: "2X3 블럭", style: "my-footer-style",
-		rowSpan: 3, colSpan: 2 // 가로, 세로 혼합 병합 (블럭 병합)
-	}, {
-		positionField: "p1212", dataField: "p1212",
-		operation: "MIN", formatString: "#,##0"
-	}];
-
-	// 두 번째 푸터 행 정의 
-	footerLayout[1] = [{
-		positionField: "region",
-		style: "my-footer-style",
-		labelText: "최대값"
-	}, {
-		positionField: "p1203", dataField: "p1203",
-		operation: "MAX", formatString: "#,##0"
-	}, {
-		positionField: "p1206", dataField: "p1206",
-		operation: "MAX", formatString: "#,##0"
-	}, {
-		positionField: "p1207", dataField: "p1207",
-		labelText: "2X2 블럭-중", style: "my-footer-style",
-		colSpan: 2, rowSpan: 2 // 가로, 세로 혼합 병합 (블럭 병합)
-	}, {
-		positionField: "p1209", dataField: "p1209",
-		operation: "MAX", formatString: "#,##0"
-	}, {
-		positionField: "p1212", dataField: "p1212",
-		operation: "MAX", formatString: "#,##0"
-	}];
-
-	//세 번째 푸터 행 정의 
-	footerLayout[2] = [{
-		positionField: "region",
-		style: "my-footer-style",
-		labelText: "합계"
-	}, {
-		positionField: "p1203", dataField: "p1203",
-		operation: "SUM", formatString: "#,##0"
-	}, {
-		positionField: "p1204", dataField: "p1204",
-		labelText: "2X2 블럭-하", style: "my-footer-style",
-		rowSpan: 2, colSpan: 2 // 가로, 세로 혼합 병합 (블럭 병합)
-	}, {
-		positionField: "p1206", dataField: "p1206",
-		operation: "SUM", formatString: "#,##0"
-	}, {
-		positionField: "p1209", dataField: "p1209",
-		operation: "SUM", formatString: "#,##0"
-	}, {
-		positionField: "p1212", dataField: "p1212",
-		operation: "SUM", formatString: "#,##0"
-	}];
+		requestGridData("./data/revenue_region.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "region",
+			headerText: "지역<br>(지역 별 매출)",
+			style: "my-column-style",
+			width: 120
+		}, {
+			dataField: "p1201",
+			headerText: "'23 1월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1202",
+			headerText: "'23 2월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1203",
+			headerText: "'23 3월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1204",
+			headerText: "'23 4월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1205",
+			headerText: "'23 5월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1206",
+			headerText: "'23 6월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1207",
+			headerText: "'23 7월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1208",
+			headerText: "'23 8월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1209",
+			headerText: "'23 9월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1210",
+			headerText: "'23 10월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1211",
+			headerText: "'23 11월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1212",
+			headerText: "'23 12월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}];
 
-		var gridProps = {
+		// 그리드 푸터 설정
+		const footerLayout = [];
+
+		// 첫 번째 푸터 행 정의 
+		footerLayout[0] = [{
+			labelText: "∑",
+			positionField: "#base",
+			style: "my-column-style",
+			rowSpan: 4 // 셀 세로 4개 병합
+		}, {
+			positionField: "region",
+			style: "my-footer-style",
+			labelText: "최소값"
+		}, {
+			positionField: "p1201", dataField: "p1201",
+			labelText: "개별 세로(3)", style: "my-footer-style",
+			rowSpan: 3 // 셀 세로 3개 병합
+		}, {
+			positionField: "p1202", dataField: "p1202",
+			labelText: "개별 세로(2)", style: "my-footer-style",
+			rowSpan: 2 // 셀 세로 2개 병합
+		}, {
+			positionField: "p1203", dataField: "p1203",
+			operation: "MIN", formatString: "#,##0"
+		}, {
+			positionField: "p1204", dataField: "p1204",
+			labelText: "2X2 블럭-상", style: "my-footer-style",
+			rowSpan: 2, colSpan: 2 // 가로, 세로 혼합 병합 (블럭 병합)
+		}, {
+			positionField: "p1206", dataField: "p1206",
+			operation: "MIN", formatString: "#,##0"
+		}, {
+			positionField: "p1209", dataField: "p1209",
+			operation: "MIN", formatString: "#,##0"
+		}, {
+			positionField: "p1210", dataField: "p1210",
+			labelText: "2X3 블럭", style: "my-footer-style",
+			rowSpan: 3, colSpan: 2 // 가로, 세로 혼합 병합 (블럭 병합)
+		}, {
+			positionField: "p1212", dataField: "p1212",
+			operation: "MIN", formatString: "#,##0"
+		}];
+
+		// 두 번째 푸터 행 정의 
+		footerLayout[1] = [{
+			positionField: "region",
+			style: "my-footer-style",
+			labelText: "최대값"
+		}, {
+			positionField: "p1203", dataField: "p1203",
+			operation: "MAX", formatString: "#,##0"
+		}, {
+			positionField: "p1206", dataField: "p1206",
+			operation: "MAX", formatString: "#,##0"
+		}, {
+			positionField: "p1207", dataField: "p1207",
+			labelText: "2X2 블럭-중", style: "my-footer-style",
+			colSpan: 2, rowSpan: 2 // 가로, 세로 혼합 병합 (블럭 병합)
+		}, {
+			positionField: "p1209", dataField: "p1209",
+			operation: "MAX", formatString: "#,##0"
+		}, {
+			positionField: "p1212", dataField: "p1212",
+			operation: "MAX", formatString: "#,##0"
+		}];
+
+		//세 번째 푸터 행 정의 
+		footerLayout[2] = [{
+			positionField: "region",
+			style: "my-footer-style",
+			labelText: "합계"
+		}, {
+			positionField: "p1203", dataField: "p1203",
+			operation: "SUM", formatString: "#,##0"
+		}, {
+			positionField: "p1204", dataField: "p1204",
+			labelText: "2X2 블럭-하", style: "my-footer-style",
+			rowSpan: 2, colSpan: 2 // 가로, 세로 혼합 병합 (블럭 병합)
+		}, {
+			positionField: "p1206", dataField: "p1206",
+			operation: "SUM", formatString: "#,##0"
+		}, {
+			positionField: "p1209", dataField: "p1209",
+			operation: "SUM", formatString: "#,##0"
+		}, {
+			positionField: "p1212", dataField: "p1212",
+			operation: "SUM", formatString: "#,##0"
+		}];
+
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
-
 			showFooter: true,
-
 			// 푸터 행 개수 설정
 			footerRowCount: 4,
-
 			// 기본 푸터 높이
 			footerHeight: 24,
-
 			// 푸터 행를 각각 20, 20, 30 으로 적용시킴
 			// 만약 지정하지 않는 경우 기본 footerHeight 이 적용됨
 			//footerHeights : [20, 20, 30],
-
 			headerHeight: 50,
-
 			fixedColumnCount: 1
 		};
 
@@ -255,20 +244,18 @@
 
 		// 푸터 레이아웃 세팅
 		AUIGrid.setFooter(myGridID, footerLayout);
-	};
+	}
 
 	//엑셀 내보내기(Export);
 	function exportClick() {
-
 		// 내보내기 실행
 		AUIGrid.exportToXlsx(myGridID);
-	};
-
+	}
 
 	// 푸터 변경하기
 	function changeFooter() {
 		// 변경할 푸터 설정
-		var footerLayout = [{
+		const footerLayout = [{
 			labelText: "1분기 개별  평균",
 			positionField: "region",
 			rowSpan: 3
@@ -291,9 +278,7 @@
 
 		// 푸터 레이아웃 변경
 		AUIGrid.changeFooterLayout(myGridID, footerLayout);
-	};
-
-
+	}
 </script>
 
 </head>
@@ -306,10 +291,9 @@
 			<span onclick="changeFooter();" class="btn">푸터 변경하기</span>
 			<span class="btn" onclick="exportClick()">엑셀(xlsx)로 저장</span>
 		</div>
-
 		<div class="src_cover">
-<xmp>// 푸터 레이아웃 정의
-var footerLayout = [];
+			<pre>// 푸터 레이아웃 정의
+const footerLayout = [];
 
 // 첫번째 푸터 행 정의
 footerLayout[0] = [{
@@ -320,13 +304,13 @@ footerLayout[0] = [{
 	positionField : "p1202", dataField : "p1202",
 	labelText : "개별 세로(2)", style : "my-footer-style",
 	rowSpan : 2 // 셀 세로 2개 병합
-....
-....
+	....
+	....
 }];
 
 // 두번째 푸터 행 정의
 footerLayout[1] = [{
-...
+	...
 }, {
 	positionField : "p1207", dataField : "p1207",
 	labelText : "2X2 블럭-중", style : "my-footer-style",
@@ -334,7 +318,7 @@ footerLayout[1] = [{
 }, {
 ....
 ....
-</xmp>
+</pre>
 		</div>
 	</div>
 
@@ -343,7 +327,7 @@ footerLayout[1] = [{
 		<div id="grid_wrap" style="width:100%;height:340px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 
 	</div>
 </div>
@@ -352,6 +336,5 @@ footerLayout[1] = [{
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

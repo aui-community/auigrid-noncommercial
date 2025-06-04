@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -30,7 +27,8 @@
 
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
-<style type="text/css">
+
+<style>
 	pre {
 		font-size: 12px;
 		font-family: 'Malgun Gothic', '맑은 고딕', AppleSDGothicNeo-Light, sans-serif;
@@ -49,9 +47,8 @@
 		line-height: 1.5em;
 	}
 </style>
-<script type="text/javascript">
-	function documentReady() {
-	};
+<script>
+	function init() { };
 </script>
 </head>
 <body>
@@ -241,7 +238,7 @@ window.AUIGrid.SpectrumEditor = window.AUIGrid.Class({
 		</div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -249,6 +246,5 @@ window.AUIGrid.SpectrumEditor = window.AUIGrid.Class({
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

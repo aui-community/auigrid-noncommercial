@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-column {
 		background: #ffffee;
@@ -39,70 +37,62 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		var url = "./data/normal_500.json";
-		requestData(url);
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name",
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "width를 140으로 지정, <br>이 칼럼은 사용자가 드래깅으로 바꾸지 않는 한 항상 140을 유지합니다."
-		},
-		width: 140
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "width를 30%로 지정, <br>이 칼럼은 그리드의 크기에 유동적으로 변합니다.<br>단, 사용자가 드래깅으로 바꾸게 되면 고정값으로 변경됩니다."
-		},
-		width: "30%"
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "width를  10%로 지정했지만, minWidth를 50으로 지정, <br>이 칼럼은 그리드의 크기에 유동적으로 변하나 어떠한 경우에도 50보다 작아지지 않습니다.<br>단, 사용자가 드래깅으로 바꾸게 되면 고정값으로 변경됩니다."
-		},
-		width: "10%",
-		minWidth: 50
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric",
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "width를 지정하지 않음.<br>width를 지정하지 않으면 남은 사이즈에서<br>width를 지정하지 않은 수 만큼 나눠 갖습니다.<br>따라서 그리드 전체 크기가 변하면 따라서 변합니다."
-		}
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric"
+		requestGridData("./data/normal_500.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Name",
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "width를 140으로 지정, <br>이 칼럼은 사용자가 드래깅으로 바꾸지 않는 한 항상 140을 유지합니다."
+			},
+			width: 140
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "width를 30%로 지정, <br>이 칼럼은 그리드의 크기에 유동적으로 변합니다.<br>단, 사용자가 드래깅으로 바꾸게 되면 고정값으로 변경됩니다."
+			},
+			width: "30%"
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "width를  10%로 지정했지만, minWidth를 50으로 지정, <br>이 칼럼은 그리드의 크기에 유동적으로 변하나 어떠한 경우에도 50보다 작아지지 않습니다.<br>단, 사용자가 드래깅으로 바꾸게 되면 고정값으로 변경됩니다."
+			},
+			width: "10%",
+			minWidth: 50
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric",
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "width를 지정하지 않음.<br>width를 지정하지 않으면 남은 사이즈에서<br>width를 지정하지 않은 수 만큼 나눠 갖습니다.<br>따라서 그리드 전체 크기가 변하면 따라서 변합니다."
+			}
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric"
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			// true 설정하면 "고정 픽셀 지정된 칼럼" 을 제외한 크기에서 해당 비율만큼 width 가 할당(퍼센티지 width)
 			applyRestPercentWidth: false
 		};
@@ -115,7 +105,6 @@
 		if (myGridID)
 			AUIGrid.resize(myGridID, w, h);
 	}
-
 </script>
 
 </head>
@@ -148,6 +137,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

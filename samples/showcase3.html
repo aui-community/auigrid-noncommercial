@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,12 +28,14 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+
+<!-- PDF 내보내기 필수 JS 추가-->
 <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style type="text/css">
+<style>
 	/* 디폴트 칼럼 스타일 */
 	.aui-grid-default-column {
 		text-align: right;
@@ -61,225 +60,191 @@
 		color: #2F9D27;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/chanel_marketing.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "title",
-		headerText: " ",
-		style: "my-custom-column",
-		width: 280
-	}, {
-		dataField: "m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12",
-		headerText: "추 세",
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "합계 행에 대하여 1월에서 12월 간 추세를 나타냅니다."
-		},
-		headerStyle: "my-custom-column2",
-		renderer: {
-			type: "SparkLineRenderer",
-			renderingField: "_isMySum" // 데이터에서 _isMySum 필드의 값이 true 인 경우만 스파크 그림
-		},
-		width: 120
-	}, {
-
-		headerText: "2014 상반기",
-		headerStyle: "my-custom-column2",
-		children: [
-			{
-				dataField: "m1",
-				headerText: "1월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m2",
-				headerText: "2월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m3",
-				headerText: "3월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m4",
-				headerText: "4월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m5",
-				headerText: "5월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m6",
-				headerText: "6월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}
-		]
-	}, {
-		headerText: "2014 하반기",
-		headerStyle: "my-custom-column2",
-		children: [
-			{
-				dataField: "m7",
-				headerText: "7월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m8",
-				headerText: "8월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m9",
-				headerText: "9월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m10",
-				headerText: "10월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m11",
-				headerText: "11월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}, {
-				dataField: "m12",
-				headerText: "12월",
-				width: 60,
-				dataType: "numeric",
-				formatString: "#,##0"
-			}
-		]
-	}, {
-		headerText: "합계",
-		dataField: "mySumCol", // 해당 칼럼에 출력 시키는 값은 dataField 가 아닌 해당 row 의 m1~m12의  합을 labelFunction() 으로 출력시킴
-		dataType: "numeric",
-		headerStyle: "my-custom-column2",
-		style: "my-custom-column3",
-		labelFunction: function (rowIndex, columnIndex, labelText, headerText, item, dataField) {
-			if (!item._$isBranch) {
-				var sum = 0;
-				var c_value;
-				for (var i = 1; i <= 12; i++) {
-					c_value = Number(item["m" + i]);
-					if (!isNaN(c_value))
-						sum += c_value;
-				}
-				if (isNaN(sum))
-					return "";
-				else
-					return AUIGrid.formatNumber(sum, "#,##0.00");
-			}
-			return "";
-		}
-	}];
+		requestGridData("./data/chanel_marketing.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "title",
+			headerText: " ",
+			style: "my-custom-column",
+			width: 280
+		}, {
+			dataField: "m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12",
+			headerText: "추 세",
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "합계 행에 대하여 1월에서 12월 간 추세를 나타냅니다."
+			},
+			headerStyle: "my-custom-column2",
+			renderer: {
+				type: "SparkLineRenderer",
+				renderingField: "_isMySum" // 데이터에서 _isMySum 필드의 값이 true 인 경우만 스파크 그림
+			},
+			width: 120
+		}, {
+			headerText: "2024 상반기",
+			headerStyle: "my-custom-column2",
+			children: [
+				{
+					dataField: "m1",
+					headerText: "1월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m2",
+					headerText: "2월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m3",
+					headerText: "3월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m4",
+					headerText: "4월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m5",
+					headerText: "5월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m6",
+					headerText: "6월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}
+			]
+		}, {
+			headerText: "2024 하반기",
+			headerStyle: "my-custom-column2",
+			children: [
+				{
+					dataField: "m7",
+					headerText: "7월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m8",
+					headerText: "8월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m9",
+					headerText: "9월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m10",
+					headerText: "10월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m11",
+					headerText: "11월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}, {
+					dataField: "m12",
+					headerText: "12월",
+					width: 60,
+					dataType: "numeric",
+					formatString: "#,##0"
+				}
+			]
+		}, {
+			headerText: "합계",
+			dataField: "mySumCol", // 해당 칼럼에 출력 시키는 값은 dataField 가 아닌 해당 row 의 m1~m12의  합을 labelFunction() 으로 출력시킴
+			dataType: "numeric",
+			headerStyle: "my-custom-column2",
+			style: "my-custom-column3",
+			labelFunction: function (rowIndex, columnIndex, labelText, headerText, item, dataField) {
+				let sum = 0;
+				for (let i = 1; i <= 12; i++) {
+					const value = Number(item["m" + i]);
+					if (!isNaN(value)) {
+						sum += value;
+					}
+				}
+				if (isNaN(sum)) return "";
+				return AUIGrid.formatNumber(sum, "#,##0.00");
+			}
+		}];
 
-		var gridProps = {};
-
-		gridProps.enableFilter = true;
-
-		gridProps.useContextMenu = true;
-
-		gridProps.fixedColumnCount = 1;
-
-		gridProps.fixedRowCount = 2;
-
-		// 최초 보여질 때 모두 열린 상태로 출력 여부
-		gridProps.displayTreeOpen = true;
-
-		// 체크박스 사용 안함
-		gridProps.showRowCheckColumn = false;
-
-		gridProps.showRowNumColumn = false;
-
-		// 그리드 ROW 스타일 함수 정의
-		gridProps.rowStyleFunction = function (rowIndex, item) {
-
-			if (item._isMySum) { // 데이터 작성 시 Sum Row 는 _isMySum 을 추가시켜놓음 ( 데이터 참고 )
-
-				// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
-				// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
-				switch (item._$depth) {  // 계층형의 depth 비교 연산
-					case 1:
-						return "aui-grid-row-depth1-style";
-					case 2:
-						return "aui-grid-row-depth2-style";
-					case 3:
-						return "aui-grid-row-depth3-style";
-					default:
-						return "aui-grid-row-depth-default-style";
+		// 그리드 속성성
+		const gridProps = {
+			enableFilter: true,
+			useContextMenu: true,
+			fixedColumnCount: 1,
+			fixedRowCount: 2,
+			displayTreeOpen: true,
+			showRowCheckColumn: false,
+			showRowNumColumn: false,
+			// 그리드 ROW 스타일 함수 정의
+			rowStyleFunction: function (rowIndex, item) {
+				if (item._isMySum) { // 데이터 작성 시 Sum Row 는 _isMySum 을 추가시켜놓음 ( 데이터 참고 )
+					// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
+					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
+					switch (item._$depth) {  // 계층형의 depth 비교 연산
+						case 1:
+							return "aui-grid-row-depth1-style";
+						case 2:
+							return "aui-grid-row-depth2-style";
+						case 3:
+							return "aui-grid-row-depth3-style";
+						default:
+							return "aui-grid-row-depth-default-style";
+					}
 				}
 			}
-
-			return null;
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	}
 
-
 	// 엑셀 내보내기(Export);
 	function exportClick() {
-
 		// 내보내기 실행
 		AUIGrid.exportToXlsx(myGridID, {
 			isRowStyleFront: false
 		});
-	};
+	}
 
 	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
 	function exportPdfClick() {
-
-		// 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
-		if (!AUIGrid.isAvailabePdf(myGridID)) {
-			alert("PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)");
-			return;
-		}
-
 		// 내보내기 실행
 		AUIGrid.exportToPdf(myGridID, {
-			fontPath: "../pdfkit/jejugothic-regular.ttf",
+			fontPath: "../pdfkit/nyjgothic-medium.ttf",
 			isRowStyleFront: false
 		});
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -287,7 +252,6 @@
 	<div class="desc">
 		<span class="btn" style="float:right;" onclick="exportClick()">엑셀(xlsx)로 저장</span>
 		<span class="btn" style="float:right;" onclick="exportPdfClick()">PDF로 저장</span>
-
 		<p style="clear:both;">마케팅 예산을 계층 구조로 출력한 모습입니다. ( 계층구조 데이터 표현 )</p>
 		<p>추세를 나타내는 스파크 라인은 합계에 해당되는 행(Row)에만 선택적으로 그리도록 설정한 모습입니다.</p>
 	</div>
@@ -303,6 +267,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

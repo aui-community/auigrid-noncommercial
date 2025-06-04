@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-column {
 		color: #D9418C;
@@ -41,25 +39,20 @@
 		color: #D9418C;
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid(columnLayout);
-
-
 		// 그리드 데이터 삽입
 		AUIGrid.setGridData(myGridID, getGridData());
-	};
+	}
 
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
+	// 그리드 칼럼 레이아웃 설정
+	const columnLayout = [{
 		dataField: "f1",
 		headerText: "Field 1",
 		width: 100
@@ -105,30 +98,25 @@
 		width: 100
 	}];
 
-	//--- 본 페이지가 샘플(데모)인 관계로 위 columnLayout 하드 코딩함.(예시용)
-	//--- 나머지 칼럼들 생성...
-	for (var i = 9; i < 30; i++) {
-		columnLayout[columnLayout.length] = {
+	// 나머지 칼럼들 생성
+	for (let i = 9; i < 30; i++) {
+		columnLayout.push({
 			dataField: "f" + i,
 			headerText: "Field " + i,
 			width: 100
-		};
+		});
 	};
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid(columnLayout) {
-
-		var gridProps = {
-			enableFilter: true,
-
-			useContextMenu: true,
-
+		// 그리드 속성 설정
+		const gridProps = {
 			// 칼럼 자리 옮기기 설정
 			enableMovingColumn: true,
-
 			editable: true,
-
-			enableSorting: false
+			enableSorting: false,
+			enableFilter: true,
+			useContextMenu: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
@@ -136,34 +124,24 @@
 
 		// columnStateChange 이벤트 바인딩.
 		AUIGrid.bind(myGridID, "columnStateChange", function (event) {
-
-			var str = "eventType :" + event.type;
-			str += ", dataField : " + event.dataField;
-			str += ", prop : " + event.property;
-			str += ", old : " + event.old + ", current : " + event.current;
-
-			document.getElementById("ellapse").innerText = str;
+			const { type, dataField, property, old, current } = event;
+			const str = `eventType: ${type}, dataField: ${dataField}, prop: ${property}, old: ${old}, current: ${current}`;
+			document.getElementById("elapse").textContent = str;
 		});
-	};
+	}
 
 	// 그리드 데이터 생성하여 반환
 	function getGridData() {
-		var i, j, len, len2;
-		var gridData = [];
-		var obj;
-		for (i = 0, len = 1000; i < len; i++) {
-			obj = {};
-			for (j = 1, len2 = 30; j < len2; j++) {
-				obj["f" + j] = "F (" + i + ", " + j + ")";
+		const data = Array.from({ length: 1000 }, (v, i) => {
+			const obj = {};
+			for (let j = 1; j < 30; j++) {
+				obj[`f${j}`] = `F (${i}, ${j})`;
 			}
-			gridData[i] = obj;
-		}
-
-		return gridData;
-	};
-
+			return obj;
+		});
+		return data;
+	}
 </script>
-
 </head>
 <body>
 
@@ -181,7 +159,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 
 	</div>
 </div>
@@ -190,6 +168,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,167 +29,167 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script type="text/javascript">
 
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "field0",
-		headerText: "날짜 시:분",
-		dataType: "date",
-		dateInputFormat: "yyyy/mm/dd HH:MM", // 실제 데이터의 형식 지정
-		formatString: "yyyy년 mm월 dd일 HH시 MM분", // 실제 데이터 형식을 어떻게 표시할지 지정
-		width: 230,
-		renderer: {
-			type: "IconRenderer",
-			iconWidth: 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-			iconHeight: 16,
-			altText: "달력 열기",
-			iconPosition: "aisleRight",
-			iconTableRef: { // icon 값 참조할 테이블 레퍼런스
-				"default": "./assets/calendar-icon.png" // default
-			},
-			onClick: function (event) {
-				// 달력 아이콘 클릭하면 실제로 달력을 띄움.
-				// 즉, 수정으로 진입함.
-				AUIGrid.openInputer(event.pid);
-			}
-		},
-		editRenderer: {
-			type: "CalendarRenderer",
-			defaultFormat: "yyyy/mm/dd HH:MM", // 달력 선택 시 데이터에 적용되는 날짜 형식
-			showEditorBtn: false,
-			showEditorBtnOver: false, // 마우스 오버 시 에디터버턴 출력 여부
-			showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력
-			showTimePicker: true // 시간 선택 출력 여부
-		}
-	}, {
-		dataField: "field1",
-		headerText: "날짜 시:분:초 (유효성 검사 정의)",
-		dataType: "date",
-		dateInputFormat: "yyyy/mm/dd HH:MM:ss", // 실제 데이터의 형식 지정
-		formatString: "yyyy년 mm월 dd일 HH시 MM분 ss초", // 실제 데이터 형식을 어떻게 표시할지 지정
-		width: 230,
-		editRenderer: {
-			type: "CalendarRenderer",
-			defaultFormat: "yyyy/mm/dd HH:MM:ss", // 달력 선택 시 데이터에 적용되는 날짜 형식
-			onlyCalendar: false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-			showPlaceholder: true, // 플레이스홀더 표시
-			placeholder: "____/__/__ __:__:__", // 플레이스홀더 표시 값 지정
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
-			showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력
-			showTimePicker: true, // 시간 선택 출력 여부
-			showTimeSecond: true, // 시간의 초까지 출력 여부
-			showConfirmBtn: true, // 확인 버튼 출력 여부
-			validator: function (oldValue, newValue, item) { // 에디팅 유효성 검사
-				var m, d, h, m2, s;
-				var isValid = true;
-				m = parseInt(newValue.substring(5, 7)); // 월
-				d = parseInt(newValue.substring(8, 10)); // 일
-				h = parseInt(newValue.substring(11, 13)); // 시
-				m2 = parseInt(newValue.substring(14, 16)); // 분
-				s = parseInt(newValue.substring(17, 19)); // 초
-				
-				// 월은 12월, 일은 31일, 시는 24, 분은 60, 초는 60을 넘지 않게..
-				if (m > 12 || d > 31 || h > 24 || m2 > 60 || s > 60) {
-					isValid = false;
-				}
-				// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-				return { "validate": isValid, "message": "유효한 날짜 형식으로 입력해주세요." };
-			}
-		}
-	}, {
-		dataField: "field2",
-		headerText: "시:분:초",
-		dataType: "date",
-		dateInputFormat: "HH:MM:ss", // 실제 데이터의 형식 지정
-		formatString: "HH시 MM분 ss초", // 실제 데이터 형식을 어떻게 표시할지 지정
-		width: 140,
-		editRenderer: {
-			type: "CalendarRenderer",
-			defaultFormat: "HH:MM:ss", // 달력 선택 시 데이터에 적용되는 날짜 형식
-			onlyCalendar: false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-			showPlaceholder: true, // 플레이스홀더 표시
-			placeholder: "__:__:__", // 플레이스홀더 표시 값 지정
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
-			onlyTimeMode: true, // 날짜 선택 없이 시간 선택만 출력 모드
-			showTimePicker: true, // 시간 선택 출력 여부
-			showTimeSecond: true, // 시간의 초까지 출력 여부
-			showConfirmBtn: true // 확인 버튼 출력 여부
-		}
-	}, {
-		dataField: "field3",
-		headerText: "15분 간격 출력",
-		dataType: "date",
-		dateInputFormat: "yyyy/mm/dd HH:MM", // 실제 데이터의 형식 지정
-		formatString: "yyyy. mm. dd. HH:MM", // 실제 데이터 형식을 어떻게 표시할지 지정
-		width: 140,
-		editRenderer: {
-			type: "CalendarRenderer",
-			defaultFormat: "yyyy/mm/dd HH:MM", // 달력 선택 시 데이터에 적용되는 날짜 형식
-			showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
-			showTimePicker: true, // 시간 선택 출력 여부
-			showConfirmBtn: true, // 확인 버튼 출력 여부
-			hourInterval: 1, // 1 시간 간격으로 출력
-			minInterval: 15 // 15분 간격으로 출력
-
-		}
-	}, {
-		dataField: "field4",
-		headerText: "시:분:초 - 직접 시간 리스트 설정",
-		dataType: "date",
-		dateInputFormat: "HH:MM:ss", // 실제 데이터의 형식 지정
-		formatString: "HH:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
-		width: 200,
-		editRenderer: {
-			type: "CalendarRenderer",
-			defaultFormat: "HH:MM:ss", // 달력 선택 시 데이터에 적용되는 날짜 형식
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
-			onlyTimeMode: true, // 날짜 선택 없이 시간 선택만 출력 모드
-			showTimePicker: true, // 시간 선택 출력 여부
-			showTimeSecond: true, // 시간의 초까지 출력 여부
-			showConfirmBtn: true,// 확인 버튼 출력 여부
-			hourList: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18], // 시 출력 리스트
-			minList: [0, 30], // 분 출력 리스트
-			secList: [0] // 초 출력 리스트
-
-		}
-	}, {
-		dataField: "field5",
-		headerText: "yyyymmddHHMMss 값에 대한 입출력",
-		dataType: "date",
-		dateInputFormat: "yyyymmddHHMMss", // 실제 데이터의 형식 지정
-		formatString: "yyyy-mm-dd HH:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
-		width: 240,
-		editRenderer: {
-			type: "CalendarRenderer",
-			defaultFormat: "yyyymmddHHMMss", // 달력 선택 시 데이터에 적용되는 날짜 형식
-			onlyCalendar: false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-			showPlaceholder: true, // 플레이스홀더 표시
-			placeholder: "yyyymmdd______", // 플레이스홀더 표시 값 지정
-			showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
-			showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력
-			showTimePicker: true, // 시간 선택 출력 여부
-			showTimeSecond: true, // 시간의 초까지 출력 여부
-			showConfirmBtn: true // 확인 버튼 출력 여부
-		}
-	}];
+		createAUIGrid();
+		// 그리드 데이터 삽입.
+		AUIGrid.setGridData(myGridID, gridData);
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		let columnLayout = [{
+			dataField: "field0",
+			headerText: "날짜 시:분",
+			dataType: "date",
+			dateInputFormat: "yyyy/mm/dd HH:MM", // 실제 데이터의 형식 지정
+			formatString: "yyyy년 mm월 dd일 HH시 MM분", // 실제 데이터 형식을 어떻게 표시할지 지정
+			width: 230,
+			renderer: {
+				type: "IconRenderer",
+				iconWidth: 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+				iconHeight: 16,
+				altText: "달력 열기",
+				iconPosition: "aisleRight",
+				iconTableRef: { // icon 값 참조할 테이블 레퍼런스
+					"default": "./assets/calendar-icon.png" // default
+				},
+				onClick: function (event) {
+					// 달력 아이콘 클릭하면 실제로 달력을 띄움.
+					// 즉, 수정으로 진입함.
+					AUIGrid.openInputer(event.pid);
+				}
+			},
+			editRenderer: {
+				type: "CalendarRenderer",
+				defaultFormat: "yyyy/mm/dd HH:MM", // 달력 선택 시 데이터에 적용되는 날짜 형식
+				showEditorBtn: false,
+				showEditorBtnOver: false, // 마우스 오버 시 에디터버턴 출력 여부
+				showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+				showTimePicker: true // 시간 선택 출력 여부
+			}
+		}, {
+			dataField: "field1",
+			headerText: "날짜 시:분:초 (유효성 검사 정의)",
+			dataType: "date",
+			dateInputFormat: "yyyy/mm/dd HH:MM:ss", // 실제 데이터의 형식 지정
+			formatString: "yyyy년 mm월 dd일 HH시 MM분 ss초", // 실제 데이터 형식을 어떻게 표시할지 지정
+			width: 230,
+			editRenderer: {
+				type: "CalendarRenderer",
+				defaultFormat: "yyyy/mm/dd HH:MM:ss", // 달력 선택 시 데이터에 적용되는 날짜 형식
+				onlyCalendar: false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+				showPlaceholder: true, // 플레이스홀더 표시
+				placeholder: "____/__/__ __:__:__", // 플레이스홀더 표시 값 지정
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
+				showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+				showTimePicker: true, // 시간 선택 출력 여부
+				showTimeSecond: true, // 시간의 초까지 출력 여부
+				showConfirmBtn: true, // 확인 버튼 출력 여부
+				validator: function (oldValue, newValue, item) { // 에디팅 유효성 검사
+					let m, d, h, m2, s;
+					let isValid = true;
+					m = parseInt(newValue.substring(5, 7)); // 월
+					d = parseInt(newValue.substring(8, 10)); // 일
+					h = parseInt(newValue.substring(11, 13)); // 시
+					m2 = parseInt(newValue.substring(14, 16)); // 분
+					s = parseInt(newValue.substring(17, 19)); // 초
 
-		var gridProps = {
+					// 월은 12월, 일은 31일, 시는 24, 분은 60, 초는 60을 넘지 않게..
+					if (m > 12 || d > 31 || h > 24 || m2 > 60 || s > 60) {
+						isValid = false;
+					}
+					// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+					return { "validate": isValid, "message": "유효한 날짜 형식으로 입력해주세요." };
+				}
+			}
+		}, {
+			dataField: "field2",
+			headerText: "시:분:초",
+			dataType: "date",
+			dateInputFormat: "HH:MM:ss", // 실제 데이터의 형식 지정
+			formatString: "HH시 MM분 ss초", // 실제 데이터 형식을 어떻게 표시할지 지정
+			width: 140,
+			editRenderer: {
+				type: "CalendarRenderer",
+				defaultFormat: "HH:MM:ss", // 달력 선택 시 데이터에 적용되는 날짜 형식
+				onlyCalendar: false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+				showPlaceholder: true, // 플레이스홀더 표시
+				placeholder: "__:__:__", // 플레이스홀더 표시 값 지정
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
+				onlyTimeMode: true, // 날짜 선택 없이 시간 선택만 출력 모드
+				showTimePicker: true, // 시간 선택 출력 여부
+				showTimeSecond: true, // 시간의 초까지 출력 여부
+				showConfirmBtn: true // 확인 버튼 출력 여부
+			}
+		}, {
+			dataField: "field3",
+			headerText: "15분 간격 출력",
+			dataType: "date",
+			dateInputFormat: "yyyy/mm/dd HH:MM", // 실제 데이터의 형식 지정
+			formatString: "yyyy. mm. dd. HH:MM", // 실제 데이터 형식을 어떻게 표시할지 지정
+			width: 140,
+			editRenderer: {
+				type: "CalendarRenderer",
+				defaultFormat: "yyyy/mm/dd HH:MM", // 달력 선택 시 데이터에 적용되는 날짜 형식
+				showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
+				showTimePicker: true, // 시간 선택 출력 여부
+				showConfirmBtn: true, // 확인 버튼 출력 여부
+				hourInterval: 1, // 1 시간 간격으로 출력
+				minInterval: 15 // 15분 간격으로 출력
+
+			}
+		}, {
+			dataField: "field4",
+			headerText: "시:분:초 - 직접 시간 리스트 설정",
+			dataType: "date",
+			dateInputFormat: "HH:MM:ss", // 실제 데이터의 형식 지정
+			formatString: "HH:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
+			width: 200,
+			editRenderer: {
+				type: "CalendarRenderer",
+				defaultFormat: "HH:MM:ss", // 달력 선택 시 데이터에 적용되는 날짜 형식
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
+				onlyTimeMode: true, // 날짜 선택 없이 시간 선택만 출력 모드
+				showTimePicker: true, // 시간 선택 출력 여부
+				showTimeSecond: true, // 시간의 초까지 출력 여부
+				showConfirmBtn: true,// 확인 버튼 출력 여부
+				hourList: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18], // 시 출력 리스트
+				minList: [0, 30], // 분 출력 리스트
+				secList: [0] // 초 출력 리스트
+
+			}
+		}, {
+			dataField: "field5",
+			headerText: "yyyymmddHHMMss 값에 대한 입출력",
+			dataType: "date",
+			dateInputFormat: "yyyymmddHHMMss", // 실제 데이터의 형식 지정
+			formatString: "yyyy-mm-dd HH:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
+			width: 240,
+			editRenderer: {
+				type: "CalendarRenderer",
+				defaultFormat: "yyyymmddHHMMss", // 달력 선택 시 데이터에 적용되는 날짜 형식
+				onlyCalendar: false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+				showPlaceholder: true, // 플레이스홀더 표시
+				placeholder: "yyyymmdd______", // 플레이스홀더 표시 값 지정
+				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
+				showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+				showTimePicker: true, // 시간 선택 출력 여부
+				showTimeSecond: true, // 시간의 초까지 출력 여부
+				showConfirmBtn: true // 확인 버튼 출력 여부
+			}
+		}];
+
+		// 그리드 속성 설정
+		const gridProps = {
 			showRowNumColumn: false,
 			editable: true
 		};
@@ -200,31 +197,32 @@
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 에디팅 시작, 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, ["cellEditBegin", "cellEditEnd"], auiCellEditingHandler);
+		// 에디팅 시작 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+			const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginDesc").textContent = msg;
+		});
 
-		// 그리드 데이터 삽입.
-		AUIGrid.setGridData(myGridID, gridData);
+		// 에디팅 정상 종료 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+			const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
+
+		// 에디팅 취소 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+			const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
 	}
 
-	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditBegin") {
-			document.getElementById("editBeginDesc").innerText = "에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		} else if (event.type == "cellEditEnd") {
-			document.getElementById("editBeginEnd").innerText = "에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		}
-	};
-
 	// 그리드 데이터
-	var gridData = [{ "field0": "2023/12/22 03:05", "field1": "2023/12/22 03:05:45", "field2": "20:23:30", "field3": "2023/12/22 03:00", "field4": "10:30:00", "field5": "20231225123540" },
+	const gridData = [{ "field0": "2023/12/22 03:05", "field1": "2023/12/22 03:05:45", "field2": "20:23:30", "field3": "2023/12/22 03:00", "field4": "10:30:00", "field5": "20231225123540" },
 	{ "field0": "2023/12/23 03:05", "field1": "2023/12/23 06:05:45", "field2": "20:23:30", "field3": "2023/12/22 04:00", "field4": "09:30:00", "field5": "20231226123530" },
 	{ "field0": "2023/12/25 07:05", "field1": "2023/12/24 07:05:45", "field2": "19:25:30", "field3": "2023/12/23 05:00", "field4": "11:00:00", "field5": "20231217123520" },
 	{ "field0": "2023/12/27 08:05", "field1": "2023/12/25 18:05:45", "field2": "20:27:30", "field3": "2023/12/24 06:00", "field4": "12:30:00", "field5": "20231218124510" },
 	{ "field0": "2023/12/28 09:05", "field1": "2023/12/26 20:05:45", "field2": "21:39:30", "field3": "2023/12/25 07:00", "field4": "13:30:00", "field5": "20231219124500" }]
-
-
 </script>
-
 </head>
 <body>
 
@@ -263,6 +261,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

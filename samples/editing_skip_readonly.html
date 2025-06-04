@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.readonly-style {
 		color: #f00;
 		text-decoration: underline;
@@ -43,30 +41,25 @@
 		font-style: italic;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
+	const chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-
 		// AUIGrid 에 데이터 삽입합니다.
-		createRandomData(100);
+		AUIGrid.setGridData(myGridID, genRandomData());
+	}
 
-	};
-
-	var chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
-
-		var columnLayout = [];
-		var column;
-
-		for (var i = 0; i < 26; i++) {
+		// 그리드 칼럼 레이아웃 작성
+		const columnLayout = [];
+		for (let i = 0; i < 26; i++) {
 			columnLayout.push({
 				headerText: chars[i],
 				dataField: i,
@@ -74,13 +67,14 @@
 			});
 
 			// 3의 배수 칼럼에는 editable : false 지정
-			if (i % 3 == 0) {
+			if (i % 3 === 0) {
 				columnLayout[columnLayout.length - 1].style = "readonly-style";
 				columnLayout[columnLayout.length - 1].editable = false;
 			}
 		}
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true, // 수정 모드
 			fixedColumnCount: 1,
 			editableOnFixedCell: false,
@@ -97,63 +91,52 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
 		// 에디팅 시작 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditingHandler);
-
-		// 에디팅 정상 종료 직전 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEndBefore", auiCellEditingHandler);
+		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+			const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginDesc").textContent = msg;
+		});
 
 		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler);
+		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+			const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
+
+		// 에디팅 정상 종료 직전 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
+			// 여기서 반환하는 값이 곧 에디팅 완료 값입니다.
+			// 개발자가 입력한 값을 변경할 수 있습니다.
+			return event.value; // 원래 값으로 적용 시킴
+		});
 
 		// 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditingHandler);
+		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+			const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
 	}
 
 	// 주어진 개수만큼 랜덤 데이터 생성하여 그리드에 삽입
-	function createRandomData(count) {
-		var data = [];
-		var row;
-		for (var i = 1; i <= count; i++) {
-
-			row = {};
-			for (var j = 0; j < 26; j++) {
+	function genRandomData(count = 100) {
+		const data = [];
+		for (let i = 1; i <= count; i++) {
+			const row = {};
+			for (let j = 0; j < 26; j++) {
 				row[j] = chars[j] + ", " + i;
 			}
 			data.push(row);
 		}
-		// 데이터 삽입
-		AUIGrid.setGridData(myGridID, data);
+		return data;
 	}
 
-
-	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditBegin") {
-			if (event.isClipboard && event.columnIndex == 3) // 칼럼 D 는 붙여 넣기 하지 않음.
-				return false;
-			document.getElementById("editBeginDesc").innerText = "에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		} else if (event.type == "cellEditEnd") {
-			document.getElementById("editBeginEnd").innerText = "에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.oldValue + " -> " + event.value;
-		} else if (event.type == "cellEditCancel") {
-			document.getElementById("editBeginEnd").innerText = "에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		} else if (event.type == "cellEditEndBefore") {
-			// 여기서 반환하는 값이 곧 에디팅 완료 값입니다.
-			// 개발자가 입력한 값을 변경할 수 있습니다.
-			return event.value; // 원래 값 그대로 종료 
-		}
-	};
-
 	function toggleSkipReadonlyColumns() {
-		var isSkip = AUIGrid.getProp(myGridID, "skipReadonlyColumns");
-
+		const isSkip = AUIGrid.getProp(myGridID, "skipReadonlyColumns");
 		// skipReadonlyColumns 속성 토글하기
 		AUIGrid.setProp(myGridID, "skipReadonlyColumns", !isSkip);
-
 		// 그리드에 포커스 넣기(즉, 현재 체크박스 선택해서 포커스가 체크박스에 놓임)
 		AUIGrid.setFocus(myGridID);
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -179,6 +162,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

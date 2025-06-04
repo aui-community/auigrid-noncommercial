@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.aui-grid-default-column {
 		text-align: right;
 	}
@@ -48,134 +46,131 @@
 		color: #ff0000;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/revenue_region.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "region",
-		headerText: "지역",
-		style: "aui-grid-my-column",
-		width: 120
-	}, {
-		dataField: "p1201",
-		headerText: "'12 1월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1202",
-		headerText: "'12 2월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1203",
-		headerText: "'12 3월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1204",
-		headerText: "'12 4월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1205",
-		headerText: "'12 5월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1206",
-		headerText: "'12 6월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1207",
-		headerText: "'12 7월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1208",
-		headerText: "'12 8월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1209",
-		headerText: "'12 9월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1210",
-		headerText: "'12 10월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1211",
-		headerText: "'12 11월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1212",
-		headerText: "'12 12월",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}];
-
-	// 푸터 설정
-	var footerLayout = [{
-		labelText: "수도권 합계",
-		positionField: "region",
-		style: "aui-grid-my-column"
-	}, {
-		dataField: "p1201",
-		positionField: "p1201",
-		formatString: "#,##0",
-		expFunction: function (columnValues) {
-			var sum = 0;
-			var gridData = AUIGrid.getGridData(myGridID); // 그리드 데이터 얻기
-			gridData.forEach(function(v) {
-				// 서울, 경기 인천의 경우만 합계 구함
-				if(v.region == "서울" || v.region == "경기인천" ) 
-					sum += v.p1201;
-			});
-			return sum;
-		}
-	}, {
-		dataField: "p1202",
-		positionField: "p1202",
-		labelFunction: function (columnValues) {
-			var sum = 0;
-			var gridData = AUIGrid.getGridData(myGridID); // 그리드 데이터 얻기
-			gridData.forEach(function(v) {
-				// 서울, 경기 인천의 경우만 합계 구함
-				if(v.region == "서울" || v.region == "경기인천" ) 
-					sum += v.p1202;
-			});
-			return AUIGrid.formatNumber(sum, "#,##0");
-		}
-	}];
+		requestGridData("./data/revenue_region.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "region",
+			headerText: "지역",
+			style: "aui-grid-my-column",
+			width: 120
+		}, {
+			dataField: "p1201",
+			headerText: "'12 1월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1202",
+			headerText: "'12 2월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1203",
+			headerText: "'12 3월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1204",
+			headerText: "'12 4월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1205",
+			headerText: "'12 5월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1206",
+			headerText: "'12 6월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1207",
+			headerText: "'12 7월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1208",
+			headerText: "'12 8월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1209",
+			headerText: "'12 9월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1210",
+			headerText: "'12 10월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1211",
+			headerText: "'12 11월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1212",
+			headerText: "'12 12월",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}];
 
-		var gridProps = {};
+		// 그리드 푸터 설정
+		const footerLayout = [{
+			labelText: "수도권 합계",
+			positionField: "region",
+			style: "aui-grid-my-column"
+		}, {
+			dataField: "p1201",
+			positionField: "p1201",
+			formatString: "#,##0",
+			expFunction: function (columnValues) {
+				const gridData = AUIGrid.getGridData(myGridID); // 그리드 데이터 얻기
+				let sum = 0;
+				gridData.forEach(function (v) {
+					// 서울, 경기 인천의 경우만 합계 구함
+					if (v.region === "서울" || v.region === "경기인천")
+						sum += v.p1201;
+				});
+				return sum;
+			}
+		}, {
+			dataField: "p1202",
+			positionField: "p1202",
+			labelFunction: function (columnValues) {
+				const gridData = AUIGrid.getGridData(myGridID); // 그리드 데이터 얻기
+				let sum = 0;
+				gridData.forEach(function (v) {
+					// 서울, 경기 인천의 경우만 합계 구함
+					if (v.region === "서울" || v.region === "경기인천")
+						sum += v.p1202;
+				});
+				return AUIGrid.formatNumber(sum, "#,##0");
+			}
+		}];
 
-		// 푸터 보이게 설정
-		gridProps.showFooter = true;
-
-		// singleRow 선택모드
-		gridProps.selectionMode = "multipleCells";
+		const gridProps = {
+			editable: true,
+			// 푸터 보이게 설정
+			showFooter: true,
+			// singleRow 선택모드
+			selectionMode: "multipleCells",
+			// 고정칼럼 1 적용
+			fixedColumnCount: 1
+		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
@@ -183,9 +178,7 @@
 		// 푸터 레이아웃 세팅
 		AUIGrid.setFooter(myGridID, footerLayout);
 	}
-
 </script>
-
 </head>
 <body>
 
@@ -195,17 +188,17 @@
 		<p>"서울"과 "경기인천"의 합계만 추려서( 원하는 조건에 해당되는 행만 추려서 ) 합계를 직접 구해 출력한 모습입니다.</p>
 		<div class="src_cover">
 			<pre>
-// 푸터 설정
-var footerLayout = [{
+// 그리드 푸터 설정
+const footerLayout = [{
 	dataField: "p1201",
 	positionField: "p1201",
 	formatString: "#,##0",
 	expFunction: function (columnValues) {
-		var sum = 0;
-		var gridData = AUIGrid.getGridData(myGridID); // 그리드 데이터 얻기
+		const gridData = AUIGrid.getGridData(myGridID); // 그리드 데이터 얻기
+		let sum = 0;
 		gridData.forEach(function(v) {
 			// 서울, 경기 인천의 경우만 합계 구함
-			if(v.region == "서울" || v.region == "경기인천" ) 
+			if(v.region === "서울" || v.region === "경기인천" ) 
 				sum += v.p1201;
 		});
 		return sum;
@@ -214,11 +207,11 @@ var footerLayout = [{
 	dataField: "p1202",
 	positionField: "p1202",
 	labelFunction: function (value, columnValues, footerValues) {
-		var sum = 0;
-		var gridData = AUIGrid.getGridData(myGridID); // 그리드 데이터 얻기
+		const gridData = AUIGrid.getGridData(myGridID); // 그리드 데이터 얻기
+		let sum = 0;
 		gridData.forEach(function(v) {
 			// 서울, 경기 인천의 경우만 합계 구함
-			if(v.region == "서울" || v.region == "경기인천" ) 
+			if(v.region === "서울" || v.region === "경기인천" ) 
 				sum += v.p1202;
 		});
 		return AUIGrid.formatNumber(sum, "#,##0");
@@ -232,8 +225,7 @@ var footerLayout = [{
 		<div id="grid_wrap" style="width:100%;height:380px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -241,6 +233,5 @@ var footerLayout = [{
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

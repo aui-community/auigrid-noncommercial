@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,35 +29,30 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script type="text/javascript">
 
+<script>
 	// 상단 그리드 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
 	// 하단 그리드 생성 후 반환ID
-	var myGridID2, myGridID3;
+	let myGridID2, myGridID3;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// 상단 그리드를 생성합니다.
 		createAUIGrid();
-
 		// 하단 그리드를 생성합니다.
 		createDetailAUIGrid();
-
 		// 하단 그리드2를 생성합니다.
 		createDetailAUIGrid2();
-
 		// 데이터 요청하여 상단 그리드에 삽입
-		requestData("./data/normal_500.json");
-	};
+		requestGridData("./data/normal_500.json", myGridID);
+	}
 
 	// Master 그리드 를 생성합니다.
 	function createAUIGrid() {
-
-		// AUIGrid 칼럼 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 160
@@ -100,9 +92,8 @@
 			headerText: "Date"
 		}];
 
-
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			selectionMode: "singleRow",
 			// 드래깅 행 이동 가능 여부 (기본값 : false)
 			enableDrag: true,
@@ -123,22 +114,20 @@
 
 		// 드랍 종료 전 이벤트 바인딩 - 여기서 행 이동, 복사를 결정합니다.
 		AUIGrid.bind(myGridID, "dropEndBefore", function (event) {
-			if (event.items.length == 0) return false;
+			if (event.items.length === 0) return false;
 
+			// 행 복사 모드 설정
 			// 이벤트의 isMoveMode 속성을 false 설정하면 행 복사를 합니다.
 			event.isMoveMode = false;
 
-			// 드랍되는 그리드의 PID
-			var pidToDrop = event.pidToDrop;
-			var item = event.items[0]; // 드래깅 되고 있는 첫번째 행
-			var notHave = AUIGrid.isUniqueValue(pidToDrop, "id", item.id); // 이미 존재하는지 검사
-			if (!notHave) {
-				if (confirm("지금 드랍되는 행은 이미 이전에 드랍된 행입니다. 또 드랍하시겠습니까?")) {
-					return true;
-				} else {
-					return false; // 기본 행위 안함.
-				}
+			const pidToDrop = event.pidToDrop;
+			const item = event.items[0];
+			const isUnique = AUIGrid.isUniqueValue(pidToDrop, "id", item.id);
+
+			if (!isUnique) {
+				return confirm("지금 드랍되는 행은 이미 이전에 드랍된 행입니다. 또 드랍하시겠습니까?");
 			}
+
 			return true; // 만약 return false 를 하게 되면 드랍 행위를 하지 않습니다.(즉, 기본 행위를 안함)
 		});
 
@@ -148,9 +137,8 @@
 
 	// 하단 그리드 생성
 	function createDetailAUIGrid() {
-
-		// AUIGrid 칼럼 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 120
@@ -168,7 +156,7 @@
 		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			selectionMode: "multipleCells",
 			// 드래깅 행 이동 가능 여부 (기본값 : false)
 			enableDrag: false
@@ -179,13 +167,12 @@
 
 		// 최초 빈 배열로 초기화
 		AUIGrid.setGridData(myGridID2, []);
-	};
+	}
 
 	//하단 그리드 생성
 	function createDetailAUIGrid2() {
-
-		// AUIGrid 칼럼 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 120
@@ -211,7 +198,7 @@
 		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			selectionMode: "multipleCells",
 			// 드래깅 행 이동 가능 여부 (기본값 : false)
 			enableDrag: false
@@ -222,18 +209,16 @@
 
 		// 최초 빈 배열로 초기화
 		AUIGrid.setGridData(myGridID3, []);
-	};
+	}
 
 	// 드랍 완료 이벤트 핸들러
 	function dropEndEventHandler(e) {
 		// 정보 출력
-		var gridDirection = "그리드 " + e.pid + " → " + e.pidToDrop;
-		var msg = gridDirection + " 드랍 완료 : " + e.fromRowIndex + "→" + e.toRowIndex + " 에 " + e.items.length + " 행(들) 드랍 됨";
-		document.getElementById("ellapse").innerText = msg;
-	};
-
+		const gridDirection = `그리드 ${e.pid} → ${e.pidToDrop}`;
+		const msg = gridDirection + ` 드랍 완료 : ${e.fromRowIndex} → ${e.toRowIndex} 에 ${e.items.length} 행(들) 드랍 됨`;
+		document.getElementById("elapse").textContent = msg;
+	}
 </script>
-
 </head>
 <body>
 
@@ -249,19 +234,16 @@
 	<div>
 		<!-- 상단 Grid -->
 		<div id="grid_wrap01" style="width:100%;height:240px; margin:0 auto;"></div>
-
 		<div style="width:100%; height:20px;"></div>
-
 		<!-- 하단 Grid -->
 		<div style="width:100%;margin:0 auto;">
 			<div id="grid_wrap02" style="width:49%; height:280px; float:left;margin-right:2%;"></div>
 			<div id="grid_wrap03" style="width:49%; height:280px; float: right;"></div>
 			<div style="clear:both;"></div>
 		</div>
-
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -269,6 +251,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

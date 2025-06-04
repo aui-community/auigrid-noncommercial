@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.pnum {
 		font-weight: bold;
 	}
@@ -41,70 +39,55 @@
 		text-align: left;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/schedule_flat_id.json");
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "Task ID",
-		width: 120,
-		editRenderer: {
-			type: "InputEditRenderer",
-
-			// ID는 고유값만 가능하도록 에디팅 유효성 검사
-			validator: function (oldValue, newValue, rowItem, dataField) {
-				if (oldValue != newValue) {
-					// dataField 에서 newValue 값이 유일한 값인지 조사
-					var isValid = AUIGrid.isUniqueValue(myGridID, dataField, newValue);
-
-					// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-					return { "validate": isValid, "message": newValue + " 값은 고유값이 아닙니다. 다른 값을 입력해 주십시오." };
-				}
-			}
-		}
-	}, {
-		dataField: "name",
-		headerText: "Task Name",
-		style: "left"
-	}];
-
+		requestGridData("./data/schedule_flat_id.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "Task ID",
+			width: 120,
+			editRenderer: {
+				type: "InputEditRenderer",
+				// ID는 고유값만 가능하도록 에디팅 유효성 검사
+				validator: function (oldValue, newValue, rowItem, dataField) {
+					if (oldValue != newValue) {
+						// dataField 에서 newValue 값이 유일한 값인지 조사
+						const isValid = AUIGrid.isUniqueValue(myGridID, dataField, newValue);
+						// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+						return { "validate": isValid, "message": newValue + " 값은 고유값이 아닙니다. 다른 값을 입력해 주십시오." };
+					}
+				}
+			}
+		}, {
+			dataField: "name",
+			headerText: "Task Name",
+			style: "left"
+		}];
 
-		var gridProps = {
-
+		const gridProps = {
 			// singleRow 선택모드
 			selectionMode: "singleRow",
-			
 			hoverMode: "singleRow",
-
 			displayTreeOpen: true,
-
 			editable: true,
-
-			// 일반 데이터를 트리로 표현할지 여부(treeIdField, treeIdRefField 설정 필수)
-			flat2tree: true,
-
 			// 행의 고유 필드명
 			rowIdField: "rowId",
-
+			// 일반 데이터를 트리로 표현할지 여부(treeIdField, treeIdRefField 설정 필수)
+			flat2tree: true,
 			// 트리의 고유 필드명
 			treeIdField: "id",
-
 			// 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
 			treeIdRefField: "parent"
 		};
@@ -113,28 +96,24 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	};
 
-	var isOpen = false;
+	let isOpen = false;
 	function expandItem() {
-
-		var isOpen = AUIGrid.isItemOpenByRowId(myGridID, "r6");
-
+		let isOpen = AUIGrid.isItemOpenByRowId(myGridID, "r6");
 		//-- rowIdField 로 설정한 필드의 값이 r6 인 행 열기/ 닫기
 		AUIGrid.expandItemByRowId(myGridID, "r6", !isOpen);
 	};
 
-	var isExpanded = true;
+	let isExpanded = true;
 	function expand() {
 		if (!isExpanded) {
 			AUIGrid.expandAll(myGridID);
 			isExpanded = true;
-		} else {
-			AUIGrid.collapseAll(myGridID);
-			isExpanded = false;
+			return;
 		}
+		AUIGrid.collapseAll(myGridID);
+		isExpanded = false;
 	};
-
 </script>
-
 </head>
 <body>
 
@@ -156,7 +135,16 @@
 </pre>
 		</div>
 		<p>id 와 parent 필드는 각각 treeIdField, treeIdRefField 속성으로 설정하십시오.</p>
-
+		<div class="src_cover">
+			<pre>
+// 일반 데이터를 트리로 표현할지 여부(treeIdField, treeIdRefField 설정 필수)
+flat2tree: true,
+// 트리의 고유 필드명
+treeIdField: "id",
+// 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
+treeIdRefField: "parent"
+</pre>
+		</div>
 		<ul class="nav_u">
 			<li><button onclick="expand()" class="btn">모두 열기/ 닫기</button></li>
 			<li><button onclick="expandItem()" class="btn">특정 브랜치 열기/닫기</button>(ID = "r6")</li>
@@ -174,6 +162,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

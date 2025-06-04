@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,68 +29,54 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name"
-	}, {
-		dataField: "country",
-		headerText: "Country"
-	}, {
-		dataField: "product",
-		headerText: "Product"
-	}, {
-		dataField: "color",
-		headerText: "Color"
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric"
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric"
-	}, {
-		dataField: "date",
-		headerText: "Date"
+		requestGridData("./data/normal_100.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		let columnLayout = [{
+			dataField: "name",
+			headerText: "Name"
+		}, {
+			dataField: "country",
+			headerText: "Country"
+		}, {
+			dataField: "product",
+			headerText: "Product"
+		}, {
+			dataField: "color",
+			headerText: "Color"
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric"
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric"
+		}, {
+			dataField: "date",
+			headerText: "Date"
+		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
-
+		const gridProps = {
 			// singleRow 선택모드
 			selectionMode: "singleRow",
-
 			showRowCheckColumn: false,
-
 			// 그룹핑 패널 사용
 			useGroupingPanel: true,
-
 			enableMovingColumn: true,
-
-
 			groupingMessage: "여기에 칼럼을 드래그하면 그룹핑이 됩니다."
 		};
 
@@ -106,12 +89,10 @@
 			AUIGrid.setRowPosition(myGridID, 50);
 			AUIGrid.setSelectionByIndex(myGridID, 50);
 
-			document.getElementById("ellapse").innerText = "AUIGrid ready";
+			document.getElementById("elapse").textContent = "AUIGrid ready";
 		});
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -123,8 +104,7 @@
 		<p>
 		<p>주의 : 그리드 좌측에 출력된 행 번호와 행 인덱스(rowIndex)는 다릅니다. rowIndex 는 항상 0부터 시작하지만, 행 번호는 1 또는 0 부터 시작 가능합니다.</p>
 		<div class="src_cover">
-			<pre>
-// 그리드 ready 이벤트 바인딩
+			<pre>// 그리드 ready 이벤트 바인딩
 AUIGrid.bind(myGridID, "ready", function(event) {
 	// ready 이벤트를 바인딩하여 데이터에 맞게 초기 화면설정 작업을 하십시오.
 	AUIGrid.setRowPosition(myGridID, 50);
@@ -138,7 +118,7 @@ AUIGrid.bind(myGridID, "ready", function(event) {
 		<div id="grid_wrap" style="width:100%;height:420px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -146,6 +126,5 @@ AUIGrid.bind(myGridID, "ready", function(event) {
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,84 +29,74 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style type="text/css">
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-column {
 		background: #EBF7FF;
 		color: #000;
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140
-	}, {
-		dataField: "name",
-		headerText: "Name",
-		style: "my-column",
-		width: 140
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		width: 140
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		width: 140
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		width: 140
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric",
-		width: 140
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		width: 140
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 140
+		requestGridData("./data/normal_100.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140
+		}, {
+			dataField: "name",
+			headerText: "Name",
+			style: "my-column",
+			width: 140
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			width: 140
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			width: 140
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			width: 140
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric",
+			width: 140
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			width: 140
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 140
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			selectionMode: "multipleCells",
-
 			// 헤더 컨텍스트 메뉴 사용
 			useContextHeaderMenu: true,
-
 			//  컨텍스트 메뉴를 보기 위해 오른쪽 클릭을 한 경우 클릭 지점이 왼쪽 클릭과 같이 셀 선택을 할지 여부
 			enableRightDownFocus: true // 기본값 : false
 		};
@@ -119,14 +106,13 @@
 
 		// 컨텍스트 메뉴 이벤트 바인딩
 		AUIGrid.bind(myGridID, "contextMenu", function (event) {
-			
-			if(event.target === "body") {
+			if (event.target === "body") {
 				alert("본 데모는 헤더 컨텍스트 데모입니다. 헤더에서 우클릭 하여 메뉴를 확인하십시오.");
 				return false; // contextMenu 이벤트에서 false 반환하면 메뉴 생성 안함.
 			}
 
 			// 컨텍스트 메뉴에 보일 아이템 리스트
-			var myContextMenus = [{
+			const myContextMenus = [{
 				label: "$value (커스텀)", callback: contextItemHandler // label 에 $value 를 설정하면 마우스가 있는 곳의 value 값으로 대체됩니다.
 			}, {
 				label: "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
@@ -136,7 +122,7 @@
 				label: "Open Google.com", callback: contextItemHandler
 			}];
 
-			var myContextMenus2 = [{
+			const myContextMenus2 = [{
 				label: "$value (커스텀)", callback: contextItemHandler // label 에 $value 를 설정하면 마우스가 있는 곳의 value 값으로 대체됩니다.
 			}, {
 				label: "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
@@ -147,14 +133,14 @@
 			}];
 
 			// Name 칼럼에서만 엑셀 내보내기와 구글 열기 메뉴 활성화함.
-			if (event.dataField == "name") {
+			if (event.dataField === "name") {
 				return myContextMenus;
 			}
 
 			// contextMenu 이벤트에서 반환하는 컨텍스트메뉴를 출력함.
 			return myContextMenus2
 		});
-	};
+	}
 
 	//컨텍스트 메뉴 아이템 핸들러
 	function contextItemHandler(event) {
@@ -162,18 +148,15 @@
 			case 0:
 				alert(event.value + ", columnIndex : " + event.columnIndex);
 				break;
-
 			case 2:
 				// 내보내기 실행
 				AUIGrid.exportToXlsx(event.pid);
 				break;
-
 			case 3:
 				window.open("https://www.google.com", "_blank");
 				break;
 		}
-	};
-
+	}
 </script>
 
 </head>
@@ -194,7 +177,7 @@ AUIGrid.bind(myGridID, "contextMenu", function(event) {
 	}
 			
 	// 컨텍스트 메뉴에 보일 아이템 리스트
-	var myContextMenus = [{
+	const myContextMenus = [{
 		label : "$value (커스텀)",  callback : contextItemHandler // label 에 $value 를 설정하면 마우스가 있는 곳의 value 값으로 대체됩니다.
 	}, {
 		label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
@@ -204,7 +187,7 @@ AUIGrid.bind(myGridID, "contextMenu", function(event) {
 		label : "Open Google.com", callback : contextItemHandler
 	}];
 	
-	var myContextMenus2 = [{
+	const myContextMenus2 = [{
 		label : "$value (커스텀)",  callback : contextItemHandler // label 에 $value 를 설정하면 마우스가 있는 곳의 value 값으로 대체됩니다.
 	}, {
 		label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
@@ -215,7 +198,7 @@ AUIGrid.bind(myGridID, "contextMenu", function(event) {
 	}];
 	
 	// Name 칼럼에서만 엑셀 내보내기와 구글 열기 메뉴 활성화함.
-	if(event.dataField == "name") {
+	if(event.dataField === "name") {
 		return myContextMenus;
 	}
 	
@@ -230,8 +213,7 @@ AUIGrid.bind(myGridID, "contextMenu", function(event) {
 		<div id="grid_wrap" style="width:100%;height:380px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -239,6 +221,5 @@ AUIGrid.bind(myGridID, "contextMenu", function(event) {
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

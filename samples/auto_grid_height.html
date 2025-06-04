@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,26 +29,23 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script type="text/javascript">
 
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-	};
+		requestGridData("./data/normal_100.json");
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
-
-		// AUIGrid 칼럼 레이아웃 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 140
@@ -107,12 +101,9 @@
 		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
-
+		const gridProps = {
 			editable: true,
-
 			enableFilter: true,
-
 			// 세로 스크롤 없이 그리드 출력. 그리드 높이는 데이터에 따라 자동 결정됩니다.
 			autoGridHeight: true
 		};
@@ -121,31 +112,27 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	};
 
-
 	//데모용으로 서버 과부하 방지...10번까지만 허용
-	var cnt = 1;
-	var alertDisplayed = false;
+	let cnt = 1;
+	let alertDisplayed = false;
 	//중복 요청을 피하기 위한 플래그
-	var nowRequesting = false;
+	let nowRequesting = false;
 	//현재 페이지
-	var page = 1;
+	let page = 1;
 
 	//추가 데이터 요청 Ajax
-	function requestAdditionalData(url, gridId) {
+	function requestAdditionalData() {
+		if (nowRequesting) return;
 
-		if (nowRequesting) {
-			return;
-		}
-
-		if (cnt > 10) {
+		if (cnt >= 10) {
 			if (!alertDisplayed) {
 				alert("데모 서버 과부하를 방지하기 위해 10번의 추가 요청까지만 허용합니다.");
 			}
 			alertDisplayed = true;
 			return;
 		}
-		cnt++;
 
+		cnt++;
 		// ajax 요청 전 그리드에 로더 표시..원할 경우 주석 제거
 		//AUIGrid.showAjaxLoader(myGridID);
 
@@ -155,32 +142,19 @@
 		// 중복 요청 피하기 위한 플래그
 		nowRequesting = true;
 
-		// 요청 URL
-		var url = "./data/getJson.php?count=20" + "&page=" + page;
-
-		// ajax (XMLHttpRequest) 로 그리드 데이터 요청
-		ajax({
-			url: url,
-			onSuccess: function (data) {
-
-				nowRequesting = false;
-
-				// 그리드 데이터
-				var gridData = data;
-
-				// 그리드 하단에 추가 데이터 삽입
-				AUIGrid.appendData(myGridID, gridData);
-
-				// 로더 제거.. 원할 경우 주석 제거
-				//AUIGrid.removeAjaxLoader(myGridID);
-			},
-			onError: function (status, e) {
-				nowRequesting = false;
-				alert("데이터 요청에 실패하였습니다.\r status : " + status);
-			}
-		});
+		// 추가 데이터 요청 후 그리드 하단에 추가로 붙임 (데이터 추가)
+		fetch(`./data/getJson.php?count=20"&page=${page}`).then((res) => {
+			nowRequesting = false;
+			if (!res.ok) throw new Error('데이터 요청 실패');
+			return res.json();
+		}).then((data) => {
+			nowRequesting = false;
+			// 그리드 하단에 추가 데이터 삽입
+			AUIGrid.appendData(myGridID, data);
+			// 로더 제거.. 원할 경우 주석 제거
+			//AUIGrid.removeAjaxLoader(myGridID);
+		}).catch((err) => console.error('데이터 로딩 오류:', err));
 	}
-
 </script>
 
 </head>
@@ -196,8 +170,7 @@
 		<div class="src_cover">
 			<pre>
 // 그리드 속성 설정
-var gridProps = {
-
+const gridProps = {
 	// 세로 스크롤 없이 그리드 출력. 그리드 높이는 데이터에 따라 자동 결정됩니다.
 	autoGridHeight : true
 };
@@ -212,8 +185,7 @@ var gridProps = {
 		</div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -221,6 +193,5 @@ var gridProps = {
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

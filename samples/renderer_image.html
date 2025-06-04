@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,124 +29,117 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style type="text/css">
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-column {
 		background: #ffffee;
 		font-weight: bold;
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name",
-		width: 140
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		width: 160,
-		renderer: {
-			type: "ImageRenderer",
-			imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
-			altField: null, // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨. 만약 null 을 설정하면 툴팁 표시 안함.
-			imgTableRef: { // 이미지 소스참조할 테이블 레퍼런스
-				"Korea": "./assets/korea.png",
-				"USA": "./assets/usa.png",
-				"UK": "./assets/uk.png",
-				"Japan": "./assets/japan.png",
-				"China": "./assets/china.png",
-				"France": "./assets/france.png",
-				"Italy": "./assets/italy.png",
-				"Singapore": "./assets/singapore.png",
-				"Taiwan": "./assets/taiwan.png",
-				"Ireland": "./assets/ireland.png",
-				"default": "./assets/korea.png" // default
-			}
-		}
-	}, {
-		dataField: "flag",
-		headerText: "Flag",
-		prefix: "./assets/",
-		width: 160,
-		renderer: {
-			type: "ImageRenderer",
-			imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
-			altField: "country" // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
-		}
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		width: 160,
-		renderer: {
-			type: "ImageRenderer",
-			imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
-			altField: "color", // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
-			srcFunction: function (rowIndex, columnIndex, value, item) {
-				switch (value) {
-					case "Blue":
-						return "./assets/blue_circle.png";
-					case "Gray":
-						return "./assets/gray_circle.png";
-					case "Green":
-						return "./assets/green_circle.png";
-					case "Orange":
-						return "./assets/orange2_circle.png";
-					case "Pink":
-						return "./assets/pink_circle.png";
-					case "Violet":
-						return "./assets/violet_circle.png";
-					default:
-						return null; // null 반환하면 이미지 표시 안함.
-				}
-			}, // end of srcFunction
-			aliasFunction: function(rowIndex, columnIndex, value, item) { // 엑셀, PDF 등 내보내기 시 값 가공 함수
-				var src = this.srcFunction(rowIndex, columnIndex, value, item);
-				if(src === null) // null 인 경우
-					return "";
-				return value;
-			}
-		}
-	}];
+		requestGridData("./data/normal_100.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Name",
+			width: 140
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			width: 160,
+			renderer: {
+				type: "ImageRenderer",
+				imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
+				altField: null, // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨. 만약 null 을 설정하면 툴팁 표시 안함.
+				imgTableRef: { // 이미지 소스참조할 테이블 레퍼런스
+					"Korea": "./assets/korea.png",
+					"USA": "./assets/usa.png",
+					"UK": "./assets/uk.png",
+					"Japan": "./assets/japan.png",
+					"China": "./assets/china.png",
+					"France": "./assets/france.png",
+					"Italy": "./assets/italy.png",
+					"Singapore": "./assets/singapore.png",
+					"Taiwan": "./assets/taiwan.png",
+					"Ireland": "./assets/ireland.png",
+					"default": "./assets/korea.png" // default
+				}
+			}
+		}, {
+			dataField: "flag",
+			headerText: "Flag",
+			prefix: "./assets/",
+			width: 160,
+			renderer: {
+				type: "ImageRenderer",
+				imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
+				altField: "country" // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
+			}
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			width: 160,
+			filter: { showIcon: true },
+			renderer: {
+				type: "ImageRenderer",
+				imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
+				altField: "color", // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
+				srcFunction: function (rowIndex, columnIndex, value, item) {
+					switch (value) {
+						case "Blue":
+							return "./assets/blue_circle.png";
+						case "Gray":
+							return "./assets/gray_circle.png";
+						case "Green":
+							return "./assets/green_circle.png";
+						case "Orange":
+							return "./assets/orange2_circle.png";
+						case "Pink":
+							return "./assets/pink_circle.png";
+						case "Violet":
+							return "./assets/violet_circle.png";
+						default:
+							return null; // null 반환하면 이미지 표시 안함.
+					}
+				}, // end of srcFunction
+				aliasFunction: function (rowIndex, columnIndex, value, item) { // 엑셀, PDF 등 내보내기 시 값 가공 함수
+					let src = this.srcFunction(rowIndex, columnIndex, value, item);
+					if (src === null) // null 인 경우
+						return "";
+					return value;
+				}
+			}
+		}];
 
-		var gridProps = {
-			editable: true
+		// 그리드 속성 설정
+		const gridProps = {
+			editable: true,
+			enableFilter: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	};
+	}
 
 	function exportToXlsx() {
 		AUIGrid.exportToXlsx(myGridID);
-	};
+	}
 </script>
-
 </head>
 <body>
 
@@ -160,8 +150,8 @@
 		<p>데모의 Country, Flag, Color 는 모두 이미지렌더러이지만 이미지 소스를 삽입하는 형태를 다양하게 작성한 모습입니다.</p>
 		<span class="btn" onclick="exportToXlsx();">엑셀 내보내기</span>
 		<div class="src_cover">
-			<pre> // AUIGrid 칼럼 레이아웃 설정
-var columnLayout = [{
+			<pre>// 그리드 칼럼 레이아웃 설정
+const columnLayout = [{
 	...
 }, {
 	dataField: "country",
@@ -222,8 +212,7 @@ var columnLayout = [{
 			}
 		} // end of srcFunction
 	}
-}
-			</pre>
+}</pre>
 		</div>
 	</div>
 	<div>
@@ -231,8 +220,7 @@ var columnLayout = [{
 		<div id="grid_wrap" style="width:100%;height:380px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -240,6 +228,5 @@ var columnLayout = [{
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

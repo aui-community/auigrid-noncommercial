@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,10 +28,11 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<script type="text/javascript">
+
+<script>
 
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
 	// document ready 
 	function documentReady() {
@@ -43,11 +41,11 @@
 		createAUIGrid(columnLayout);
 
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/revenue_region.json");
+		requestGridData("./data/revenue_region.json");
 	};
 
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
+	// 그리드 칼럼 레이아웃 설정
+	let columnLayout = [{
 		headerText: " ",
 		children: [{
 			headerText: "Column1",
@@ -139,7 +137,7 @@
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid(columnLayout) {
 
-		var gridProps = {
+		let gridProps = {
 			editable: true,
 			fixedColumnCount: 2
 		};
@@ -148,17 +146,17 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	};
 
-	var idx = 1;
+	let idx = 1;
 	function addColumn() {
 
 		// 추가되는 칼럼의 dataField;
-		var myDataField = "myNum" + idx;
+		let myDataField = "myNum" + idx;
 
 		// 다음 dataField 를 위해 idx 증가 시킴
 		idx++;
 
 		// 새로운 칼럼
-		var columnObj = {
+		let columnObj = {
 			headerText: "새 칼럼",
 			dataField: myDataField, // dataField 는 중복되지 않게 설정
 			dataType: "numeric"
@@ -178,7 +176,7 @@
 
 	// 데이터 확인
 	function getGridData() {
-		var gridData = AUIGrid.getGridData(myGridID);
+		let gridData = AUIGrid.getGridData(myGridID);
 		console.log(JSON.stringify(gridData, null, 4));
 	}
 
@@ -198,7 +196,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 		<div><span style="float:right;"> 식품군별 1일 섭취량 추이 , 통계청</span></div>
 
 	</div>
@@ -208,6 +206,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

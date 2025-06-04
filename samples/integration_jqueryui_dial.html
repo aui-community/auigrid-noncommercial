@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,11 +28,12 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+
 <!-- jQuery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-<style type="text/css">
+<style>
 	/* 드랍 리스트의 아이템 텍스트 left 로 재정의 */
 	.aui-grid-drop-list-item-wrapper {
 		text-align: left;
@@ -51,13 +49,11 @@
 	}
 </style>
 <script>
-	function documentReady() { };
-
 	$(function () {
 		$("#dialog_wrap").dialog({
 			autoOpen: false,
 			position: { my: "bottom", at: "center", of: "#main" },
-			width: 720,
+			width: 1000,
 			height: 480,
 			minWidth: 240,
 			minHeight: 240,
@@ -80,9 +76,9 @@
 			},
 			// Open 시 그리드 사이징 다시 해주기
 			open: function (event, ui) {
-				var $this = $(this);
-				var dWidth = $this.dialog("option", "width") - 30; // jQuery UI 다이얼로그 패딩 및 마진 계산한 값 빼주기
-				var dHeight = $this.dialog("option", "height") - 130;
+				let $this = $(this);
+				let dWidth = $this.dialog("option", "width") - 30; // jQuery UI 다이얼로그 패딩 및 마진 계산한 값 빼주기
+				let dHeight = $this.dialog("option", "height") - 130;
 				AUIGrid.resize("#myGrid", dWidth, dHeight);
 			},
 			// 리사이징 시 똑같이 그리드도 리사이징 하기
@@ -92,13 +88,13 @@
 		});
 
 		$("#opener").click(function () {
-			var $dia = $("#dialog_wrap");
+			let $dia = $("#dialog_wrap");
 			if ($dia.dialog("isOpen")) {
 				return;
 			}
 
 			$dia.dialog("option", {
-				"width": 720,
+				"width": 1000,
 				"height": 480,
 				"position": { my: "bottom", at: "center", of: "#main" }
 			}).dialog("open");
@@ -112,8 +108,7 @@
 
 	// 칼럼 레이아웃 생성
 	function getColumnLayout() {
-
-		var columnLayout = [{
+		const columnLayout = [{
 			headerText: "Group Header",
 			children: [{
 				dataField: "id",
@@ -170,39 +165,29 @@
 			width: "10%",
 			minWidth: 80
 		}];
-
 		return columnLayout;
-	};
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid(gridPID) {
 
 		// type에 맞는 칼럼 레이아웃 
-		var columnLayout = getColumnLayout();
+		const columnLayout = getColumnLayout();
 
-		var gridProps = {
-
+		// 긜드 속성 설정
+		const gridProps = {
 			editable: true,
-
 			// singleRow 선택모드
 			selectionMode: "singleRow",
-
 			enableColumnResize: true,
-
 			enableMovingColumn: true,
-
 			displayTreeOpen: true,
-
 			enableFilter: true,
-
 			useContextMenu: true,
-
 			// 행 체크 박스 칼럼 사용
 			showRowCheckColumn: true,
-
 			// 트리 체크 부모에 의존성 갖음.
 			rowCheckDependingTree: true,
-
 			//  jQuery UI Dialog 의 ID를 지정해서 해당 dialog 안에 그리드 레이어들이 생성하도록 지시
 			dialogId: "dialog_wrap"
 		};
@@ -211,24 +196,20 @@
 		AUIGrid.create(gridPID, columnLayout, gridProps);
 
 		// 데이터 요청
-		requestData(gridPID, "./data/schedule_tree.json");
-	};
+		requestGridData(gridPID, "./data/schedule_tree.json");
+	}
 
-	function requestData(gridPID, url) {
-
+	function requestGridData(gridPID, url) {
 		AUIGrid.showAjaxLoader(gridPID); // 로딩바 출력
-
 		$.get(url, function (data) {
 			AUIGrid.setGridData(gridPID, data);
 
 			AUIGrid.removeAjaxLoader(gridPID); // 로딩바 제거
 		});
-	};
-
+	}
 </script>
 </head>
 <body>
-
 
 <div id="main">
 	<div class="desc">
@@ -237,9 +218,7 @@
 		<p>아래 버턴을 눌러 Dialog 를 열어보시고, Dialog 이동 및 크기 조절을 테스트 해 보십시오.</p>
 		<span id="opener" class="btn">Open jQuery UI Dialog</span><span>&lt;- 클릭</span>
 	</div>
-
 	<!--  jQuery UI Dialog 정의 -->
-	
 	<div id="dialog_wrap" title="AUIGrid-jQuery UI 연동" style="display:none;">
 		<!--  여기에 그리드가 생성됩니다. -->
 		<div id="myGrid"></div>
@@ -250,6 +229,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

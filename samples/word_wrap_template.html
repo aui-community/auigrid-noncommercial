@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,77 +29,70 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style type="text/css">
+<style>
 	.my-custom-column {
 		text-align: left;
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/message_tag_100_.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140,
-	}, {
-		dataField: "msg",
-		headerText: "Message",
-		style: "my-custom-column",
-		width: 500,
-		renderer: { // 템플릿 렌더러 사용
-			type: "TemplateRenderer",
-			// 엑셀 내보내기 시 값 가공 함수
-			aliasFunction : function (rowIndex, columnIndex, value, headerText, item ) {
-				var v = value.replace(/<br\/>/gi, "\n"); // br태그는 \n 으로 변경시킨 후
-				return v.replace(/<[^>]*>?/gi, ""); // 그 외 모든 html 는 제거
-			}
-		}
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 160
-	}];
+		requestGridData("./data/message_tag_100_.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140,
+		}, {
+			dataField: "msg",
+			headerText: "Message",
+			style: "my-custom-column",
+			width: 500,
+			renderer: { // 템플릿 렌더러 사용
+				type: "TemplateRenderer",
+				// 엑셀 내보내기 시 값 가공 함수
+				aliasFunction: function (rowIndex, columnIndex, value, headerText, item) {
+					let v = value.replace(/<br\/>/gi, "\n"); // br태그는 \n 으로 변경시킨 후
+					return v.replace(/<[^>]*>?/gi, ""); // 그 외 모든 html 는 제거
+				}
+			}
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 160
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			// 워드랩 적용 
 			wordWrap: true,
-
 			selectionMode: "multipleCells",
-
 			editable: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	};
-	
+	}
+
 	function exportToXlsx() {
 		AUIGrid.exportToXlsx(myGridID);
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -110,29 +100,33 @@
 	<div class="desc">
 		<p>워드랩(wordWrap=true) 사용 후 Message 칼럼에 TemplateRenderer 를 적용한 모습입니다.</p>
 		<p>작성된 JSON 데이터를 보면, 다음과 같이 BR 태그를 비롯하여 색상, 강조를 내타내는 태그가 내재되어 있습니다. 이를 그대로 HTML 처리합니다.</p>
-		<div class="src_cover"><xmp>....
+		<div class="src_cover">
+			<pre><xmp>....
 }, {
-    "id": "#Cust2",
-    "date": "2014-12-26",
-    "name": "Kim",
-    "msg": "<span style='color:#D941C5'>자바스크립트(JavaScript)</span>는 객체 기반의 스크립트 프로그래밍 언어이다.<br/>이 언어는... "
+	"id": "#Cust2",
+	"date": "2014-12-26",
+	"name": "Kim",
+	"msg": "<span style='color:#D941C5'>자바스크립트(JavaScript)</span>는 객체 기반의 스크립트 프로그래밍 언어이다.<br />이 언어는... "
 }, {
-    "id": "#Cust3",
-    "date": "2014-12-25",
-    "name": "Jennifer",
-    "msg": "JavaScript is a dynamic computer <b>programming language</b>."
+	"id": "#Cust3",
+	"date": "2014-12-25",
+	"name": "Jennifer",
+	"msg": "JavaScript is a dynamic computer <b>programming language</b>."
 }, {
-....
-</xmp></div>
-	<span class="btn" onclick="exportToXlsx();">엑셀 내보내기</span>
+....</xmp></pre>
+		</div>
+		<span class="btn" onclick="exportToXlsx();">엑셀 내보내기</span>
+		<p><a href="javascript:changeLocation('./paging_word_wrap_template.html?exp_s&theme=default&s=7958')">동일한 페이징 데모 보기</a></p>
+		<p>참고 : TemplateRenderer 로 작성하여 CSS로 색상 변경한 것은 엑셀 내보내기에 적용되지 않습니다. 엑셀 내보내기에 색상 적용은 그리드의 style, styleFunction 등을 이용해야 합니다.
+			</strong>(<a href="javascript:changeLocation('./export_styles.html?exp_s&theme=default&s=7958')">데모 보기</a>)</strong>
+		</p>
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:380px; margin:0 auto;"></div>
 	</div>
-
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -140,6 +134,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

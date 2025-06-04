@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 스타일 */
 	.left {
 		text-align: left;
@@ -82,96 +80,82 @@
 		vertical-align: bottom;
 		margin: 0 2px 0 4px;
 	}
-
-	/****** 트리 아이콘 재정의 끝******/
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/schedule_tree.json");
-	};
-
-	//AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140
-	}, {
-		dataField: "name",
-		headerText: "Task Name",
-		style: "left",
-		width: 360
-	}, {
-		dataField: "charge",
-		headerText: "Charge",
-		style: "left",
-		width: 140
-	}, {
-		dataField: "complete",
-		headerText: "Complete(%)",
-		postfix: "%",
-		width: 120
-	}, {
-		dataField: "start",
-		headerText: "Start Date"
-	}, {
-		dataField: "end",
-		headerText: "End Date"
-	}];
-
+		requestGridData("./data/schedule_tree.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		let columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140
+		}, {
+			dataField: "name",
+			headerText: "Task Name",
+			style: "left",
+			width: 360
+		}, {
+			dataField: "charge",
+			headerText: "Charge",
+			style: "left",
+			width: 140
+		}, {
+			dataField: "complete",
+			headerText: "Complete(%)",
+			postfix: "%",
+			width: 120
+		}, {
+			dataField: "start",
+			headerText: "Start Date"
+		}, {
+			dataField: "end",
+			headerText: "End Date"
+		}];
 
-		var gridProps = {};
-
-		// 편집 가능 여부
-		gridProps.editable = true;
-
-		// 최초 보여질 때 모두 열린 상태로 출력 여부
-		gridProps.displayTreeOpen = true;
-
-		// 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
-		gridProps.treeColumnIndex = 1;
-
-		gridProps.rowIdField = "id";
-
-		gridProps.showRowNumColumn = true;
-
-		// 행 스타일 정의 함수
-		gridProps.rowStyleFunction = function (rowIndex, item) {
-			if (item._$isBranch) { // 브랜치 행에 대해 depth 별로
-				// depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
-				// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
-				switch (item._$depth) {  // 계층형의 depth 비교 연산
-					case 1:
-						return "aui-grid-row-depth1-style";
-					case 2:
-						return "aui-grid-row-depth2-style";
-					case 3:
-						return "aui-grid-row-depth3-style";
-					default:
-						return "aui-grid-row-depth-default-style";
+		// 그리드 속성 설정
+		const gridProps = {
+			// 편집 가능 여부
+			editable: true,
+			// 최초 보여질 때 모두 열린 상태로 출력 여부
+			displayTreeOpen: true,
+			// 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
+			treeColumnIndex: 1,
+			rowIdField: "id",
+			showRowNumColumn: true,
+			// 행 스타일 정의 함수
+			rowStyleFunction: function (rowIndex, item) {
+				if (item._$isBranch) { // 브랜치 행에 대해 depth 별로
+					// depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
+					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
+					switch (item._$depth) {  // 계층형의 depth 비교 연산
+						case 1:
+							return "aui-grid-row-depth1-style";
+						case 2:
+							return "aui-grid-row-depth2-style";
+						case 3:
+							return "aui-grid-row-depth3-style";
+						default:
+							return "aui-grid-row-depth-default-style";
+					}
 				}
 			}
-			return "";
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	}
-
 </script>
-
 </head>
 <body>
 
@@ -180,20 +164,48 @@
 		<p>계층 구조에서 트리 아이콘을 재정의하고, 트리의 depth 별로 스타일을 적용한 모습입니다.</p>
 		<p>HTML CSS 에서 다음과 같이 기본 클래스를 재정의하여 원하는 아이콘으로 변경 하십시오.</p>
 		<div class="src_cover">
-<xmp><style type="text/css">
-	/* 트리 아이콘 재정의 */
-	.aui-grid-tree-plus-icon {
-		display: inline-block;
-		width: 15px;
-		height: 10px;
-		border: 1px solid #eeeeee;
-		background: #ffffff url(./style/images/plus_7_7.png) 50% 50% no-repeat;
-		margin: 0 4px 0 0;
-	}
-	....
-	....
-</style>
-</xmp>
+			<pre><xmp><style>
+/* 트리 아이콘 재정의 */
+.aui-grid-tree-plus-icon {
+	display: inline-block;
+	width: 15px;
+	height: 10px;
+	border: 1px solid #eeeeee;
+	background: #ffffff url(./style/images/plus_7_7.png) 50% 50% no-repeat;
+	margin: 0 4px 0 0;
+}
+
+.aui-grid-tree-minus-icon {
+	display: inline-block;
+	width: 15px;
+	height: 10px;
+	border: 1px solid #eeeeee;
+	background: #ffffff url(./style/images/minus_7_7.png) 50% 50% no-repeat;
+	margin: 0 4px 2px 0;
+}
+
+.aui-grid-tree-branch-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background: url(./style/images/b_folder.png) 50% 50% no-repeat;
+	vertical-align: bottom;
+	margin: 0 2px 0 0;
+}
+
+.aui-grid-tree-branch-open-icon {
+	background: url(./style/images/b_folderopen.png) 50% 50% no-repeat;
+}
+
+.aui-grid-tree-leaf-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background: url(./style/images/document.png) no-repeat;
+	vertical-align: bottom;
+	margin: 0 2px 0 4px;
+}
+</style></xmp></pre>
 		</div>
 	</div>
 	<div>
@@ -208,6 +220,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

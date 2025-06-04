@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,32 +29,28 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script type="text/javascript">
 
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
 	// 하단 그리드 생성 후 반환ID
-	var myGridID2;
+	let myGridID2;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// 상단 그리드를 생성합니다.
 		createAUIGrid();
-
 		// 하단 그리드를 생성합니다.
 		createDetailAUIGrid();
-
 		// 데이터 요청하여 상단 그리드에 삽입
-		requestData("./data/normal_500.json");
-	};
+		requestGridData("./data/normal_500.json");
+	}
 
 	// Master 그리드 를 생성합니다.
 	function createAUIGrid() {
-
-		// AUIGrid 칼럼 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 160
@@ -97,16 +90,12 @@
 			headerText: "Date"
 		}];
 
-
 		// 그리드 속성 설정
-		var gridProps = {
-
+		const gridProps = {
 			// 행 소프트 제거 모드 해제
 			softRemoveRowMode: false,
-
 			// 행 체크 칼럼(엑스트라 체크박스) 설정
 			showRowCheckColumn: true,
-
 			noDataMessage: "하단의 그리드에서 체크하여 행을 여기로 옮기세요."
 		};
 
@@ -119,9 +108,8 @@
 
 	// Details 그리드 생성
 	function createDetailAUIGrid() {
-
-		// AUIGrid 칼럼 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 160
@@ -140,13 +128,11 @@
 		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			// 행 체크 칼럼(엑스트라 체크박스) 설정
 			showRowCheckColumn: true,
-
 			// 행 소프트 제거 모드 해제
 			softRemoveRowMode: false,
-
 			noDataMessage: "상단의 그리드에서 체크하여 행을 여기로 옮기세요."
 		};
 
@@ -158,58 +144,53 @@
 
 		// 최초 빈 배열로 초기화
 		AUIGrid.setGridData(myGridID2, []);
-	};
+	}
 
 	// 셀 클릭으로 엑스트라 체크박스 체크/해제 하기
 	function cellClickHandler(event) {
-		var item = event.item, rowIdField, rowId;
-		rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
-		rowId = item[rowIdField];
+		const item = event.item;
+		const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
+		const rowId = item[rowIdField];
 		// 이미 체크 선택되었는지 검사
 		if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
 			// 엑스트라 체크박스 체크해제 추가
 			AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
-		} else {
-			// 엑스트라 체크박스 체크 추가
-			AUIGrid.addCheckedRowsByIds(event.pid, rowId);
+			return;
 		}
-	};
-
+		// 엑스트라 체크박스 체크 추가
+		AUIGrid.addCheckedRowsByIds(event.pid, rowId);
+	}
 
 	// 체크 행 아래로 이동 버턴 클릭
 	function downBtnClick() {
 		// 상단 그리드의 체크된 행들 얻기
-		var rows = AUIGrid.getCheckedRowItemsAll(myGridID);
+		const rows = AUIGrid.getCheckedRowItemsAll(myGridID);
 		if (rows.length <= 0) {
 			alert('상단 그리드에서 체크된 행이 없습니다.');
 			return;
 		}
 		// 얻은 행을 하단 그리드에 추가하기
 		AUIGrid.addRow(myGridID2, rows, "last");
-
 		// 선택한 상단 그리드 행들 삭제
 		// 삭제하면  "이동" 이고, 삭제하지 않으면 "복사" 를 구현할 수 있음.
 		AUIGrid.removeCheckedRows(myGridID);
-	};
+	}
 
 	//체크 행 위로 이동 버턴 클릭
 	function upBtnClick() {
 		// 하단 그리드의 체크된 행들 얻기
-		var rows = AUIGrid.getCheckedRowItemsAll(myGridID2);
+		const rows = AUIGrid.getCheckedRowItemsAll(myGridID2);
 		if (rows.length <= 0) {
 			alert('하단 그리드에서 체크된 행이 없습니다.');
 			return;
 		}
 		// 얻은 행을 상단 그리드에 추가하기
 		AUIGrid.addRow(myGridID, rows, "last");
-
 		// 선택한 하단 그리드 행들 삭제
 		// 삭제하면  "이동" 이고, 삭제하지 않으면 "복사" 를 구현할 수 있음.
 		AUIGrid.removeCheckedRows(myGridID2);
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -222,17 +203,15 @@
 	<div>
 		<!-- 상단 Grid -->
 		<div id="grid_wrap" style="width:100%;height:280px; margin:0 auto;"></div>
-
 		<div style="width:100%;margin:0 auto;  text-align:center;">
 			<span class="btn" onclick="downBtnClick();">체크 행(들) 아래로 이동(▼)</span>
 			<span class="btn" onclick="upBtnClick();">체크 행(들) 위로 이동(▲)</span>
 		</div>
-
 		<!-- 하단 Grid -->
 		<div id="grid_wrap2" style="width:100%;height:280px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -240,6 +219,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

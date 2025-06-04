@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,34 +28,26 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<script type="text/javascript">
 
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID, myGridID2;
+	let myGridID, myGridID2;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid();
 		// 상단 그리드 생성
 		createAUIGrid(columnLayout);
-
 		// 하단 그리드 생성
 		createAUIGridSub(columnLayout);
-
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		ajax({
-			url: "./data/nutrition.json",
-			onSuccess: function (data) {
-				AUIGrid.setGridData(myGridID, data);
-				AUIGrid.setGridData(myGridID2, data);
-			}
-		});
-	};
+		requestGridData("./data/nutrition.json", myGridID);
+		requestGridData("./data/nutrition.json", myGridID2);
+	}
 
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//"gubun1":"식물성식품 계","gubun2":"소계","avg98":"1,027.1","sdev98":"12.7","avg01":"1,027.5","sdev01":"11.5","avg05":"997.9","sdev05":"11.0","avg07":"1,038.9","sdev07":"14.7","avg08":"1,060.9","sdev08":"11.9","avg09":"1,080.2","sdev09":"11.5","avg10":"1,200.9","sdev10":"15.1","avg11":"1,161.8","sdev11":"15.7","avg12":"1,143.1","sdev12":"14.5"}, { .....} ];
-	var columnLayout = [{
+	// 그리드 칼럼 레이아웃 설정
+	const columnLayout = [{
 		dataField: "gubun1",
 		headerText: "구분1",
 		width: 160,
@@ -127,61 +116,50 @@
 	// ---------------------------- 상단 그리드 입니다. --------------------
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid(columnLayout) {
-		var gridProps = {
+		// 그리드 속성 설정정
+		const gridProps = {
 			// 셀 병합 실행
 			enableCellMerge: true,
-			
 			// 수정 가능 여부
 			editable: true,
-			
 			// 마우스 클릭(선택) 시 적용 모드
 			selectionMode: "multipleCells",
-			
 			// 마우스 오버 적용 모드
 			hoverMode: "singleRow",
-			
 			showStateColumn: true,
-
 			// 셀 병합 정책
 			// "default"(기본값) : null 을 셀 병합에서 제외하여 병합을 실행하지 않습니다.
 			// "withNull" : null 도 하나의 값으로 간주하여 다수의 null 을 병합된 하나의 공백으로 출력 시킵니다.
 			// "valueWithNull" : null 이 상단의 값과 함께 병합되어 출력 시킵니다.
 			cellMergePolicy: "withNull",
-
 			// 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
 			rowSelectionWithMerge: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	};
+	}
 
 	//---------------------------- 하단 그리드 입니다. --------------------
 	//AUIGrid 하단 그리드를 생성합니다.
 	function createAUIGridSub(columnLayout) {
-		var gridProps = {
+		const gridProps = {
 			// 셀 병합 실행
 			enableCellMerge: true,
-
 			// 수정 가능 여부
 			editable: true,
-			
 			// enableCellMerge 할 때 실제로 rowspan 적용 시킬지 여부
 			// 만약 false 설정하면 실제 병합은 하지 않고(rowspan 적용 시키지 않고) 최상단에 값만 출력 시킵니다.
 			cellMergeRowSpan: false,
-
 			// 마우스 클릭(선택) 시 적용 모드
 			selectionMode: "multipleCells",
-			
 			// 마우스 오버 적용 모드
 			hoverMode: "singleRow",
-
 			// 셀 병합 정책
 			// "default"(기본값) : null 을 셀 병합에서 제외하여 병합을 실행하지 않습니다.
 			// "withNull" : null 도 하나의 값으로 간주하여 다수의 null 을 병합된 하나의 공백으로 출력 시킵니다.
 			// "valueWithNull" : null 이 상단의 값과 함께 병합되어 출력 시킵니다.
 			cellMergePolicy: "withNull",
-
 			// 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
 			rowSelectionWithMerge: true
 		};
@@ -190,7 +168,7 @@
 		myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridProps);
 	};
 
-	var isMerged = true; // 최초에는 merged 상태
+	let isMerged = true; // 최초에는 merged 상태
 	function setCellMerge() {
 		isMerged = !isMerged;
 		AUIGrid.setCellMerge(myGridID, isMerged);
@@ -222,11 +200,9 @@
 		<div id="grid_wrap2" style="width:100%;height:280px; margin:0 auto;"></div>
 	</div>
 
-
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 		<div><span style="float:right;"> 식품군별 1일 섭취량 추이 , 통계청 </span></div>
-
 	</div>
 </div>
 <div id="footer">
@@ -234,6 +210,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

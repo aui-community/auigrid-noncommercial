@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,66 +29,62 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style type="text/css">
+
+<style>
 	.my-custom-column {
 		text-align: left;
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/message_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140
-	}, {
-		dataField: "msg",
-		headerText: "Message",
-		style: "my-custom-column",
-		width: 500,
-		widthFit: 500
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 160
+		requestGridData("./data/message_100.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140
+		}, {
+			dataField: "msg",
+			headerText: "Message",
+			style: "my-custom-column",
+			width: 500,
+			widthFit: 500
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 160
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			// 워드랩 적용 
 			wordWrap: true,
 			// 페이징 사용
 			usePaging: true,
 			// 그리드가 생성하는 세로 스크롤 없이 그리드 높이 설정
-			autoGridHeight:true,
+			autoGridHeight: true,
 
 			showRowCheckColumn: true,
 
 			editable: true,
 
 			selectionMode: "multipleCells",
-			
+
 			// 페이지 행 개수 select UI 출력 여부 (기본값 : false)
 			showPageRowSelect: true,
-			
+
 			// 현재 페이지의 행들 대상으로 전체 체크 설정
 			isRowAllCheckCurrentView: true
 		};
@@ -99,7 +92,6 @@
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	};
-
 </script>
 
 </head>
@@ -117,9 +109,8 @@
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
-
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -127,6 +118,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

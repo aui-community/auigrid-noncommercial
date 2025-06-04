@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-my-column {
 		text-align: right;
@@ -42,7 +40,7 @@
 		border-top: none;
 		color: #fff;
 		height: 24px;
-		font-size: 13px;
+		font-size: 14px;
 		background: #191919;
 		text-align: right;
 	}
@@ -52,197 +50,189 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/revenue_region.json");
-
-	};
-
-
-	//AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "region",
-		headerText: "지역",
-		width: 120
-	}, {
-		dataField: "p1301,p1302,p1303,p1304,p1305,p1306,p1307,p1308,p1309,p1310,p1311,p1312",
-		headerText: "월별 추이",
-		width: 120,
-		renderer: {
-			type: "SparkLineRenderer"
-		}
-	}, {
-		dataField: "p1301",
-		headerText: "1월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1302",
-		headerText: "2월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1303",
-		headerText: "3월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1304",
-		headerText: "4월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1305",
-		headerText: "5월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1306",
-		headerText: "6월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1307",
-		headerText: "7월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1308",
-		headerText: "8월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1309",
-		headerText: "9월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1310",
-		headerText: "10월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1311",
-		headerText: "11월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1312",
-		headerText: "12월",
-		style: "aui-grid-my-column",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}];
-
-	//푸터 설정
-	var footerLayout = [{
-		labelText: "매출 합계",
-		positionField: "region"
-	}, {
-		dataField: "p1301",
-		positionField: "p1301",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1302",
-		positionField: "p1302",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1303",
-		positionField: "p1303",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1304",
-		positionField: "p1304",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1305",
-		positionField: "p1305",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1306",
-		positionField: "p1306",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1307",
-		positionField: "p1307",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1308",
-		positionField: "p1308",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1309",
-		positionField: "p1309",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1310",
-		positionField: "p1310",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1311",
-		positionField: "p1311",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}, {
-		dataField: "p1312",
-		positionField: "p1312",
-		operation: "SUM",
-		style: "aui-grid-my-column",
-		formatString: "#,##0"
-	}];
-
+		requestGridData("./data/revenue_region.json");
+	}
 
 	//AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "region",
+			headerText: "지역",
+			width: 120
+		}, {
+			dataField: "p1301,p1302,p1303,p1304,p1305,p1306,p1307,p1308,p1309,p1310,p1311,p1312",
+			headerText: "월별 추이",
+			width: 120,
+			renderer: {
+				type: "SparkLineRenderer"
+			}
+		}, {
+			dataField: "p1301",
+			headerText: "1월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1302",
+			headerText: "2월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1303",
+			headerText: "3월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1304",
+			headerText: "4월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1305",
+			headerText: "5월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1306",
+			headerText: "6월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1307",
+			headerText: "7월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1308",
+			headerText: "8월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1309",
+			headerText: "9월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1310",
+			headerText: "10월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1311",
+			headerText: "11월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1312",
+			headerText: "12월",
+			style: "aui-grid-my-column",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}];
 
-		var gridProps = {
+		//푸터 설정
+		const footerLayout = [{
+			labelText: "매출 합계",
+			positionField: "region"
+		}, {
+			dataField: "p1301",
+			positionField: "p1301",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1302",
+			positionField: "p1302",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1303",
+			positionField: "p1303",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1304",
+			positionField: "p1304",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1305",
+			positionField: "p1305",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1306",
+			positionField: "p1306",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1307",
+			positionField: "p1307",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1308",
+			positionField: "p1308",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1309",
+			positionField: "p1309",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1310",
+			positionField: "p1310",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1311",
+			positionField: "p1311",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}, {
+			dataField: "p1312",
+			positionField: "p1312",
+			operation: "SUM",
+			style: "aui-grid-my-column",
+			formatString: "#,##0"
+		}];
+
+		// 그리드 속성 설정
+		const gridProps = {
 			showFooter: true,
-
 			// 선택모드 (기본값은 singleCell 임)
 			selectionMode: "multipleCells",
-			
 			// selectionChange 이벤트가 마우스 누르고 이동할 때도 발생 시킬지 여부(기본값 false)
 			dispatchSelectionChangeMoving: true
 		};
@@ -259,51 +249,43 @@
 
 	// 셀렉션 체인지 이벤트 핸들러
 	function auiGridSelectionChangeHandler(event) {
-		var items = event.selectedItems;
-		var val;
-		var count = items.length;
-		var sum = 0;
-		var numCount = 0;
-		var avg = 0;
-		var msg = '';
+		const items = AUIGrid.getSelectedItems(event.pid, true); // 선택한 전체 아이템들 얻기 
+		const count = items.length;
+		let val;
+		let sum = 0;
+		let numCount = 0;
+		let avg = 0;
+		let msg = '';
 
 		if (count <= 1) {
-			document.getElementById("info").innerText = "";
+			document.getElementById("info").textContent = "";
 			return;
 		}
 
-		for (var i = 0; i < count; i++) {
-			val = String(items[i].value).replace(",", ""); // 컴마 모두 제거
+		for (let i = 0; i < count; i++) {
+			const v = items[i].value;
+			val = String(v).replace(",", ""); // 컴마 모두 제거
 			val = Number(val);
-			if (isNaN(val)) {
-				continue;
-			}
+			if (isNaN(val) || v === "") continue; // 숫자 아닌 경우는 제외 시킴
 			sum += val;
 			numCount++;
 		}
 
 		if (numCount > 0) {
 			avg = (sum / numCount).toFixed(2);
-			msg = "평균 : " + commafy(avg) + ", 개수 : " + count + ", 합계 : " + commafy(sum);
+			avg = AUIGrid.formatNumber(avg, "#,##0.##");
+			sum = AUIGrid.formatNumber(sum, "#,##0");
+			msg = `평균: ${avg}, 개수: ${count},  합계: ${sum}`;
+			if (numCount !== count) {
+				msg += `, 숫자 개수: ${numCount}`;
+			}
 		} else {
-			msg = "개수 : " + count + ", 합계 : " + commafy(sum);
+			msg = `개수 : ${count}`;
 		}
 
-		document.getElementById("info").innerText = msg;
-	};
-
-
-	//숫자에 컴마 붙이기
-	function commafy(n) {
-		var reg = /(^[+-]?\d+)(\d{3})/;   // 정규식
-		n += '';                          // 숫자를 문자열로 변환
-		while (reg.test(n)) {
-			n = n.replace(reg, '$1' + ',' + '$2');
-		}
-		return n;
+		document.getElementById("info").textContent = msg;
 	}
 </script>
-
 </head>
 <body>
 
@@ -317,7 +299,6 @@
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
-
 	<div class="desc_bottom" style="height:42px;">
 		<p id="info"></p>
 	</div>
@@ -327,6 +308,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

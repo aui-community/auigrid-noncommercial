@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,7 +29,8 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 페이징 패널 정의 */
 	.my-grid-paging-panel {
 		width:100%
@@ -49,10 +47,10 @@
 </style>
 
 
-<script type="text/javascript">
+<script>
 
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
 	// document ready 
 	function documentReady() {
@@ -61,15 +59,15 @@
 		createAUIGrid();
 
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		preRequestData(rowCount, currentPage);
+		prerequestGridData(rowCount, currentPage);
 
 	};
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
 
-		// AUIGrid 칼럼 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		let columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 100
@@ -115,7 +113,7 @@
 		];
 
 		// 그리드 속성 설정
-		var gridProps = {
+		let gridProps = {
 			showRowNumColumn: false,
 
 			// 사용자 정렬 정의
@@ -143,18 +141,18 @@
 		createPagingNavigator(1);
 	}
 
-	var totalRowCount = 500; // 전체 데이터 건수
-	var rowCount = 20;	// 1페이지에서 보여줄 행 수
-	var pageButtonCount = 10;		// 페이지 네비게이션에서 보여줄 페이지의 수
-	var currentPage = 1;	// 현재 페이지
-	var totalPage = Math.ceil(totalRowCount / rowCount);	// 전체 페이지 계산
-	var sortingFields = []; // 서버 사이드 정렬 상태
+	let totalRowCount = 500; // 전체 데이터 건수
+	let rowCount = 20;	// 1페이지에서 보여줄 행 수
+	let pageButtonCount = 10;		// 페이지 네비게이션에서 보여줄 페이지의 수
+	let currentPage = 1;	// 현재 페이지
+	let totalPage = Math.ceil(totalRowCount / rowCount);	// 전체 페이지 계산
+	let sortingFields = []; // 서버 사이드 정렬 상태
 
 	// 페이징 네비게이터를 동적 생성합니다.
 	function createPagingNavigator(goPage) {
-		var retStr = "";
-		var prevPage = parseInt((goPage - 1) / pageButtonCount) * pageButtonCount;
-		var nextPage = ((parseInt((goPage - 1) / pageButtonCount)) * pageButtonCount) + pageButtonCount + 1;
+		let retStr = "";
+		let prevPage = parseInt((goPage - 1) / pageButtonCount) * pageButtonCount;
+		let nextPage = ((parseInt((goPage - 1) / pageButtonCount)) * pageButtonCount) + pageButtonCount + 1;
 
 		prevPage = Math.max(0, prevPage);
 		nextPage = Math.min(nextPage, totalPage);
@@ -165,8 +163,8 @@
 		// 이전
 		retStr += "<a href='javascript:moveToPage(" + Math.max(1, prevPage) + ")'><span class='aui-grid-paging-number aui-grid-paging-prev'>prev</span></a>";
 
-		for (var i = (prevPage + 1), len = (pageButtonCount + prevPage); i <= len; i++) {
-			if (goPage == i) {
+		for (let i = (prevPage + 1), len = (pageButtonCount + prevPage); i <= len; i++) {
+			if (goPage === i) {
 				retStr += "<span class='aui-grid-paging-number aui-grid-paging-number-selected'>" + i + "</span>";
 			} else {
 				retStr += "<a href='javascript:moveToPage(" + i + ")'><span class='aui-grid-paging-number'>";
@@ -198,13 +196,13 @@
 		currentPage = goPage;
 
 		// rowCount 만큼 데이터 요청
-		preRequestData(rowCount, goPage);
+		prerequestGridData(rowCount, goPage);
 	}
 
 	// 데이터 요청
-	function preRequestData(count, goPage) {
-		var sortField = "0";
-		var sortType = "0";
+	function prerequestGridData(count, goPage) {
+		let sortField = "0";
+		let sortType = "0";
 
 		// 서버에서 정렬된 데이터로 요청하기 위함
 		// sortingFields 는 그리드 customSorting 이벤트에서 보관한 값임.
@@ -213,8 +211,8 @@
 			sortType = sortingFields[0].sortType;
 		}
 
-		var url = "./data/getSortJson.php?count=" + count + "&page=" + goPage + "&sortField=" + sortField + "&sortType=" + sortType;
-		requestData(url);
+		let url = "./data/getSortJson.php?count=" + count + "&page=" + goPage + "&sortField=" + sortField + "&sortType=" + sortType;
+		requestGridData(url);
 	}
 
 
@@ -244,7 +242,7 @@
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 
 	</div>
 </div>
@@ -253,6 +251,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

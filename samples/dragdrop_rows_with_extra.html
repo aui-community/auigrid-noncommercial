@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,7 +29,8 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style type="text/css">
+
+<style>
 	/* 사용자 정의 드래깅 프록시*/
 	.my-drag-proxy-ul {
 		max-height: 100px;
@@ -48,26 +46,22 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
-		// 그리드를 생성합니다.
+	// 시작점
+	function init() {
+		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-
 		// 데이터 요청하여 상단 그리드에 삽입
-		requestData("./data/normal_500.json");
-	};
+		requestGridData("./data/normal_500.json");
+	}
 
 	//  그리드 를 생성합니다.
 	function createAUIGrid() {
-
-		// AUIGrid 칼럼 설정
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 160
@@ -108,7 +102,7 @@
 		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			// 행 드래그&드랍을 도와주는 엑스트라 칼럼을 최좌측에 생성합니다.
 			showDragKnobColumn: true,
 			// 드래깅 행 이동 가능 여부 (기본값 : false)
@@ -127,32 +121,36 @@
 
 		// 드래깅 시작 이벤트 바인딩	
 		AUIGrid.bind(myGridID, "dragBegin", function (e) {
-			var item = e.items[0];
-			var msg;
+			const item = e.items[0];
+			const { id, name, flag, product } = item;
 
 			// 정보 출력
-			document.getElementById("ellapse_b").innerText = "드래깅 시작 : " + e.items.length + " row(s)";
+			document.getElementById("elapse_b").textContent = `드래깅 시작 : ${e.items.length} row(s)`;
 
-			// 드래깅 시 나타날 텍스트를 HTML 형식으로 작성
-			msg = '<ul class="my-drag-proxy-ul">';
-			msg += '<li><span>' + item.id + '</span><span>' + item.name + '</span>';
-			msg += '<span><img width="24" height="16" style="vertical-align:middle;" src="./assets/' + item.flag + '"></span><span>' + item.product + '</span></li>';
-			msg += '</ul>';
-			return msg; // String 을 반환하면 해당 String 이 드래깅 텍스트로 출력됩니다.
+			// 드래깅 텍스트 HTML 작성
+			const msg = `
+				<ul class="my-drag-proxy-ul">
+					<li>
+					<span>${id}</span>
+					<span>${name}</span>
+					<span>
+						<img width="24" height="16" style="vertical-align:middle;" src="./assets/${flag}">
+					</span>
+					<span>${product}</span>
+					</li>
+				</ul>`.trim();
+			return msg;
 		});
 
 		// 드랍 종료 이벤트 바인딩
 		AUIGrid.bind(myGridID, "dropEnd", function (e) {
 			// 정보 출력
-			var direction = e.direction == true ? "위에서 아래로" : "아래에서 위로";
-			var msg = "드랍 완료 : " + e.fromRowIndex + "→" + e.toRowIndex + " 에 " + e.items.length + " 행(들) 드랍 됨(진행 방향 : " + direction + ")";
-			document.getElementById("ellapse_e").innerText = msg;
+			const direction = e.direction === true ? "위에서 아래로" : "아래에서 위로";
+			const msg = "드랍 완료 : " + e.fromRowIndex + "→" + e.toRowIndex + " 에 " + e.items.length + " 행(들) 드랍 됨(진행 방향 : " + direction + ")";
+			document.getElementById("elapse_e").textContent = msg;
 		});
 	}
-
-
 </script>
-
 </head>
 <body>
 
@@ -170,8 +168,8 @@
 		<div id="grid_wrap" style="width:100%;height:380px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse_b"></p>
-		<p id="ellapse_e"></p>
+		<p id="elapse_b"></p>
+		<p id="elapse_e"></p>
 	</div>
 </div>
 <div id="footer">
@@ -179,6 +177,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

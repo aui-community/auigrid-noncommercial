@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,73 +28,65 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 스타일 */
 	.left {
 		text-align: left;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/schedule_tree_wordwrap.json");
-	};
-
-	//AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140
-	}, {
-		dataField: "name",
-		headerText: "Task Name",
-		style: "left",
-		width: 160
-	}, {
-		dataField: "charge",
-		headerText: "Charge",
-		style: "left",
-		width: 140
-	}, {
-		dataField: "complete",
-		headerText: "Complete(%)",
-		postfix: "%",
-		width: 120
-	}, {
-		dataField: "start",
-		headerText: "Start Date",
-		width: 120
-	}, {
-		dataField: "end",
-		headerText: "End Date",
-		width: 120
-	}];
-
+		requestGridData("./data/schedule_tree_wordwrap.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140
+		}, {
+			dataField: "name",
+			headerText: "Task Name",
+			style: "left",
+			width: 160
+		}, {
+			dataField: "charge",
+			headerText: "Charge",
+			style: "left",
+			width: 140
+		}, {
+			dataField: "complete",
+			headerText: "Complete(%)",
+			postfix: "%",
+			width: 120
+		}, {
+			dataField: "start",
+			headerText: "Start Date",
+			width: 120
+		}, {
+			dataField: "end",
+			headerText: "End Date",
+			width: 120
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
-
 			// 워드랩 형식으로 출력
 			wordWrap: true,
-
 			selectionMode: "singleRow",
-
 			// 사용자가 정의한 데이터 필드 중 id 를 rowIdField 로 설정함
 			rowIdField: "id",
-
 			// 최초 보여질 때 모두 열린 상태로 출력 여부
 			displayTreeOpen: true
 		};
@@ -110,32 +99,26 @@
 			// 첫 셀에 선택되도록 지정
 			AUIGrid.setSelectionByIndex(myGridID, 0, 0);
 		});
-
 	}
 
-	var isOpen = false;
+	let isOpen = false;
 	function expandItem() {
-
-		var isOpen = AUIGrid.isItemOpenByRowId(myGridID, "T36");
-
+		let isOpen = AUIGrid.isItemOpenByRowId(myGridID, "T36");
 		//-- id 가 T36 인 행 열기/ 닫기
 		AUIGrid.expandItemByRowId(myGridID, "T36", !isOpen);
 	}
 
-	var isExpanded = true;
+	let isExpanded = true;
 	function expand() {
 		if (!isExpanded) {
 			AUIGrid.expandAll(myGridID);
 			isExpanded = true;
-		} else {
-			AUIGrid.collapseAll(myGridID);
-			isExpanded = false;
+			return;
 		}
-	};
-
-
+		AUIGrid.collapseAll(myGridID);
+		isExpanded = false;
+	}
 </script>
-
 </head>
 <body>
 
@@ -143,7 +126,6 @@
 	<div class="desc">
 		<p>출력할 텍스트가 정해진 칼럼 사이즈 보다 긴 경우 word-wrap 형식으로 출력시킵니다. ( wordWrap = true 설정)</p>
 		<p>자동 개행이 발생하며, 개별 자동 행 높이로 출력됩니다.</p>
-
 		<ul class="nav_u">
 			<li><button onclick="expand()" class="btn">모두 열기/ 닫기</button></li>
 			<li><button onclick="expandItem()" class="btn">특정 브랜치(ID = T36) 열기/닫기</button></li>
@@ -161,6 +143,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

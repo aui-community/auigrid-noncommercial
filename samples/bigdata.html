@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,128 +28,142 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.right_style {
 		text-align: right;
 	}
 </style>
-<script type="text/javascript">
+<script>
+	// AUIGrid 생성 후 반환 ID
+	let myGridID;
 
-	var myGridID;
-
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-	};
-
-	// 칼럼 레이아웃
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140
-	}, {
-		dataField: "name",
-		headerText: "Name",
-		filter: {
-			showIcon: true,
-			useExMenu: true
-		}
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		filter: {
-			showIcon: true,
-			useExMenu: true
-		}
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		filter: {
-			showIcon: true,
-			useExMenu: true
-		}
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		renderer: {
-			type: "IconRenderer",
-			iconPosition: "aisle",
-			iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-			iconHeight: 20,
-			iconTableRef: { // icon 값 참조할 테이블 레퍼런스
-				"Blue": "./assets/blue_circle.png",
-				"Gray": "./assets/gray_circle.png",
-				"Green": "./assets/green_circle.png",
-				"Orange": "./assets/orange2_circle.png",
-				"Pink": "./assets/pink_circle.png",
-				"Violet": "./assets/violet_circle.png",
-				"Yellow": "./assets/yellow_circle.png",
-				"Red": "./assets/orange_circle.png",
-				"default": "./assets/glider.png" //default
-			}
-		}
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		style: "right_style",
-		dataType: "numeric",
-		filter: {
-			showIcon: true,
-			useExMenu: true
-		}
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		style: "right_style",
-		dataType: "numeric",
-		filter: {
-			showIcon: true,
-			useExMenu: true
-		}
-	}];
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140
+		}, {
+			dataField: "name",
+			headerText: "Name",
+			filter: {
+				showIcon: true,
+				useExMenu: true
+			}
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			filter: {
+				showIcon: true,
+				useExMenu: true
+			}
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			filter: {
+				showIcon: true,
+				useExMenu: true
+			}
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			renderer: {
+				type: "IconRenderer",
+				iconPosition: "aisle",
+				iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+				iconHeight: 20,
+				iconTableRef: { // icon 값 참조할 테이블 레퍼런스
+					"Blue": "./assets/blue_circle.png",
+					"Gray": "./assets/gray_circle.png",
+					"Green": "./assets/green_circle.png",
+					"Orange": "./assets/orange2_circle.png",
+					"Pink": "./assets/pink_circle.png",
+					"Violet": "./assets/violet_circle.png",
+					"Yellow": "./assets/yellow_circle.png",
+					"Red": "./assets/orange_circle.png",
+					"default": "./assets/glider.png" //default
+				}
+			}
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			style: "right_style",
+			dataType: "numeric",
+			filter: {
+				showIcon: true,
+				useExMenu: true
+			}
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			style: "right_style",
+			dataType: "numeric",
+			filter: {
+				showIcon: true,
+				useExMenu: true
+			}
+		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
-
+		const gridProps = {
 			editable: true,
-
 			// row 를 구별짓는 유니크한 값을 갖는 필드 설정 (10만 행 이상의 대용량인 경우 반드시 설정을 권함 )
 			rowIdField: "id",
-
 			showRowCheckColumn: true,
-
 			enableFilter: true,
-
 			// 정렬 시 빈값(undefined, null, "")이 항상 하단에 위치할지 여부 (기본값 : true)
-			nullsLastOnSorting: true
+			nullsLastOnSorting: true,
+			selectionMode: 'multipleCells',
+			// 셀렉션 간소화 설정
+			simplifySelectionEvent: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+		
+		AUIGrid.bind(myGridID, 'selectionChange', function(e) {
+			console.log(e);
+		});
 
 		// 최초 10만 행 데이터 생성하여 그리드에 삽입.
 		createRandomData(100000);
 	}
 
+	function chkClick() {
+		const checked = document.getElementById("chk").checked;
+		// nullsLastOnSorting 속성 변경
+		AUIGrid.setProp("#grid_wrap", "nullsLastOnSorting", checked);
+	}
 
-	var countries = ["Korea", "USA", "UK", "Japan", "China", "France", "Italy", "Singapore", "Ireland", "Taiwan"];
-	var products = ["IPhone 5S", "Galaxy S5", "IPad Air", "Galaxy Note3", "LG G3", "Nexus 10"];
-	var quantities = [0, 1, 3, 9, 7, 10, 4, 15, 20, 12, 8];
-	var colors = ["Blue", "Gray", "Green", "Orange", "Pink", "Violet", "Yellow", "Red"];
-	var names = ["Steve", "Anna", "Lawrence", "Kim", "Emma", "Jennifer", "Han"];
+	function getCheckedRowItemsAll() {
+		// 체크된 행들 얻기
+		const rows = AUIGrid.getCheckedRowItemsAll("#grid_wrap");
+		console.log(rows);
+		alert(`${rows.length} 개 데이터 얻음. 정확한 데이터 확인은 F12 의 개발자 도구의 콘솔 확인`);
+	}
 
 	// count 수만큼 랜덤 데이터 생성
 	function createRandomData(count) {
-		var now = new Date();
-		var data = [];
-		var country, product, quantity, color, name, date, price;
+		const countries = ["Korea", "USA", "UK", "Japan", "China", "France", "Italy", "Singapore", "Ireland", "Taiwan"];
+		const products = ["IPhone 16", "Galaxy S25", "IPhone 16 Pro", "Galaxy Note21", "Galaxy S25 Ultra", "Galaxy zFlip"];
+		const quantities = [0, 1, 3, 9, 7, 10, 4, 15, 20, 12, 8];
+		const colors = ["Blue", "Gray", "Green", "Orange", "Pink", "Violet", "Yellow", "Red"];
+		const names = ["Steve", "Anna", "Lawrence", "Kim", "Emma", "Jennifer", "Han"];
+		const now = new Date();
+		const data = [];
+		let country, product, quantity, color, name, date, price;
+
 		console.time('데이터 생성 걸리는 시간');
-		for (var i = 0; i < count; i++) {
+
+		for (let i = 0; i < count; i++) {
 			country = countries[Math.floor(Math.random() * countries.length)],
 				product = products[Math.floor(Math.random() * products.length)],
 				quantity = quantities[Math.floor(Math.random() * quantities.length)],
@@ -182,31 +193,17 @@
 			}
 		}
 
-		// AUIGrid 에 데이터 삽입합니다.
-		AUIGrid.setGridData("#grid_wrap", data);
+		const endDate = new Date();
+		const dataTime = endDate.getTime() - now.getTime();
 
-		var endDate = new Date();
-		var dataTime = endDate.getTime() - now.getTime();
 		console.timeEnd('데이터 생성 걸리는 시간');
-		document.getElementById("ellapse").innerText = count + "개 출력 소요 시간 : " + dataTime + " ms";
-	};
 
-	function chkClick() {
-		var checked = document.getElementById("chk").checked;
+		// 그리드 데이터 삽입
+		AUIGrid.setGridData(myGridID, data);
 
-		// nullsLastOnSorting 속성 변경
-		AUIGrid.setProp("#grid_wrap", "nullsLastOnSorting", checked);
-	};
-
-	function getCheckedRowItemsAll() {
-		// 체크된 행들 얻기
-		var rows = AUIGrid.getCheckedRowItemsAll("#grid_wrap");
-
-		console.log(rows);
-		alert(rows.length + "개 데이터 얻음. 정확한 데이터 확인은 F12 의 개발자 도구의 콘솔 확인");
-	};
+		document.getElementById("elapse").textContent = count + "개 출력 소요 시간 : " + dataTime + " ms";
+	}
 </script>
-
 </head>
 <body>
 
@@ -217,7 +214,7 @@
 		<p>따라서 로컬(Local) 에서 자바스크립트로 랜덤 데이터를 생성하여 그리드에 적용시킵니다.</p>
 		<p>이와 같이 단순 렌더링은 원활하게 가능하나 필터링, 정렬 등과 같이 데이터를 전체 검색(Full Scan)하고 조작해야 하는 기능
 		<p>
-		<p>사용 시 성능이 낮은 PC나 버전이 낮은 IE 브라우저에서 한계가 있습니다.(스크립트 중지 경고가 발생할 수 있음.)</p>
+		<p>사용 시 성능이 낮은 PC나 버전이 낮은 브라우저에서 한계가 있습니다.(스크립트 중지 경고가 발생할 수 있음.)</p>
 		<span class="btn" onclick="createRandomData(300000)">30만 데이터 생성</span>
 		<span class="btn" onclick="createRandomData(500000)">50만 데이터 생성</span>
 		<span class="btn" onclick="createRandomData(1000000)">100만 데이터 생성</span>
@@ -232,7 +229,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 
 	</div>
 </div>
@@ -241,6 +238,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

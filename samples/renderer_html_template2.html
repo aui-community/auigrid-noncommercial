@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-column {
 		background: #ffffee;
@@ -89,132 +87,143 @@
 	}
 
 	.my_div_chk_span input {
-		margin-left: 4px;
+		margin-left: 6px;
+		margin-right: 2px;
 		width: 16px;
 		height: 16px;
+		vertical-align: middle;
 	}
 
 	/* HTML 템플릿에서 사용할 스타일 정의 끝*/
 </style>
+<script>
+	// 셀렉트 표현할 리스트
+	const mySelectList = [
+		{ value: "001", text: "선택 1" },
+		{ value: "002", text: "선택 2" },
+		{ value: "003", text: "선택 3" },
+		{ value: "004", text: "선택 4" },
+		{ value: "005", text: "선택 5" }
+	];
 
-<script type="text/javascript">
+	// 템플릿에 출력할 체크박스 그룹
+	const checkboxGroup = [
+		{ value: "v1", label: "값1" },
+		{ value: "v2", label: "값2" },
+		{ value: "v3", label: "값3" },
+	];
 
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 그리드에 데이터 삽입
 		AUIGrid.setGridData(myGridID, gridData);
-
-	};
-
-
-	//AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Template-ButtonGroup",
-		width: 260,
-		renderer: { // HTML 템플릿 렌더러 사용
-			type: "TemplateRenderer"
-		},
-		// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
-			var template = '<div class="my_div">';
-
-			template += '<span class="my_div_text_box">' + value + '</span>';
-			template += '<span class="my_div_btn" onclick="javascript:myApplyBtnClick(' + rowIndex + ', event);">적용</span>';
-			template += '<span class="my_div_btn2" onclick="javascript:myPopupBtnClick(' + rowIndex + ', event);">팝업</span>';
-			template += '</div>';
-			return template;
-		}
-
-	}, {
-		dataField: "code",
-		headerText: "Template-Select",
-		width: 280,
-		editable: false, // 그리드의 에디팅 사용 안함( 템플릿에서 만든 Select 로 에디팅 처리 하기 위함 )
-		renderer: { // HTML 템플릿 렌더러 사용
-			type: "TemplateRenderer"
-		},
-		// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
-			if (!value) return "";
-			var code, text;
-			var template = '<div class="my_div">';
-
-			if (value == "None") {
-				template += '<span style="line-height:2em;">선택할 수 없도록 작성됨(즉, 동적 select 표현)</span>';
-			} else {
-
-				template += '<span class="my_div_code_span">코드명 : ' + value + '</span>';
-				template += '<select class="my_select" onchange="javascript:mySelectChangeHandler(' + rowIndex + ', this.value, event);">';
-
-				for (var i = 0, len = mySelectList.length; i < len; i++) {
-					code = mySelectList[i]["value"];
-					text = mySelectList[i]["text"];
-					if (code == value) {
-						template += '<option value="' + code + '" selected="selected">' + text + '</option>';
-					} else {
-						template += '<option value="' + code + '">' + text + '</option>';
-					}
-				}
-				template += '</select>';
-			}
-			template += '</div>';
-			return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-		}
-	}, {
-		dataField: "check",
-		headerText: "Template-CheckGroup",
-		width: 180,
-		editable: false, // 그리드의 에디팅 사용 안함( 템플릿에서 만든 Select 로 에디팅 처리 하기 위함 )
-		renderer: { // HTML 템플릿 렌더러 사용
-			type: "TemplateRenderer"
-		},
-		// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
-			var valueArr = value.split(",");
-			var inputTagArr = [];
-			var template = '<div class="my_div">';
-			template += '<span class="my_div_chk_span">';
-
-
-			inputTagArr[0] = '<input type="checkbox" value="v1" onclick="javascript:myCheckClick(' + rowIndex + ', event);">값1';
-			inputTagArr[1] = '<input type="checkbox" value="v2" onclick="javascript:myCheckClick(' + rowIndex + ', event);">값2';
-			inputTagArr[2] = '<input type="checkbox" value="v3" onclick="javascript:myCheckClick(' + rowIndex + ', event);">값3';
-
-			for (var i = 0, len = valueArr.length; i < len; i++) {
-				switch (valueArr[i]) {
-					case "v1":
-						inputTagArr[0] = '<input type="checkbox" checked="checked" value="v1" onclick="javascript:myCheckClick(' + rowIndex + ', event);">값1';
-						break;
-					case "v2":
-						inputTagArr[1] = '<input type="checkbox" checked="checked" value="v2" onclick="javascript:myCheckClick(' + rowIndex + ', event);">값2';
-						break;
-					case "v3":
-						inputTagArr[2] = '<input type="checkbox" checked="checked" value="v3" onclick="javascript:myCheckClick(' + rowIndex + ', event);">값3';
-						break;
-				}
-
-			}
-
-			template += inputTagArr.join('');
-			template += '</span>';
-			template += '</div>';
-
-			return template;
-		}
-	}];
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Template-ButtonGroup",
+			width: 260,
+			renderer: { // HTML 템플릿 렌더러 사용
+				type: "TemplateRenderer"
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
+				return (`
+					<div class="my_div">
+						<span class="my_div_text_box">${value}</span>
+						<span class="my_div_btn" onclick="myApplyBtnClick(${rowIndex}, event)">적용</span>
+						<span class="my_div_btn2" onclick="myPopupBtnClick(${rowIndex}, event)">팝업</span>
+					</div>
+				`);
+			}
+		}, {
+			dataField: "code",
+			headerText: "Template-Select",
+			width: 280,
+			editable: false, // 그리드의 에디팅 사용 안함( 템플릿에서 만든 Select 로 에디팅 처리 하기 위함 )
+			renderer: { // HTML 템플릿 렌더러 사용
+				type: "TemplateRenderer"
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
+				if (!value) return "";
+				if (value === "None") {
+					return (`
+						<div class="my_div">
+							<span style="line-height:2em;">
+							선택할 수 없도록 작성됨(즉, 동적 select 표현)
+							</span>
+						</div>
+					`);
+				}
 
-		var gridProps = {
+				// option 만들기
+				const options = mySelectList.map(({ value: code, text }) => {
+					const selected = code === value ? ' selected="selected"' : '';
+					return `<option value="${code}"${selected}>${text}</option>`;
+				}).join("");
+
+				return (`
+					<div class="my_div">
+						<span class="my_div_code_span">코드명 : ${value}</span>
+						<select class="my_select" onchange="mySelectChangeHandler(${rowIndex}, this.value, event);">
+							${options}
+						</select>
+					</div>
+				`);
+			}
+		}, {
+			dataField: "check",
+			headerText: "Template-CheckGroup",
+			width: 180,
+			editable: false, // 그리드의 에디팅 사용 안함( 템플릿에서 만든 Select 로 에디팅 처리 하기 위함 )
+			renderer: { // HTML 템플릿 렌더러 사용
+				type: "TemplateRenderer"
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
+				const selectedValues = value.split(",");
+
+				// 체크박스 개수에 맞게 만들기
+				const checkboxes = checkboxGroup.map(({ value, label }) => {
+					const isChecked = selectedValues.includes(value) ? 'checked="checked"' : '';
+					return `<label><input type="checkbox" value="${value}" ${isChecked} onclick="myCheckClick(${rowIndex}, event);">${label}</label>`;
+				}).join("");
+
+				return (`
+					<div class="my_div">
+						<span class="my_div_chk_span">
+							${checkboxes}
+						</span>
+					</div>
+				`);
+			}
+		}, {
+			dataField: "radioCheck",
+			headerText: "라디오",
+			width: 100,
+			editable: false,
+			renderer: {
+				type: "TemplateRenderer",
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
+				let radioChecked = "";
+				// 체크됐는지 확인하기 (데이터의 radioCheck 필드에 checked 값이 있는지 확인)
+				if (value === "checked") {
+					radioChecked = "checked";
+				}
+				const html = `<input type="radio" name="myRadioFieldCheck" ${radioChecked} onchange="myRadioChange(${rowIndex}, event)">`;
+				return '<label>' + html + '</label>';
+			}
+		}];
+
+		// 그리드 속성 설정
+		const gridProps = {
 			// 행 높이 설정
 			rowHeight: 34,
 			editable: true,
@@ -229,39 +238,35 @@
 	// 적용 버턴 클릭 핸들러
 	function myApplyBtnClick(rowIndex, event) {
 		alert("rowIndex : " + rowIndex + " 적용 버턴 클릭");
-
 		// 그리드에 실제 업데이트 적용 시킴
 		AUIGrid.updateRow(myGridID, {
 			"name": "셀 값 예약어로 수정"
 		}, rowIndex);
-	};
+	}
 
 	//팝업 버턴 클릭 핸들러
 	function myPopupBtnClick(rowIndex, event) {
 		alert("rowIndex : " + rowIndex + " 팝업 버턴 클릭");
-	};
+	}
 
 	// 셀렉트 변경 핸들러
 	function mySelectChangeHandler(rowIndex, selectedValue, event) {
 		alert(selectedValue);
-
 		// 그리드에 실제 업데이트 적용 시킴
 		AUIGrid.updateRow(myGridID, {
 			"code": selectedValue
 		}, rowIndex);
-	};
+	}
 
 	// 체크박스 그룹 클릭 핸들러
 	function myCheckClick(rowIndex, event) {
-		var target = event.target ? event.target : event.srcElement;
-
+		const target = event.target ? event.target : event.srcElement;
 		alert("rowIndex : " + rowIndex + ", value : " + target.value + ", checked : " + target.checked);
 
-
 		// 해당 행의 아이템 얻기
-		var item = AUIGrid.getItemByRowIndex(myGridID, rowIndex);
-		var checkValue = item.check;
-		var checkArr = checkValue.split(",");
+		const item = AUIGrid.getItemByRowIndex(myGridID, rowIndex);
+		const checkValue = item.check;
+		const checkArr = checkValue.split(",");
 
 		// 체크된 경우 포함시킴
 		if (target.checked) {
@@ -275,39 +280,37 @@
 		AUIGrid.updateRow(myGridID, {
 			"check": checkArr.join(",")
 		}, rowIndex);
+	}
 
-	};
+	// 라디오 체인지 핸들러
+	function myRadioChange(rowIndex, event) {
+		// 전체 데이터를 대상으로 라디오에 해당하는 dataField는 "" 으로 그리드에 우선적으로 적용시킴 (즉, 전체 초기화)
+		const rowCount = AUIGrid.getRowCount(myGridID);
+		AUIGrid.updateRowBlockToValue(myGridID, 0, rowCount - 1, "radioCheck", "");
 
-
-	// 셀렉트 표현할 리스트
-	var mySelectList = [
-		{ value: "001", text: "선택 1" },
-		{ value: "002", text: "선택 2" },
-		{ value: "003", text: "선택 3" },
-		{ value: "004", text: "선택 4" },
-		{ value: "005", text: "선택 5" }
-	];
+		// rowIndex 의 radioCheck 필드 값 변경 시키기 즉, 현재 선택한 라디오만 checked 로 값 수정 시킴
+		AUIGrid.setCellValue(myGridID, rowIndex, "radioCheck", "checked");
+	}
 
 	// 그리드 데이터
-	var gridData = [{ "name": "Steve", "code": "001", "check": "v1" }, { "name": "Emma", "code": "003", "check": "v1,v2,v3" }, { "name": "Steve", "code": "004", "check": "v2" }, { "name": "Anna", "code": "003", "check": "v1,v2,v3" }, { "name": "Lawrence", "code": "005", "check": "v1,v2,v3" }, { "name": "Steve", "code": "003", "check": "v1,v2,v3" }, { "name": "Anna", "code": "002", "check": "v1,v2,v3" }, { "name": "Lawrence", "code": "002", "check": "v3" }, { "name": "Lawrence", "code": "None", "check": "v1,v3" }, { "name": "Kim", "code": "001", "check": "v1,v2" }, { "name": "Emma", "code": "005", "check": "v1,v2,v3" }, { "name": "Kim", "code": "002", "check": "v1,v2,v3" }, { "name": "Kim", "code": "None", "check": "v1,v2,v3" }, { "name": "Steve", "code": "001", "check": "v1,v2,v3" }, { "name": "Anna", "code": "005", "check": "v1,v3" }, { "name": "Anna", "code": "005", "check": "v1,v2,v3" }, { "name": "Kim", "code": "001", "check": "v3" }, { "name": "Steve", "code": "None", "check": "v1,v2,v3" }, { "name": "Kim", "code": "002", "check": "v2,v3" }, { "name": "Kim", "code": "001", "check": "v1,v2,v3" }];
+	const gridData = [{ "name": "Steve", "code": "001", "check": "v1", "radioCheck": "checked" }, { "name": "Emma", "code": "003", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Steve", "code": "004", "check": "v2", "radioCheck": "" }, { "name": "Anna", "code": "003", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Lawrence", "code": "005", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Steve", "code": "003", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Anna", "code": "002", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Lawrence", "code": "002", "check": "v3", "radioCheck": "" }, { "name": "Lawrence", "code": "None", "check": "v1,v3", "radioCheck": "" }, { "name": "Kim", "code": "001", "check": "v1,v2", "radioCheck": "" }, { "name": "Emma", "code": "005", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Kim", "code": "002", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Kim", "code": "None", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Steve", "code": "001", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Anna", "code": "005", "check": "v1,v3", "radioCheck": "" }, { "name": "Anna", "code": "005", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Kim", "code": "001", "check": "v3", "radioCheck": "" }, { "name": "Steve", "code": "None", "check": "v1,v2,v3", "radioCheck": "" }, { "name": "Kim", "code": "002", "check": "v2,v3", "radioCheck": "" }, { "name": "Kim", "code": "001", "check": "v1,v2,v3", "radioCheck": "" }];
 </script>
-
 </head>
 <body>
 
 <div id="main">
 	<div class="desc">
-		<p>데이터 값이 HTML 인 경우 그대로 출력하며, 사용자가 임의로 labelFunction 에서 HTML 스트링을 작성할 수 있습니다.(innerHTML 처리)</p>
+		<p>데이터 값이 HTML 인 경우 그대로 출력하며, 사용자가 임의로 labelFunction 에서 HTML 템플릿 리터럴을 작성할 수 있습니다.(innerHTML 처리)</p>
 		<div class="src_cover">
-			<xmp>// HTML 형식을 스트링으로 작성해서 반환하면 그대로 그리드의 셀로 출력됩니다.
-				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
-				var template = '<div class="my_div">';
-					template += '<span class="my_div_text_box">' + value + '</span>';
-					template += '<span class="my_div_btn" onclick="javascript:myApplyBtnClick(' + rowIndex + ', event);">적용</span>';
-					template += '<span class="my_div_btn2" onclick="javascript:myPopupBtnClick(' + rowIndex + ', event);">팝업</span>';
-					template += '</div>';
-				return template; // HTML 형식의 스트링
-				}</xmp>
+			<pre><xmp>// HTML 형식의 템플릿을 작성하여 반환하면 그대로 그리드의 셀로 출력됩니다.
+labelFunction: function (rowIndex, columnIndex, value, headerText, item) { // HTML 템플릿 작성
+	return (`
+		<div class="my_div">
+			<span class="my_div_text_box">${value}</span>
+			<span class="my_div_btn" onclick="myApplyBtnClick(${rowIndex}, event)">적용</span>
+			<span class="my_div_btn2" onclick="myPopupBtnClick(${rowIndex}, event)">팝업</span>
+		</div>
+	`);</xmp></pre>
 		</div>
 		<strong>템플릿 렌더러에서 수정가능한 태그를 어떻게 작성하는지를 보여주는 데모입니다.</strong>
 		<p>템플릿 렌더러로 작성된 데이터 수정도 Undo(Ctrl+Z), Redo(Ctrl+Y) 를 지원합니다.</p>
@@ -319,8 +322,7 @@
 		<div id="grid_wrap" style="width:100%;height:340px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -328,6 +330,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,81 +28,76 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.right_style {
 		text-align: right;
 	}
 </style>
-<script type="text/javascript">
+<script>
+	// AUIGrid 생성 후 반환 ID
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-	};
+
+		// AUIGrid 에 데이터 삽입합니다.
+		AUIGrid.setGridData(myGridID, genRandomData(1000));
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
-
 		// 칼럼 레이아웃
-		var columnLayout = getColumnLayout();
+		const columnLayout = getColumnLayout();
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			rowIdField: "id",
-
 			// 스크롤 크기 지정
 			scrollHeight: 18,
 			scrollThumbHeight: 16,
-
 			// 수직 라이브 스크롤링 사용 안함.
 			liveVScrolling: false,
-
 			// 수평 라이브 스크롤링 사용 안함.
 			liveHScrolling: false
-
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-		// AUIGrid 에 데이터 삽입합니다.
-		AUIGrid.setGridData("#grid_wrap", createRandomData());
 	}
 
 	//칼럼 레이아웃을 생성하여 반환합니다.
 	function getColumnLayout() {
-		var columnLayout = [];
-
-		for (var i = 1; i <= 50; i++) { // 칼럼 50개 
-			obj = {
+		const columnLayout = [];
+		for (let i = 1; i <= 50; i++) { // 칼럼 50개 
+			columnLayout.push({
 				width: 70,
 				dataField: "w" + i,
 				headerText: i + "주 실적"
-			};
-			columnLayout.push(obj);
+			});
 		}
-
 		return columnLayout;
-	};
+	}
 
-	// 랜덤 데이터 생성
-	function createRandomData() {
-		var data = [];
-		for (var i = 0; i < 1000; i++) {
-			obj = { "id": i };
-			for (var j = 1; j <= 50; j++) {
-				obj["w" + j] = Math.floor(Math.random() * 10000);
+	// 주어진 개수만큼 랜덤 데이터 생성하여 반환
+	function genRandomData(count) {
+		const data = Array.from({ length: count }, (v, i) => {
+			const row = {
+				id: `${i + 1}`
+			};
+
+			for (let j = 1; j <= 50; j++) {
+				row[`w${j}`] = Math.round(Math.random() * 10000);
 			}
-			data[i] = obj;
-		}
+
+			return row;
+		});
 
 		return data;
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -122,8 +114,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -131,6 +122,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<style>
+	/* 커스텀 칼럼 스타일 정의 */
+	.aui-grid-user-custom-column {
+		background: #ffffee;
+		font-weight: bold;
+	}
+</style>
+
+<script>
+	let myGridID;
+
+	// 시작점
+	function init() {
+		// 칼럼 레이아웃 반환
+		const columnLayout = createColumnData();
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid(columnLayout);
+		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+		requestGridData("./data/stress_5000.json");
+	}
+
+	// 칼럼 레이아웃을 생성하여 반환합니다.
+	function createColumnData() {
+		// 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "dept",
+			headerText: "부서코드"
+		}];
+
+		for (let i = 1; i <= 100; i++) { // 칼럼 100개 + 부서 1 총 101개 생성
+			const column = {
+				width: 70,
+				dataField: "w" + i,
+				headerText: i + "주"
+			};
+			columnLayout.push(column);
+		}
+
+		return columnLayout;
+	}
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid(columnLayout) {
+		// 그리드 속성 설정
+		const gridProps = {
+			editable: true,
+			rowIdField: "dept",
+			// 전체 선택 활성화 (기본값: false)
+			enableSelectionAll: true,
+			// 전체 선택 활성화를 위해서는 선택 모드 "multipleCells" 또는 "multipleRows" 설정해야 함
+			selectionMode: "multipleCells"
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+		AUIGrid.bind(myGridID, "copyBegin", function (event) {
+			console.time('copyElapse');
+		})
+
+		AUIGrid.bind(myGridID, "copyEnd", function (event) {
+			console.timeEnd('copyElapse');
+			document.getElementById("elapse").textContent = "복사 완료";
+		})
+	}
+
+	function setSelectionAll() {
+		// 그리드 셀 전체 선택
+		AUIGrid.setSelectionAll(myGridID);
+	}
+
+	function setSelectionColumn() {
+		// 1번째 칼럼 인덱스 전체 선택
+		AUIGrid.setSelectionColumn(myGridID, 1);
+
+		// 1, 2, 3 칼럼 인덱스 전체 선택
+		// AUIGrid.setSelectionColumn(myGridID, 1, 3);
+	}
+</script>
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>그리드 셀을 전체 선택 활성화 한 모습입니다. 다음 두 속성을 설정하면 전체 선택을 할 수 있습니다.</p>
+		<div class="src_cover">
+			<pre>// 그리드 속성 설정
+const gridProps = {
+	// 전체 선택 활성화
+	enableSelectionAll: true,
+	// 전체 선택 활성화를 위해서는 선택 모드 "multipleCells" 또는 "multipleRows" 설정해야 함
+	selectionMode: "multipleCells"
+};</pre>
+		</div>
+		<p>전체 선택이 활성화되면 Ctrl + A 단축키가 활성화 되며, 행 번호 칼럼의 헤더인 "No" 를 클릭하여 전체 선택이 가능해 집니다.</p>
+		<p>데모는 약 100개의 칼럼 * 5000 행의 데이터를 출력한 모습니다.</p>
+		<p>주의 : 모든 상황에서 전체 선택 기능을 사용할 수 있는 것은 아닙니다. 수천 개 이상의 데이터를 전체 선택할 경우, 브라우저 성능 저하, 일시적인 멈춤 현상 또는 스크립트 중단 등의 문제가 발생할 수 있습니다.</p>
+		<p>따라서 해당 기능은 사용해야 하는 상황에서 데이터 양을 고려하여 신중하게 사용해야 합니다.</p>
+		<ul class="nav_u">
+			<li><button onclick="setSelectionAll()" class="btn">셀 전체 선택하기</button></li>
+			<li><button onclick="setSelectionColumn()" class="btn">1주 칼럼 전체 선택하기</button></li>
+		</ul>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width:100%;height:400px; margin:0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="elapse"></p>
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

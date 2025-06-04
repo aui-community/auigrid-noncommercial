@@ -73,17 +73,15 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 	 * @Overriden public update
 	 *
 	 * 그리드에 의해 호출되는 메소드이며 빈번히 호출됩니다.
-	 * 이 메소드에서 DOM 검색이나, jQuery 객체 생성 등은 자제하십시오.
-	 * DOM 검색이나 jQuery 객체는 initialize() 메소드에서 하십시오.
+	 * 이 메소드에서 DOM 검색이나 조작은 자제하십시오.
 	 */
 	update: function () {
-		var data = this.data; // 행 전체 아이템
+		// 행 아이템
+		const data = this.data;
 		if (!data) return;
 
-		var ownData = data[this.dataField]; // 현재 칼럼 아이템
-
+		const ownData = data[this.dataField];
 		if (!ownData) {
-			// 칼럼 데이터가 없는 경우
 			if (this.initialized) {
 				this.__setChildrenVisible(false);
 			}
@@ -96,10 +94,8 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 		} else {
 			this.__setChildrenVisible(true);
 		}
-
 		// 실제 element 에 값 출력
 		this.__displayMyValues();
-
 		// 바차트 값 갱신
 		this.__updateBarChart(ownData.value);
 	},
@@ -130,38 +126,39 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 	 */
 	initialize: function () {
 		if (this.initialized) return;
-
 		this.initialized = true;
 
 		this.setHeight(this.rowHeight - 2);
 
 		// 렌더러 자체 HTML Element(Div)
-		var element = this.element;
-		// 중요!!!! child 들이 absolute 포지션을 갖기 때문에 relative 해줘야 함.
+		const element = this.element;
+
+		// 필수: 자식이 absolute 이므로 relative 필요
 		this.__setStyle(element, 'position', 'relative');
 
-		var c1 = (this.__childEle = document.createElement('div'));
+		// 값 표시 영역
+		const c1 = document.createElement('div');
 		c1.className = 'my-child1';
+		this.__childEle = c1;
 
-		var c2 = (this.__childEle2 = document.createElement('div'));
+		// 클릭 가능한 아이콘
+		const c2 = document.createElement('div');
 		c2.className = 'my-child2';
+		this.__childEle2 = c2;
 
-		var self = this;
-		//-- 아이콘 클릭
-		c2.onclick = function (event) {
-			var date = self.data[self.dataField].date;
-			var value = self.data[self.dataField].value;
-			alert('rowIndex : ' + self.rowIndex + ', columnIndex : ' + self.columnIndex + ', 날짜 : ' + date + ', 값 : ' + value + ' 아이콘 클릭');
+		// 아이콘 클릭 핸들러
+		c2.onclick = (event) => {
+			const { date, value } = this.data[this.dataField];
+			// 원하는 작업 작성
+			alert(`rowIndex: ${this.rowIndex}, columnIndex: ${this.columnIndex}, 날짜: ${date}, 값: ${value} 아이콘 클릭`);
 		};
 
+		// DOM 구성
 		element.appendChild(c1);
 		element.appendChild(c2);
 
 		// 차트 생성
 		this.__createBarChart();
-
-		// IE 메모리 누수 방지
-		c1 = c2 = null;
 	},
 
 	/****************************************************************
@@ -175,80 +172,79 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 
 	/* 값을 실제로 element 에 출력함*/
 	__displayMyValues: function () {
-		var el, ownValue;
+		const data = this.data;
+		const ownItem = data[this.dataField];
 
-		var data = this.data; // 행 전체 아이템
-		var ownItem = data[this.dataField]; // 현재 칼럼 아이템
+		if (!data || !ownItem) return;
 
-		// 달력에 날짜 출력
-		if (data && ownItem) {
-			el = this.__childEle;
-			ownValue = ownItem.date;
-			el.textContent != null ? (el.textContent = ownValue) : (el.innerText = ownValue);
-		}
-		el = null;
+		const el = this.__childEle;
+		const value = ownItem.date ?? '';
+
+		el.textContent = value;
 	},
 
 	// 차트를 생성합니다.
 	__createBarChart: function () {
-		var chartBase = (this.__chartBase = document.createElement('div'));
+		// 차트 베이스 생성
+		const chartBase = document.createElement('div');
 		chartBase.className = 'my-chart-base';
+		this.__chartBase = chartBase;
 
-		var chart = (this.__chart = document.createElement('div'));
+		// 실제 바차트 (채워질 부분)
+		const chart = document.createElement('div');
 		chart.className = 'my-chart';
+		this.__chart = chart;
 
-		var chartLabel = (this.__chartLabel = document.createElement('div'));
+		// 차트 값 텍스트 표시용 라벨
+		const chartLabel = document.createElement('div');
 		chartLabel.className = 'my-chart-label';
+		this.__chartLabel = chartLabel;
 
+		// DOM 구성
 		chartBase.appendChild(chart);
 		this.element.appendChild(chartLabel);
 		this.element.appendChild(chartBase);
-
-		// IE 메모리 누수 방지
-		chartLabel = chartBase = chart = null;
 	},
 
 	// 차트 값 갱신
 	__updateBarChart: function (value) {
-		var el = this.__chartLabel;
+		const labelEl = this.__chartLabel;
+		const chartEl = this.__chart;
 
-		// 값 % 출력
-		var text = value + ' %';
-		el.textContent != null ? (el.textContent = text) : (el.innerText = text);
-
-		//-- 차트 value 에 맞게 크기 조절
-
-		var chartWidth = 90; // 차트 전체 width
-
-		var pos = ((chartWidth * value) / 100).toFixed(2) + 'px';
-		var bgColor = '#000000';
-		if (value < 20) {
-			bgColor = '#FF0000';
-		} else if (value < 50) {
-			bgColor = '#FFBB00';
-		} else if (value < 75) {
-			bgColor = '#ABF200';
-		} else {
-			bgColor = '#1DDB16';
+		// 값 보정 (숫자 아닌 경우 대비)
+		const percent = Number(value);
+		if (isNaN(percent)) {
+			labelEl.textContent = '';
+			this.__setStyle(chartEl, 'width', '0px');
+			return;
 		}
 
-		this.__setStyle(this.__chart, 'width', pos);
-		this.__setStyle(this.__chart, 'background', bgColor);
+		// % 텍스트 출력
+		labelEl.textContent = `${percent} %`;
+
+		// 전체 너비 대비 차트 비율 계산
+		const chartWidth = 90; // 차트 전체 width
+		const width = `${((chartWidth * percent) / 100).toFixed(2)}px`;
+
+		// 구간별 색상 정의
+		const getBarColor = (val) => {
+			if (val < 20) return '#FF0000'; // 빨강
+			if (val < 50) return '#FFBB00'; // 주황
+			if (val < 75) return '#ABF200'; // 연두
+			return '#1DDB16'; // 초록
+		};
+
+		this.__setStyle(chartEl, 'width', width);
+		this.__setStyle(chartEl, 'background', getBarColor(percent));
 	},
 
 	/* 생성된 자식들 엘리먼트 보이기/ 감추기 설정 */
 	__setChildrenVisible: function (visible) {
-		if (visible) {
-			this.__childEle.style.display = 'block';
-			this.__childEle2.style.display = 'block';
-			this.__chartBase.style.display = 'block';
-			this.__chartLabel.style.display = 'block';
-		} else {
-			this.__childEle.style.display = 'none';
-			this.__childEle2.style.display = 'none';
-			this.__chartBase.style.display = 'none';
-			this.__chartLabel.style.display = 'none';
-		}
+		const displayValue = visible ? 'block' : 'none';
+
+		[this.__childEle, this.__childEle2, this.__chartBase, this.__chartLabel].forEach((el) => {
+			if (el) el.style.display = displayValue;
+		});
 	},
 
 	/* element (엘리먼트) 에 styles 을 설정합니다. */

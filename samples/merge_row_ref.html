@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,117 +28,109 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<script type="text/javascript">
+
+<script>
 
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/nutrition3.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "gubun0",
-		headerText: "대분류",
-		width: 160,
-		cellMerge: true // 대분류 셀 세로 병합 실행
-	}, {
-		dataField: "gubun1",
-		headerText: "구분1",
-		width: 140,
-		cellMerge: true, // 구분1 셀 세로 병합 실행
-		mergeRef: "gubun0", // 대분류(gubun0 필드) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
-		mergePolicy: "restrict"
-	}, {
-		dataField: "gubun2",
-		headerText: "구분2",
-		width: 140
-	}, {
-		headerText: "2008년",
-		children: [{
-			dataField: "avg08",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev08",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2009년",
-		children: [{
-			dataField: "avg09",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev09",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2010년",
-		children: [{
-			dataField: "avg10",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev10",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2011년",
-		children: [{
-			dataField: "avg11",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev11",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2012년",
-		children: [{
-			dataField: "avg12",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev12",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}];
+		requestGridData("./data/nutrition3.json");
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "gubun0",
+			headerText: "대분류",
+			width: 160,
+			cellMerge: true // 대분류 셀 세로 병합 실행
+		}, {
+			dataField: "gubun1",
+			headerText: "구분1",
+			width: 140,
+			cellMerge: true, // 구분1 셀 세로 병합 실행
+			mergeRef: "gubun0", // 대분류(gubun0 필드) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+			mergePolicy: "restrict"
+		}, {
+			dataField: "gubun2",
+			headerText: "구분2",
+			width: 140
+		}, {
+			headerText: "2008년",
+			children: [{
+				dataField: "avg08",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev08",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}, {
+			headerText: "2009년",
+			children: [{
+				dataField: "avg09",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev09",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}, {
+			headerText: "2010년",
+			children: [{
+				dataField: "avg10",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev10",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}, {
+			headerText: "2011년",
+			children: [{
+				dataField: "avg11",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev11",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}, {
+			headerText: "2012년",
+			children: [{
+				dataField: "avg12",
+				headerText: "평균(g)",
+				width: 100
+			}, {
+				dataField: "sdev12",
+				headerText: "표준편차",
+				width: 100
+			}]
+		}];
 
-		var gridProps = {
-				
+		// 그리드 속성 설정정
+		const gridProps = {
 			// 마우스 클릭(선택) 시 적용 모드
 			selectionMode: "singleRow",
-				
 			// 마우스 오버 적용 모드
 			hoverMode: "singleRow",
-				
 			// 셀 병합 실행
 			enableCellMerge: true,
-
 			// 셀 병합 정책
 			// "default"(기본값) : null 을 셀 병합에서 제외하여 병합을 실행하지 않습니다.
 			// "withNull" : null 도 하나의 값으로 간주하여 다수의 null 을 병합된 하나의 공백으로 출력 시킵니다.
 			// "valueWithNull" : null 이 상단의 값과 함께 병합되어 출력 시킵니다.
 			cellMergePolicy: "withNull",
-
-			showRowBgStyles: false,
 			showStateColumn: true,
 			editable: true,
 			enableMovingColumn: true
@@ -151,7 +140,7 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	}
 
-	var isMerged = true; // 최초에는 merged 상태
+	let isMerged = true; // 최초에는 merged 상태
 
 	function setCellMerge() {
 		isMerged = !isMerged;
@@ -180,7 +169,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -188,6 +177,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

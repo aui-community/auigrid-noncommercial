@@ -1,665 +1,186 @@
 <!doctype html>
-<html>
+<html lang="ko">
+
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
-<meta content="text/javascript" http-equiv="Content-Script-Type">
-<meta content="text/css" http-equiv="Content-Style-Type">
-<meta content="IE=edge" http-equiv="X-UA-Compatible">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="-1">
-<meta content="width=1200" name="viewport">
-<meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
-<meta content="AUIGrid API Documentation" property="og:title">
-<meta content="https://www.auisoft.net/documentation/auigrid" property="og:url">
-<meta content="AUIGrid API Documentation" property="og:description">
-<meta content="AUIGrid API Documentation" name="keywords">
-<link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
-<title>AUIGrid Documentation</title>
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:Wingdings;
-	panose-1:5 0 0 0 0 0 0 0 0 0;}
-@font-face
-	{font-family:굴림;
-	panose-1:2 11 6 0 0 1 1 1 1 1;}
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:"맑은 고딕";
-	panose-1:2 11 5 3 2 0 0 2 0 4;}
-@font-face
-	{font-family:"\@맑은 고딕";
-	panose-1:2 11 5 3 2 0 0 2 0 4;}
-@font-face
-	{font-family:"\@굴림";
-	panose-1:2 11 6 0 0 1 1 1 1 1;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:8.0pt;
-	margin-left:0cm;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	line-height:107%;
-	text-autospace:none;
-	word-break:break-hangul;
-	font-size:10.0pt;
-	font-family:"맑은 고딕";}
-a:link, span.MsoHyperlink
-	{color:#0563C1;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:#954F72;
-	text-decoration:underline;}
-p
-	{margin-right:0cm;
-	margin-left:0cm;
-	font-size:12.0pt;
-	font-family:굴림;}
-p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
-	{margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:8.0pt;
-	margin-left:40.0pt;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	line-height:107%;
-	text-autospace:none;
-	word-break:break-hangul;
-	font-size:10.0pt;
-	font-family:"맑은 고딕";}
-.MsoChpDefault
-	{font-family:"맑은 고딕";}
-.MsoPapDefault
-	{margin-bottom:8.0pt;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	line-height:107%;}
- /* Page Definitions */
- @page WordSection1
-	{size:595.3pt 841.9pt;
-	margin:3.0cm 72.0pt 72.0pt 72.0pt;}
-div.WordSection1
-	{page:WordSection1;}
- /* List Definitions */
- ol
-	{margin-bottom:0cm;}
-ul
-	{margin-bottom:0cm;}
--->
-</style>
-
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta content="text/javascript" http-equiv="Content-Script-Type">
+    <meta content="text/css" http-equiv="Content-Style-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta content="width=1200" name="viewport">
+    <meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
+    <meta content="AUIGrid API Documentation" property="og:title">
+    <meta content="https://www.auisoft.net/documentation/auigrid" property="og:url">
+    <meta content="AUIGrid API Documentation" property="og:description">
+    <meta content="AUIGrid API Documentation" name="keywords">
+    <title>AUIGrid Documentation</title>
+    <link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen">
+    
+    
+    
 </head>
+
 <body>
-<div class="header">
-<div id="logo-bar">
-<a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
-</div>
-<span id="title">AUIGrid 3.0.15 Documentation</span>
-</div>
+    <div class="header">
+        <div id="logo-bar">
+            <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
+        </div>
+        <span id="title">AUIGrid 3.0.16 Documentation</span>
+    </div>
 
-<div class="MainContent">
+    <div class="MainContent">
 
-	<span class="className">AUIGrid 데이터 구조 및 작성 방법에 대하여 </span>
-<div class=WordSection1>
 
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>AUIGrid
-</span><span style='font-size:12.0pt;line-height:107%'>는 <span lang=EN-US>JSON </span>형식과
-<span lang=EN-US>XML </span>형식의 데이터를 지원합니다<span lang=EN-US>.</span></span></p>
+        <h1>3. 데이터 구조 및 작성 방법에 대하여</h1>
 
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>아래와 같이 직원 급여
-테이블을 출력했을 때 어떻게 <span lang=EN-US>AUIGrid </span>에 맞게 데이터를 작성하는지 본 문서에서 설명하겠습니다<span
-lang=EN-US>.</span></span></p>
+        <h2>3.1 데이터 구조 개요</h2>
+        <p>AUIGrid는 JSON 기반의 1차원 객체 배열 데이터를 기본으로 사용하며, 트리 구조, XML, CSV 형태의 데이터도 가공하여 사용할 수 있습니다.</p>
+        <p>각 데이터 항목은 한 행(Row)을 나타내며, 객체의 속성명은 그리드 컬럼의 <code class="language-javascript">dataField</code>설정 값과 일치해야 합니다.</p>
 
-<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
- style='border-collapse:collapse;border:none'>
- <tr>
-  <td width=150 valign=top style='width:112.7pt;border:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>이름<span lang=EN-US>(name)</span></p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border:solid windowtext 1.0pt;
-  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>직급<span lang=EN-US>(position)</span></p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border:solid windowtext 1.0pt;
-  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>근속연수<span lang=EN-US>(years)</span></p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border:solid windowtext 1.0pt;
-  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>연봉<span lang=EN-US>(salary)</span></p>
-  </td>
- </tr>
- <tr>
-  <td width=150 valign=top style='width:112.7pt;border:solid windowtext 1.0pt;
-  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>홍길동</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>과장</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>8</span>년</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>48,000,000</span></p>
-  </td>
- </tr>
- <tr>
-  <td width=150 valign=top style='width:112.7pt;border:solid windowtext 1.0pt;
-  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>김대리</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>대리</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>6</span>년</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>38,000,000</span></p>
-  </td>
- </tr>
- <tr>
-  <td width=150 valign=top style='width:112.7pt;border:solid windowtext 1.0pt;
-  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>이진리</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>사원</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>3</span>년</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>32,000,000</span></p>
-  </td>
- </tr>
- <tr>
-  <td width=150 valign=top style='width:112.7pt;border:solid windowtext 1.0pt;
-  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>최소원</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>사원</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>3</span>년</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>32,000,000</span></p>
-  </td>
- </tr>
- <tr>
-  <td width=150 valign=top style='width:112.7pt;border:solid windowtext 1.0pt;
-  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>김말단</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'>사원</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>1</span>년</p>
-  </td>
-  <td width=150 valign=top style='width:112.7pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US>28,000,000</span></p>
-  </td>
- </tr>
-</table>
+        <h2>3.2 JSON 데이터 구조 (기본)</h2>
+        <pre><code class="language-javascript">[
+  { "id": 1, "name": "홍길동", "product": "iPhone", "price": 1200000 },
+  { "id": 2, "name": "김영희", "product": "Galaxy", "price": 950000 }
+]</code></pre>
 
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
+        <h3>구조 설명</h3>
+        <ul>
+            <li>배열 형태로 각 객체가 하나의 행(Row)</li>
+            <li>그리드 칼럼 레이아웃에서 정의한 <code class="language-javascript">dataField</code>에 해당하는 key 값 사용</li>
+        </ul>
 
-<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'><span
-lang=EN-US style='font-size:12.0pt;line-height:107%;font-family:Wingdings'>l<span
-style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US
-style='font-size:12.0pt;line-height:107%'>JSON</span></p>
+        <h3>AUIGrid 컬럼 레이아웃 설정 예시</h3>
+        <pre><code class="language-javascript">// 그리드 칼럼 레이아웃 설정
+const columnLayout = [
+  { dataField: "id", headerText: "ID" },
+  { dataField: "name", headerText: "이름" },
+  { dataField: "product", headerText: "제품" },
+  { dataField: "price", headerText: "가격", dataType: "numeric" }
+];</code></pre>
 
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>JSON
-</span><span style='font-size:12.0pt;line-height:107%'>데이터는 자바스크립트 배열<span
-lang=EN-US>(Array)</span>과 <span lang=EN-US>Object </span>를 문자열로 묶은 표현기법입니다<span
-lang=EN-US>.</span></span></p>
+        <h2>3.3 XML 데이터 구조</h2>
+        <pre><code class="language-javascript">&lt;rows&gt;
+  &lt;row&gt;
+    &lt;id&gt;1&lt;/id&gt;
+    &lt;name&gt;홍길동&lt;/name&gt;
+    &lt;product&gt;iPhone&lt;/product&gt;
+    &lt;price&gt;1200000&lt;/price&gt;
+  &lt;/row&gt;
+  &lt;row&gt;
+    &lt;id&gt;2&lt;/id&gt;
+    &lt;name&gt;김영희&lt;/name&gt;
+    &lt;product&gt;Galaxy&lt;/product&gt;
+    &lt;price&gt;950000&lt;/price&gt;
+  &lt;/row&gt;
+&lt;/rows&gt;
+</code></pre>
+        <p><strong>주의사항:</strong> AUIGrid는 XML을 직접 처리하지 않으며, 브라우저에서 <code class="language-javascript">DOMParser</code> 등으로 JSON 변환 후 사용합니다. 따라서 성능적으로 JSON 이 우수합니다.</p>
 
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>배열<span
-lang=EN-US>(Array)</span>은 <span lang=EN-US>[] </span>와 같고 <span lang=EN-US>Object
-</span>는 <span lang=EN-US>{} </span>과 같습니다<span lang=EN-US>.</span></span></p>
+        <h2>3.4 CSV 데이터 구조</h2>
+        <pre><code class="language-javascript">id,name,product,price
+1,홍길동,iPhone,1200000
+2,김영희,Galaxy,950000</code></pre>
+        <p><strong>주의사항:</strong> AUIGrid는 CSV를 문자열 파싱 후 JSON 배열로 변환 후 사용합니다. 따라서 성능적으로 JSON 이 우수합니다.</p>
 
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>개별 행이 하나의 <span
-lang=EN-US>Object </span>가 됩니다<span lang=EN-US>. </span>즉<span lang=EN-US>, </span>위의
-테이블에선 총 <span lang=EN-US>5</span>명이 있으니 <span lang=EN-US>5</span>행<span
-lang=EN-US>(row)</span>가 존재해야 합니다<span lang=EN-US>. </span>이 말은 바로 <span
-lang=EN-US>5</span>개의 <span lang=EN-US>Object( {} ) </span>이 있다는 이야기 입니다<span
-lang=EN-US>.</span></span></p>
+        <h2>3.5 트리(Tree)형 JSON 구조</h2>
+        <pre><code class="language-javascript">[
+  {
+    "name": "관리부",
+    "manager": "홍길동",
+    "children": [
+      { "name": "총무팀", "manager": "김철수" },
+      { "name": "회계팀", "manager": "이영희" }
+    ]
+  }
+]</code></pre>
+        <p><strong>참고 사항:</strong> AUIGrid에 삽입한 데이터가 <code class="language-javascript">children</code> 을 갖는 계층적 데이터 구조(Hierarchical Data Structure)라면 그리드는 따로 설정없이 계층적 구조의 트리 그리드를 출력합니다.</p>
+        <p>만약 일반 1차원 객체 배열 데이터를 계층적 데이터 구조(Hierarchical Data Structure)로 표현하고자 하는 경우 반드시 3가지 속성을 설정해야 합니다.</p>
+        <h3>트리 뷰 속성 설정 예시</h3>
+        <pre><code class="language-javascript">// 그리드 속성 설정
+const gridProps = {
+    // 일반 데이터를 트리로 표현할지 여부(treeIdField, treeIdRefField 설정 필수)
+    flat2tree: true,
+    // 트리의 고유 필드명
+    treeIdField: "id",
+    // 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
+    treeIdRefField: "parent"
+};</code></pre>
 
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>개발에서 여러 개를 묶는
-방법의 기초는 배열로 선언하는 방법입니다<span lang=EN-US>.</span></span></p>
+        <h2>3.6 데이터 유형별 특징 요약</h2>
+        <table class="browser_table">
+            <thead>
+                <tr>
+                    <th>형식</th>
+                    <th>사용 권장도</th>
+                    <th>특징</th>
+                    <th>처리 방식</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>JSON</td>
+                    <td>매우 우수</td>
+                    <td>AUIGrid 표준 형식</td>
+                    <td>바로 사용 가능</td>
+                </tr>
+                <tr>
+                    <td>XML</td>
+                    <td>일반</td>
+                    <td>구조 명확, 브라우저 파싱 필요</td>
+                    <td>JSON으로 변환 필요</td>
+                </tr>
+                <tr>
+                    <td>CSV</td>
+                    <td>일반</td>
+                    <td>단순 구조, 라인 기반</td>
+                    <td>문자열 파싱 필요</td>
+                </tr>
+            </tbody>
+        </table>
 
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>1</span><span
-style='font-size:12.0pt;line-height:107%'>행을 선언하면<span lang=EN-US>, { “name” : “</span>홍길동<span
-lang=EN-US>”, “position” : “</span>과장<span lang=EN-US>”, “years” : “8</span>년<span
-lang=EN-US>”, “salary” : 48000000 } </span>이 됩니다<span lang=EN-US>. </span></span></p>
+        <h2>3.7 데이터 속성별 주의사항</h2>
+        <table class="browser_table">
+            <thead>
+                <tr>
+                    <th>dataType</th>
+                    <th>설명</th>
+                    <th>정렬 기준</th>
+                    <th>예시</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>string</td>
+                    <td>문자열</td>
+                    <td>알파벳 순</td>
+                    <td>"홍길동"</td>
+                </tr>
+                <tr>
+                    <td>numeric</td>
+                    <td>숫자</td>
+                    <td>숫자 크기</td>
+                    <td>1000, 3500</td>
+                </tr>
+                <tr>
+                    <td>date</td>
+                    <td>날짜</td>
+                    <td>날짜 순서</td>
+                    <td>"2024-01-01"</td>
+                </tr>
+                <tr>
+                    <td>boolean</td>
+                    <td>참/거짓</td>
+                    <td>false 우선</td>
+                    <td>false, true</td>
+                </tr>
+            </tbody>
+        </table>
+        <p><strong>💡 TIP:</strong> 실시간 연동을 원한다면 JSON 구조를 사용하는 REST API 또는 fetch/ajax를 권장합니다.</p>
 
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>행은 <span
-lang=EN-US>{} </span>으로 정의하고 그 행에 해당되는 각 칼럼은 <span lang=EN-US>key-value </span>의
-해쉬로 정의됩니다<span lang=EN-US>.</span></span></p>
-
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>마찬가지로 <span
-lang=EN-US>2</span>행을 선언하면 <span lang=EN-US>{ “name” : “</span>김대리<span
-lang=EN-US>”, “position” : “</span>대리<span lang=EN-US>”, “years” : “6</span>년<span
-lang=EN-US>”, “salary” : 38000000 } </span>입니다<span lang=EN-US>.</span></span></p>
-
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>이를 <span
-lang=EN-US>JSON </span>형식의 전체 소스로 정의하면 다음과 같습니다<span lang=EN-US>.</span></span></p>
-
-<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
- style='border-collapse:collapse;border:none'>
- <tr>
-  <td width=601 valign=top style='width:450.8pt;border:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>[</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
-  </span><span lang=EN-US style='color:#2A00FF'>&quot;name&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>홍길동<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;position&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>과장<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;years&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;8</span><span
-  style='color:#2A00FF'>년<span lang=EN-US>&quot;</span></span><span lang=EN-US
-  style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;salary&quot;</span><span
-  lang=EN-US style='color:black'> : 48000000 },</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
-  </span><span lang=EN-US style='color:#2A00FF'>&quot;name&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>김대리<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;position&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>대리<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;years&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;6</span><span
-  style='color:#2A00FF'>년<span lang=EN-US>&quot;</span></span><span lang=EN-US
-  style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;salary&quot;</span><span
-  lang=EN-US style='color:black'> : 38000000 },</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
-  </span><span lang=EN-US style='color:#2A00FF'>&quot;name&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>이진리<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;position&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>사원<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;years&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;3</span><span
-  style='color:#2A00FF'>년<span lang=EN-US>&quot;</span></span><span lang=EN-US
-  style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;salary&quot;</span><span
-  lang=EN-US style='color:black'> : 32000000 },</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
-  </span><span lang=EN-US style='color:#2A00FF'>&quot;name&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>최소원<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;position&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>사원<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;years&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;3</span><span
-  style='color:#2A00FF'>년<span lang=EN-US>&quot;</span></span><span lang=EN-US
-  style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;salary&quot;</span><span
-  lang=EN-US style='color:black'> : 32000000 },</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
-  </span><span lang=EN-US style='color:#2A00FF'>&quot;name&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>김말단<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;position&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;</span><span
-  style='color:#2A00FF'>사원<span lang=EN-US>&quot;</span></span><span
-  lang=EN-US style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;years&quot;</span><span
-  lang=EN-US style='color:black'> : </span><span lang=EN-US style='color:#2A00FF'>&quot;1</span><span
-  style='color:#2A00FF'>년<span lang=EN-US>&quot;</span></span><span lang=EN-US
-  style='color:black'>, </span><span lang=EN-US style='color:#2A00FF'>&quot;salary&quot;</span><span
-  lang=EN-US style='color:black'> : 28000000 }</span></p>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US style='color:black'>];</span></p>
-  </td>
- </tr>
-</table>
-
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
-
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>이 데이터가 곧 <span
-lang=EN-US>JSON </span>형식의 데이터입니다<span lang=EN-US>. </span>서버 사이드에서 이와 같은 형식의 데이터를
-만들어 클라이언트에 응답으로 보내면 됩니다<span lang=EN-US>.</span></span></p>
-
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>클라이언트에서는 <span
-lang=EN-US>JSON </span>을 <span lang=EN-US>parse </span>하여 자바스크립트 <span
-lang=EN-US>Object </span>로 만들어 <span lang=EN-US>AUIGrid.setGridData( "그리드ID", "data ); </span>함수로
-데이터를 설정할 수 있습니다<span lang=EN-US>.</span></span></p>
-
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
-
-<p class=MsoListParagraph style='margin-left:38.0pt;text-indent:-18.0pt'><span
-lang=EN-US style='font-size:12.0pt;line-height:107%;font-family:Wingdings'>l<span
-style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US
-style='font-size:12.0pt;line-height:107%'>XML</span></p>
-
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>AUIGrid
-</span><span style='font-size:12.0pt;line-height:107%'>는 <span lang=EN-US>XML</span>로
-데이터를 작성하는 것을 추천하지 않습니다<span lang=EN-US>. </span>많은 양의 데이터를 응답으로 받을 때 전송 용량도 많을 뿐더러
-자바스크립트에서 사용하기에 다소 버겁기 때문입니다<span lang=EN-US>.</span></span></p>
-
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>반드시 데이터 건수가 많은
-경우에는 <span lang=EN-US>JSON </span>을 사용하십시오<span lang=EN-US>.</span></span></p>
-
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>위 급여 테이블은<span
-lang=EN-US> AUIGrid </span>에서 사용할 수 있는 <span lang=EN-US>XML </span>형식으로 작성하면 다음과
-같습니다<span lang=EN-US>.</span></span></p>
-
-<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
- style='border-collapse:collapse;border:none'>
- <tr>
-  <td width=601 valign=top style='width:450.8pt;border:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F;
-  background:silver'>rows</span><span lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>홍길동</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>과장</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>year</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>8</span><span
-  style='color:black'>년</span><span lang=EN-US style='color:teal'>&lt;/</span><span
-  lang=EN-US style='color:#3F7F7F'>year</span><span lang=EN-US
-  style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>48000000</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>김대리</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>과장대리</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>year</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>6</span><span
-  style='color:black'>년</span><span lang=EN-US style='color:teal'>&lt;/</span><span
-  lang=EN-US style='color:#3F7F7F'>year</span><span lang=EN-US
-  style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>38000000</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>이진리</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>사원</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>year</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>3</span><span
-  style='color:black'>년</span><span lang=EN-US style='color:teal'>&lt;/</span><span
-  lang=EN-US style='color:#3F7F7F'>year</span><span lang=EN-US
-  style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>32000000</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>최소원</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>사원</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>year</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>3</span><span
-  style='color:black'>년</span><span lang=EN-US style='color:teal'>&lt;/</span><span
-  lang=EN-US style='color:#3F7F7F'>year</span><span lang=EN-US
-  style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>32000000</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>김말단</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>name</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span style='color:black'>사원</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>position</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>year</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>1</span><span
-  style='color:black'>년</span><span lang=EN-US style='color:teal'>&lt;/</span><span
-  lang=EN-US style='color:#3F7F7F'>year</span><span lang=EN-US
-  style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span><span lang=EN-US style='color:black'>28000000</span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>salary</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
-  lang=EN-US style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F'>row</span><span
-  lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal align=left style='margin-bottom:0cm;margin-bottom:.0001pt;
-  text-align:left;line-height:normal;word-break:keep-all'><span lang=EN-US
-  style='color:teal'>&lt;/</span><span lang=EN-US style='color:#3F7F7F;
-  background:silver'>rows</span><span lang=EN-US style='color:teal'>&gt;</span></p>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US style='font-size:12.0pt'>&nbsp;</span></p>
-  </td>
- </tr>
-</table>
-
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
-
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%'>보다 자세한 <span
-lang=EN-US>XML </span>작성 방법은 <span lang=EN-US><a
-href="http://www.w3.org/standards/xml/">http://www.w3.org/standards/xml/</a> </span>를
-참고하여 작성해주십시오<span lang=EN-US>.</span></span></p>
-
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
-
-<p class=MsoNormal><span style='font-size:12.0pt;line-height:107%;color:red'>현재
-운영 중인 시스템의 테이블 및 데이터를 <span lang=EN-US>AUIGrid </span>에 맞추고자 할 때 궁금한 점 있으면 게시판에
-남겨주세요<span lang=EN-US>. </span>답변드리도록하겠습니다<span lang=EN-US>.</span></span></p>
-
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
-
-</div>
-			
-</div>
+    </div>
 
 </body>
+
 </html>

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -32,29 +29,23 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script type="text/javascript">
 
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_500.json");
-
-	};
+		requestGridData("./data/normal_500.json");
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
-
-		// AUIGrid 칼럼 설정
-		// 데이터 형태는 다음과 같은 형태임,
-		//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-		var columnLayout = [{
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
 			width: 120
@@ -115,42 +106,28 @@
 		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
+		const gridProps = {
 			editable: true,
-
 			// 페이징 사용		
 			usePaging: true,
-
 			enableFilter: true,
-
 			useContextMenu: true,
-
 			// 한 화면에 출력되는 행 개수 20(기본값:20)
 			pageRowCount: 20,
-
 			// 페이지 행 개수 select UI 출력 여부 (기본값 : false)
 			showPageRowSelect: true,
-
 			showStateColumn: true,
-
 			displayTreeOpen: true,
-
 			selectionMode: "multipleCells",
-
 			headerHeight: 40,
-
 			// 그룹핑 패널 사용
 			useGroupingPanel: true,
-
 			// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 			skipReadonlyColumns: true,
-
 			// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 			wrapSelectionMove: true,
-
 			// Home, End 키가 칼럼 중심인지 여부
 			isColumnOriented: false,
-
 			groupingMessage: "여기에 칼럼을 드래그하면 그룹핑이 됩니다."
 		};
 
@@ -159,26 +136,22 @@
 
 		// 페이지 변경 이벤트(pageChange) 바인딩
 		AUIGrid.bind(myGridID, "pageChange", function (event) {
-			document.getElementById("ellapse").innerText = "페이지 변경 이벤트 : " + event.oldPage + " → " + event.currentPage + ", 전체 페이지 수 : " + event.totalPageCount;
+			document.getElementById("elapse").textContent = `페이지 변경 이벤트 : ${event.oldPage} → ${event.currentPage}, 전체 페이지 수 : ${event.totalPageCount}`;
 		});
 	}
 
 	// 특정 페이지로 이동 처리
 	function movePageTo() {
-
-		var pageNum = document.getElementById("count").value;
-
+		const pageNum = document.getElementById("count").value;
 		// 해당 페이지로 이동
-		AUIGrid.movePageTo(myGridID, Number(pageNum));
+		AUIGrid.movePageTo(myGridID, pageNum);
 	};
 
 	// 특정 셀로 이동 처리
 	function selectionByIndex() {
 		AUIGrid.setSelectionByIndex(myGridID, 200, 7);
-	};
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -197,11 +170,9 @@
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -209,6 +180,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

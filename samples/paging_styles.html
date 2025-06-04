@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 summary total  스타일 */
 	.aui-grid-my-footer-sum-total {
 		font-weight: bold;
@@ -71,132 +69,115 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/country_phone_500.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "orderId",
-		headerText: "Order ID",
-		width: 140
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		style: "my-column-style2",
-	}, {
-		dataField: "name",
-		headerText: "Name"
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		style: "my-column-style",
-		styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-			if (value == "Galaxy S5") {
-				return "my-cell-style";
-			}
-			return null;
-		}
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric"
-	}, {
-		dataField: "phone",
-		headerText: "Phone"
-	}, {
-		dataField: "date",
-		headerText: "Date"
+		requestGridData("./data/country_phone_500.json");
 	}
-	];
-
-	// 푸터 설정
-	var footerLayout = [{
-		labelText: "∑",
-		positionField: "#base"
-	}, {
-		dataField: "price",
-		positionField: "price",
-		operation: "SUM",
-		dataType: "numeric",
-		formatString: "#,##0",
-		style: "aui-grid-my-footer-sum-total"
-	}, {
-		dataField: "price",
-		positionField: "date",
-		operation: "COUNT",
-		style: "aui-grid-my-footer-sum-total2"
-	}, {
-		labelText: "Count=>",
-		positionField: "phone",
-		style: "aui-grid-my-footer-sum-total2"
-	}];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "orderId",
+			headerText: "Order ID",
+			width: 140
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			style: "my-column-style2",
+		}, {
+			dataField: "name",
+			headerText: "Name"
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			style: "my-column-style",
+			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (value === "Galaxy S25") {
+					return "my-cell-style";
+				}
+			}
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric"
+		}, {
+			dataField: "phone",
+			headerText: "Phone"
+		}, {
+			dataField: "date",
+			headerText: "Date"
+		}];
 
-		var gridProps = {
+		// 그리드 푸터 설정
+		const footerLayout = [{
+			labelText: "∑",
+			positionField: "#base"
+		}, {
+			dataField: "price",
+			positionField: "price",
+			operation: "SUM",
+			dataType: "numeric",
+			formatString: "#,##0",
+			style: "aui-grid-my-footer-sum-total"
+		}, {
+			dataField: "price",
+			positionField: "date",
+			operation: "COUNT",
+			style: "aui-grid-my-footer-sum-total2"
+		}, {
+			labelText: "Count=>",
+			positionField: "phone",
+			style: "aui-grid-my-footer-sum-total2"
+		}];
+
+		// 그리드 속성 설정
+		const gridProps = {
 			// 페이징 사용
 			usePaging: true,
-
 			showFooter: true,
-
 			// singleRow 선택모드
 			selectionMode: "multipleCells",
-
 			// 그룹핑 패널 사용
 			useGroupingPanel: true,
-
 			// row Styling 함수
 			rowStyleFunction: function (rowIndex, item) {
-				if (item.country == "USA") {
+				if (item.country === "USA") {
 					return "my-row-style";
 				}
 			}
 		};
-
-
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
 		// 푸터 레이아웃 세팅
 		AUIGrid.setFooter(myGridID, footerLayout);
-
 	}
-
 </script>
-
 </head>
 <body>
 
 <div id="main">
 	<div class="desc">
-
 		<p>스타일과 푸터가 설정된 화면에서 페이징 적용 시 어떻게 보여지는 나타내는 데모입니다.</p>
 		<p>열(column) 스타일 : 데이터 값에 의존하지 않고 해당 열 전체 스타일링 함(정적 스타일)</p>
 		<p>행(row) 스타일링 : <span class="my-row-style"> Country = USA 인 경우 행에 스타일링</span></p>
-		<p>셀 스타일링 : <span class="my-cell-style">Product = Galaxy S5 인 셀에 스타일링</span></p>
+		<p>셀 스타일링 : <span class="my-cell-style">Product = Galaxy S25 인 셀에 스타일링</span></p>
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -204,6 +185,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

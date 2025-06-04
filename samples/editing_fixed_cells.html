@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,31 +28,28 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.my-right-style {
 		text-align: right;
 	}
 </style>
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-
 		// AUIGrid 에 데이터 삽입합니다.
-		createRandomData(20);
-
-	};
+		AUIGrid.setGridData(myGridID, genRandomData(20));
+	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
-
-		var columnLayout = [];
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [];
 
 		columnLayout[0] = { // 연도 칼럼 생성
 			headerText: "연도",
@@ -64,7 +58,7 @@
 			width: 100
 		}
 
-		for (var i = 1; i <= 12; i++) { // 1~12월 칼럼 생성
+		for (let i = 1; i <= 12; i++) { // 1~12월 칼럼 생성
 			columnLayout.push({
 				headerText: i + "월",
 				dataField: "col" + i,
@@ -76,7 +70,7 @@
 			});
 		}
 
-		var gridProps = {
+		const gridProps = {
 			fixedColumnCount: 1,
 			fixedRowCount: 3,
 			showRowCheckColumn: false,
@@ -84,28 +78,21 @@
 			enableSorting: false,
 			selectionMode: "multipleCells",
 			editable: true, // 수정 모드
-
 			// 행 고유 id 에 속하는 필드명(DB의 primary key 와 일치 시키면 유용합니다.)
 			rowIdField: "id",
-
 			// 고정 칼럼, 행에 있는 셀도 수정 가능 여부(기본값:false)
 			editableOnFixedCell: true,
-
 			// 행 선택모드에서 옆으로 칼럼 변경할 시 selectionChange 이벤트 발생 시킬지 여부(기본값 : false)
 			triggerSelectionChangeOnCell: true,
-
 			//softRemoveRowMode 적용을 원래 데이터에만 적용 즉, 새 행인 경우 적용 안시킴
 			softRemovePolicy: "exceptNew",
-
 			// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 			wrapSelectionMove: true,
-
 			// selectionChange 이벤트 발생 시 간소화된 정보만 받을지 여부
 			// 이 속성은 선택한 셀이 많을 때 false 설정하면 퍼포먼스에 영향을 미칩니다.
 			// selectionChange 이벤트 바인딩 한 경우 true 설정을 권합니다.
 			simplifySelectionEvent: true
 		};
-
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
@@ -113,77 +100,70 @@
 		// 선택 변경 이벤트 바인딩
 		AUIGrid.bind(myGridID, "selectionChange", function (event) {
 			// 선택 대표 셀 정보 
-			var primeCell = event.primeCell;
-
-			// 하단에 행인덱스, 헤더 텍스트, 수정 가능여부 출력함.
-			document.getElementById("selectionDesc").innerText = "현재 셀 : ( " + primeCell.rowIndex + ", " + primeCell.headerText + " ) : editable : " + primeCell.editable + ", 행 고유값(PK) : " + primeCell.rowIdValue;
+			const cell = event.primeCell;
+			const msg = `현재 셀 : ( ${cell.rowIndex}, ${cell.headerText} ) : editable : ${cell.editable}, 행 고유값(rowId) : ${cell.rowIdValue}`;
+			document.getElementById("selectionDesc").textContent = msg;
 		});
 
-		// 에디팅 시작, 종료, 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, ["cellEditBegin", "cellEditEnd", "cellEditCancel"], auiCellEditingHandler);
+		// 에디팅 시작 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+			const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginDesc").textContent = msg;
+		});
+
+		// 에디팅 정상 종료 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+			const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
+
+		// 에디팅 취소 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+			const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+			document.getElementById("editBeginEnd").textContent = msg;
+		});
 	}
-
-	// 주어진 개수만큼 랜덤 데이터 생성하여 그리드에 삽입
-	function createRandomData(count) {
-		var data = [];
-		var row;
-		var maxYear = 2015;
-		for (var i = 1; i <= count; i++) {
-
-			row = {};
-			row.id = "PK" + i; // rowIdField 로 지정할 중복되지 않는 고유값(primary key)
-			row.year = 2015 - i;
-			for (var j = 1; j <= 12; j++) { // 1~12월 개별 데이터 생성
-				row["col" + j] = Math.round(Math.random() * 10000); // 모든 데이터를 랜덤 데이터로 생성
-			}
-			data.push(row);
-		}
-		// 데이터 삽입
-		AUIGrid.setGridData(myGridID, data);
-	}
-
-	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditBegin") {
-			document.getElementById("editBeginDesc").innerText = "에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		} else if (event.type == "cellEditEnd") {
-			document.getElementById("editBeginEnd").innerText = "에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		} else if (event.type == "cellEditCancel") {
-			document.getElementById("editBeginEnd").innerText = "에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
-		}
-	};
 
 	// 수정 아이템들 확인하기
 	function checkItems() {
-
-		// 수정된 행의 진짜 수정된 칼럼들 배열)
-		var editedCells = AUIGrid.getEditedRowColumnItems(myGridID);
-
-		var i, len;
-		var str = "";
-		var row;
-		if (editedCells.length > 0) {
-			for (i = 0, len = editedCells.length; i < len; i++) {
-				row = editedCells[i];
-				for (var name in row) {
-					str += name + " : " + row[name] + ", ";
-				}
-				str += "\r\n";
-			}
+		const editedCells = AUIGrid.getEditedRowColumnItems(myGridID);
+		let resultText = "";
+		if (editedCells.length === 0) {
+			resultText = "변경 사항 없음";
+			alert(resultText);
+			return;
 		}
-
-		if (str == "")
-			str = "변경 사항 없음";
-
-		alert(str);
+		resultText = editedCells.map((row, rowIndex) => {
+			const cells = Object.entries(row)
+				.map(([key, value]) => `${key}: ${value}`)
+				.join(", ");
+			return `행 ${rowIndex + 1} → ${cells}`;
+		}).join("\r\n");
+		alert(resultText);
 	}
 
 	//editableOnFixedCell 토글
 	function toggleEditableOnFixedCell() {
-		var downChkbox = document.getElementById("downChkbox");
+		const downChkbox = document.getElementById("downChkbox");
 		AUIGrid.setProp(myGridID, "editableOnFixedCell", downChkbox.checked); //editingOnKeyDown 토글
-	};
-</script>
+	}
 
+	// 주어진 개수만큼 랜덤 데이터 생성하여 반환
+	function genRandomData(count = 100) {
+		const data = [];
+		const maxYear = 2015;
+		for (let i = 1; i <= count; i++) {
+			const row = {};
+			row.id = "PK" + i; // rowIdField 로 지정할 중복되지 않는 고유값(primary key)
+			row.year = 2015 - i;
+			for (let j = 1; j <= 12; j++) { // 1~12월 개별 데이터 생성
+				row["col" + j] = Math.round(Math.random() * 10000); // 모든 데이터를 랜덤 데이터로 생성
+			}
+			data.push(row);
+		}
+		return data;
+	}
+</script>
 </head>
 <body>
 
@@ -213,6 +193,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

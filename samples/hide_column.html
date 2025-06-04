@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,97 +28,90 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.my-right {
 		text-align: right;
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 140
-	}, {
-		headerText: "Header Group",
-		dataField: "group", // 그리드에서 사용하진 않지만, Header Group 칼럼을 얻기 위해 dataField 임의로 지정. 
-		children: [{
-			dataField: "name",
-			headerText: "Name",
-			width: 150
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			width: 150
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			width: 150
-		}]
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		width: 120,
-		visible: false // Color 칼럼은 숨긴채 출력시킴
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric",
-		width: 120
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		style: "my-right",
-		width: 140
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		width: 140
+		requestGridData("./data/normal_100.json");
 	}
-	];
-
-
-	// 푸터 설정
-	var footerLayout = [{
-		labelText: "∑",
-		positionField: "#base"
-	}, {
-		positionField: "date",
-		dataField: "date",
-		operation: "COUNT",
-		style: "my-right"
-	}, {
-		dataField: "price",
-		positionField: "price",
-		operation: "SUM",
-		formatString: "#,##0",
-		style: "my-right"
-	}];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 140
+		}, {
+			headerText: "Header Group",
+			dataField: "group", // 그리드에서 사용하진 않지만, Header Group 칼럼을 얻기 위해 dataField 임의로 지정. 
+			children: [{
+				dataField: "name",
+				headerText: "Name",
+				width: 150
+			}, {
+				dataField: "country",
+				headerText: "Country",
+				width: 150
+			}, {
+				dataField: "product",
+				headerText: "Product",
+				width: 150
+			}]
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			width: 120,
+			visible: false // Color 칼럼은 숨긴채 출력시킴
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric",
+			width: 120
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			style: "my-right",
+			width: 140
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			width: 140
+		}];
 
-		var gridProps = {
+		// 그리드 푸터 설정
+		const footerLayout = [{
+			labelText: "∑",
+			positionField: "#base"
+		}, {
+			positionField: "date",
+			dataField: "date",
+			operation: "COUNT",
+			style: "my-right"
+		}, {
+			dataField: "price",
+			positionField: "price",
+			operation: "SUM",
+			formatString: "#,##0",
+			style: "my-right"
+		}];
+
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
 			selectionMode: "multipleCells",
 			enableSorting: true, // 정렬 사용
@@ -139,15 +129,14 @@
 
 	// 칼럼 숨김/해제 체크박스 핸들러
 	function checkboxChangeHandler(event) {
-		var target = event.target || event.srcElement;
-		if (!target) return;
+		const target = event.target || event.srcElement;
+		if (!target) return
 
-		var dataField = target.value;
-		var checked = target.checked;
+		const dataField = target.value;
+		const checked = target.checked;
 
-		if (dataField == "group") { // 헤더그룹인 경우
+		if (dataField === "group") { // 헤더그룹인 경우
 			if (checked) {
-
 				// dataField 를 group 이라고 정의한 그룹을 찾아 보이기 실행
 				AUIGrid.showColumnGroup(myGridID, "group");
 
@@ -170,9 +159,9 @@
 			}
 		} else {
 			// 데모 상 그룹 헤더 체크박스 설정 시킴. (자식 3개가 모두 체크된 경우)
-			var c1 = document.getElementById("c1").checked;
-			var c2 = document.getElementById("c2").checked;
-			var c3 = document.getElementById("c3").checked;
+			const c1 = document.getElementById("c1").checked;
+			const c2 = document.getElementById("c2").checked;
+			const c3 = document.getElementById("c3").checked;
 
 			if (c1 && c2 && c3) {
 				document.getElementById("c8").checked = true;
@@ -187,11 +176,8 @@
 				AUIGrid.hideColumnByDataField(myGridID, dataField);
 			}
 		}
-	};
-
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -217,8 +203,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -226,6 +211,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

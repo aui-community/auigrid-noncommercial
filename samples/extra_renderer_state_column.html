@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,64 +28,55 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-right {
 		text-align: right;
 	}
 </style>
-
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_100.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	var columnLayout = [{
-		dataField: "name",
-		headerText: "Name"
-	}, {
-		dataField: "country",
-		headerText: "Country"
-	}, {
-		dataField: "color",
-		headerText: "Color"
-	}, {
-		dataField: "product",
-		headerText: "Product"
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		style: "aui-grid-user-custom-right",
-		postfix: "원"
-	}, {
-		dataField: "date",
-		headerText: "Date"
+		requestGridData("./data/normal_100.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "name",
+			headerText: "Name"
+		}, {
+			dataField: "country",
+			headerText: "Country"
+		}, {
+			dataField: "color",
+			headerText: "Color"
+		}, {
+			dataField: "product",
+			headerText: "Product"
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			style: "aui-grid-user-custom-right",
+			postfix: "원"
+		}, {
+			dataField: "date",
+			headerText: "Date"
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
-
 			rowIdField: "id",
-
 			showStateColumn: true
 		};
 
@@ -96,35 +84,30 @@
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	}
 
+	const countries = ["Korea", "USA", "UK", "Japan", "China", "France", "Italy", "Singapore", "Ireland", "Taiwan"];
+	const products = new Array("IPhone 16", "Galaxy S25", "IPhone 16 Pro", "Galaxy Note21", "Galaxy S25 Ultra", "Galaxy zFlip");
+	const colors = new Array("Blue", "Gray", "Green", "Orange", "Pink", "Violet", "Yellow", "Red");
 
-
-	var countries = ["Korea", "USA", "UK", "Japan", "China", "France", "Italy", "Singapore", "Ireland", "Taiwan"];
-	var products = new Array("IPhone 5S", "Galaxy S5", "IPad Air", "Galaxy Note3", "LG G3", "Nexus 10");
-	var colors = new Array("Blue", "Gray", "Green", "Orange", "Pink", "Violet", "Yellow", "Red");
-
-	var cnt = 0;
+	let cnt = 0;
 	function addRow(rowPos) {
-		var item = new Object();
-		item.name = "AUI-" + (++cnt),
-			item.country = countries[cnt % countries.length],
-			item.color = colors[cnt % colors.length],
-			item.product = products[cnt % products.length],
-			item.price = Math.floor(Math.random() * 1000000),
-			item.date = "2015-03-05"
+		const item = new Object();
+		item.name = "AUI-" + (++cnt);
+		item.country = countries[cnt % countries.length];
+		item.color = colors[cnt % colors.length];
+		item.product = products[cnt % products.length];
+		item.price = Math.floor(Math.random() * 1000000);
+		item.date = "2015-03-05";
 
 		// parameter
 		// item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
 		// rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-		AUIGrid.addRow(myGridID, item, rowPos);
+		AUIGrid.addRow(myGridID, item, "selectionDown");
 	}
 
-	function removeRow(rowPos) {
-		AUIGrid.removeRow(myGridID, rowPos);
+	function removeRow() {
+		AUIGrid.removeRow(myGridID, "selectedIndex");
 	}
-
-
 </script>
-
 </head>
 <body>
 
@@ -140,8 +123,8 @@
 		<p style="margin-top:18px;">또한 그리드에서 셀의 값을 수정하면 연필 모양의 아이콘이 나옵니다. 이 아이콘을 클릭 해 보십시오</p>
 		<p>이와 관련된 자세한 내용은 <a href="javascript:changeLocation('./restore_edited_row_state.html?rers')"><strong>"엑스트라 행 상태 칼럼에서 복구하기"</strong></a> 데모를 참고하십시오.</p>
 		<ul class="nav_u">
-			<li><span onclick="addRow('selectionDown')" class="btn">선택 아래에 행 추가</span></li>
-			<li><span onclick="removeRow('selectedIndex')" class="btn">선택 행 삭제</span></li>
+			<li><span onclick="addRow()" class="btn">선택 아래에 행 추가</span></li>
+			<li><span onclick="removeRow()" class="btn">선택 행 삭제</span></li>
 		</ul>
 	</div>
 	<div>
@@ -158,6 +141,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

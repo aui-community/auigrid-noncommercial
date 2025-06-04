@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,59 +28,51 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<script type="text/javascript">
 
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// AUIGrid 에 데이터 삽입합니다.
 		AUIGrid.setGridData(myGridID, gridData);
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "f1",
-		headerText: "password 입력 모드",
-		width: 240,
-		editRenderer: {
-			type: "InputEditRenderer",
-			passwordMode: true, // password 입력 모드
-			regExp: "[^ㄱ-힣]+$", // 한글 제외
-		}
-	}, {
-		dataField: "f2",
-		headerText: "password 입력 모드<br/>labelFunction 정의하여 보여지는 값도 마스킹 처리",
-		width: 300,
-		editRenderer: {
-			type: "InputEditRenderer",
-			passwordMode: true, // password 입력 모드
-			regExp: "[^ㄱ-힣]+$", // 한글 제외
-		},
-		labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-			value += ''; // 명확히 스트링으로 캐스팅
-			return value.replace(/./gi, "*"); // 모든 문자열 * 로 변환해서 표시
-		}
-	}];
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "f1",
+			headerText: "password 입력 모드",
+			width: 240,
+			editRenderer: {
+				type: "InputEditRenderer",
+				passwordMode: true, // password 입력 모드
+				regExp: "[^ㄱ-힣]+$", // 한글 제외
+			}
+		}, {
+			dataField: "f2",
+			headerText: "password 입력 모드<br/>labelFunction 정의하여 보여지는 값도 마스킹 처리",
+			width: 300,
+			editRenderer: {
+				type: "InputEditRenderer",
+				passwordMode: true, // password 입력 모드
+				regExp: "[^ㄱ-힣]+$", // 한글 제외
+			},
+			labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				value += ''; // 명확히 스트링으로 캐스팅
+				return value.replace(/./gi, "*"); // 모든 문자열 * 로 변환해서 표시
+			}
+		}];
 
 		// 그리드 속성 설정
-		var gridProps = {
-
+		const gridProps = {
 			selectionMode: "multipleCells",
-
 			headerHeight: 40,
-
 			editable: true,
-
 			// 상태 칼럼 사용
 			showStateColumn: true
 		};
@@ -93,14 +82,13 @@
 
 		// 에디팅 정상 종료 이벤트 바인딩
 		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
-			document.getElementById("editBeginEnd").innerText = "실제 적용 값 : " + event.value + ", which : " + event.which;
+			document.getElementById("editBeginEnd").textContent = "실제 적용 값 : " + event.value + ", which : " + event.which;
 		});
 	};
 
 	// 그리드 데이터
-	var gridData = [{ "f1": "Korea", "f2": "Blue" }, { "f1": "USA", "f2": "Gray" }, { "f1": "UK", "f2": "Green" }, { "f1": "Japan", "f2": "Orange" }, { "f1": "China", "f2": "Pink" }, { "f1": "France", "f2": "Violet" }, { "f1": "Italy", "f2": "Yellow" }, { "f1": "Singapore", "f2": "Red" }, { "f1": "Ireland", "f2": "Blue" }, { "f1": "Taiwan", "f2": "Gray" }, { "f1": "Korea", "f2": "Green" }, { "f1": "USA", "f2": "Orange" }, { "f1": "UK", "f2": "Pink" }, { "f1": "Japan", "f2": "Violet" }, { "f1": "China", "f2": "Yellow" }, { "f1": "France", "f2": "Red" }, { "f1": "Italy", "f2": "Blue" }, { "f1": "Singapore", "f2": "Gray" }, { "f1": "Ireland", "f2": "Green" }, { "f1": "Taiwan", "f2": "Orange" }];
+	const gridData = [{ "f1": "Korea", "f2": "Blue" }, { "f1": "USA", "f2": "Gray" }, { "f1": "UK", "f2": "Green" }, { "f1": "Japan", "f2": "Orange" }, { "f1": "China", "f2": "Pink" }, { "f1": "France", "f2": "Violet" }, { "f1": "Italy", "f2": "Yellow" }, { "f1": "Singapore", "f2": "Red" }, { "f1": "Ireland", "f2": "Blue" }, { "f1": "Taiwan", "f2": "Gray" }, { "f1": "Korea", "f2": "Green" }, { "f1": "USA", "f2": "Orange" }, { "f1": "UK", "f2": "Pink" }, { "f1": "Japan", "f2": "Violet" }, { "f1": "China", "f2": "Yellow" }, { "f1": "France", "f2": "Red" }, { "f1": "Italy", "f2": "Blue" }, { "f1": "Singapore", "f2": "Gray" }, { "f1": "Ireland", "f2": "Green" }, { "f1": "Taiwan", "f2": "Orange" }];
 </script>
-
 </head>
 <body>
 
@@ -133,6 +121,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

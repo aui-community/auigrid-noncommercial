@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,18 +28,19 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<script type="text/javascript">
 
+<script>
+	// AUIGrid 생성 후 반환 ID
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
-	};
+	}
 
-	// 칼럼 레이아웃
-	var columnLayout = [{
+	// 그리드 칼럼 레이아웃 설정
+	const columnLayout = [{
 		dataField: "name",
 		headerText: "Name"
 	}, {
@@ -59,25 +57,19 @@
 		dataField: "price",
 		headerText: "Price",
 		dataType: "numeric"
-	}
-	];
-
-	var myGridID;
+	}];
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
-
 		// 이미 생성되어 있는 경우
 		if (AUIGrid.isCreated("#grid_wrap")) {
 			return;
 		}
 
 		// 그리드 속성 설정
-		var gridProps = {
-
+		const gridProps = {
 			showRowCheckColumn: false,
-
-			// row 를 구별짓는 유니크한 값을 갖는 필드 설정 ( 대용량인 경우 반드시 설정해야 함 )
+			// row 를 구별짓는 유니크한 값을 갖는 필드 설정
 			rowIdField: "id"
 		};
 
@@ -86,21 +78,17 @@
 
 		// AUIGrid 에 데이터 삽입합니다.
 		AUIGrid.setGridData("#grid_wrap", gridData);
-	};
+	}
 
 	// 그리드를 제거합니다.
 	function destroyGrid() {
 		AUIGrid.destroy("#grid_wrap");
 		myGridID = null;
-	};
+	}
 
-	var gridData = [];
-	for (var i = 0; i < 100; i++) {
-		gridData[i] = { "id": i, "name": "name" + i, "country": "country" + i, "product": "product" + i, "quantity": "quantity" + i, "price": 100 * i };
-	};
-
+	// 그리드 데이터
+	const gridData = [{ "id": 0, "name": "name0", "country": "country0", "product": "product0", "quantity": "quantity0", "price": 0 }, { "id": 1, "name": "name1", "country": "country1", "product": "product1", "quantity": "quantity1", "price": 100 }, { "id": 2, "name": "name2", "country": "country2", "product": "product2", "quantity": "quantity2", "price": 200 }, { "id": 3, "name": "name3", "country": "country3", "product": "product3", "quantity": "quantity3", "price": 300 }, { "id": 4, "name": "name4", "country": "country4", "product": "product4", "quantity": "quantity4", "price": 400 }, { "id": 5, "name": "name5", "country": "country5", "product": "product5", "quantity": "quantity5", "price": 500 }, { "id": 6, "name": "name6", "country": "country6", "product": "product6", "quantity": "quantity6", "price": 600 }, { "id": 7, "name": "name7", "country": "country7", "product": "product7", "quantity": "quantity7", "price": 700 }, { "id": 8, "name": "name8", "country": "country8", "product": "product8", "quantity": "quantity8", "price": 800 }, { "id": 9, "name": "name9", "country": "country9", "product": "product9", "quantity": "quantity9", "price": 900 }, { "id": 10, "name": "name10", "country": "country10", "product": "product10", "quantity": "quantity10", "price": 1000 }, { "id": 11, "name": "name11", "country": "country11", "product": "product11", "quantity": "quantity11", "price": 1100 }, { "id": 12, "name": "name12", "country": "country12", "product": "product12", "quantity": "quantity12", "price": 1200 }, { "id": 13, "name": "name13", "country": "country13", "product": "product13", "quantity": "quantity13", "price": 1300 }, { "id": 14, "name": "name14", "country": "country14", "product": "product14", "quantity": "quantity14", "price": 1400 }, { "id": 15, "name": "name15", "country": "country15", "product": "product15", "quantity": "quantity15", "price": 1500 }, { "id": 16, "name": "name16", "country": "country16", "product": "product16", "quantity": "quantity16", "price": 1600 }, { "id": 17, "name": "name17", "country": "country17", "product": "product17", "quantity": "quantity17", "price": 1700 }, { "id": 18, "name": "name18", "country": "country18", "product": "product18", "quantity": "quantity18", "price": 1800 }, { "id": 19, "name": "name19", "country": "country19", "product": "product19", "quantity": "quantity19", "price": 1900 }, { "id": 20, "name": "name20", "country": "country20", "product": "product20", "quantity": "quantity20", "price": 2000 }, { "id": 21, "name": "name21", "country": "country21", "product": "product21", "quantity": "quantity21", "price": 2100 }, { "id": 22, "name": "name22", "country": "country22", "product": "product22", "quantity": "quantity22", "price": 2200 }, { "id": 23, "name": "name23", "country": "country23", "product": "product23", "quantity": "quantity23", "price": 2300 }, { "id": 24, "name": "name24", "country": "country24", "product": "product24", "quantity": "quantity24", "price": 2400 }, { "id": 25, "name": "name25", "country": "country25", "product": "product25", "quantity": "quantity25", "price": 2500 }, { "id": 26, "name": "name26", "country": "country26", "product": "product26", "quantity": "quantity26", "price": 2600 }, { "id": 27, "name": "name27", "country": "country27", "product": "product27", "quantity": "quantity27", "price": 2700 }, { "id": 28, "name": "name28", "country": "country28", "product": "product28", "quantity": "quantity28", "price": 2800 }, { "id": 29, "name": "name29", "country": "country29", "product": "product29", "quantity": "quantity29", "price": 2900 }];
 </script>
-
 </head>
 <body>
 
@@ -109,8 +97,8 @@
 		<p>동적으로 그리드를 제어해야 할 때가 있습니다.</p>
 		<p>기존 그리드를 제거한 후 새로운 그리드를 작성할 때 기존 그리드를 완벽히 제거하여 메모리 누수를 방지합니다.</p>
 		<ul class="nav_u">
-			<li><span onclick="destroyGrid()" class="btn">그리드 제거</span></li>
-			<li><span onclick="createAUIGrid()" class="btn">그리드 생성</span></li>
+			<li><button onclick="destroyGrid()" class="btn">그리드 제거</button></li>
+			<li><button onclick="createAUIGrid()" class="btn">그리드 생성</button></li>
 		</ul>
 	</div>
 	<div>
@@ -118,8 +106,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
-
+		<p id="elapse"></p>
 	</div>
 </div>
 <div id="footer">
@@ -127,6 +114,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

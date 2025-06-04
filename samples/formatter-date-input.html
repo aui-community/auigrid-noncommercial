@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,90 +28,90 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+
+<!-- PDF 내보내기 필수 JS 추가-->
 <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
 <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
-
-<style type="text/css">
+<style>
 	.aui-grid-default-column {
 		text-align: left;
 	}
 </style>
-
-<script type="text/javascript">
+<script>
 
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
+	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "field0",
-		headerText: "yyyymmdd HHMMss",
-		dataType: "date",
-		dateInputFormat: "yyyymmdd HHMMss", // 실제 데이터의 형식 지정
-		formatString: "yyyy. mm. dd t hh:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
-		xlsxDate: "[$-ko-KR]yyyy. mm. dd AM/PM hh:mm:ss", // 엑셀에서 날짜 표현 형식 지정
-		width: 180,
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "입력 받은 형태는 yyyymmdd HHMMss,<br>formatString : yyyy. mm. dd t hh:MM:ss"
-		}, editRenderer: {
-			type: "CalendarRenderer",
-			showExtraDays: false, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
-			onlyCalendar: true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-			defaultFormat: "yyyymmdd HHMMss", // 달력 선택 시 데이터에 적용되는 날짜 형식
-			showTimePicker: true, // 시간 선택 출력 여부
-			showTimeSecond: true, // 시간의 초까지 출력 여부
-			showPlaceholder: true // defaultFormat 설정된 값으로 플래스홀더 표시
-		}
-	}, {
-		dataField: "field1",
-		headerText: "yyyymmddHHMMss",
-		dataType: "date",
-		dateInputFormat: "yyyymmddHHMMss", // 실제 데이터의 형식 지정
-		formatString: "yyyy. mm. dd t hh:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
-		width: 180,
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "입력 받은 형태는 yyyymmddHHMMss,<br>formatString : yyyy. mm. dd t hh:MM:ss"
-		}
-	}, {
-		dataField: "field2",
-		headerText: "mmddyyyyHHMMss",
-		dataType: "date",
-		width: 180,
-		dateInputFormat: "mmddyyyyHHMMss", // 실제 데이터의 형식 지정
-		formatString: "yyyy. mm. dd t hh:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "입력 받은 형태는 mmddyyyyHHMMss,<br>formatString : yyyy. mm. dd t hh:MM:ss"
-		}
-	}, {
-		dataField: "field3",
-		headerText: "HHMMssddmmyyyy",
-		dataType: "date",
-		width: 240,
-		dateInputFormat: "HHMMssddmmyyyy", // 실제 데이터의 형식 지정
-		formatString: "yyyy. mm. dd t hh:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "입력 받은 형태는 HHMMssddmmyyyy,<br>formatString : yyyy. mm. dd t hh:MM:ss"
-		}
-	}];
+		createAUIGrid();
+		// 데이터 삽입
+		AUIGrid.setGridData(myGridID, gridData);
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "field0",
+			headerText: "yyyymmdd HHMMss",
+			dataType: "date",
+			dateInputFormat: "yyyymmdd HHMMss", // 실제 데이터의 형식 지정
+			formatString: "yyyy. mm. dd t hh:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
+			xlsxDate: "[$-ko-KR]yyyy. mm. dd AM/PM hh:mm:ss", // 엑셀에서 날짜 표현 형식 지정
+			width: 180,
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "입력 받은 형태는 yyyymmdd HHMMss,<br>formatString : yyyy. mm. dd t hh:MM:ss"
+			}, editRenderer: {
+				type: "CalendarRenderer",
+				showExtraDays: false, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
+				onlyCalendar: true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+				defaultFormat: "yyyymmdd HHMMss", // 달력 선택 시 데이터에 적용되는 날짜 형식
+				showTimePicker: true, // 시간 선택 출력 여부
+				showTimeSecond: true, // 시간의 초까지 출력 여부
+				showPlaceholder: true // defaultFormat 설정된 값으로 플래스홀더 표시
+			}
+		}, {
+			dataField: "field1",
+			headerText: "yyyymmddHHMMss",
+			dataType: "date",
+			dateInputFormat: "yyyymmddHHMMss", // 실제 데이터의 형식 지정
+			formatString: "yyyy. mm. dd t hh:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
+			width: 180,
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "입력 받은 형태는 yyyymmddHHMMss,<br>formatString : yyyy. mm. dd t hh:MM:ss"
+			}
+		}, {
+			dataField: "field2",
+			headerText: "mmddyyyyHHMMss",
+			dataType: "date",
+			width: 180,
+			dateInputFormat: "mmddyyyyHHMMss", // 실제 데이터의 형식 지정
+			formatString: "yyyy. mm. dd t hh:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "입력 받은 형태는 mmddyyyyHHMMss,<br>formatString : yyyy. mm. dd t hh:MM:ss"
+			}
+		}, {
+			dataField: "field3",
+			headerText: "HHMMssddmmyyyy",
+			dataType: "date",
+			width: 240,
+			dateInputFormat: "HHMMssddmmyyyy", // 실제 데이터의 형식 지정
+			formatString: "yyyy. mm. dd t hh:MM:ss", // 실제 데이터 형식을 어떻게 표시할지 지정
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "입력 받은 형태는 HHMMssddmmyyyy,<br>formatString : yyyy. mm. dd t hh:MM:ss"
+			}
+		}];
 
-		var gridProps = {
+		// 그리드 속성 설정
+		const gridProps = {
 			enableSorting: false,
 			showRowCheckColumn: false,
 			showRowNumColumn: false,
@@ -123,36 +120,26 @@
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-		// 데이터 삽입
-		AUIGrid.setGridData(myGridID, gridData);
-	};
-
-	var gridData = [{ "field0": "20220428 023447", "field1": "20220428023447", "field2": "04282022023447", "field3": "02344728042022" }, { "field0": "20220428 001721", "field1": "20220428001721", "field2": "04282022001721", "field3": "00172128042022" }, { "field0": "20220428 021615", "field1": "20220428021615", "field2": "04282022021615", "field3": "02161528042022" }, { "field0": "20220428 004454", "field1": "20220428004454", "field2": "04282022004454", "field3": "00445428042022" }, { "field0": "20220428 023224", "field1": "20220428023224", "field2": "04282022023224", "field3": "02322428042022" }];
+	}
 
 	//엑셀 내보내기(Export);
 	function exportClick() {
-
 		// 내보내기 실행
 		AUIGrid.exportToXlsx(myGridID);
-	};
+	}
 
 
 	//PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
 	function exportPdfClick() {
-
-		// 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
-		if (!AUIGrid.isAvailabePdf(myGridID)) {
-			alert("PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)");
-			return;
-		}
-
 		// 내보내기 실행
 		AUIGrid.exportToPdf(myGridID, {
 			// 폰트 경로 지정
-			fontPath: "../pdfkit/jejugothic-regular.ttf"
+			fontPath: "../pdfkit/nyjgothic-medium.ttf"
 		});
-	};
+	}
+
+	// 그리드 데이터
+	const gridData = [{ "field0": "20220428 023447", "field1": "20220428023447", "field2": "04282022023447", "field3": "02344728042022" }, { "field0": "20220428 001721", "field1": "20220428001721", "field2": "04282022001721", "field3": "00172128042022" }, { "field0": "20220428 021615", "field1": "20220428021615", "field2": "04282022021615", "field3": "02161528042022" }, { "field0": "20220428 004454", "field1": "20220428004454", "field2": "04282022004454", "field3": "00445428042022" }, { "field0": "20220428 023224", "field1": "20220428023224", "field2": "04282022023224", "field3": "02322428042022" }];
 </script>
 
 </head>
@@ -179,6 +166,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>

@@ -15,10 +15,7 @@
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <link href="./demo.css" rel="stylesheet">
 
-<!-- ajax 요청을 위한 스크립트입니다. -->
-<script type="text/javascript" src="./ajax.js"></script>
-
-<!-- 본 샘플를 위한 스크립트입니다. -->
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
@@ -31,7 +28,8 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style type="text/css">
+
+<style>
 	.number-style {
 		text-align: right;
 	}
@@ -44,91 +42,73 @@
 	}
 </style>
 
-<script type="text/javascript">
-
+<script>
 	// AUIGrid 생성 후 반환 ID
-	var myGridID;
-
+	let myGridID;
 	// 소팅 정보 보관 객체
-	var sortingInfo;
-
-
-	// document ready 
-	function documentReady() {
-
+	let sortingInfo;
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestData("./data/normal_500.json");
-
-	};
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [{
-		dataField: "country",
-		headerText: "나라"
-	}, {
-		dataField: "name",
-		headerText: "이름"
-	}, {
-		dataField: "product",
-		headerText: "제품"
-	}, {
-		dataField: "color",
-		headerText: "색상"
-	}, {
-		dataField: "price",
-		headerText: "가격",
-		style: "number-style",
-		disableGrouping: true,
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "quantity",
-		headerText: "수량",
-		disableGrouping: true,
-		dataType: "numeric",
-		style: "number-style"
-	}, {
-		dataField: "date",
-		headerText: "날짜"
+		requestGridData("./data/normal_500.json");
 	}
-	];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "country",
+			headerText: "나라"
+		}, {
+			dataField: "name",
+			headerText: "이름"
+		}, {
+			dataField: "product",
+			headerText: "제품"
+		}, {
+			dataField: "color",
+			headerText: "색상"
+		}, {
+			dataField: "price",
+			headerText: "가격",
+			style: "number-style",
+			disableGrouping: true,
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "quantity",
+			headerText: "수량",
+			disableGrouping: true,
+			dataType: "numeric",
+			style: "number-style"
+		}, {
+			dataField: "date",
+			headerText: "날짜"
+		}];
 
-		var gridProps = {
-
+		// 그리드 속성 설정
+		const gridProps = {
 			editable: true,
-
 			// 그룹핑 패널 사용
 			useGroupingPanel: true,
-
 			// 차례로 country, product 순으로 그룹핑을 합니다.
 			groupingFields: ["country", "product"],
-
 			// 합계(소계) 설정
 			groupingSummary: {
 				// 합계 필드는 price 1개에 대하여 실시 합니다.
 				dataFields: ["price"]
 			},
-
 			// 최초 보여질 때 모두 열린 상태로 출력 여부
 			displayTreeOpen: true,
-
 			// 그룹핑 후 셀 병합 실행
 			enableCellMerge: true,
-
 			// 브랜치에 해당되는 행을 출력 여부
 			showBranchOnGrouping: false,
-
 			// 그리드 ROW 스타일 함수 정의
 			rowStyleFunction: function (rowIndex, item) {
-
 				if (item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
-
 					// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
 					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
 					switch (item._$depth) {  // 계층형의 depth 비교 연산
@@ -142,8 +122,6 @@
 							return "aui-grid-row-depth-default-style";
 					}
 				}
-
-				return null;
 			} // end of rowStyleFunction
 		};
 
@@ -152,7 +130,6 @@
 
 		// 그리드 ready 이벤트 바인딩
 		AUIGrid.bind(myGridID, "ready", function (event) {
-
 			// 최초에 정렬된 채로 그리드 출력 시킴.
 			AUIGrid.setSorting(myGridID, [{
 				dataField: "country", sortType: -1
@@ -163,7 +140,6 @@
 
 		// 정렬 이벤트 바인딩
 		AUIGrid.bind(myGridID, "sorting", function (event) {
-
 			// 소팅 정보 보관.
 			sortingInfo = event.sortingFields;
 		});
@@ -171,15 +147,12 @@
 		// 그룹핑  이벤트  바인딩
 		AUIGrid.bind(myGridID, "grouping", function (event) {
 			// 보관된 소팅 정보로 그룹핑 후 소팅 실시함
-			if (typeof sortingInfo != "undefined") {
+			if (typeof sortingInfo !== "undefined") {
 				AUIGrid.setSorting(myGridID, sortingInfo);
 			}
 		});
-	};
-
-
+	}
 </script>
-
 </head>
 <body>
 
@@ -194,7 +167,7 @@
 		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
-		<p id="ellapse"></p>
+		<p id="elapse"></p>
 
 	</div>
 </div>
@@ -203,6 +176,5 @@
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>
-
 </body>
 </html>
