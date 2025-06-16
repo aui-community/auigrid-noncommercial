@@ -317,15 +317,8 @@
 	// PDF 로 내보내기
 	const exportPdfClick = () => {
 		const grid = myGrid.value as AUIGrid;
-
-		// 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
-		if (!grid.isAvailabePdf()) {
-			alert('PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)');
-			return;
-		}
-
 		// 내보내기 실행
-		grid.exportToPdf({ ...exportProps, fontPath: './fonts/jejugothic-regular.ttf' });
+		grid.exportToPdf({ ...exportProps, fontPath: './fonts/nyjgothic-medium.ttf' });
 	};
 </script>
 <template>

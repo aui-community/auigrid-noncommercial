@@ -4,40 +4,43 @@ import AUIGrid from '../static/AUIGrid-React.js/AUIGridReact';
 import MyCalendarRenderer from '../renderers/MyCalendarRenderer';
 import './Showcase07.css';
 
-const genGridData = (currentDate) => {
-	let date = new Date(currentDate);
-	let thisYear = date.getFullYear();
-	let thisMonth = date.getMonth() + 1; // 실제 보이는 월
-	let startDay = new Date(thisYear, thisMonth - 1, 1);
-	let endDay = new Date(thisYear, thisMonth, 0); // 말일
-	let endCount = endDay.getDate();
-	let weekArray = [];
-	let data = [];
-	let i;
-	startDay = startDay.getDay();
-	// 달력 앞의 빈 날짜들
-	for (let i = 0; i < startDay; i++) {
-		weekArray.push(null);
+const genGridData = (inputDate) => {
+	const originDate = new Date(inputDate);
+	const year = originDate.getFullYear();
+	const month = originDate.getMonth(); // 0-based
+	const startOfMonth = new Date(year, month, 1);
+	const endOfMonth = new Date(year, month + 1, 0);
+	const totalDays = endOfMonth.getDate();
+	const startWeekday = startOfMonth.getDay(); // 0 (일) ~ 6 (토)
+
+	const weeks = [];
+	let week = [];
+
+	// 달력 앞쪽 공백 삽입
+	for (let i = 0; i < startWeekday; i++) {
+		week.push(null);
 	}
 
-	// 진짜 날짜들
-	for (i = 1; i <= endCount; i++) {
-		if (weekArray.length === 7) {
-			data.push(weekArray);
-			weekArray = [];
-		}
-		weekArray.push({
-			date: i,
+	// 날짜 + 랜덤값 삽입
+	for (let day = 1; day <= totalDays; day++) {
+		week.push({
+			date: day,
 			value: Math.floor(Math.random() * 100)
 		});
+
+		if (week.length === 7) {
+			weeks.push(week);
+			week = [];
+		}
 	}
 
-	// 달력 마지막 주의 날짜들
-	if (weekArray.length !== 0) {
-		data.push(weekArray);
+	// 마지막 주가 남아있다면 추가
+	if (week.length > 0) {
+		weeks.push(week);
 	}
-	//console.log(JSON.stringify(data));
-	return data;
+
+	console.log(weeks);
+	return weeks;
 };
 
 const Showcase07 = () => {

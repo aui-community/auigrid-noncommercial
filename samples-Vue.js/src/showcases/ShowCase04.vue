@@ -287,17 +287,10 @@
 			// PDF 로 내보내기
 			exportPdfClick() {
 				const grid = this.$refs.myGrid;
-
-				// 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
-				if (!grid.isAvailabePdf()) {
-					alert('PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)');
-					return;
-				}
-
 				// 내보내기 실행
 				grid.exportToPdf({
 					// 폰트 경로 지정
-					fontPath: './fonts/jejugothic-regular.ttf',
+					fontPath: './fonts/nyjgothic-medium.ttf',
 					fileName: '쇼케이스-02'
 				});
 			}

@@ -1,0 +1,63 @@
+﻿AUIGrid 사용 방법 및 샘플 실행 방법
+
+--------------------------------------------------------------------------------
+1 AUIGrid 사용 방법
+
+- AUIGridLicense.js, AUIGrid.js, AUIGrid_style.css 포함
+- HTML에 다음과 같이 삽입
+
+```
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script src="./AUIGrid/AUIGridLicense.js"></script>
+<!-- AUIGrid 라이브러리 메인 JS -->
+<script src="./AUIGrid/AUIGrid.js"></script>
+<!-- AUIGrid CSS 테마 파일 (원하는 테마로 변경 가능) -->
+<link rel="stylesheet" href="./AUIGrid/AUIGrid_style.css" />
+```
+
+--------------------------------------------------------------------------------
+2 폴더 구조
+
+제품 패키지를 압축을 해제하면 다음 디렉토리가 보입니다.
+- AUIGrid: AUIGrid 라이브러리와 스타일(css)
+- AUIGrid-React: React.js용 서브 컴포넌트
+- AUIGrid-Vue: Vue.js용 서브 컴포넌트
+- documentation: 공식 문서 (index.html 포함)
+- export_server_samples: 서버 내보내기 샘플(PHP, JSP, ASP)
+- pdfkit: PDF 출력용 라이브러리
+- samples: JavaScript 샘플
+- samples-React.js: React 샘플
+- samples-React.tsx: React + TypeScript 샘플
+- samples-Vue.js: Vue 샘플
+- samples-Vue.ts: Vue + TypeScript 샘플
+
+--------------------------------------------------------------------------------
+3 일반 JS 샘플 실행 방법
+
+	3.1. 제품 패키지를 압축을 해제한 후 웹 서버에 FTP 또는 파일 복사 방식으로 업로드합니다.
+	3.2. /samples 또는 /documentation 폴더의 index.html을 브라우저로 실행합니다.
+	3.3. AUIGrid 샘플 기능을 바로 확인하고 테스트할 수 있습니다.
+
+--------------------------------------------------------------------------------
+4 Vue, React 샘플 실행 방법
+
+	4.1. samples-React.js
+	   - 프레임워크: React (JS 기반)
+	   - 빌드 도구: CRA
+	   - 실행 명령어:  
+	     npm install && npm start
+	4.2. samples-React.tsx
+	   - 프레임워크: React + TypeScript
+	   - 빌드 도구: CRA
+	   - 실행 명령어:  
+	     npm install && npm start
+	4.3. samples-Vue.js
+	   - 프레임워크: Vue 3 (Vue CLI)
+	   - 빌드 도구: Vue CLI
+	   - 실행 명령어:  
+	     npm install && npm run serve
+	4.4. samples-Vue.ts
+	   - 프레임워크: Vue 3 + TypeScript
+	   - 빌드 도구: Vite
+	   - 실행 명령어:  
+	     npm install && npm run dev

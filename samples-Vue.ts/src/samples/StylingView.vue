@@ -35,10 +35,9 @@
 			headerText: 'Product',
 			style: 'my-column-style',
 			styleFunction: (rowIndex, columnIndex, value) => {
-				if (value === 'Galaxy S5') {
+				if (value === 'Galaxy S25') {
 					return 'my-cell-style';
 				}
-				return null;
 			}
 		},
 		{
@@ -97,7 +96,6 @@
 			if (item.country === 'USA') {
 				return 'my-row-style';
 			}
-			return null;
 		}
 	};
 
@@ -110,7 +108,6 @@
 			if (item.country === 'UK') {
 				return 'my-row-style';
 			}
-			return null;
 		});
 
 		// 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
@@ -144,7 +141,7 @@
 		// 내보내기 실행
 		grid?.exportToPdf({
 			// 폰트 경로 지정
-			fontPath: './fonts/jejugothic-regular.ttf',
+			fontPath: './fonts/nyjgothic-medium.ttf',
 			fileName: 'AUIGrid-Style'
 		});
 	};
@@ -158,7 +155,7 @@
 		<div class="desc">
 			<p>특정 조건에 따라 동적으로 스타일을 정의합니다.</p>
 			<p>행(row) 스타일링 : <span class="my-row-style"> Country = USA 인 경우 행에 스타일링</span></p>
-			<p>셀 스타일링 : <span class="my-cell-style">Product = Galaxy S5 인 셀에 스타일링</span></p>
+			<p>셀 스타일링 : <span class="my-cell-style">Product = Galaxy S25 인 셀에 스타일링</span></p>
 			<button class="btn" @click="changeRowStyleFunction">행 스타일링을 변경하기 ( Country 가 UK 인 행 스타일링 하기 )</button>
 		</div>
 		<div>

@@ -87,7 +87,7 @@
 		methods: {
 			// 칼럼 레이아웃 작성하여 반환
 			createColumnLayout() {
-				let columnLayout = [
+				const columnLayout = [
 					{
 						dataField: 'name',
 						headerText: '학생이름',
@@ -98,83 +98,23 @@
 					}
 				];
 
-				let obj = {
+				const column = {
 					headerText: '합 계',
 					children: [
-						{
-							dataField: 'ct',
-							expFunction: this.myExpFunction,
-							editable: false,
-							headerText: 'T',
-							width: 40,
-							headerStyle: 'mycustom-t',
-							dataType: 'numeric',
-							headerTooltip: {
-								show: true,
-								tooltipHtml: '지각'
-							}
-						},
-						{
-							dataField: 'ce',
-							expFunction: this.myExpFunction,
-							editable: false,
-							headerText: 'E',
-							width: 40,
-							headerStyle: 'mycustom-e',
-							dataType: 'numeric',
-							headerTooltip: {
-								show: true,
-								tooltipHtml: '사정 상 결석'
-							}
-						},
-						{
-							dataField: 'cu',
-							expFunction: this.myExpFunction,
-							editable: false,
-							headerText: 'U',
-							width: 40,
-							headerStyle: 'mycustom-u',
-							dataType: 'numeric',
-							headerTooltip: {
-								show: true,
-								tooltipHtml: '무단 결석'
-							}
-						},
-						{
-							dataField: 'cp',
-							expFunction: this.myExpFunction,
-							editable: false,
-							headerText: 'P',
-							width: 40,
-							headerStyle: 'mycustom-p',
-							dataType: 'numeric',
-							headerTooltip: {
-								show: true,
-								tooltipHtml: '출석'
-							}
-						},
-						{
-							dataField: 'ceu',
-							expFunction: this.myExpFunction,
-							editable: false,
-							headerText: '결석 일수',
-							width: 100,
-							dataType: 'numeric',
-							renderer: {
-								type: 'BarRenderer',
-								max: 10,
-								style: 'showcase1-custmom-bar'
-							}
-						}
+						{ dataField: 'ct', expFunction: this.myExpFunction, editable: false, headerText: 'T', width: 40, headerStyle: 'mycustom-t', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '지각' } },
+						{ dataField: 'ce', expFunction: this.myExpFunction, editable: false, headerText: 'E', width: 40, headerStyle: 'mycustom-e', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '사정 상 결석' } },
+						{ dataField: 'cu', expFunction: this.myExpFunction, editable: false, headerText: 'U', width: 40, headerStyle: 'mycustom-u', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '무단 결석' } },
+						{ dataField: 'cp', expFunction: this.myExpFunction, editable: false, headerText: 'P', width: 40, headerStyle: 'mycustom-p', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '출석' } },
+						{ dataField: 'ceu', expFunction: this.myExpFunction, editable: false, headerText: '결석 일수', width: 100, dataType: 'numeric', renderer: { type: 'BarRenderer', max: 10, style: 'custmom-bar' } }
 					]
 				};
-				columnLayout.push(obj);
+				columnLayout.push(column);
 
-				let days = ['일', '월', '화', '수', '목', '금', '토'];
+				const days = ['일', '월', '화', '수', '목', '금', '토'];
 				for (let i = 1; i <= 31; i++) {
-					obj = {};
-					obj.headerText = days[i % 7];
-					obj.children = [
+					const column = {};
+					column.headerText = days[i % 7];
+					column.children = [
 						{
 							dataField: 'd' + i,
 							headerText: i,
@@ -182,9 +122,8 @@
 							styleFunction: this.cellStyleFunction
 						}
 					];
-					columnLayout.push(obj);
+					columnLayout.push(column);
 				}
-
 				return columnLayout;
 			},
 
@@ -208,49 +147,34 @@
 				else if (value === 'U') return 'mycustom-u';
 				else if (value === 'E') return 'mycustom-e';
 				else if (value === 'P') return 'mycustom-p';
-				return null;
 			},
 
 			// 행 아이템에서 T, E, U, P 개수를 구하는 수식 함수.
 			myExpFunction(rowIndex, columnIndex, item, dataField) {
-				let count = 0;
-				let value;
-				let field;
 				let opValue;
-
 				if (dataField === 'ceu') {
 					// E, U 개수 구하기
-					for (field in item) {
-						value = item[field];
-						if (value === 'E' || value === 'U') {
-							count++;
-						}
-					}
-					return count;
-				} else {
-					// T, E, U, P 각각 개별 개수 구하기
-					switch (dataField) {
-						case 'ct': // 지각 합
-							opValue = 'T';
-							break;
-						case 'ce': // 사정상 결적 합
-							opValue = 'E';
-							break;
-						case 'cu': // 무단 결석 합
-							opValue = 'U';
-							break;
-						case 'cp': // 출석 합
-							opValue = 'P';
-							break;
-					}
-					for (field in item) {
-						value = item[field];
-						if (value === opValue) {
-							count++;
-						}
-					}
-					return count;
+					return Object.values(item).filter((v) => v === 'E' || v === 'U').length;
 				}
+
+				// T, E, U, P 각각 개별 개수 구하기
+				switch (dataField) {
+					case 'ct': // 지각 합
+						opValue = 'T';
+						break;
+					case 'ce': // 사정상 결적 합
+						opValue = 'E';
+						break;
+					case 'cu': // 무단 결석 합
+						opValue = 'U';
+						break;
+					default:
+					case 'cp': // 출석 합
+						opValue = 'P';
+						break;
+				}
+				// opValue와 동일한 개수 구하여 반환
+				return Object.values(item).filter((v) => v === opValue).length;
 			},
 
 			// 셀클릭 이벤트 핸들러
@@ -260,30 +184,27 @@
 
 			// cellEditEndBefore 이벤트에서 사용자가 입력한 텍스트를 강제로 변경가능합니다.
 			cellEditEndBeforeHandler(event) {
+				const oldValue = event.oldValue;
+				const value = event.value;
+				// cellEditEndBefore 이벤트에서 사용자가 입력한 텍스트를 강제로 변경가능합니다.
 				// 이름은 어떤것을 입력해도 허용함.
 				if (event.dataField === 'name') {
-					console.log('oldValue : ' + event.oldValue + ', new Value : ' + event.value);
-					return event.value;
+					console.log(`oldValue : ${oldValue}, new Value : ${value}`);
+					return value;
 				}
-
-				let value = event.value;
-				let oldValue = event.oldValue;
-				let validValues = ['T', 'E', 'U', 'P', 'N']; // 입력 유효값.
 
 				if (!value) return oldValue;
 
 				// 대문자로 모두 변경시킴
-				value = value.toUpperCase();
-
-				// T, E, U, P, N 이 아니라면 에디팅 취소와 같음
-				if (validValues.indexOf(value) === -1) {
-					console.log('T, E, U, P, N 입력이 아님으로 에디팅 취소시킴');
+				const normalizedValue = value.toUpperCase();
+				const validValues = ['T', 'E', 'U', 'P', 'N']; // 입력 유효값.
+				if (!validValues.includes(normalizedValue)) {
+					console.log(`"${value}"는 허용되지 않는 값입니다.유효한 값: ${validValues.join(', ')}`);
 					return oldValue;
 				}
 
-				console.log('oldValue : ' + oldValue + ', new Value : ' + value + ', (대문자로 변경됨)');
-
-				return value;
+				console.log(`oldValue: ${oldValue}, new Value : ${normalizedValue}, (대문자로 변경됨)`);
+				return normalizedValue;
 			},
 
 			// 셀 편집 취소 핸들러
@@ -307,15 +228,13 @@
 				// 그리드의 편집 인푸터가 열린 경우 에디팅 완료 상태로 만듬.
 				grid.forceEditingComplete(null);
 
-				let item = new Object();
-				let holidays = [6, 7, 13, 14];
+				//새행 만들기
+				const item = {};
 				item.name = '';
+				// 휴일(holidays) 에 해당하는 날은 "N"(예: 휴무), 그 외에는 "P"(예: 근무)로 값을 채움
+				const holidays = [6, 7, 13, 14];
 				for (let i = 1; i <= 31; i++) {
-					if (holidays.indexOf(i) >= 0) {
-						item['d' + i] = 'N';
-					} else {
-						item['d' + i] = 'P';
-					}
+					item[`d${i}`] = holidays.includes(i) ? 'N' : 'P';
 				}
 				grid.addRow(item, 'last');
 			},
@@ -326,17 +245,20 @@
 				// 행 추가 시 추가된 행에 선택자가 이동합니다.
 				// 이 때 칼럼은 기존 칼럼 그래도 유지한채 이동함.
 				// 원하는 칼럼으로 선택자를 보내 강제로 편집기(inputer) 를 열기 위한 코드
-				let selected = grid.getSelectedIndex();
+				const selected = grid.getSelectedIndex();
 				if (selected.length <= 0) {
 					return;
 				}
 
-				let rowIndex = selected[0];
-				let colIndex = grid.getColumnIndexByDataField('name');
+				const rowIndex = selected[0];
+				const colIndex = grid.getColumnIndexByDataField('name');
 				grid.setSelectionByIndex(rowIndex, colIndex); // name 으로 선택자 이동
 
-				// 빈행 추가 후 isbn 에 인푸터 열기
-				grid.openInputer();
+				// 빈행 추가 후 인푸터 열기
+				setTimeout(() => {
+					// 빈행 추가 후 isbn 에 인푸터 열기
+					grid.openInputer();
+				}, 16);
 			},
 
 			// 행 삭제
@@ -356,7 +278,7 @@
 			removeSoftRows() {
 				const grid = this.$refs.myGrid;
 				// 삭제 처리된 아이템 있는지 보기
-				let removedRows = grid.getRemovedItems(true);
+				const removedRows = grid.getRemovedItems(true);
 
 				if (removedRows.length <= 0) {
 					alert('삭제 처리되어 마크된 행이 없습니다.');
@@ -383,18 +305,10 @@
 			// PDF 로 내보내기
 			exportPdfClick() {
 				const grid = this.$refs.myGrid;
-
-				// 완전한 HTML5 를 지원하는 브라우저에서만 PDF 저장 가능( IE=10부터 가능 )
-				if (!grid.isAvailabePdf()) {
-					alert('PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)');
-					return;
-				}
-
 				// 내보내기 실행
 				grid.exportToPdf({
-					// 폰트 경로 지정
-					fontPath: './fonts/jejugothic-regular.ttf',
-					fileName: '쇼케이스-01'
+					// 폰트 경로 지정 (필수)
+					fontPath: './fonts/nyjgothic-medium.ttf'
 				});
 			}
 		}

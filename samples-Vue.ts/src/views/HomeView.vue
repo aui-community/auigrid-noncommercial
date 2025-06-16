@@ -22,7 +22,7 @@
 			<li>"@types/node": "^20.14.5",</li>
 			<li>"@vitejs/plugin-vue": "^5.0.5",</li>
 			<li>"@vue/tsconfig": "^0.5.1",</li>
-			<li><span style="background-color: #ff0">""aui-grid": "^2.0.11",</span></li>
+			<li><span style="background-color: #ff0">""aui-grid": "^2.0.12",</span></li>
 			<li>"npm-run-all2": "^6.2.0",</li>
 			<li>"typescript": "~5.4.0",</li>
 			<li>"vite": "^5.3.1",</li>

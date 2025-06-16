@@ -16,10 +16,11 @@
     <meta content="AUIGrid API Documentation" property="og:description">
     <meta content="AUIGrid API Documentation" name="keywords">
     <title>AUIGrid Documentation</title>
+     <link href="../static/aui.ico" rel="shortcut icon" />
     <link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen">
-    
-    
-    
+   <!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
+	<link rel="stylesheet" href="../static/prism.css"/>
+	<script type="text/javascript"src="../static/prism.js"></script>
 </head>
 
 <body>
@@ -33,13 +34,13 @@
     <div class="MainContent">
 
 
-        <h1>3. 데이터 구조 및 작성 방법에 대하여</h1>
+        <h1>2. 데이터 구조 및 작성 방법에 대하여</h1>
 
-        <h2>3.1 데이터 구조 개요</h2>
+        <h2>2.1 데이터 구조 개요</h2>
         <p>AUIGrid는 JSON 기반의 1차원 객체 배열 데이터를 기본으로 사용하며, 트리 구조, XML, CSV 형태의 데이터도 가공하여 사용할 수 있습니다.</p>
         <p>각 데이터 항목은 한 행(Row)을 나타내며, 객체의 속성명은 그리드 컬럼의 <code class="language-javascript">dataField</code>설정 값과 일치해야 합니다.</p>
 
-        <h2>3.2 JSON 데이터 구조 (기본)</h2>
+        <h2>2.2 JSON 데이터 구조 (기본)</h2>
         <pre><code class="language-javascript">[
   { "id": 1, "name": "홍길동", "product": "iPhone", "price": 1200000 },
   { "id": 2, "name": "김영희", "product": "Galaxy", "price": 950000 }
@@ -60,7 +61,7 @@ const columnLayout = [
   { dataField: "price", headerText: "가격", dataType: "numeric" }
 ];</code></pre>
 
-        <h2>3.3 XML 데이터 구조</h2>
+        <h2>2.3 XML 데이터 구조</h2>
         <pre><code class="language-javascript">&lt;rows&gt;
   &lt;row&gt;
     &lt;id&gt;1&lt;/id&gt;
@@ -78,13 +79,13 @@ const columnLayout = [
 </code></pre>
         <p><strong>주의사항:</strong> AUIGrid는 XML을 직접 처리하지 않으며, 브라우저에서 <code class="language-javascript">DOMParser</code> 등으로 JSON 변환 후 사용합니다. 따라서 성능적으로 JSON 이 우수합니다.</p>
 
-        <h2>3.4 CSV 데이터 구조</h2>
+        <h2>2.4 CSV 데이터 구조</h2>
         <pre><code class="language-javascript">id,name,product,price
 1,홍길동,iPhone,1200000
 2,김영희,Galaxy,950000</code></pre>
         <p><strong>주의사항:</strong> AUIGrid는 CSV를 문자열 파싱 후 JSON 배열로 변환 후 사용합니다. 따라서 성능적으로 JSON 이 우수합니다.</p>
 
-        <h2>3.5 트리(Tree)형 JSON 구조</h2>
+        <h2>2.5 트리(Tree)형 JSON 구조</h2>
         <pre><code class="language-javascript">[
   {
     "name": "관리부",
@@ -108,7 +109,7 @@ const gridProps = {
     treeIdRefField: "parent"
 };</code></pre>
 
-        <h2>3.6 데이터 유형별 특징 요약</h2>
+        <h2>2.6 데이터 유형별 특징 요약</h2>
         <table class="browser_table">
             <thead>
                 <tr>
@@ -140,7 +141,7 @@ const gridProps = {
             </tbody>
         </table>
 
-        <h2>3.7 데이터 속성별 주의사항</h2>
+        <h2>2.7 데이터 속성별 주의사항</h2>
         <table class="browser_table">
             <thead>
                 <tr>

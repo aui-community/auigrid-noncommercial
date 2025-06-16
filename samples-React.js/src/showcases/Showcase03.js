@@ -141,17 +141,15 @@ const Showcase03 = () => {
 			style: 'showcase3-strong-cells',
 			xlsxTextConversion: true,
 			labelFunction: (rowIndex, columnIndex, labelText, headerText, item) => {
-				if (!item._$isBranch) {
-					let sum = 0;
-					let c_value;
-					for (let i = 1; i <= 12; i++) {
-						c_value = Number(item['m' + i]);
-						if (!isNaN(c_value)) sum += c_value;
+				let sum = 0;
+				for (let i = 1; i <= 12; i++) {
+					const value = Number(item['m' + i]);
+					if (!isNaN(value)) {
+						sum += value;
 					}
-					if (isNaN(sum)) return '';
-					return agUtils.formatNumber(sum, '#,##0.00');
 				}
-				return '';
+				if (isNaN(sum)) return '';
+				return agUtils.formatNumber(sum, '#,##0.00');
 			}
 		}
 	];
@@ -188,8 +186,6 @@ const Showcase03 = () => {
 						return 'aui-grid-row-depth-default-style';
 				}
 			}
-
-			return null;
 		}
 	};
 

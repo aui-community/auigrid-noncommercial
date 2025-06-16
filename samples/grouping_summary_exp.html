@@ -51,129 +51,116 @@
 	// AUIGrid 생성 후 반환 ID
 	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
 		requestGridData("./data/normal_500.json");
-
-	};
-
-	// 그리드 칼럼 레이아웃 설정
-	let columnLayout = [{
-		dataField: "country",
-		headerText: "나라"
-	}, {
-		dataField: "name",
-		headerText: "이름"
-	}, {
-		dataField: "product",
-		headerText: "제품"
-	}, {
-		dataField: "price",
-		headerText: "가격",
-		style: "number-style",
-		dataType: "numeric",
-		formatString: "#,##0"
-	}, {
-		dataField: "quantity",
-		headerText: "수량",
-		dataType: "numeric",
-		style: "number-style"
-	}, {
-		dataField: "totalPrice", // totalPrice 필드는 원래 데이터에 없는 필드임. expFunction 에 의해 계산된 값이 이곳에 보관됨
-		headerText: "가격 * 수량",
-		headerTooltip: {
-			show: true,
-			tooltipHtml: "그리드가 가격 * 수량을 자동 계산하여 출력함"
-		},
-		editable: false, // 자동 계산되므로 임의 수정 불가
-		style: "number-style",
-		dataType: "numeric",
-		formatString: "#,##0",
-		expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-			if (item._$isGroupSumField) { // 썸머리 필드인 경우 그대로 반환함
-				return item[dataField];
-			}
-			return (item.price * item.quantity);
-		},
-	}, {
-		dataField: "color",
-		headerText: "색상"
-	}, {
-		dataField: "date",
-		headerText: "날짜"
 	}
-	];
-
-	// 그리드 푸터 설정
-	let footerLayout = [{
-		labelText: "∑",
-		positionField: "#base"
-	}, {
-		dataField: "price",
-		positionField: "price",
-		operation: "SUM",
-		formatString: "#,##0",
-		style: "aui-grid-my-footer-sum-total"
-	}, {
-		dataField: "totalPrice",
-		positionField: "totalPrice",
-		operation: "SUM",
-		formatString: "#,##0",
-		style: "aui-grid-my-footer-sum-total"
-	}, {
-		dataField: "price",
-		positionField: "date",
-		operation: "COUNT",
-		style: "aui-grid-my-footer-sum-total2"
-	}, {
-		labelText: "Count=>",
-		positionField: "phone",
-		style: "aui-grid-my-footer-sum-total2"
-	}];
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "country",
+			headerText: "나라"
+		}, {
+			dataField: "name",
+			headerText: "이름"
+		}, {
+			dataField: "product",
+			headerText: "제품"
+		}, {
+			dataField: "price",
+			headerText: "가격",
+			style: "number-style",
+			dataType: "numeric",
+			formatString: "#,##0"
+		}, {
+			dataField: "quantity",
+			headerText: "수량",
+			dataType: "numeric",
+			style: "number-style"
+		}, {
+			dataField: "totalPrice", // totalPrice 필드는 원래 데이터에 없는 필드임. expFunction 에 의해 계산된 값이 이곳에 보관됨
+			headerText: "가격 * 수량",
+			headerTooltip: {
+				show: true,
+				tooltipHtml: "그리드가 가격 * 수량을 자동 계산하여 출력함"
+			},
+			editable: false, // 자동 계산되므로 임의 수정 불가
+			style: "number-style",
+			dataType: "numeric",
+			formatString: "#,##0",
+			expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+				if (item._$isGroupSumField) { // 썸머리 필드인 경우 그대로 반환함
+					return item[dataField];
+				}
+				return (item.price * item.quantity);
+			},
+		}, {
+			dataField: "color",
+			headerText: "색상"
+		}, {
+			dataField: "date",
+			headerText: "날짜"
+		}];
 
-		let gridProps = {
+		// 그리드 푸터 설정
+		const footerLayout = [{
+			labelText: "∑",
+			positionField: "#base"
+		}, {
+			dataField: "price",
+			positionField: "price",
+			operation: "SUM",
+			formatString: "#,##0",
+			style: "aui-grid-my-footer-sum-total"
+		}, {
+			dataField: "totalPrice",
+			positionField: "totalPrice",
+			operation: "SUM",
+			formatString: "#,##0",
+			style: "aui-grid-my-footer-sum-total"
+		}, {
+			dataField: "price",
+			positionField: "date",
+			operation: "COUNT",
+			style: "aui-grid-my-footer-sum-total2"
+		}, {
+			labelText: "Count=>",
+			positionField: "phone",
+			style: "aui-grid-my-footer-sum-total2"
+		}];
+
+		// 그리드 속성 설정
+		const gridProps = {
 			rowIdField: "id",
-
 			// 편집 활성화
 			editable: true,
-
 			showFooter: true,
 			// 그룹핑 후 셀 병함 실행
 			enableCellMerge: true,
 			// 그룹핑, 셀머지 사용 시 브랜치에 해당되는 행 표시 안함.
 			showBranchOnGrouping: false,
+			// 최초 보여질 때 모두 열린 상태로 출력 여부
+			displayTreeOpen: true,
 			// 그룹핑 패널 사용
 			useGroupingPanel: true,
-
 			// 차례로 country, product, 순으로 그룹핑을 합니다.
 			// 즉, 각 나라별, 각 제품으로 그룹핑
 			groupingFields: ["country", "product"],
-
 			// 그룹핑 후 합계필드를 출력하도록 설정합니다.
 			groupingSummary: {
 				// 합계 필드는 price, quantity, totalPrice 3개에 대하여 실시 합니다.(totalPrice 는 expFunction 으로 구해진 필드임)
 				dataFields: ["price", "quantity", "totalPrice"],
-
 				// "country", "product",  순으로 그룹핑을 했을 때 해당 항목 아래에 출력되는 텍스트 지정
 				labelTexts: ["전체 합계", "부분 합계"]
 			},
-
-			// 최초 보여질 때 모두 열린 상태로 출력 여부
-			displayTreeOpen: true,
-
 			// 그리드 ROW 스타일 함수 정의
 			rowStyleFunction: function (rowIndex, item) {
-
 				if (item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
-
 					// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
 					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
 					switch (item._$depth) {  // 계층형의 depth 비교 연산
@@ -195,11 +182,8 @@
 
 		// 푸터 레이아웃 세팅
 		AUIGrid.setFooter(myGridID, footerLayout);
-
 	}
-
 </script>
-
 </head>
 <body>
 
@@ -215,7 +199,6 @@
 	</div>
 	<div class="desc_bottom">
 		<p id="elapse"></p>
-
 	</div>
 </div>
 <div id="footer">

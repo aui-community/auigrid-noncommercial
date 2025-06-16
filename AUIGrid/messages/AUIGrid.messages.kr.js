@@ -1,9 +1,9 @@
 /* eslint-disable */
 /**
  * AUIGrid 에서 사용되는 메세지들을 정의합니다. - 한국어
- * 마지막 추가된 버전 : v3.0.13
+ * 마지막 추가된 버전 : v3.0.16
  */
-var AUIGridMessages = {
+const AUIGridMessages = {
 	/*
 	 * 그리드에 출력시킬 데이터가 없는 메세지
 	 */
@@ -91,32 +91,7 @@ var AUIGridMessages = {
 	/*
 	 * date 의 formatString mmm, mmmm
 	 */
-	monthNames: [
-		'Jan',
-		'Feb',
-		'Mar',
-		'Apr',
-		'May',
-		'Jun',
-		'Jul',
-		'Aug',
-		'Sep',
-		'Oct',
-		'Nov',
-		'Dec',
-		'January',
-		'February',
-		'March',
-		'April',
-		'May',
-		'June',
-		'July',
-		'August',
-		'September',
-		'October',
-		'November',
-		'December'
-	],
+	monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 
 	/*
 	 * date 의 formatString ddd, dddd
@@ -141,10 +116,10 @@ var AUIGridMessages = {
 	 * 행 드래그 시 나타나는 기본 메세지
 	 */
 	dragRowsText: '$value 행(들)',
-	
+
 	/*
 	 * 체크박스 헤더 텍스트
 	 */
 	checkHeaderText: ''
 };
-if (typeof window !== "undefined") window.AUIGridMessages = AUIGridMessages;
+if (typeof window !== 'undefined') window.AUIGridMessages = AUIGridMessages;

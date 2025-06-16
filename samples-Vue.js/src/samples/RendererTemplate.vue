@@ -1,7 +1,9 @@
 <script>
 	// AUIGrid 컴포넌트
 	import AUIGrid from '../static/AUIGrid-Vue.js/AUIGrid.vue';
-	import './RendererTemplateFunc';
+	import { gridData, selectList, checkboxGroup } from './data/RendererTemplateData';
+	import { registerAUIGridTemplateHandler, unregisterAUIGridTemplateHandler } from '../static/AUIGrid-Vue.js/useAUIGridTemplateHandler';
+	import './RendererTemplate.css';
 
 	export default {
 		components: {
@@ -9,9 +11,6 @@
 		},
 
 		data: () => ({
-			// 그리드 이름, SPA 프로젝트일 때 해당 그리드는 중복되어선 안됨.
-			gridName: 'RendererTemplate',
-
 			// 그리드 속성 정의
 			gridProps: {
 				width: '100%',
@@ -24,44 +23,11 @@
 			},
 
 			// 그리드 칼럼 레이아웃
-			columnLayout2: [],
-
-			// 그리드 데이터
-			gridData: [
-				{ name: 'Steve', code: '001', check: 'v1' },
-				{ name: 'Emma', code: '003', check: 'v1,v2,v3' },
-				{ name: 'Steve', code: '004', check: 'v2' },
-				{ name: 'Anna', code: '003', check: 'v1,v2,v3' },
-				{ name: 'Lawrence', code: '005', check: 'v1,v2,v3' },
-				{ name: 'Steve', code: '003', check: 'v1,v2,v3' },
-				{ name: 'Anna', code: '002', check: 'v1,v2,v3' },
-				{ name: 'Lawrence', code: '002', check: 'v3' },
-				{ name: 'Lawrence', code: 'None', check: 'v1,v3' },
-				{ name: 'Kim', code: '001', check: 'v1,v2' },
-				{ name: 'Emma', code: '005', check: 'v1,v2,v3' },
-				{ name: 'Kim', code: '002', check: 'v1,v2,v3' },
-				{ name: 'Kim', code: 'None', check: 'v1,v2,v3' },
-				{ name: 'Steve', code: '001', check: 'v1,v2,v3' },
-				{ name: 'Anna', code: '005', check: 'v1,v3' },
-				{ name: 'Anna', code: '005', check: 'v1,v2,v3' },
-				{ name: 'Kim', code: '001', check: 'v3' },
-				{ name: 'Steve', code: 'None', check: 'v1,v2,v3' },
-				{ name: 'Kim', code: '002', check: 'v2,v3' },
-				{ name: 'Kim', code: '001', check: 'v1,v2,v3' }
-			],
-
-			// 셀렉트 표현할 리스트
-			mySelectList: [
-				{ value: '001', text: '선택 1' },
-				{ value: '002', text: '선택 2' },
-				{ value: '003', text: '선택 3' },
-				{ value: '004', text: '선택 4' },
-				{ value: '005', text: '선택 5' }
-			]
+			columnLayout: []
 		}),
 		created() {
 			console.log('RendererTemplate 생성됨');
-			this.columnLayout2 = [
+			this.columnLayout = [
 				{
 					dataField: 'name',
 					headerText: 'Template-ButtonGroup',
@@ -70,15 +36,15 @@
 						// HTML 템플릿 렌더러 사용
 						type: 'TemplateRenderer'
 					},
-					// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
 					labelFunction: (rowIndex, columnIndex, value) => {
 						// HTML 템플릿 작성
-						let template = '<div class="my_div">';
-						template += '<span class="my_div_text_box">' + value + '</span>';
-						template += '<span class="my_div_btn" onclick="javascript:$agRendererTemplate.myApplyBtnClick(' + rowIndex + ', event);">적용</span>';
-						template += '<span class="my_div_btn2" onclick="javascript:$agRendererTemplate.myPopupBtnClick(' + rowIndex + ', event);">팝업</span>';
-						template += '</div>';
-						return template;
+						return `
+							<div class="my_div">
+								<span class="my_div_text_box">${value}</span>
+								<span class="my_div_btn" onclick="myApplyBtnClick(${rowIndex}, event)">적용</span>
+								<span class="my_div_btn2" onclick="myPopupBtnClick(${rowIndex}, event)">팝업</span>
+							</div>
+						`.trim();
 					}
 				},
 				{
@@ -90,31 +56,35 @@
 						// HTML 템플릿 렌더러 사용
 						type: 'TemplateRenderer'
 					},
-					// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
 					labelFunction: (rowIndex, columnIndex, value) => {
 						// HTML 템플릿 작성
 						if (!value) return '';
-						let template = '<div class="my_div">';
-
 						if (value === 'None') {
-							template += '<span style="line-height:2em;">선택할 수 없도록 작성됨(즉, 동적 select 표현)</span>';
-						} else {
-							template += '<span class="my_div_code_span">코드명 : ' + value + '</span>';
-							template += '<select style="width:100px;height:20px;" onchange="javascript:$agRendererTemplate.mySelectChangeHandler(' + rowIndex + ', this.value, event);">';
-
-							this.mySelectList.forEach((element) => {
-								const code = element['value'];
-								const text = element['text'];
-								if (code === value) {
-									template += '<option value="' + code + '" selected="selected">' + text + '</option>';
-								} else {
-									template += '<option value="' + code + '">' + text + '</option>';
-								}
-							});
-							template += '</select>';
+							return `
+								<div class="my_div">
+									<span style="line-height:2em;">
+									선택할 수 없도록 작성됨(즉, 동적 select 표현)
+									</span>
+								</div>
+							`.trim();
 						}
-						template += '</div>';
-						return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
+
+						// option 만들기
+						const options = selectList
+							.map(({ value: code, text }) => {
+								const selected = code === value ? ' selected="selected"' : '';
+								return `<option value="${code}"${selected}>${text}</option>`;
+							})
+							.join('');
+
+						return `
+							<div class="my_div">
+								<span class="my_div_code_span">코드명 : ${value}</span>
+								<select class="my_select" onchange="mySelectChangeHandler(${rowIndex}, this.value, event);">
+									${options}
+								</select>
+							</div>
+						`.trim();
 					}
 				},
 				{
@@ -129,34 +99,23 @@
 					// dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
 					labelFunction: (rowIndex, columnIndex, value) => {
 						// HTML 템플릿 작성
-						const valueArr = value.split(',');
-						const inputTagArr = [];
-						let template = '<div class="my_div">';
-						template += '<span class="my_div_chk_span">';
+						const selectedValues = value.split(',');
 
-						inputTagArr[0] = '<input type="checkbox" value="v1" onclick="javascript:$agRendererTemplate.myCheckClick(' + rowIndex + ', event);">값1';
-						inputTagArr[1] = '<input type="checkbox" value="v2" onclick="javascript:$agRendererTemplate.myCheckClick(' + rowIndex + ', event);">값2';
-						inputTagArr[2] = '<input type="checkbox" value="v3" onclick="javascript:$agRendererTemplate.myCheckClick(' + rowIndex + ', event);">값3';
+						// 체크박스 개수에 맞게 만들기
+						const checkboxes = checkboxGroup
+							.map(({ value, label }) => {
+								const isChecked = selectedValues.includes(value) ? 'checked="checked"' : '';
+								return `<label><input type="checkbox" value="${value}" ${isChecked} onclick="myCheckClick(${rowIndex}, event);">${label}</label>`;
+							})
+							.join('');
 
-						valueArr.forEach((element) => {
-							switch (element) {
-								case 'v1':
-									inputTagArr[0] = '<input type="checkbox" checked="checked" value="v1" onclick="javascript:$agRendererTemplate.myCheckClick(' + rowIndex + ', event);">값1';
-									break;
-								case 'v2':
-									inputTagArr[1] = '<input type="checkbox" checked="checked" value="v2" onclick="javascript:$agRendererTemplate.myCheckClick(' + rowIndex + ', event);">값2';
-									break;
-								case 'v3':
-									inputTagArr[2] = '<input type="checkbox" checked="checked" value="v3" onclick="javascript:$agRendererTemplate.myCheckClick(' + rowIndex + ', event);">값3';
-									break;
-								default:
-									break;
-							}
-						});
-						template += inputTagArr.join('');
-						template += '</span>';
-						template += '</div>';
-						return template;
+						return `
+							<div class="my_div">
+								<span class="my_div_chk_span">
+									${checkboxes}
+								</span>
+							</div>
+						`.trim();
 					}
 				}
 			];
@@ -165,13 +124,89 @@
 		mounted() {
 			console.log('RendererTemplate 마운트됨');
 			const grid = this.$refs.myGrid;
-			grid.setGridData(this.gridData);
+			grid.setGridData(gridData);
+
+			// TemplateRenderer 에서 사용하는 함수들 등록 하기
+			registerAUIGridTemplateHandler('myApplyBtnClick', this.myApplyBtnClick);
+			registerAUIGridTemplateHandler('myPopupBtnClick', this.myPopupBtnClick);
+			registerAUIGridTemplateHandler('mySelectChangeHandler', this.mySelectChangeHandler);
+			registerAUIGridTemplateHandler('myCheckClick', this.myCheckClick);
 		},
 
 		unmounted() {
 			console.log('RendererTemplate 언마운트됨');
+
+			// TemplateRenderer 에서 사용하는 함수들 등록 해제 하기
+			unregisterAUIGridTemplateHandler('myApplyBtnClick');
+			unregisterAUIGridTemplateHandler('myPopupBtnClick');
+			unregisterAUIGridTemplateHandler('mySelectChangeHandler');
+			unregisterAUIGridTemplateHandler('myCheckClick');
 		},
-		methods: {}
+		methods: {
+			// 수정으로 진입함.
+			calIconClick() {
+				const grid = this.$refs.myGrid;
+				grid.openInputer();
+			},
+
+			// 그리드 템플릿 렌더러 적용 버튼 클릭
+			myApplyBtnClick(rowIndex, event) {
+				const grid = this.$refs.myGrid;
+				grid.updateRow(
+					{
+						name: '셀 값 예약어로 수정'
+					},
+					rowIndex
+				);
+				alert(`eventType : ${event.type}, rowIndex : ${rowIndex} 적용 버턴 클릭`);
+			},
+
+			// 그리드 템플릿 렌더러 팝업 버튼 클릭
+			myPopupBtnClick(rowIndex) {
+				alert('rowIndex : ' + rowIndex + ' 팝업 버턴 클릭');
+			},
+
+			// 그리드 템플릿 렌더러 select 변경
+			mySelectChangeHandler(rowIndex, selectedValue) {
+				alert(selectedValue);
+				const grid = this.$refs.myGrid;
+				// 그리드에 실제 업데이트 적용 시킴
+				grid.updateRow(
+					{
+						code: selectedValue
+					},
+					rowIndex
+				);
+			},
+
+			// 그리드 템플릿 렌더러 체크박스 클릭
+			myCheckClick(rowIndex, event) {
+				const target = event.target;
+				const grid = this.$refs.myGrid;
+				alert('rowIndex : ' + rowIndex + ', value : ' + target.value + ', checked : ' + target.checked);
+
+				// 해당 행의 아이템 얻기
+				const item = grid.getItemByRowIndex(rowIndex);
+				const checkValue = item.check;
+				const checkArr = checkValue.split(',');
+
+				// 체크된 경우 포함시킴
+				if (target.checked) {
+					checkArr.push(target.value);
+				} else {
+					// 해제된 경우 제거함.
+					checkArr.splice(checkArr.indexOf(target.value), 1);
+				}
+
+				// 그리드 값 수정함.
+				grid.updateRow(
+					{
+						check: checkArr.join(',')
+					},
+					rowIndex
+				);
+			}
+		}
 	};
 </script>
 <template>
@@ -184,59 +219,6 @@
 			<p>■ 단점 : 사용자가 HTML 템플릿을 작성하였기 때문에 엑셀 저장, 그룹핑, 필터링, 정렬 등에 제약을 받습니다. (dataField 값 기준으로 처리됩니다.)</p>
 			<p><strong>템플릿 렌더러(TempalateRenderer)를 Vue.js 와 같은 프로젝트에서 사용을 추천하지 않습니다. CustomRenderer를 사용하십시오.</strong></p>
 		</div>
-		<!-- name 속성을 설정하면 해당 값이 포함되어 그리드의 id 가 설정됨.(예: aui-grid-wrap-이름) -->
-		<AUIGrid ref="myGrid" :name="gridName" :columnLayout="columnLayout2" :gridProps="gridProps" />
+		<AUIGrid ref="myGrid" :columnLayout="columnLayout" :gridProps="gridProps" />
 	</div>
 </template>
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.aui-grid-user-custom-column {
-		background: #ffffee;
-		font-weight: bold;
-	}
-
-	/* HTML 템플릿에서 사용할 스타일 정의*/
-	.my_div {
-		display: inline-block;
-		margin-top: 4px;
-		line-height: 12px;
-	}
-	.my_div_text_box {
-		display: inline-block;
-		border: 1px solid #aaa;
-		text-align: left;
-		width: 140px;
-		padding: 4px;
-	}
-	.my_div_btn {
-		color: #fff !important;
-		background-color: #2a2d33;
-		font-weight: bold;
-		margin: 2px 4px;
-		padding: 2px 4px;
-		line-height: 2em;
-		cursor: pointer;
-	}
-	.my_div_btn2 {
-		color: #fff !important;
-		background-color: #ee5315;
-		font-weight: bold;
-		margin: 2px 4px;
-		padding: 2px 4px;
-		line-height: 2em;
-		cursor: pointer;
-	}
-	.my_div_code_span {
-		margin-right: 4px;
-		color: #000099;
-	}
-	.my_div_chk_span {
-		line-height: 2em;
-	}
-	.my_div_chk_span input {
-		margin-left: 4px;
-		width: 16px;
-		height: 16px;
-	}
-	/* HTML 템플릿에서 사용할 스타일 정의 끝*/
-</style>

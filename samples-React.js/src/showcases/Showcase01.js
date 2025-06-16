@@ -6,7 +6,7 @@ import './Showcase01.css';
 
 // 칼럼 레이아웃 작성하여 반환
 const createColumnData = () => {
-	let columnLayout = [
+	const columnLayout = [
 		{
 			dataField: 'name',
 			headerText: '학생이름',
@@ -17,83 +17,23 @@ const createColumnData = () => {
 		}
 	];
 
-	let obj = {
+	const column = {
 		headerText: '합 계',
 		children: [
-			{
-				dataField: 'ct',
-				expFunction: myExpFunction,
-				editable: false,
-				headerText: 'T',
-				width: 40,
-				headerStyle: 'mycustom-t',
-				dataType: 'numeric',
-				headerTooltip: {
-					show: true,
-					tooltipHtml: '지각'
-				}
-			},
-			{
-				dataField: 'ce',
-				expFunction: myExpFunction,
-				editable: false,
-				headerText: 'E',
-				width: 40,
-				headerStyle: 'mycustom-e',
-				dataType: 'numeric',
-				headerTooltip: {
-					show: true,
-					tooltipHtml: '사정 상 결석'
-				}
-			},
-			{
-				dataField: 'cu',
-				expFunction: myExpFunction,
-				editable: false,
-				headerText: 'U',
-				width: 40,
-				headerStyle: 'mycustom-u',
-				dataType: 'numeric',
-				headerTooltip: {
-					show: true,
-					tooltipHtml: '무단 결석'
-				}
-			},
-			{
-				dataField: 'cp',
-				expFunction: myExpFunction,
-				editable: false,
-				headerText: 'P',
-				width: 40,
-				headerStyle: 'mycustom-p',
-				dataType: 'numeric',
-				headerTooltip: {
-					show: true,
-					tooltipHtml: '출석'
-				}
-			},
-			{
-				dataField: 'ceu',
-				expFunction: myExpFunction,
-				editable: false,
-				headerText: '결석 일수',
-				width: 100,
-				dataType: 'numeric',
-				renderer: {
-					type: 'BarRenderer',
-					max: 10,
-					style: 'showcase1-custmom-bar'
-				}
-			}
+			{ dataField: 'ct', expFunction: myExpFunction, editable: false, headerText: 'T', width: 40, headerStyle: 'mycustom-t', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '지각' } },
+			{ dataField: 'ce', expFunction: myExpFunction, editable: false, headerText: 'E', width: 40, headerStyle: 'mycustom-e', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '사정 상 결석' } },
+			{ dataField: 'cu', expFunction: myExpFunction, editable: false, headerText: 'U', width: 40, headerStyle: 'mycustom-u', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '무단 결석' } },
+			{ dataField: 'cp', expFunction: myExpFunction, editable: false, headerText: 'P', width: 40, headerStyle: 'mycustom-p', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '출석' } },
+			{ dataField: 'ceu', expFunction: myExpFunction, editable: false, headerText: '결석 일수', width: 100, dataType: 'numeric', renderer: { type: 'BarRenderer', max: 10, style: 'custmom-bar' } }
 		]
 	};
-	columnLayout.push(obj);
+	columnLayout.push(column);
 
 	const days = ['일', '월', '화', '수', '목', '금', '토'];
 	for (let i = 1; i <= 31; i++) {
-		obj = {};
-		obj.headerText = days[i % 7];
-		obj.children = [
+		const column = {};
+		column.headerText = days[i % 7];
+		column.children = [
 			{
 				dataField: 'd' + i,
 				headerText: i,
@@ -101,52 +41,36 @@ const createColumnData = () => {
 				styleFunction: cellStyleFunction
 			}
 		];
-		columnLayout.push(obj);
+		columnLayout.push(column);
 	}
 	return columnLayout;
 };
 
 const myExpFunction = (rowIndex, columnIndex, item, dataField) => {
-	let count = 0;
-	let value;
-	let field;
 	let opValue;
-
 	if (dataField === 'ceu') {
 		// E, U 개수 구하기
-		for (field in item) {
-			value = item[field];
-			if (value === 'E' || value === 'U') {
-				count++;
-			}
-		}
-		return count;
-	} else {
-		// T, E, U, P 각각 개별 개수 구하기
-		switch (dataField) {
-			case 'ct': // 지각 합
-				opValue = 'T';
-				break;
-			case 'ce': // 사정상 결적 합
-				opValue = 'E';
-				break;
-			case 'cu': // 무단 결석 합
-				opValue = 'U';
-				break;
-			case 'cp': // 출석 합
-				opValue = 'P';
-				break;
-			default:
-				break;
-		}
-		for (field in item) {
-			value = item[field];
-			if (value === opValue) {
-				count++;
-			}
-		}
-		return count;
+		return Object.values(item).filter((v) => v === 'E' || v === 'U').length;
 	}
+
+	// T, E, U, P 각각 개별 개수 구하기
+	switch (dataField) {
+		case 'ct': // 지각 합
+			opValue = 'T';
+			break;
+		case 'ce': // 사정상 결적 합
+			opValue = 'E';
+			break;
+		case 'cu': // 무단 결석 합
+			opValue = 'U';
+			break;
+		default:
+		case 'cp': // 출석 합
+			opValue = 'P';
+			break;
+	}
+	// opValue와 동일한 개수 구하여 반환
+	return Object.values(item).filter((v) => v === opValue).length;
 };
 
 const cellStyleFunction = (rowIndex, columnIndex, value) => {
@@ -155,7 +79,6 @@ const cellStyleFunction = (rowIndex, columnIndex, value) => {
 	else if (value === 'U') return 'mycustom-u';
 	else if (value === 'E') return 'mycustom-e';
 	else if (value === 'P') return 'mycustom-p';
-	return null;
 };
 
 const Showcase01 = () => {
@@ -165,12 +88,54 @@ const Showcase01 = () => {
 	// 그리드 칼럼 레이아웃
 	const columnLayout = createColumnData();
 
+	// 그리드 푸터 설정
+	const footerLayout = [
+		{
+			labelText: '합 계',
+			positionField: 'name'
+		},
+		{
+			dataField: 'ct',
+			operation: 'SUM',
+			positionField: 'ct'
+		},
+		{
+			dataField: 'ce',
+			operation: 'SUM',
+			positionField: 'ce'
+		},
+		{
+			dataField: 'cu',
+			operation: 'SUM',
+			positionField: 'cu'
+		},
+		{
+			dataField: 'cp',
+			operation: 'SUM',
+			positionField: 'cp'
+		},
+		{
+			dataField: 'ceu',
+			operation: 'SUM',
+			positionField: 'ceu'
+		}
+	];
+
 	// 그리드 속성 정의
 	const gridProps = {
 		editable: true,
 		width: '100%',
 		height: 480,
-		selectionMode: 'multipleCells'
+		editableOnFixedCell: true,
+		rowIdField: 'no',
+		enableFilter: true,
+		showFooter: true,
+		useContextMenu: true,
+		showStateColumn: true,
+		fixedColumnCount: 1,
+		softRemovePolicy: 'exceptNew',
+		skipReadonlyColumns: true,
+		enterKeyColumnBase: true
 	};
 
 	useEffect(() => {
@@ -195,8 +160,9 @@ const Showcase01 = () => {
 			console.log(event.type);
 		});
 
-		// addRow 이벤트 바인딩
-		grid.bind(['addRow'], (event) => {
+		// 행추가 이벤트 바인딩
+		// addRowFinish 이벤트 핸들링
+		grid.bind('addRowFinish', (event) => {
 			// 행 추가 시 추가된 행에 선택자가 이동합니다.
 			// 이 때 칼럼은 기존 칼럼 그래도 유지한채 이동함.
 			// 원하는 칼럼으로 선택자를 보내 강제로 편집기(inputer) 를 열기 위한 코드
@@ -219,29 +185,27 @@ const Showcase01 = () => {
 		grid.bind(['cellEditEndBefore', 'cellEditCancel'], (event) => {
 			switch (event.type) {
 				case 'cellEditEndBefore':
+					const oldValue = event.oldValue;
+					const value = event.value;
+					// cellEditEndBefore 이벤트에서 사용자가 입력한 텍스트를 강제로 변경가능합니다.
 					// 이름은 어떤것을 입력해도 허용함.
 					if (event.dataField === 'name') {
-						console.log('oldValue : ' + event.oldValue + ', new Value : ' + event.value);
-						return event.value;
+						console.log(`oldValue : ${oldValue}, new Value : ${value}`);
+						return value;
 					}
-
-					let value = event.value;
-					let oldValue = event.oldValue;
-					let validValues = ['T', 'E', 'U', 'P', 'N']; // 입력 유효값.
 
 					if (!value) return oldValue;
 
 					// 대문자로 모두 변경시킴
-					value = value.toUpperCase();
-
-					// T, E, U, P, N 이 아니라면 에디팅 취소와 같음
-					if (validValues.indexOf(value) === -1) {
-						console.log('T, E, U, P, N 입력이 아님으로 에디팅 취소시킴');
+					const normalizedValue = value.toUpperCase();
+					const validValues = ['T', 'E', 'U', 'P', 'N']; // 입력 유효값.
+					if (!validValues.includes(normalizedValue)) {
+						console.log(`"${value}"는 허용되지 않는 값입니다.유효한 값: ${validValues.join(', ')}`);
 						return oldValue;
 					}
 
-					console.log('oldValue : ' + oldValue + ', new Value : ' + value + ', (대문자로 변경됨)');
-					return value;
+					console.log(`oldValue: ${oldValue}, new Value : ${normalizedValue}, (대문자로 변경됨)`);
+					return normalizedValue;
 				case 'cellEditCancel':
 					if (event.dataField === 'name') {
 						// 학생 이름 입력 안하면 삭제.
@@ -280,15 +244,13 @@ const Showcase01 = () => {
 		// 그리드의 편집 인푸터가 열린 경우 에디팅 완료 상태로 만듬.
 		grid.forceEditingComplete(null);
 
-		let item = {};
-		let holidays = [6, 7, 13, 14];
+		//새행 만들기
+		const item = {};
 		item.name = '';
+		// 휴일(holidays) 에 해당하는 날은 "N"(예: 휴무), 그 외에는 "P"(예: 근무)로 값을 채움
+		const holidays = [6, 7, 13, 14];
 		for (let i = 1; i <= 31; i++) {
-			if (holidays.indexOf(i) >= 0) {
-				item['d' + i] = 'N';
-			} else {
-				item['d' + i] = 'P';
-			}
+			item[`d${i}`] = holidays.includes(i) ? 'N' : 'P';
 		}
 		grid.addRow(item, 'last');
 	};
@@ -328,7 +290,6 @@ const Showcase01 = () => {
 		<div>
 			<div className="desc">
 				<ExportGridDataView myGrid={myGrid} xlsxProps={{ fileName: '쇼케이스-01' }} pdfProps={{ fileName: '쇼케이스-01' }} />
-
 				<p>학생 출석 레코드를 표현 할 때 각각의 셀에 스타일을 적용시킨 것입니다.</p>
 				<div>
 					<span className="legend mycustom-t">T</span>
@@ -342,7 +303,6 @@ const Showcase01 = () => {
 					<span className="legend mycustom-n">N</span>
 					<span>휴교</span>
 				</div>
-
 				<p>날짜의 값(T, E, U, P, N) 수정 시 동적으로 합계가 변경됩니다.</p>
 				<div>
 					<div>
@@ -362,7 +322,7 @@ const Showcase01 = () => {
 				</div>
 				<p>(삭제 시 softRemoveRowMode = true 설정으로 바로 그리드에서 제거하지 않음.)</p>
 			</div>
-			<AUIGrid ref={myGrid} columnLayout={columnLayout} gridProps={gridProps} />
+			<AUIGrid ref={myGrid} columnLayout={columnLayout} gridProps={gridProps} footerLayout={footerLayout} />
 		</div>
 	);
 };

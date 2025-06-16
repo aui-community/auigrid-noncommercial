@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href=".././static/style.css" type="text/css" media="screen">
 <meta charset="utf-8">
 <meta content="text/javascript" http-equiv="Content-Script-Type">
 <meta content="text/css" http-equiv="Content-Style-Type">
@@ -15,9 +15,11 @@
 <meta content="http://www.auisoft.net/documentation/auigrid" property="og:url">
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
-<script src="../static/doc.js" type="text/javascript"></script>
-
-
+<link rel="shortcut icon" href="../static/aui.ico">
+<script src="../static/doc.js?v=250612" type="text/javascript"></script>
+<!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
+<link href="../static/prism.css" rel="stylesheet">
+<script src="../static/prism.js" type="text/javascript"></script>
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -1227,6 +1229,7 @@
  <li>toColumnIndex : 사용자가 변경 시킬 열(Column) 인덱스</li>
  <li>dataField : toColumnIndex 에 해당되는 데이터의 KeyField</li>
  <li>stopPropagation : confirm과 같이 Modal 을 띄워서 확인 하는 경우 event 의 stopPropagation 요소에 true 를 설정하여 진행을 막음. </li>
+ <li>which : 셀렉션 변경을 어떤 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
  </ul>
 <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "selectionConstraint", function(event) {

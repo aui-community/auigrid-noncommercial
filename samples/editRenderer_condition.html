@@ -50,7 +50,7 @@
 	function createAUIGrid() {
 		// 그리드 칼럼 레이아웃 설정
 		const columnLayout = [{
-			dataField: "myCode",
+			dataField: "code",
 			headerText: "코드",
 			dataType: "numeric",
 			width: 140
@@ -63,7 +63,7 @@
 				// 컨디션함수는 필요한 경우 비번히 호출됩니다.
 				conditionFunction: function (rowIndex, columnIndex, value, item, dataField) {
 					if (allInputEditor) return; // 일반 인풋 사용
-					if (item.myCode === 1) {
+					if (item.code === 1) {
 						return {
 							type: "DropDownListRenderer",
 							list: posList
@@ -121,7 +121,7 @@
 	}
 
 	// 그리드 데이터
-	const gridData = [{ "index": 1, "myCode": 2, "position": "2024/03/13" }, { "index": 2, "myCode": 2, "position": "2024/03/12" }, { "index": 3, "myCode": 2, "position": "2024/03/11" }, { "index": 4, "myCode": 1, "position": "전무" }, { "index": 5, "myCode": 1, "position": "이사" }, { "index": 6, "myCode": 1, "position": "부장" }, { "index": 7, "myCode": 2, "position": "2024/03/07" }, { "index": 8, "myCode": 1, "position": "과장" }, { "index": 9, "myCode": 2, "position": "2024/03/05" }, { "index": 10, "myCode": 2, "position": "2024/03/04" }, { "index": 11, "myCode": 2, "position": "2024/03/03" }, { "index": 12, "myCode": 1, "position": "임시1" }, { "index": 13, "myCode": 1, "position": "임시2" }, { "index": 14, "myCode": 1, "position": "임시3" }, { "index": 15, "myCode": 2, "position": "2024/02/28" }, { "index": 16, "myCode": 1, "position": "임시5" }, { "index": 17, "myCode": 1, "position": "회장" }, { "index": 18, "myCode": 2, "position": "2024/02/25" }, { "index": 19, "myCode": 2, "position": "2024/02/24" }, { "index": 20, "myCode": 1, "position": "상무" }];
+	const gridData = [{ "index": 1, "code": 2, "position": "2024/03/13" }, { "index": 2, "code": 2, "position": "2024/03/12" }, { "index": 3, "code": 2, "position": "2024/03/11" }, { "index": 4, "code": 1, "position": "전무" }, { "index": 5, "code": 1, "position": "이사" }, { "index": 6, "code": 1, "position": "부장" }, { "index": 7, "code": 2, "position": "2024/03/07" }, { "index": 8, "code": 1, "position": "과장" }, { "index": 9, "code": 2, "position": "2024/03/05" }, { "index": 10, "code": 2, "position": "2024/03/04" }, { "index": 11, "code": 2, "position": "2024/03/03" }, { "index": 12, "code": 1, "position": "임시1" }, { "index": 13, "code": 1, "position": "임시2" }, { "index": 14, "code": 1, "position": "임시3" }, { "index": 15, "code": 2, "position": "2024/02/28" }, { "index": 16, "code": 1, "position": "임시5" }, { "index": 17, "code": 1, "position": "회장" }, { "index": 18, "code": 2, "position": "2024/02/25" }, { "index": 19, "code": 2, "position": "2024/02/24" }, { "index": 20, "code": 1, "position": "상무" }];
 </script>
 </head>
 <body>
@@ -129,9 +129,29 @@
 <div id="main">
 	<div class="desc">
 		<p>특정 조건에 따라 원하는 에디터를 출력할 수 있습니다.</p>
-		<p>예를 들면, JSON 데이터에서 코드 칼럼 값이 1 이면 달력, 2이면 드랍다운리스트 등으로 에디터를 자유롭게 표현이 가능합니다.</p>
+		<p>예를 들면, JSON 데이터에서 코드 칼럼 값이 1이면 드랍다운리스트, 2이면 달력 등으로 에디터를 자유롭게 표현이 가능합니다.</p>
 		<p>또는 특정 이벤트를 받아 조건에 맞게 처리가 가능합니다.</p>
 		<p>데모는 일반 인풋터(기본 에디터), 달력, 드랍다운리스트로 출력을 다르게 하였습니다.</p>
+<div class="src_cover"><pre>
+editRenderer: {
+	type: "ConditionRenderer", // 조건에 따라 editRenderer 사용하기. conditionFunction 정의 필수
+	// 컨디션함수는 필요한 경우 비번히 호출됩니다.
+	conditionFunction: function (rowIndex, columnIndex, value, item, dataField) {
+		if (allInputEditor) return; // 일반 인풋 사용
+		<strong>if (item.code === 1) { // 코드 칼럼 값이 1 이면 드랍다운리스트</strong>
+			return {
+				type: "DropDownListRenderer",
+				list: posList
+			};
+		}
+		return {
+			type: "CalendarRenderer",
+			onlyCalendar: true,
+			showExtraDays: true
+		};
+	}
+}
+</pre></div>
 		<p><span onclick="getCheckedRowItems()" class="btn">체크 항목 얻기</span></p>
 		<p><input type="checkbox" id="chkbox" onchange="checkboxChangeHandler()"><label for="chkbox">모든 에디터 일반 인푸터로 출력 (체크 하면 기본 에디터로 출력됨))</label></p>
 	</div>

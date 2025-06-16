@@ -44,118 +44,101 @@
 	// AUIGrid 생성 후 반환 ID
 	let myGridID;
 
-	// document ready 
-	function documentReady() {
-
+	// 시작점
+	function init() {
 		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-
+		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
 		requestGridData("./data/normal_500.json");
-
-	};
-
-	// 그리드 칼럼 레이아웃 설정
-	// 데이터 형태는 다음과 같은 형태임,
-	//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	let columnLayout = [{
-		dataField: "id",
-		headerText: "ID",
-		width: 120
-	}, {
-		dataField: "name",
-		headerText: "Name",
-		width: 140
-	}, {
-		dataField: "country",
-		headerText: "Country",
-		width: 140
-	}, {
-		dataField: "flag",
-		headerText: "Flag IMG",
-		editable: false,
-		prefix: "./assets/",
-		renderer: {
-			type: "ImageRenderer",
-			imgHeight: 24,
-			altField: "country"
-		},
-		width: 100
-	}, {
-		dataField: "product",
-		headerText: "Product",
-		width: 140
-	}, {
-		dataField: "color",
-		headerText: "Color",
-		width: 100
-	}, {
-		dataField: "price",
-		headerText: "Price",
-		dataType: "numeric",
-		style: "my-column",
-		width: 120,
-		editRenderer: {
-			type: "InputEditRenderer",
-			onlyNumeric: true, // 0~9만 입력가능
-			textAlign: "right", // 오른쪽 정렬로 입력되도록 설정
-			autoThousandSeparator: true // 천단위 구분자 삽입 여부
-		}
-	}, {
-		dataField: "quantity",
-		headerText: "Quantity",
-		dataType: "numeric",
-		style: "my-column",
-		width: 100,
-		editRenderer: {
-			type: "InputEditRenderer",
-			onlyNumeric: true, // 0~9만 입력가능
-			textAlign: "right", // 오른쪽 정렬로 입력되도록 설정
-			autoThousandSeparator: true // 천단위 구분자 삽입 여부
-		}
-	}, {
-		dataField: "date",
-		headerText: "Date",
-		dataType: "date",
-		dateInputFormat: "yyyy-mm-dd", // 데이터의 날짜 형식
-		formatString: "yyyy년 mm월 dd일" // 그리드에 보여줄 날짜 형식
-	}];
+	}
 
 	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "id",
+			headerText: "ID",
+			width: 120
+		}, {
+			dataField: "name",
+			headerText: "Name",
+			width: 140
+		}, {
+			dataField: "country",
+			headerText: "Country",
+			width: 140
+		}, {
+			dataField: "flag",
+			headerText: "Flag IMG",
+			editable: false,
+			prefix: "./assets/",
+			renderer: {
+				type: "ImageRenderer",
+				imgHeight: 24,
+				altField: "country"
+			},
+			width: 100
+		}, {
+			dataField: "product",
+			headerText: "Product",
+			width: 140
+		}, {
+			dataField: "color",
+			headerText: "Color",
+			width: 100
+		}, {
+			dataField: "price",
+			headerText: "Price",
+			dataType: "numeric",
+			style: "my-column",
+			width: 120,
+			editRenderer: {
+				type: "InputEditRenderer",
+				onlyNumeric: true, // 0~9만 입력가능
+				textAlign: "right", // 오른쪽 정렬로 입력되도록 설정
+				autoThousandSeparator: true // 천단위 구분자 삽입 여부
+			}
+		}, {
+			dataField: "quantity",
+			headerText: "Quantity",
+			dataType: "numeric",
+			style: "my-column",
+			width: 100,
+			editRenderer: {
+				type: "InputEditRenderer",
+				onlyNumeric: true, // 0~9만 입력가능
+				textAlign: "right", // 오른쪽 정렬로 입력되도록 설정
+				autoThousandSeparator: true // 천단위 구분자 삽입 여부
+			}
+		}, {
+			dataField: "date",
+			headerText: "Date",
+			dataType: "date",
+			dateInputFormat: "yyyy-mm-dd", // 데이터의 날짜 형식
+			formatString: "yyyy년 mm월 dd일" // 그리드에 보여줄 날짜 형식
+		}];
 
 		// 그리드 속성 설정
-		let gridProps = {
-
+		const gridProps = {
 			// 편집 가능 여부 (기본값 : false)
 			editable: true,
-
 			// 셀 병합 실행
 			enableCellMerge: true,
-
 			// 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
 			enterKeyColumnBase: true,
-
 			// 셀 선택모드 (기본값: singleCell)
 			selectionMode: "multipleCells",
-
 			// 컨텍스트 메뉴 사용 여부 (기본값 : false)
 			useContextMenu: true,
-
 			// 필터 사용 여부 (기본값 : false)
 			enableFilter: true,
-
 			// 그룹핑 패널 사용
 			useGroupingPanel: true,
-
 			// 상태 칼럼 사용
 			showStateColumn: true,
-
 			// 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
 			displayTreeOpen: true,
-
 			noDataMessage: "출력할 데이터가 없습니다.",
-
 			groupingMessage: "여기에 칼럼을 드래그하면 그룹핑이 됩니다."
 		};
 
@@ -165,6 +148,7 @@
 
 	// 스케일 설정하기
 	function setScaleFactorGrid(factor) {
+		// scaleFactor 얻기
 		let value = AUIGrid.getProp(myGridID, "scaleFactor");
 		if (factor > 0) { // 크게
 			value += 0.1;
@@ -172,13 +156,15 @@
 			value -= 0.1;
 		}
 
-		document.getElementById("grid_wrap").style.transform = 'scale(' + value + ')';
-		//document.getElementById("grid_wrap").style.transform = 'matrix(' + value + ', 0, 0, ' + value + ', 0, 0)';
+		// 그리드에 scaleFactor 적용
 		AUIGrid.setScaleFactor(myGridID, value);
-	};
 
+		// 그리드 div(또는 그리드 부모, 조상 div) 의 style transform 에서 적용
+		// 그리드에 적용된 scaleFacotr 와 동일하게 설정해야 함.
+		document.getElementById("main").style.transform = 'scale(' + value + ')';
+		//document.getElementById("grid_wrap").style.transform = 'matrix(' + value + ', 0, 0, ' + value + ', 0, 0)';
+	}
 </script>
-
 </head>
 <body>
 
@@ -196,7 +182,6 @@
 	</div>
 	<div class="desc_bottom">
 		<p id="elapse"></p>
-
 	</div>
 </div>
 <div id="footer">

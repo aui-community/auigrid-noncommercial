@@ -21,7 +21,7 @@ const Home = () => {
 				<li>"@types/react-dom": "^18.0.6"</li>
 				<li>"@types/react-router-dom": "^5.3.3"</li>
 				<li>
-					<span style={{ backgroundColor: '#ff0' }}>"aui-grid": "^2.0.11",</span>
+					<span style={{ backgroundColor: '#ff0' }}>"aui-grid": "^2.0.12",</span>
 				</li>
 				<li>"axios": "^1.0.0"</li>
 				<li>"file-saver": "^2.0.5"</li>

@@ -96,7 +96,6 @@ const Showcase02 = () => {
 			},
 			styleFunction: (rowIndex, columnIndex, value) => {
 				if (value === 100) return 'showcase2-complete-red';
-				return '';
 			}
 		},
 		{

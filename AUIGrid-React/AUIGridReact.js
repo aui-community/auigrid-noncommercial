@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.js for React.js v1.5.20250604
- * Based on AUIGrid v3.0.16.0
+ * AUIGridReact.js for React.js v1.5.20250615
+ * Based on AUIGrid v3.0.16.1
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
@@ -21,7 +21,12 @@ if (typeof window !== 'undefined' && typeof window.AUIGrid !== 'undefined') {
 	window.AUIGrid.defaultProps = {
 		// 모바일인 경우 자동으로 작은 사이즈의 스크롤을 표시할지 여부
 		// 여기서 정의했기 때문에 앞으로 모든 그리드는 속성 autoScrollSize: true 를 상속 받아 적용됨.
-		autoScrollSize: true
+		autoScrollSize: true,
+
+		// selectionChange 이벤트 발생 시 간소화된 정보만 받을지 여부를 지정합니다.
+		// 간소화한 경우 selectionChange 이벤트의 파라메터 요소인 event.selectedItems 를 포함시키지 않습니다.
+		// 성능 향상을 위해 true 설정을 권장합니다.
+		simplifySelectionEvent: true
 	};
 }
 
@@ -119,6 +124,12 @@ class AUIGrid extends React.Component {
 	}
 	changeColumnLayout(newLayout) {
 		$ag.changeColumnLayout.call($ag, this.pid, arguments[0]);
+	}
+	changeExtraColumnOrders(orders) {
+		$ag.changeExtraColumnOrders.call($ag, this.pid, arguments[0]);
+	}
+	changeExtraColumnWidth(name, width) {
+		$ag.changeExtraColumnWidth.call($ag, this.pid, arguments[0], arguments[1]);
 	}
 	changeFooterLayout(newLayout) {
 		$ag.changeFooterLayout.call($ag, this.pid, arguments[0]);
@@ -387,11 +398,14 @@ class AUIGrid extends React.Component {
 	getSelectedIndex() {
 		return $ag.getSelectedIndex.call($ag, this.pid);
 	}
-	getSelectedItems() {
-		return $ag.getSelectedItems.call($ag, this.pid);
+	getSelectedItems(performanceMode) {
+		return $ag.getSelectedItems.call($ag, this.pid, arguments[0]);
 	}
 	getSelectedPrimeIndexOnMerge() {
 		return $ag.getSelectedPrimeIndexOnMerge.call($ag, this.pid);
+	}
+	getSelectedRowIndexes() {
+		return $ag.getSelectedRowIndexes.call($ag, this.pid);
 	}
 	getSelectedRows() {
 		return $ag.getSelectedRows.call($ag, this.pid);
@@ -425,6 +439,9 @@ class AUIGrid extends React.Component {
 	}
 	hideColumnGroup(dataField) {
 		$ag.hideColumnGroup.call($ag, this.pid, arguments[0]);
+	}
+	hideExtraColumn(name) {
+		$ag.hideExtraColumn.call($ag, this.pid, arguments[0]);
 	}
 	hideFooterLater() {
 		$ag.hideFooterLater.call($ag, this.pid);
@@ -723,6 +740,9 @@ class AUIGrid extends React.Component {
 	setSelectionByIndex(rowIndex, columnIndex) {
 		$ag.setSelectionByIndex.call($ag, this.pid, arguments[0], arguments[1]);
 	}
+	setSelectionColumn(startColIdx, endColIdx) {
+		$ag.setSelectionColumn.call($ag, this.pid, arguments[0], arguments[1]);
+	}
 	setSelectionMode(mode) {
 		$ag.setSelectionMode.call($ag, this.pid, arguments[0]);
 	}
@@ -743,6 +763,9 @@ class AUIGrid extends React.Component {
 	}
 	showColumnGroup(dataField) {
 		$ag.showColumnGroup.call($ag, this.pid, arguments[0]);
+	}
+	showExtraColumn(name) {
+		$ag.showExtraColumn.call($ag, this.pid, arguments[0]);
 	}
 	showFooterLater() {
 		$ag.showFooterLater.call($ag, this.pid);

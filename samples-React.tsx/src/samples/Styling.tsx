@@ -30,10 +30,9 @@ const Syling = () => {
 			headerText: 'Product',
 			style: 'my-column-style',
 			styleFunction: (rowIndex, columnIndex, value) => {
-				if (value === 'Galaxy S5') {
+				if (value === 'Galaxy S25') {
 					return 'my-cell-style';
 				}
-				return null;
 			}
 		},
 		{
@@ -92,7 +91,6 @@ const Syling = () => {
 			if (item.country === 'USA') {
 				return 'my-row-style';
 			}
-			return null;
 		}
 	};
 
@@ -116,7 +114,6 @@ const Syling = () => {
 			if (item.country === 'UK') {
 				return 'my-row-style';
 			}
-			return null;
 		});
 
 		// 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
@@ -145,7 +142,7 @@ const Syling = () => {
 					행(row) 스타일링 : <span className="my-row-style"> Country = USA 인 경우 행에 스타일링</span>
 				</p>
 				<p>
-					셀 스타일링 : <span className="my-cell-style">Product = Galaxy S5 인 셀에 스타일링</span>
+					셀 스타일링 : <span className="my-cell-style">Product = Galaxy S25 인 셀에 스타일링</span>
 				</p>
 				<button onClick={changeRowStyleFunction}>행 스타일링을 변경하기 ( Country 가 UK 인 행 스타일링 하기 )</button>
 				<ExportGridDataView myGrid={myGrid} />

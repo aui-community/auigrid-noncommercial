@@ -80,6 +80,16 @@
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 	}
+
+	function changeOrders() {
+		// 엑스트라 행 번호, 상태, 드래깅 손잡이, 체크박스 순으로 순서 변경하기
+		AUIGrid.changeExtraColumnOrders(myGridID, ["showRowNumColumn", "showStateColumn", "showDragKnobColumn", "showRowCheckColumn"]);
+	}
+
+	function changeExtraWidth() {
+		// 엑스트라 행 번호 칼럼 넓이 100 으로 변경
+		AUIGrid.changeExtraColumnWidth(myGridID, "rowNumColumnWidth", 100);
+	}
 </script>
 </head>
 <body>
@@ -106,6 +116,12 @@ const gridProps = {
 	// 엑스트라 칼럼들 순서
 	extraColumnOrders : ["showRowCheckColumn"]
 };</pre>
+		</div>
+		<div>
+			<ul class="nav_u">
+				<li><button onclick="changeOrders()" class="btn">엑스트라 행 번호, 상태, 드래깅 손잡이, 체크박스 순으로 순서 변경하기</button></li>
+				<li><button onclick="changeExtraWidth()" class="btn">엑스트라 행 번호 칼럼 넓이 100 으로 변경</button></li>
+			</ul>
 		</div>
 	</div>
 	<div>

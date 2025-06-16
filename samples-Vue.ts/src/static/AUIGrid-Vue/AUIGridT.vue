@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
-	 * AUIGrid.vue for Vue3.js + Typescript v1.5.20250604
-	 * Based on AUIGrid v3.0.16.0
+	 * AUIGrid.vue for Vue3.js + Typescript v1.5.20250615
+	 * Based on AUIGrid v3.0.16.1
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */
@@ -20,7 +20,12 @@
 		window.AUIGrid.defaultProps = {
 			// 모바일인 경우 자동으로 작은 사이즈의 스크롤을 표시할지 여부
 			// 여기서 정의했기 때문에 앞으로 모든 그리드는 속성 autoScrollSize: true 를 상속 받아 적용됨.
-			autoScrollSize: true
+			autoScrollSize: true,
+
+			// selectionChange 이벤트 발생 시 간소화된 정보만 받을지 여부를 지정합니다.
+			// 간소화한 경우 selectionChange 이벤트의 파라메터 요소인 event.selectedItems 를 포함시키지 않습니다.
+			// 성능 향상을 위해 true 설정을 권장합니다.
+			simplifySelectionEvent: true
 		};
 	}
 
@@ -274,6 +279,12 @@
 			},
 			changeColumnLayout(newLayout: IGrid.Column[]) {
 				$ag.changeColumnLayout.call($ag, this.state.pid, arguments[0]);
+			},
+			changeExtraColumnOrders(orders: string[]) {
+				$ag.changeExtraColumnOrders.call($ag, this.state.pid, arguments[0]);
+			},
+			changeExtraColumnWidth(name: string, width: number) {
+				$ag.changeExtraColumnWidth.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
 			changeFooterLayout(newLayout: IGrid.Footer[]) {
 				$ag.changeFooterLayout.call($ag, this.state.pid, arguments[0]);
@@ -542,11 +553,14 @@
 			getSelectedIndex(): number[] {
 				return $ag.getSelectedIndex.call($ag, this.state.pid);
 			},
-			getSelectedItems(): any[] {
-				return $ag.getSelectedItems.call($ag, this.state.pid);
+			getSelectedItems(performanceMode?: boolean): any[] {
+				return $ag.getSelectedItems.call($ag, this.state.pid, arguments[0]);
 			},
 			getSelectedPrimeIndexOnMerge(): number[] {
 				return $ag.getSelectedPrimeIndexOnMerge.call($ag, this.state.pid);
+			},
+			getSelectedRowIndexes(): number[] {
+				return $ag.getSelectedRowIndexes.call($ag, this.state.pid);
 			},
 			getSelectedRows(): any[] {
 				return $ag.getSelectedRows.call($ag, this.state.pid);
@@ -580,6 +594,9 @@
 			},
 			hideColumnGroup(dataField: string) {
 				$ag.hideColumnGroup.call($ag, this.state.pid, arguments[0]);
+			},
+			hideExtraColumn(name: string) {
+				$ag.hideExtraColumn.call($ag, this.state.pid, arguments[0]);
 			},
 			hideFooterLater() {
 				$ag.hideFooterLater.call($ag, this.state.pid);
@@ -878,6 +895,9 @@
 			setSelectionByIndex(rowIndex: number, columnIndex: number) {
 				$ag.setSelectionByIndex.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
+			setSelectionColumn(startColIdx: number, endColIdx?: number) {
+				$ag.setSelectionColumn.call($ag, this.state.pid, arguments[0], arguments[1]);
+			},
 			setSelectionMode(mode: 'singleCell' | 'singleRow' | 'multipleCells' | 'multipleRows' | 'none') {
 				$ag.setSelectionMode.call($ag, this.state.pid, arguments[0]);
 			},
@@ -898,6 +918,9 @@
 			},
 			showColumnGroup(dataField: string) {
 				$ag.showColumnGroup.call($ag, this.state.pid, arguments[0]);
+			},
+			showExtraColumn(name: string) {
+				$ag.showExtraColumn.call($ag, this.state.pid, arguments[0]);
 			},
 			showFooterLater() {
 				$ag.showFooterLater.call($ag, this.state.pid);

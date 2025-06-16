@@ -1,9 +1,9 @@
 /* eslint-disable */
 /**
  * AUIGrid 에서 사용되는 메세지들을 정의합니다. - 캐나다 영어
- * 마지막 추가된 버전 : v3.0.13
+ * 마지막 추가된 버전 : v3.0.16
  */
-var AUIGridMessages = {
+const AUIGridMessages = {
 	/*
 	 * 그리드에 출력시킬 데이터가 없는 메세지
 	 */
@@ -37,20 +37,7 @@ var AUIGridMessages = {
 	filterModalAndLabel: 'AND',
 	filterModalOrLabel: 'OR',
 	filterExMenuTextList: ['Equal', 'Not Equal', '_$line', 'Starts with', 'Ends width', '_$line', 'Contains', 'Do Not Contains'],
-	filterExMenuNumberList: [
-		'Equal(=)',
-		'Not Equal(!=)',
-		'_$line',
-		'Greater than(>)',
-		'Greater than or Equal(>=)',
-		'Less than(<)',
-		'Less than or Equal(<=)',
-		'Applicable range',
-		'_$line',
-		'Top 10',
-		'Above average',
-		'Below average'
-	],
+	filterExMenuNumberList: ['Equal(=)', 'Not Equal(!=)', '_$line', 'Greater than(>)', 'Greater than or Equal(>=)', 'Less than(<)', 'Less than or Equal(<=)', 'Applicable range', '_$line', 'Top 10', 'Above average', 'Below average'],
 
 	/*
 	 * 천 단위 구분자
@@ -104,32 +91,7 @@ var AUIGridMessages = {
 	/*
 	 * date 의 formatString mmm, mmmm
 	 */
-	monthNames: [
-		'Jan',
-		'Feb',
-		'Mar',
-		'Apr',
-		'May',
-		'Jun',
-		'Jul',
-		'Aug',
-		'Sep',
-		'Oct',
-		'Nov',
-		'Dec',
-		'January',
-		'February',
-		'March',
-		'April',
-		'May',
-		'June',
-		'July',
-		'August',
-		'September',
-		'October',
-		'November',
-		'December'
-	],
+	monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 
 	/*
 	 * date 의 formatString ddd, dddd
@@ -154,10 +116,10 @@ var AUIGridMessages = {
 	 * 행 드래그 시 나타나는 기본 메세지
 	 */
 	dragRowsText: '$value Row(s)',
-	
+
 	/*
 	 * 체크박스 헤더 텍스트
 	 */
 	checkHeaderText: ''
 };
-if (typeof window !== "undefined") window.AUIGridMessages = AUIGridMessages;
+if (typeof window !== 'undefined') window.AUIGridMessages = AUIGridMessages;

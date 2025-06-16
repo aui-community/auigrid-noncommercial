@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href=".././static/style.css" type="text/css" media="screen">
 <meta charset="utf-8">
 <meta content="text/javascript" http-equiv="Content-Script-Type">
 <meta content="text/css" http-equiv="Content-Style-Type">
@@ -15,9 +15,11 @@
 <meta content="http://www.auisoft.net/documentation/auigrid" property="og:url">
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
-<script src="../static/doc.js" type="text/javascript"></script>
-
-
+<link rel="shortcut icon" href="../static/aui.ico">
+<script src="../static/doc.js?v=250612" type="text/javascript"></script>
+<!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
+<link href="../static/prism.css" rel="stylesheet">
+<script src="../static/prism.js" type="text/javascript"></script>
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -37,7 +39,7 @@
 </div>
 <div id="desc_top">
 <p></p>
-<p>푸터(Footer) 는 칼럼 레이아웃을 선언할 때와 같이 Array-Object 로 선언합니다.</p>
+<p>푸터 레이아웃(Footer Layout) 는 칼럼 레이아웃을 선언할 때와 같이 Array-Object 로 선언합니다.</p>
 <p>푸터에 출력하고자 하는 값 1개는 하나의 Object 입니다.</p>
 <p>푸터 Array 의 순서는 칼럼의 순서와 관계가 없습니다. 연산(operation)하고자 하는 필드(dataField)를 지정하고, 출력하고자 하는 필드(positionField)를 지정하는 방식입니다.</p>
 <p>예를 들어 "price" 에 대해 합계를 계산하여 "price" 가 출력되고 있는 푸터 셀에 위치하고자 한다면 다음과 같습니다.</p>

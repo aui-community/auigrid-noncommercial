@@ -120,6 +120,7 @@
 
 		// 선택 통제(제한) 이벤트 핸들링
 		AUIGrid.bind(myGridID, "selectionConstraint", function (event) {
+			if (event.which === "drag") return true; // 다중 드래깅인 경우는 무시
 			if (event.columnIndex === 0 && event.toColumnIndex === 1) {
 				AUIGrid.showToastMessage(event.pid, event.rowIndex, event.columnIndex, "구분1 셀 선택 후에는 구분2 셀로 바로 이동할 수 없습니다");
 				return false; // false 반환하면 셀렉션 이동을 하지 않음
@@ -138,6 +139,7 @@
 		<div class="src_cover">
 			<pre>// 선택 통제(제한) 이벤트 핸들링
 AUIGrid.bind(myGridID, "selectionConstraint", function(event) {
+	if (event.which === "drag") return true; // 다중 드래깅인 경우는 무시
 	// 원하는 조건식
 	if(event.columnIndex === 0 && event.toColumnIndex === 1) {
 		AUIGrid.showToastMessage(event.pid, event.rowIndex, event.columnIndex, "구분1 셀 선택 후에는 구분2 셀로 바로 이동할 수 없습니다");

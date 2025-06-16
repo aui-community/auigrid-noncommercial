@@ -22,11 +22,18 @@ export const gridData: any[] = [
 	{ name: 'Kim', code: '001', check: 'v1,v2,v3' }
 ];
 
-// 셀렉트 표현할 리스트
+// 템플릿에 셀렉트 표현할 리스트
 export const selectList: any[] = [
 	{ value: '001', text: '선택 1' },
 	{ value: '002', text: '선택 2' },
 	{ value: '003', text: '선택 3' },
 	{ value: '004', text: '선택 4' },
 	{ value: '005', text: '선택 5' }
+];
+
+// 템플릿에 출력할 체크박스 그룹
+export const checkboxGroup: any[] = [
+	{ value: 'v1', label: '값1' },
+	{ value: 'v2', label: '값2' },
+	{ value: 'v3', label: '값3' }
 ];

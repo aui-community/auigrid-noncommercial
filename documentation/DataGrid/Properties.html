@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../static/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href=".././static/style.css" type="text/css" media="screen">
 <meta charset="utf-8">
 <meta content="text/javascript" http-equiv="Content-Script-Type">
 <meta content="text/css" http-equiv="Content-Style-Type">
@@ -15,9 +15,11 @@
 <meta content="http://www.auisoft.net/documentation/auigrid" property="og:url">
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
-<script src="../static/doc.js" type="text/javascript"></script>
-
-
+<link rel="shortcut icon" href="../static/aui.ico">
+<script src="../static/doc.js?v=250612" type="text/javascript"></script>
+<!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
+<link href="../static/prism.css" rel="stylesheet">
+<script src="../static/prism.js" type="text/javascript"></script>
 <title>	AUIGrid Documentation</title>
 </head>
 <body>
@@ -818,7 +820,7 @@
  <p>예로 작성하면 다음과 같습니다.</p>
  <pre><code class="language-javascript">
  // 엑스트라 체크박스 칼럼을 맨 앞으로, 나머지 칼럼은 기본 순서 유지 (나머지 칼럼 유지는 배열에 지정하지 않으면 유지 시킴)
- extraColumnOrders = ["showDragKnobColumn"];
+ extraColumnOrders = ["showRowCheckColumn"];
  
  // 엑스트라 체크박스, 행 번호, 상태, 드래깅 손잡이 순으로 순서 지정하기
  extraColumnOrders = ["showRowCheckColumn", "showRowNumColumn", "showStateColumn", "showDragKnobColumn"];</code></pre>

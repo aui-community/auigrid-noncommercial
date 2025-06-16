@@ -20,8 +20,8 @@ const volumes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 // count 수만큼 랜덤 데이터 생성
 const createRandomData = () => {
-	let data = [];
-	let count = names.length;
+	const data = [];
+	const count = names.length;
 	for (let i = 0; i < count; i++) {
 		data.push({
 			id: i + 1,
@@ -50,17 +50,16 @@ const createRandomRows = () => {
 	let price;
 	let codeCount = names.length; // 종목개수
 	let limitGap;
-	let i;
 
 	// 랜덤 개수만큼 갱신
 	let count = Math.floor(Math.random() * 10);
 
-	for (i = 0; i < count; i++) {
+	for (let i = 0; i < count; i++) {
 		code = Math.ceil(Math.random() * codeCount);
 		codes.push(code);
 	}
 
-	for (i = 0, count = codes.length; i < count; i++) {
+	for (let i = 0, count = codes.length; i < count; i++) {
 		isPlus = Math.random() > 0.5 ? true : false; // 상승, 하락 랜덤 결정
 		gap = 3000; // 호가
 
@@ -69,12 +68,9 @@ const createRandomRows = () => {
 		}
 
 		index = codes[i] - 1;
-
 		price = prices[index];
-
 		// 상하한 제한
 		limitGap = price * 0.3;
-
 		// 대비 값(상승 또는 하락 대비 가격)
 		gaps[index] += gap;
 		gap = gaps[index];
@@ -248,10 +244,8 @@ const Showcase04 = () => {
 	// 주식 종목 중 랜덤하게 갱신할 종목을 선택해서...랜덤하게 상승, 하락을 결정해 그리드에 반영시킴.
 	const refreshRows = () => {
 		const grid = myGrid.current;
-
 		// 변경 시킬 행들 얻어 옴.
 		const rows = createRandomRows();
-
 		// AUIGrid 에 갱신할 행들 삽입
 		// refreshRows 사용하기 전에 반드시 rowIdField 속성을 선행으로 설정해야합니다.
 		grid.refreshRows(rows, 'my-refresh-row-flash-style', 200);
