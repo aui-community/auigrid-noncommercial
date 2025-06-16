@@ -3,7 +3,7 @@
 	import * as IGrid from 'aui-grid';
 	import AUIGrid from '@/static/AUIGrid-Vue/AUIGridT.vue';
 	import { gridData, selectList, checkboxGroup } from './data/RendererTemplateData';
-	import { registerAUIGridTemplateHandler, unregisterAUIGridTemplateHandler } from '@/static/AUIGrid-Vue/useAUIGridTemplateHandler';
+	import { registerAUIGridTemplateHandler, unregisterAUIGridTemplateHandler } from './useAUIGridTemplateHandler';
 	import './RendererTemplate.css';
 
 	// 그리드 InstanceType

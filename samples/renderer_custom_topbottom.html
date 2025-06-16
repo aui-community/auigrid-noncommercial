@@ -32,10 +32,10 @@
 <!-- 사용자가 작성한 렌더러 JS -->
 <script type="text/javascript" src="./js/renderers/AUIGrid.MyMultiRenderer.js"></script>
 <style>
-.my-auigrid-multi-renderer-top {
-    border-bottom: 1px dashed #dcdcdc;
-    margin: 0px -4px;
-}
+	.my-auigrid-multi-renderer-top {
+		border-bottom: 1px dashed #dcdcdc;
+		margin: 0px -4px;
+	}
 </style>
 <script>
 	// AUIGrid 생성 후 반환 ID
@@ -106,25 +106,33 @@
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-		
+
 		// cellClick 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellClick", function(event) {
+		AUIGrid.bind(myGridID, "cellClick", function (event) {
 			const target = event.orgEvent.target;
+			const dataField = event.dataField;
 			console.log(target);
 			let clickedDataField;
-			let value = '';
-			if(target.className === "my-auigrid-multi-renderer-top") {
-				clickedDataField = "name";
-			} else {
-				clickedDataField = "country";
+			let value = "";
+
+			if (dataField === "name") {
+				if (target.className === "my-auigrid-multi-renderer-top")
+					clickedDataField = "name";
+				else
+					clickedDataField = "country";
+			} else { // name2
+				if (target.className === "my-auigrid-multi-renderer-top")
+					clickedDataField = "name2";
+				else
+					clickedDataField = "country2";
 			}
 			value = event.item[clickedDataField];
-			alert( value );
+			alert(value);
 		});
 	}
-	
+
 	// 그리드 데이터
-	const gridData = [{"name":"Jennifer","country":"UK","name2":"Jennifer2","country2":"UK2","quantity":5,"product":"Galaxy S25 Ultra","price":533900,"date":"2025-06-10"},{"name":"Steve","country":"Korea","name2":"Steve2","country2":"Korea2","quantity":16,"product":"IPhone 16","price":676500,"date":"2025-06-09"},{"name":"Lawrence","country":"Italy","name2":"Lawrence2","country2":"Italy2","quantity":13,"product":"Galaxy S25 Ultra","price":53500,"date":"2025-06-08"},{"name":"Steve","country":"UK","name2":"Steve2","country2":"UK2","quantity":15,"product":"IPhone 16 Pro","price":792200,"date":"2025-06-07"},{"name":"Kim","country":"France","name2":"Kim2","country2":"France2","quantity":19,"product":"IPhone 16","price":991800,"date":"2025-06-06"},{"name":"Anna","country":"Japan","name2":"Anna2","country2":"Japan2","quantity":5,"product":"Galaxy Note21","price":968400,"date":"2025-06-05"},{"name":"Anna","country":"Korea","name2":"Anna2","country2":"Korea2","quantity":19,"product":"IPhone 16 Pro","price":507500,"date":"2025-06-04"},{"name":"Jennifer","country":"USA","name2":"Jennifer2","country2":"USA2","quantity":19,"product":"IPhone 16 Pro","price":112400,"date":"2025-06-03"},{"name":"Anna","country":"Singapore","name2":"Anna2","country2":"Singapore2","quantity":19,"product":"Galaxy Note21","price":255400,"date":"2025-06-02"},{"name":"Jennifer","country":"Japan","name2":"Jennifer2","country2":"Japan2","quantity":16,"product":"IPhone 16","price":628200,"date":"2025-06-01"}];
+	const gridData = [{ "name": "Jennifer", "country": "UK", "name2": "Jennifer2", "country2": "UK2", "quantity": 5, "product": "Galaxy S25 Ultra", "price": 533900, "date": "2025-06-10" }, { "name": "Steve", "country": "Korea", "name2": "Steve2", "country2": "Korea2", "quantity": 16, "product": "IPhone 16", "price": 676500, "date": "2025-06-09" }, { "name": "Lawrence", "country": "Italy", "name2": "Lawrence2", "country2": "Italy2", "quantity": 13, "product": "Galaxy S25 Ultra", "price": 53500, "date": "2025-06-08" }, { "name": "Steve", "country": "UK", "name2": "Steve2", "country2": "UK2", "quantity": 15, "product": "IPhone 16 Pro", "price": 792200, "date": "2025-06-07" }, { "name": "Kim", "country": "France", "name2": "Kim2", "country2": "France2", "quantity": 19, "product": "IPhone 16", "price": 991800, "date": "2025-06-06" }, { "name": "Anna", "country": "Japan", "name2": "Anna2", "country2": "Japan2", "quantity": 5, "product": "Galaxy Note21", "price": 968400, "date": "2025-06-05" }, { "name": "Anna", "country": "Korea", "name2": "Anna2", "country2": "Korea2", "quantity": 19, "product": "IPhone 16 Pro", "price": 507500, "date": "2025-06-04" }, { "name": "Jennifer", "country": "USA", "name2": "Jennifer2", "country2": "USA2", "quantity": 19, "product": "IPhone 16 Pro", "price": 112400, "date": "2025-06-03" }, { "name": "Anna", "country": "Singapore", "name2": "Anna2", "country2": "Singapore2", "quantity": 19, "product": "Galaxy Note21", "price": 255400, "date": "2025-06-02" }, { "name": "Jennifer", "country": "Japan", "name2": "Jennifer2", "country2": "Japan2", "quantity": 16, "product": "IPhone 16", "price": 628200, "date": "2025-06-01" }];
 </script>
 </head>
 <body>
@@ -141,11 +149,11 @@ headerText : "현재가",
 width : 160,
 renderer : {
 	type : "CustomRenderer", // 사용자 정의 렌더러 사용
-	jsClass : AUIGrid.MyStockRenderer // 작성한 사용자 정의 렌더러 JS
+	jsClass : AUIGrid.MyMultiRenderer // 작성한 사용자 정의 렌더러 JS
 }
 </pre>
 		</div>
-		<p>샘플로 제공되는 AUIGrid.MyStockRenderer.js 파일을 참고하여 원하는 렌더러를 작성해 보십시오.</p>
+		<p>샘플로 제공되는 AUIGrid.MyMultiRenderer.js 파일을 참고하여 원하는 렌더러를 작성해 보십시오.</p>
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->

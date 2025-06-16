@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import AUIGrid from '../static/AUIGrid-React.js/AUIGridReact';
 import { gridData, selectList, checkboxGroup } from './data/RendererTemplateData';
-import { registerAUIGridTemplateHandler, unregisterAUIGridTemplateHandler } from '../static/AUIGrid-React.js/useAUIGridTemplateHandler';
+import { registerAUIGridTemplateHandler, unregisterAUIGridTemplateHandler } from './useAUIGridTemplateHandler';
 import './RendererTemplate.css';
 
 const RendererTemplate = () => {

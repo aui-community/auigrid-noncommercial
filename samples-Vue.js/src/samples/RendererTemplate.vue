@@ -2,7 +2,7 @@
 	// AUIGrid 컴포넌트
 	import AUIGrid from '../static/AUIGrid-Vue.js/AUIGrid.vue';
 	import { gridData, selectList, checkboxGroup } from './data/RendererTemplateData';
-	import { registerAUIGridTemplateHandler, unregisterAUIGridTemplateHandler } from '../static/AUIGrid-Vue.js/useAUIGridTemplateHandler';
+	import { registerAUIGridTemplateHandler, unregisterAUIGridTemplateHandler } from './useAUIGridTemplateHandler';
 	import './RendererTemplate.css';
 
 	export default {

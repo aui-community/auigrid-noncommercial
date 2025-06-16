@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as IGrid from 'aui-grid';
 import AUIGrid from '../static/AUIGrid-React.tsx/AUIGridReact';
 import { gridData, selectList, checkboxGroup } from './data/RendererTemplateData';
-import { registerAUIGridTemplateHandler, unregisterAUIGridTemplateHandler } from '../static/AUIGrid-React.tsx/useAUIGridTemplateHandler';
+import { registerAUIGridTemplateHandler, unregisterAUIGridTemplateHandler } from './useAUIGridTemplateHandler';
 import './RendererTemplate.css';
 
 const RendererTemplate = () => {
