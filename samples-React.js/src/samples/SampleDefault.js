@@ -128,8 +128,14 @@ const SampleDefault = () => {
 	// 그리드 이벤트 세팅
 	const setupGridEvents = () => {
 		const grid = myGrid.current;
+
 		// 그리드 이벤트 바인딩
 		grid.bind(['cellClick', 'selectionChange', 'headerClick'], (event) => {
+			console.log(event.type);
+		});
+
+		// 그리드 수정 이벤트 바인딩
+		grid.bind(['cellEditBegin', 'cellEditEnd'], (event) => {
 			console.log(event.type);
 		});
 	};

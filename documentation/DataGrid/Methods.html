@@ -555,9 +555,11 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Method &nbsp; <span class="label">Version: </span>3.0.12<br>
  <p>그리드에 출력된 현재 데이터를 다운로드 가능한 PDF 로 내보내기 합니다.</p>
  <p>PDF 로 내보내기 시 셀 병합 관련 속성은 무시되며 동일한 행 높이만 내보내기 됩니다. wordWrap 의 가변적인 행 높이로 내보내기 불가능합니다.</p>
+ <p>긴 텍스트의 경우 PDF로 내보내기는 적절하지 않습니다. 그 텍스트에 맞게 해당 칼럼의 크기가 커야 합니다.</p>
  <p>또한 그리드에 설정된 스타일 중 글자 색상, 배경색, 이탤릭체, 볼드체, 언더라인 만 고려되어 내보내기 됩니다.</p>
  <p>최소한의 PDF 내보내기 기능만을 제공합니다.</p>
  <p>HTML5 를 완전히 지원하는 브라우저에서 사용 가능합니다.</p>
+ <p>PDF 에는 내보내기 할 수 있는 크기(size)가 정해져 있습니다. 최대 크기는 4A0 용지 크기인 1682 x 2378mm (66.2 x 93.6 인치) 입니다.</p>
  <p>파라메터 설명</p>
  <ul>
  <li>exportProps (Object) : PDF로 내보내기 할 때 파일명, 상단, 하단 추가 텍스트를 지정할 수 있는 파라메터입니다.</li>
@@ -2882,7 +2884,7 @@
  <pre><code class="language-javascript">// 0번째 행의 name 칼럼의 값을 "이름 고침" 으로 변경
  AUIGrid.setCellValue(myGridID, 0, "name", "이름 고침");
  // 3번째 행의 1 번째 칼럼 즉, (3, 1) 의 셀의 값을 "이름 고침" 으로 변경
- AUIGrid.setCellVAlue(myGridID, 3, 1, "이름 고침");</code></pre>
+ AUIGrid.setCellValue(myGridID, 3, 1, "이름 고침");</code></pre>
  <p>절대 반복문법(for, while 등) 안에서 이 메소드를 사용하지 마십시오.</p><p>다수의 셀 값을 변경하고자 하는 경우 updateRow, updateRows, updateRowsById 메소드를 사용하십시오.</p>
  <p>Also See : <a href="#updateRow">updateRow</a>, <a href="#updateRows">updateRows</a>, <a href="#updateRowsById">updateRowsById</a>, <a href="#getCellValue">getCellValue</a> | <a href="../../samples/editing_setvalue.html?esval&theme=default" target="_blank">관련 데모 보기</a></p>
  </td>
@@ -3365,7 +3367,7 @@
  <tr><td>editable<td> 수정 가능여부</td></tr>
  <tr><td>enableDrag<td> 행 드래깅 가능 여부</td></tr>
  <tr><td>enableDrop<td> 행 드랍 가능 여부</td></tr>
-  <tr><td>enableSelectionAll<td> 전체 선택 가능 여부</td></tr>
+ <tr><td>enableSelectionAll<td> 전체 선택 가능 여부</td></tr>
  <tr><td>editableOnFixedCell<td> 고정 칼럼, 행 지정된 셀 수정 가능여부</td></tr>
  <tr><td>editBeginMode</td><td>수정 시작모드</td></tr>
  <tr><td>editingOnKeyDown</td><td>바로 키입력으로 수정 가능 여부</td></tr>
@@ -3375,6 +3377,8 @@
  <tr><td>enableMovingColumn</td><td>칼럼 순서 바꾸기 가능 여부</td></tr>
  <tr><td>enableSorting</td><td>정렬 가능 여부</td></tr>
  <tr><td>enterKeyColumnBase</td><td>엔터키가 다음 칼럼으로 이동할지 여부</td></tr>
+ <tr><td>excludeFixedRowsOnFiltering</td><td>필터 할 때 고정 행으로 설정된 행 제외 여부</td></tr>
+ <tr><td>excludeFixedRowsOnSorting</td><td>정렬 할 때 고정 행으로 설정된 행 제외 여부</td></tr>
  <tr><td>filterMenuItemMaxCount</td><td>필터 메뉴 체크박스 출력 최대 개수</td></tr>
  <tr><td>filterItemMoreMessage</td><td>실제 필터 가능한 값보다 많을 경우 출력할 메세지</td></tr>
  <tr><td>isColumnOriented</td><td>Home, End 키가 칼럼 중심인지 여부</td></tr>
@@ -3383,14 +3387,18 @@
  <tr><td>multiSortingKey</td><td>다중 정렬키 지정</td></tr>
  <tr><td>noDataMessage</td><td>출력할 데이터 없을 경우 출력 될 메세지</td></tr>
  <tr><td>pagingBottomGap</td><td>페이징 수직 스크롤에 추가될 여분 값</td></tr>
+ <tr><td>rowStyleForOnlyTr</td><td>행 스타일 TR에만 적용할지 여부</td></tr>
  <tr><td>rowStyleFunction</td><td>행 스타일 함수 지정</td></tr>
  <tr><td>showAutoNoDataMessage</td><td>출력할 데이터가 없을 경우 자동 출력 여부</td></tr>
  <tr><td>showFooter</td><td>푸터 출력 여부</td></tr>
  <tr><td>showHeader</td><td>헤더 출력 여부</td></tr>
+ <tr><td>showTooltip</td><td>툴팁 표시 여부</td></tr>
  <tr><td>skipReadonlyColumns</td><td>읽기 전용 칼럼 설정한 경우 키보드로 셀렉션 이동 가능 여부</td></tr>
  <tr><td>skipUneditableOnPaste</td><td>붙여넣기 할 때 수정 불가능한 셀은 값 자체를 무시할지 여부</td></tr>
  <tr><td>sortableByFormatValue</td><td>정렬을 할 때 데이터 기반이 아닌 그리드에 출력된 값을 기반으로 정렬을 실행할지 여부</td></tr>
  <tr><td>sortingSequence</td><td>정렬의 순서를 지정</td></tr>
+ <tr><td>tooltipDocked</td><td>툴팁 고정 위치 표시 여부</td></tr>
+ <tr><td>tooltipDockedPosition</td><td>툴팁 고정 위치 지정</td></tr>
  <tr><td>treeOpenRecursivly</td><td>트리 열기 할 때 자손까지 열지 여부</td></tr>
  <tr><td>triggerSelectionChangeOnCell</td><td>행 선택 모드에서 옆으로 칼럼 변경할 시 selectionChange 이벤트 발생 여부</td></tr>
  <tr><td>useGroupingPanel</td><td>그룹핑 패널 사용 여부</td></tr>

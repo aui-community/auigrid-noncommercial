@@ -29,6 +29,12 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+<!-- PDF 내보내기 필수 JS 추가-->
+<script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
+
+<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+
 <style>
 	/* 커스텀 summary total  스타일 */
 	.aui-grid-my-footer-sum-total {
@@ -64,13 +70,6 @@
 		font-weight: bold;
 		color: #22741C;
 	}
-
-	/* 커스텀 셀 스타일 */
-	.my-cell-style {
-		background: #FF007F;
-		font-weight: bold;
-		color: #fff;
-	}
 </style>
 
 <script>
@@ -102,12 +101,7 @@
 		}, {
 			dataField: "product",
 			headerText: "Product",
-			style: "my-column-style",
-			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-				if (value === "Galaxy S25") {
-					return "my-cell-style";
-				}
-			}
+			style: "my-column-style"
 		}, {
 			dataField: "price",
 			headerText: "Price",
@@ -143,14 +137,10 @@
 		// 그리드 속성 설정
 		const gridProps = {
 			showFooter: true,
-			editable: true,
-			showRowNumColumn: true,
-			showRowCheckColumn: true,
-			displayTreeOpen: true,
-			// singleRow 선택모드
-			selectionMode: "multipleCells",
-			// 그룹핑 패널 사용
-			useGroupingPanel: true,
+
+			// 행 스타일(rowStyle)을 TR에만 적용 시키기 (기본값 : false)
+			rowStyleForOnlyTr: true,
+
 			// row Styling 함수
 			rowStyleFunction: function (rowIndex, item) {
 				if (item.country === "USA") {
@@ -166,16 +156,23 @@
 		AUIGrid.setFooter(myGridID, footerLayout);
 	}
 
-	function changeRowStyleFunction() {
-		// row Styling 함수를 다른 함수로 변경
-		AUIGrid.setProp(myGridID, "rowStyleFunction", function (rowIndex, item) {
-			if (item.country === "UK") {
-				return "my-row-style";
-			}
+	// 엑셀 내보내기
+	function exportToXlsx() {
+		AUIGrid.exportToXlsx(myGridID, {
+			// 행 스타일이 하단으로 저장되도록 명시
+			isRowStyleFront: false
 		});
+	}
 
-		// 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
-		AUIGrid.update(myGridID);
+	// PDF 내보내기
+	function exportToPDF() {
+		// AUIGrid.pdfkit.js 파일을 추가하십시오.
+		AUIGrid.exportToPdf(myGridID, {
+			// 폰트 경로 지정 (반드시 지정해야 함)
+			fontPath: "../pdfkit/nyjgothic-medium.ttf",
+			// 행 스타일이 하단으로 저장되도록 명시
+			isRowStyleFront: false
+		})
 	}
 </script>
 </head>
@@ -183,13 +180,14 @@
 
 <div id="main">
 	<div class="desc">
-		<p>특정 조건에 따라 동적으로 스타일을 정의합니다.</p>
-		<p>행(row) 스타일링 : <span class="my-row-style"> Country = USA 인 경우 행에 스타일링</span></p>
-		<p>셀 스타일링 : <span class="my-cell-style">Product = Galaxy S25 인 셀에 스타일링</span></p>
-
-		<p class="btn" onclick="changeRowStyleFunction();">행 스타일링을 변경하기 ( Country 가 UK 인 행 스타일링 하기 )</p>
-		<p><a href="javascript:changeLocation('./styling-column-require.html?st1')">칼럼에 필수 입력 마커 표시하는 스타일 적용 데모 보기</a></p>
-		<p><a href="javascript:changeLocation('./styling_column_front.html?st1')">행, 열 교차 시 열(column)이 상단에 출력 데모 보기</a></p>
+		<p>rowStyleFunction 으로 결정된 행 스타일(rowStyle)을 항상 행에 대해서만 적용 시킵니다. 속성 rowStyleForOnlyTr = true (기본값: false) 설정 하십시오.</p>
+		<p>이것의 의미는 TR 태그에만 스타일 적용하라는 의미입니다. 그렇기 때문에 항상 행(row) 스타일은 열(column)보다 하단에 출력 됩니다.</p>
+		<p>rowStyleForOnlyTr 설정을 하지 않은 경우 TR과 해당 TD 모두에 행 스타일이 적용되어 상단 또는 하단에 CSS 우선 순위에 따라 선택적으로 결정 시킬 수 있습니다.</p>
+		<p>참고: 칼럼의 styleFunction 으로 결정되는 셀 스타일은 항상 최상단에 출력됩니다.</p>
+		<div>
+			<button class="btn" onclick="exportToXlsx()">엑셀 내보내기</button>
+			<button class="btn" onclick="exportToPDF()">PDF 내보내기</button>
+		</div>
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->

@@ -127,7 +127,11 @@
 			// singleRow 선택모드
 			selectionMode: "singleCell",
 			// 고정로우 카운트 지정
-			fixedRowCount: 3
+			fixedRowCount: 3,
+			useContextMenu: true,
+			enableFilter: true,
+			// 필터(filtering)를 할 때 고정 행으로 설정된 행이 필터에서 제외 (기본값:false)
+			excludeFixedRowsOnFiltering: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성

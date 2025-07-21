@@ -112,11 +112,17 @@
 
 		// 그리드 속성 설정
 		const gridProps = {
-			enableCellMerge: true,       // 셀 병합 활성화
-			enableSorting: false,        // 정렬 기능 비활성화
-			selectionMode: "multipleCells", // 선택 모드: 여러 셀 선택
-			fixedRowCount: 3,            // 고정 행(Row) 개수
-			fixedColumnCount: 2          // 고정 열(Column) 개수
+			enableCellMerge: true,
+			enableSorting: false,
+			selectionMode: "multipleCells",
+			// 고정 행(Row) 개수
+			fixedRowCount: 3,
+			// 고정 열(Column) 개수         
+			fixedColumnCount: 2,
+			useContextMenu: true,
+			enableFilter: true,
+			// 필터(filtering)를 할 때 고정 행으로 설정된 행이 필터에서 제외 (기본값:false)
+			excludeFixedRowsOnFiltering: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성

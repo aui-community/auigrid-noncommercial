@@ -90,6 +90,17 @@
 		// 엑스트라 행 번호 칼럼 넓이 100 으로 변경
 		AUIGrid.changeExtraColumnWidth(myGridID, "rowNumColumnWidth", 100);
 	}
+	
+	function hideExtraColumn() {
+		 // 엑스트라 칼럼인 행 번호 칼럼(showRowNumColumn)를 보이지 않게 합니다.
+		 AUIGrid.hideExtraColumn(myGridID, "showRowNumColumn");
+	}
+	
+	function showExtraColumn() {
+	 	// 엑스트라 칼럼인 행 번호 칼럼(showRowNumColumn)를 보이게 합니다.
+	 	AUIGrid.showExtraColumn(myGridID, "showRowNumColumn");
+	}
+	
 </script>
 </head>
 <body>
@@ -118,15 +129,17 @@ const gridProps = {
 };</pre>
 		</div>
 		<div>
-			<ul class="nav_u">
-				<li><button onclick="changeOrders()" class="btn">엑스트라 행 번호, 상태, 드래깅 손잡이, 체크박스 순으로 순서 변경하기</button></li>
-				<li><button onclick="changeExtraWidth()" class="btn">엑스트라 행 번호 칼럼 넓이 100 으로 변경</button></li>
-			</ul>
+			<button onclick="changeOrders()" class="btn">엑스트라 행 번호, 상태, 드래깅 손잡이, 체크박스 순으로 순서 변경하기</button>
+			<button onclick="changeExtraWidth()" class="btn">엑스트라 행 번호 칼럼 넓이 100 으로 변경</button>
+		</div>
+		<div>
+			<button onclick="hideExtraColumn()" class="btn">엑스트라 행 번호 칼럼 숨기기</button>
+			<button onclick="showExtraColumn()" class="btn">엑스트라 행 번호 칼럼 보이기</button>
 		</div>
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:320px; margin:0 auto;"></div>
+		<div id="grid_wrap" style="width:100%;height:280px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
 		<p id="elapse"></p>

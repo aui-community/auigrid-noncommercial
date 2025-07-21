@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div :class="currentTheme">
 		<div class="header">
 			<div class="logo-bar">
 				<button class="knob-btn btn" @click="handleKnobClick">
@@ -151,6 +151,13 @@
 			]
 		}),
 		methods: {
+			applyTheme() {
+				// <body>에 테마 클래스 적용
+				document.body.classList.remove('dark-theme', 'modern-theme');
+				if (this.currentTheme) {
+					document.body.classList.add(this.currentTheme);
+				}
+			},
 			handleKnobClick() {
 				this.isNavOpen = !this.isNavOpen;
 			},
