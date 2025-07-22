@@ -136,6 +136,7 @@
 		<p>ready 이벤트는 데이터 삽입 후 준비가 된 상태가 된 경우입니다.</p>
 		<p>여기서 getFitColumnSizeList 메소드와 setColumnSizeList 메소드를 활용하여 칼럼들 사이즈 조절이 가능합니다.</p>
 		<p>renderer type을 ImageRenderer 나 DropDownListRenderer, TemplateRenderer 등을 정의 한 경우에는 widthFit 을 반드시 설정해서 해당 값이 적용되도록 해야 합니다.</p>
+		<p style="color:#ff0000;">데이터 개수가 많거나 칼럼의 개수가 많은 경우 계산해야 하는 양이 많기 때문에 느려질 수 있습니다. 따라서 이 점을 고려해서 사용하십시오. 무조건적인 사용은 피하시길 바랍니다.</p>
 		<button class="btn" onclick="setGridData(100, parseInt(Math.random()*5));">데이터 다시 만들어 삽입하기(Refresh)</button>
 		<div class="src_cover">
 			<pre>

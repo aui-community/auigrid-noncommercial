@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.tsx for React.js + Typescript v1.5.20250721
- * Based on AUIGrid v3.0.16.5
+ * AUIGridReact.tsx for React.js + Typescript v1.5.20250722
+ * Based on AUIGrid v3.0.16.6
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
