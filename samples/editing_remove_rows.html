@@ -30,11 +30,6 @@
 
 
 <style>
-	/*  셀력션 백그라운드 스타일 재정의 */
-	.aui-grid-selection-bg {
-		background: #1D8B15 !important;
-	}
-
 	/* 커스텀 칼럼 스타일 정의 */
 	.aui-grid-user-custom-left {
 		text-align: left;
@@ -175,9 +170,7 @@
 		AUIGrid.bind(myGridID, "beforeRemoveRow", function (event) {
 			let message = "삭제 확인\r" + event.type + " 이벤트 ( softRemoveRowMode : " + event.softRemoveRowMode + ")\r\n";
 			message += "삭제할 개수 : " + event.items.length;
-
-			let retVal = confirm(message);
-
+			const retVal = confirm(message);
 			return retVal;
 		});
 	}

@@ -116,20 +116,23 @@
 		AUIGrid.bind(myGridID, "cellClick", function (event) {
 			const target = event.orgEvent.target;
 			const dataField = event.dataField;
-			console.log(target);
 			let clickedDataField;
 			let value = "";
 
+			console.log(target);
+			
 			if (dataField === "name") {
 				if (target.className === "my-auigrid-multi-renderer-top")
 					clickedDataField = "name";
 				else
 					clickedDataField = "country";
-			} else { // name2
+			} else if (dataField === "name2") {
 				if (target.className === "my-auigrid-multi-renderer-top")
 					clickedDataField = "name2";
 				else
 					clickedDataField = "country2";
+			} else { // 그 외 일반 칼럼
+				clickedDataField = dataField;
 			}
 			value = event.item[clickedDataField];
 			alert(value);
