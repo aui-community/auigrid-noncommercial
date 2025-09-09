@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.tsx for React.js + Typescript v1.5.20250807
- * Based on AUIGrid v3.0.16.8
+ * AUIGridReact.tsx for React.js + Typescript v1.5.20250909
+ * Based on AUIGrid v3.0.16.11
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
@@ -590,6 +590,9 @@ class AUIGrid extends React.Component<IProps, IState> {
 	}
 	outdentTreeDepth() {
 		$ag.outdentTreeDepth.call($ag, this.state.pid);
+	}
+	prependData(items: any) {
+		$ag.prependData.call($ag, this.state.pid, arguments[0]);
 	}
 	redo() {
 		$ag.redo.call($ag, this.state.pid);

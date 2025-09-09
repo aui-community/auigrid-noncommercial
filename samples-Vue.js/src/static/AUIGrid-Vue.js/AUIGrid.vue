@@ -1,7 +1,7 @@
 <script>
 	/**
-	 * AUIGrid.vue for Vue.js v1.5.20250807
-	 * Based on AUIGrid v3.0.16.8
+	 * AUIGrid.vue for Vue.js v1.5.20250909
+	 * Based on AUIGrid v3.0.16.11
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */
@@ -733,6 +733,9 @@
 			},
 			outdentTreeDepth() {
 				$ag.outdentTreeDepth.call($ag, this.pid);
+			},
+			prependData(items) {
+				$ag.prependData.call($ag, this.pid, arguments[0]);
 			},
 			redo() {
 				$ag.redo.call($ag, this.pid);
