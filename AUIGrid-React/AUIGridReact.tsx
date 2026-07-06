@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.tsx for React.js + Typescript v1.5.20250807
- * Based on AUIGrid v3.0.16.8
+ * AUIGridReact.tsx for React.js + Typescript v1.6.20260706
+ * Based on AUIGrid v3.0.17.1
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
@@ -35,6 +35,7 @@ interface IProps {
 	name?: string;
 	autoResize?: boolean;
 	resizeDelayTime?: number;
+	waitPortalRendering?: boolean;
 	gridProps?: IGrid.Props | null;
 	columnLayout?: IGrid.Column[];
 	footerLayout?: IGrid.Footer[];
@@ -72,15 +73,24 @@ class AUIGrid extends React.Component<IProps, IState> {
 		name: '',
 		autoResize: true,
 		resizeDelayTime: 300,
+		waitPortalRendering: false,
 		gridProps: null,
 		columnLayout: [],
 		footerLayout: []
 	};
 
 	componentDidMount() {
-		$ag.create(this.state.pid, this.props.columnLayout, this.props.gridProps);
-		$ag.setFooter(this.state.pid, this.props.footerLayout);
-		this.__setupGlobalResize();
+		const initGrid = () => {
+			$ag.create(this.state.pid, this.props.columnLayout, this.props.gridProps);
+			$ag.setFooter(this.state.pid, this.props.footerLayout);
+			this.__setupGlobalResize();
+		};
+		if (this.props.waitPortalRendering) {
+			// Portal 시차 해결을 위해 RAF 사용
+			window.requestAnimationFrame(initGrid);
+		} else {
+			initGrid();
+		}
 	}
 
 	componentWillUnmount() {
@@ -117,8 +127,11 @@ class AUIGrid extends React.Component<IProps, IState> {
 		this.setState({ timerId: timerId });
 	}
 
-	create(columnLayout: IGrid.Column[], props: IGrid.Props) {
+	create(columnLayout: IGrid.Column[], props: IGrid.Props, footerLayout?: IGrid.Footer[]): string {
 		$ag.create(this.state.pid, columnLayout, props);
+		if (footerLayout) {
+			$ag.setFooter(this.state.pid, footerLayout);
+		}
 		this.__setupGlobalResize();
 		return this.state.pid;
 	}
@@ -297,6 +310,12 @@ class AUIGrid extends React.Component<IProps, IState> {
 	getColumnValues(dataField: string, total?: boolean): any[] {
 		return $ag.getColumnValues.call($ag, this.state.pid, arguments[0], arguments[1]);
 	}
+	getColumnWidthByDataField(dataField: string): number {
+		return $ag.getColumnWidthByDataField.call($ag, this.state.pid, arguments[0]);
+	}
+	getColumnWidthList(): number[] {
+		return $ag.getColumnWidthList.call($ag, this.state.pid);
+	}
 	getCurrentPageData(): any[] {
 		return $ag.getCurrentPageData.call($ag, this.state.pid);
 	}
@@ -447,6 +466,9 @@ class AUIGrid extends React.Component<IProps, IState> {
 	getSelectedText(exceptHidden?: boolean): string {
 		return $ag.getSelectedText.call($ag, this.state.pid, arguments[0]);
 	}
+	getSortCollator() {
+		return $ag.getSortCollator.call($ag, this.state.pid);
+	}
 	getSortingFields(): any[] {
 		return $ag.getSortingFields.call($ag, this.state.pid);
 	}
@@ -591,6 +613,9 @@ class AUIGrid extends React.Component<IProps, IState> {
 	outdentTreeDepth() {
 		$ag.outdentTreeDepth.call($ag, this.state.pid);
 	}
+	prependData(items: any) {
+		$ag.prependData.call($ag, this.state.pid, arguments[0]);
+	}
 	redo() {
 		$ag.redo.call($ag, this.state.pid);
 	}
@@ -615,7 +640,7 @@ class AUIGrid extends React.Component<IProps, IState> {
 	removeInfoMessage() {
 		$ag.removeInfoMessage.call($ag, this.state.pid);
 	}
-	removeRow(rowIndex: number | string) {
+	removeRow(rowIndex: number | number[] | 'selectedIndex') {
 		$ag.removeRow.call($ag, this.state.pid, arguments[0]);
 	}
 	removeRowByRowId(rowIds: string | number | string[] | number[]) {
@@ -780,6 +805,9 @@ class AUIGrid extends React.Component<IProps, IState> {
 	setSelectionMode(mode: 'singleCell' | 'singleRow' | 'multipleCells' | 'multipleRows' | 'none') {
 		$ag.setSelectionMode.call($ag, this.state.pid, arguments[0]);
 	}
+	setSortCollator(collator: Intl.Collator | null) {
+		$ag.setSortCollator.call($ag, this.state.pid, arguments[0]);
+	}
 	setSorting(sortingInfoArr: { dataField: string; sortType: number }[], onlyLastDepthSorting?: boolean) {
 		$ag.setSorting.call($ag, this.state.pid, arguments[0], arguments[1]);
 	}
@@ -837,7 +865,7 @@ class AUIGrid extends React.Component<IProps, IState> {
 	updateGrouping() {
 		$ag.updateGrouping.call($ag, this.state.pid);
 	}
-	updateRow(item: any, rowIndex?: number | string, isMarkEdited?: boolean) {
+	updateRow(item: any, rowIndex: number | 'selectedIndex', isMarkEdited?: boolean) {
 		$ag.updateRow.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2]);
 	}
 	updateRowBlockToValue(startRowIndex: number, endRowIndex: number, dataFields: string | string[], values: any | any[]) {

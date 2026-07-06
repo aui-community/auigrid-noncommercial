@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<script>
+	//시작점
+	function init() {
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid();
+
+		// 그리드 데이터 삽입
+		AUIGrid.setGridData(myGridID, gridData);
+	};
+
+
+	//AUIGrid 를 생성합니다.
+	function createAUIGrid() {
+		//칼럼 레이아웃
+		const columnLayout = [{
+			dataField: "col1",
+			headerText: "COL 1",
+			cellMerge: true, // 셀 세로 병합
+			cellColMerge: true, // 셀 가로 병합 실행
+			cellColSpan: 4, // 셀 가로 병합 대상은 4개로 설정
+			width: 100
+		}, {
+			dataField: "col2",
+			headerText: "COL 2",
+			cellMerge: true, // 셀 세로 병합
+			width: 120
+		}, {
+			dataField: "col3",
+			headerText: "COL 3",
+			cellMerge: true, // 셀 세로 병합
+			width: 120
+		}, {
+			dataField: "col4",
+			headerText: "COL 4",
+			width: 120
+		}];
+
+		// 그리드 속성 설정
+		const gridPros = {
+			editable: true,
+			selectionMode: 'multipleCells',
+			enableColumnResize: false,
+			enableCellMerge: true
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+	}
+
+	//그리드 데이터
+	const gridData = [{
+		col1: "값 1",
+		col2: "값 1",
+		col3: "값 1",
+		col4: "값 1",
+	}, {
+		col1: "값 2",
+		col2: "값 2",
+		col3: "값 2",
+		col4: "값 2",
+	}, {
+		col1: "값 3",
+		col2: "값 3",
+		col3: "값 3",
+		col4: "값 3",
+	}, {
+		col1: "값 4",
+		col2: "값 4",
+		col3: "값 4",
+		col4: "값 4",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 5",
+		col4: "값 5",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 6",
+		col4: "값 6",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 6",
+		col4: "값 7",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 6",
+		col4: "값 8",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 6",
+		col4: "값 9",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 10",
+		col4: "값 10",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 10",
+		col4: "값 11",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 10",
+		col4: "값 12",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 10",
+		col4: "값 13",
+	}, {
+		col1: "값 4",
+		col2: "값 5",
+		col3: "값 10",
+		col4: "값 14",
+	}, {
+		col1: "값 4",
+		col2: "값 15",
+		col3: "값 15",
+		col4: "값 15",
+		col5: "값 15",
+	}, {
+		col1: "값 4",
+		col2: "값 15",
+		col3: "값 15",
+		col4: "값 16",
+		col5: "값 16",
+	}, {
+		col1: "값 4",
+		col2: "값 15",
+		col3: "값 15",
+		col4: "값 17",
+		col5: "값 17",
+	}, {
+		col1: "값 4",
+		col2: "값 15",
+		col3: "값 15",
+		col4: "값 18",
+	}, {
+		col1: "값 4",
+		col2: "값 15",
+		col3: "값 15",
+		col4: "값 19",
+	}];
+</script>
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>가로 병합과 세로 병합을 같이 사용하여 혼합된 병합으로 출력은 불가능합니다. 가로, 세로 병합 중 한가지만 가능합니다.</p>
+		<p>다음은 가로 병합, 세로 병합을 같이 설정한 경우의 예를 보여주는 데모입니다.</p>
+	</div>
+	<div class="src_cover">
+		<pre>
+const columnLayout = [{
+	dataField: "col1",
+	headerText: "COL 1",
+	cellMerge: true, // 셀 세로 병합
+	cellColMerge: true, // 셀 가로 병합 실행
+	cellColSpan: 4, // 셀 가로 병합 대상은 4개로 설정
+	width: 100
+}, {
+	dataField: "col2",
+	headerText: "COL 2",
+	cellMerge: true, // 셀 세로 병합
+	width: 120
+}, {
+	dataField: "col3",
+	headerText: "COL 3",
+	cellMerge: true, // 셀 세로 병합
+	width: 120
+}, {
+	dataField: "col4",
+	headerText: "COL 4",
+	width: 120
+}];
+</pre>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="elapse"></p>
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

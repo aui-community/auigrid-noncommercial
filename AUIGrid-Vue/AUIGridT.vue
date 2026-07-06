@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
-	 * AUIGrid.vue for Vue3.js + Typescript v1.5.20250807
-	 * Based on AUIGrid v3.0.16.8
+	 * AUIGrid.vue for Vue3.js + Typescript v1.6.20260706
+	 * Based on AUIGrid v3.0.17.1
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */
@@ -37,6 +37,7 @@
 		name?: string;
 		autoResize?: boolean;
 		resizeDelayTime?: number;
+		waitPortalRendering?: boolean;
 		gridProps?: IGrid.Props | null;
 		columnLayout?: IGrid.Column[];
 		footerLayout?: IGrid.Footer[];
@@ -68,6 +69,10 @@
 				type: Number,
 				default: 300
 			},
+			waitPortalRendering: {
+				type: Boolean,
+				default: false
+			},
 			gridProps: {
 				type: Object as () => IGrid.Props,
 				default: null
@@ -98,13 +103,21 @@
 			};
 		},
 		mounted: function () {
-			const columnLayout = this.__getColumnLayoutByProxy();
-			const gridProps = this.__getGridPropsByProxy();
-			const footerLayout = this.__getFooterLayoutByProxy();
-			if (columnLayout !== null) $ag.create(this.state.pid, columnLayout, gridProps);
-			if (footerLayout !== null) $ag.setFooter(this.state.pid, footerLayout);
-			this.__setupEvents();
-			this.__setupGlobalResize();
+			const initGrid = () => {
+				const columnLayout = this.__getColumnLayoutByProxy();
+				const gridProps = this.__getGridPropsByProxy();
+				const footerLayout = this.__getFooterLayoutByProxy();
+				if (columnLayout !== null) $ag.create(this.state.pid, columnLayout, gridProps);
+				if (footerLayout !== null) $ag.setFooter(this.state.pid, footerLayout);
+				this.__setupEvents();
+				this.__setupGlobalResize();
+			};
+			if (this.waitPortalRendering) {
+				// Portal(Teleport) 시차 해결을 위해 RAF 사용
+				window.requestAnimationFrame(initGrid);
+			} else {
+				initGrid();
+			}
 		},
 		beforeUnmount: function () {
 			this.__resetGlobalResize();
@@ -236,9 +249,12 @@
 			getPID() {
 				return this.state.pid;
 			},
-			create(columnLayout: IGrid.Column[], props: IGrid.Props) {
+			create(columnLayout: IGrid.Column[], props: IGrid.Props, footerLayout?: IGrid.Footer[]) {
 				if ($ag.isCreated(this.state.pid)) return this.state.pid;
 				$ag.create(this.state.pid, columnLayout, props);
+				if (footerLayout) {
+					$ag.setFooter(this.state.pid, footerLayout);
+				}
 				this.__setupEvents();
 				this.__setupGlobalResize();
 				return this.state.pid;
@@ -418,6 +434,12 @@
 			getColumnValues(dataField: string, total?: boolean): any[] {
 				return $ag.getColumnValues.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
+			getColumnWidthByDataField(dataField: string): number {
+				return $ag.getColumnWidthByDataField.call($ag, this.state.pid, arguments[0]);
+			},
+			getColumnWidthList(): number[] {
+				return $ag.getColumnWidthList.call($ag, this.state.pid);
+			},
 			getCurrentPageData(): any[] {
 				return $ag.getCurrentPageData.call($ag, this.state.pid);
 			},
@@ -568,6 +590,9 @@
 			getSelectedText(exceptHidden?: boolean): string {
 				return $ag.getSelectedText.call($ag, this.state.pid, arguments[0]);
 			},
+			getSortCollator() {
+				return $ag.getSortCollator.call($ag, this.state.pid);
+			},
 			getSortingFields(): any[] {
 				return $ag.getSortingFields.call($ag, this.state.pid);
 			},
@@ -712,6 +737,9 @@
 			outdentTreeDepth() {
 				$ag.outdentTreeDepth.call($ag, this.state.pid);
 			},
+			prependData(items: any) {
+				$ag.prependData.call($ag, this.state.pid, arguments[0]);
+			},
 			redo() {
 				$ag.redo.call($ag, this.state.pid);
 			},
@@ -736,7 +764,7 @@
 			removeInfoMessage() {
 				$ag.removeInfoMessage.call($ag, this.state.pid);
 			},
-			removeRow(rowIndex: number | string) {
+			removeRow(rowIndex: number | number[] | 'selectedIndex') {
 				$ag.removeRow.call($ag, this.state.pid, arguments[0]);
 			},
 			removeRowByRowId(rowIds: string | number | string[] | number[]) {
@@ -901,6 +929,9 @@
 			setSelectionMode(mode: 'singleCell' | 'singleRow' | 'multipleCells' | 'multipleRows' | 'none') {
 				$ag.setSelectionMode.call($ag, this.state.pid, arguments[0]);
 			},
+			setSortCollator(collator: Intl.Collator | null) {
+				$ag.setSortCollator.call($ag, this.state.pid, arguments[0]);
+			},
 			setSorting(sortingInfoArr: { dataField: string; sortType: number }[], onlyLastDepthSorting?: boolean) {
 				$ag.setSorting.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
@@ -958,7 +989,7 @@
 			updateGrouping() {
 				$ag.updateGrouping.call($ag, this.state.pid);
 			},
-			updateRow(item: any, rowIndex?: number | string, isMarkEdited?: boolean) {
+			updateRow(item: any, rowIndex: number | 'selectedIndex', isMarkEdited?: boolean) {
 				$ag.updateRow.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2]);
 			},
 			updateRowBlockToValue(startRowIndex: number, endRowIndex: number, dataFields: string | string[], values: any | any[]) {

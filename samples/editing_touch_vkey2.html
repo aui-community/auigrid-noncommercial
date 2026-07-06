@@ -131,10 +131,7 @@
 				// 즉, editingBeginMode="doubleClick" 인 경우 PC는 더블클릭이라도 모바일은 싱글 탭임.
 				autoEditBeginMode: true,
 				// 모바일 기기의 스크롤 크기
-				scrollHeight4Mobile: 4,
-				// 셀을 클릭하면 가상 키보드가 올라오나요?
-				// enableFocus  = false 설정하십시오.
-				enableFocus: false
+				scrollHeight4Mobile: 4
 			};
 
 			// 실제로 #grid_wrap 에 그리드 생성
@@ -167,14 +164,14 @@
 		<div>
 			<div style="margin:10px;">
 				<p>본 데모를 모바일 기기에서 확인하십시오.</p>
-				<p>가상 키보드(소프트 키보드)의 종류 지정은 다음 editRenderer 에서 가능합니다.</p>
+				<p>소프트 키보드(가상 키보드)의 종류 지정은 다음 editRenderer 에서 가능합니다.</p>
 				<p>■ 기본 편집 렌더러(InputEditRenderer)</p>
 				<p>■ 넘버스텝렌더러(NumberStepRenderer) - renerer 의 type 설정으로도 가능</p>
 				<p>■ 달력 편집 렌더러(CalendarRenderer, JQCalendarRenderer, BTCalendarRenderer)</p>
 				<p>■ 콤보박스 편집 렌더러(ComboBoxRenderer)</p>
 				<p>■ 마스크 편집 렌더러(MaskEditRenderer)</p>
-				<p>아래 데모는 위의 editRenderer 에 모두 가상 키보드 "decimal"을 적용 시킨 데모입니다.</p>
-				<p><a href="./editing_touch_vkey.html">기본 가상 키보드 적용 데모 보기</a></p>
+				<p>아래 데모는 위의 editRenderer 에 모두 소프트 키보드 "decimal"을 적용 시킨 데모입니다.</p>
+				<p><a href="./editing_touch_vkey.html">기본 소프트 키보드 적용 데모 보기</a></p>
 				<div id="test"></div>
 			</div>
 			<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->

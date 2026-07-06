@@ -121,14 +121,14 @@
 
 		// 체크박스 클릭 이벤트 바인딩
 		AUIGrid.bind(myGridID, "rowCheckClick", function (event) {
-			alert("rowIndex : " + event.rowIndex + ", id : " + event.item.id + ", name : " + event.item.name + ", checked : " + event.checked + ", shiftKey : " + event.shiftKey + ", shiftIndex : " + event.shiftIndex);
+			const msg = `rowIndex : ${event.rowIndex}, id : ${event.item.id}, name : ${event.item.name}, checked : ${event.checked}, shiftKey : ${event.shiftKey}, shiftIndex : ${event.shiftIndex}`;
+			document.getElementById("elapse").textContent = msg
 		});
 
 		// 전체 체크박스 클릭 이벤트 바인딩
 		AUIGrid.bind(myGridID, "rowAllChkClick", function (event) {
-			alert("전체 선택  checked : " + event.checked);
+			document.getElementById("elapse").textContent =`전체 선택  checked : ${event.checked}`;
 		});
-
 	};
 
 

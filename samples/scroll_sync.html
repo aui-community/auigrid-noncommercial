@@ -96,12 +96,12 @@
 
 		// H스크롤 체인지 핸들러.
 		AUIGrid.bind(myGridID, "hScrollChange", function (event) {
-			AUIGrid.setHScrollPositionByPx(myGridID2, event.position); // 수평 스크롤 이동 시킴..
+			AUIGrid.setHScrollPositionByPx(myGridID2, event.position); // 수평 스크롤 이동 시킴
 		});
 
 		// V스크롤 체인지 핸들러.
 		AUIGrid.bind(myGridID, "vScrollChange", function (event) {
-			AUIGrid.setRowPosition(myGridID2, event.position); // 수평 스크롤 이동 시킴..
+			AUIGrid.setRowPosition(myGridID2, event.position); // 수직 스크롤 이동 시킴
 		});
 
 		//------------------------- 하단 그리드 ------------------------
@@ -111,12 +111,12 @@
 
 		// H스크롤 체인지 핸들러.
 		AUIGrid.bind(myGridID2, "hScrollChange", function (event) {
-			AUIGrid.setHScrollPositionByPx(myGridID, event.position); // 수평 스크롤 이동 시킴...
+			AUIGrid.setHScrollPositionByPx(myGridID, event.position); // 수평 스크롤 이동 시킴
 		});
 
 		// V스크롤 체인지 핸들러.
 		AUIGrid.bind(myGridID2, "vScrollChange", function (event) {
-			AUIGrid.setRowPosition(myGridID, event.position); // 수평 스크롤 이동 시킴..
+			AUIGrid.setRowPosition(myGridID, event.position); // 수직 스크롤 이동 시킴
 		});
 	}
 

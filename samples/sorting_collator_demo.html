@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+
+<script>
+	// AUIGrid 생성 후 반환 ID
+	let myGridID, myGridID2;
+
+	// 시작점
+	function init() {
+		// AUIGrid 그리드를 생성합니다.
+		createAUIGrid();
+
+		// 그리드 데이터 삽입
+		AUIGrid.setGridData(myGridID, gridData);
+		AUIGrid.setGridData(myGridID2, gridData);
+	}
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid() {
+		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = [{
+			dataField: "textNum",
+			headerText: "문자의 숫자인식",
+			width: 180
+		}, {
+			dataField: "mulLan",
+			headerText: "다국어",
+			width: 180
+		}, {
+			dataField: "caseWord",
+			headerText: "대소문자/악센트 무시",
+			width: 200
+		}];
+
+		// 그리드 속성 설정
+		const gridProps = {
+			editable: true
+		};
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+		// 실제로 #grid_wrap2 에 그리드 생성
+		myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridProps);
+
+		// 하단 그리드에만 정렬 문자열 비교기 설정
+		AUIGrid.setSortCollator(myGridID2, new Intl.Collator('ko', { // 'ko' 설정으로 한글 우선
+			sensitivity: 'case',      // 대소문자/악센트 무시
+			numeric: true            // 문자열에 있는 숫자를 숫자로 인식 처리
+		}));
+	}
+
+	// 정렬 문자열 비교기 초기화
+	function clearSortCollator() {
+		// 정렬 문자열 비교기 초기화
+		AUIGrid.setSortCollator(myGridID2, null);
+		// 정렬도 초기화
+		AUIGrid.clearSortingAll(myGridID2);
+		alert("정렬 문자열 비교기를 초기화 하였습니다.");
+	}
+
+	//그리드 데이터
+	const gridData = [
+		{ textNum: "item1", mulLan: "한글", caseWord: "Alpha" },
+		{ textNum: "item12", mulLan: "Tokyo", caseWord: "alpha" },
+		{ textNum: "item2", mulLan: "北京", caseWord: "ALPHA" },
+		{ textNum: "item10", mulLan: "서울", caseWord: "beta" },
+		{ textNum: "item3", mulLan: "大阪", caseWord: "Beta" },
+		{ textNum: "file20", mulLan: "New York", caseWord: "BETA" },
+		{ textNum: "file3", mulLan: "파리", caseWord: "Gamma" },
+		{ textNum: "file1", mulLan: "런던", caseWord: "gamma" },
+		{ textNum: "doc2", mulLan: "도쿄", caseWord: "GAMMA" },
+		{ textNum: "doc10", mulLan: "홍콩", caseWord: "delta" },
+		{ textNum: "doc1", mulLan: "부산", caseWord: "Delta" },
+		{ textNum: "user05", mulLan: "釜山", caseWord: "DELTA" },
+		{ textNum: "user1", mulLan: "Paris", caseWord: "Zeta" },
+		{ textNum: "user002", mulLan: "台北", caseWord: "zeta" },
+		{ textNum: "user12", mulLan: "Nagoya", caseWord: "ZETA" },
+		{ textNum: "user10", mulLan: "대전", caseWord: "café" },
+		{ textNum: "a100", mulLan: "대구", caseWord: "cafe" },
+		{ textNum: "a2", mulLan: "하노이", caseWord: "résumé" },
+		{ textNum: "a10", mulLan: "Manila", caseWord: "resume" },
+		{ textNum: "a001", mulLan: "광주", caseWord: "naïve" },
+		{ textNum: "a9", mulLan: "Busan", caseWord: "naive" },
+		{ textNum: "doc3", mulLan: "Seoul", caseWord: "Omega" },
+		{ textNum: "file11", mulLan: "Hong Kong", caseWord: "omega" },
+		{ textNum: "file8", mulLan: "Kyoto", caseWord: "OMEGA" },
+		{ textNum: "user08", mulLan: "Fukuoka", caseWord: "Alpha" },
+		{ textNum: "item5", mulLan: "Singapore", caseWord: "alpha" },
+		{ textNum: "item30", mulLan: "Taipei", caseWord: "ALPHA" },
+		{ textNum: "file12", mulLan: "Incheon", caseWord: "beta" },
+		{ textNum: "item20", mulLan: "오사카", caseWord: "BETA" }
+	];
+</script>
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>JS 표준 API인 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator" target="_blank">Intl.Collator</a> 를 통해 문자열 정렬 비교기를 설정할 수 있습니다.</p>
+		<p>상단 그리드는 기본 정렬에 해당되고 하단 그리드는 Intl.Collator 를 설정하여 문자열 정렬를 지시한 모습입니다.</p>
+	</div>
+	<div>
+		<!--  Grid 1 -->
+		<div style="width:100%;margin:0 auto;">
+			<p>■ 기본 그리드</p>
+		</div>
+		<div id="grid_wrap" style="width:100%;height:200px; margin:0 auto;"></div>
+
+		<!--  Grid 2 -->
+		<div style="width:100%;margin:0 auto;">
+			<p id="detail_info" style="margin-top:20px;">■ 정렬 문자열 비교기 설정 한 그리드</p>
+			<div class="desc">
+				<div class="src_cover">
+					<pre>
+// 정렬 문자열 비교기 설정하기
+AUIGrid.setSortCollator(myGridID2, new Intl.Collator('ko', { // 'ko' 설정으로 한글 우선
+	sensitivity: 'case',      // 대소문자/악센트 무시
+	numeric: true            // 문자열에 있는 숫자를 숫자로 인식 처리
+}));</pre>
+				</div>
+			</div>
+			<ul class="nav_u">
+				<li><button onclick="clearSortCollator()" class="btn">정렬 문자열 비교기 초기화( 상단 그리드와 동일한 정렬 방식 )</button></li>
+			</ul>
+		</div>
+		<div id="grid_wrap2" style="width:100%;height:200px; margin:0 auto;"></div>
+	</div>
+
+	<div class="desc_bottom">
+		<p id="sorting_info"></p>
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

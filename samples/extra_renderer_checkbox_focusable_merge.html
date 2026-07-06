@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<style>
+	/* 커스텀 칼럼 스타일 정의 */
+	.aui-grid-user-custom-left {
+		text-align: left;
+	}
+
+	/* 엑스트라 체크박스 사용자 선택 못하는 표시 스타일 */
+	.disable-check-style {
+		color: #d3825c;
+	}
+</style>
+
+<script>
+//AUIGrid 생성 후 반환 ID
+let myGridID;
+
+// 시작점
+function init() {
+	// AUIGrid 그리드를 생성합니다.
+	createAUIGrid();
+	// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+	requestGridData("./data/nutrition3.json");
+}
+
+// AUIGrid 를 생성합니다.
+function createAUIGrid() {
+	// 그리드 칼럼 레이아웃 설정
+	const columnLayout = [{
+		dataField: "gubun0",
+		headerText: "대분류",
+		width: 160,
+		cellMerge: true // 대분류 셀 세로 병합 실행
+	}, {
+		dataField: "gubun1",
+		headerText: "구분1",
+		width: 140,
+		cellMerge: true, // 구분1 셀 세로 병합 실행
+		mergeRef: "gubun0", // 대분류(gubun0 필드) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+		mergePolicy: "restrict"
+	}, {
+		dataField: "gubun2",
+		headerText: "구분2",
+		width: 140
+	}, {
+		headerText: "2008년",
+		children: [{
+			dataField: "avg08",
+			headerText: "평균(g)",
+			width: 100
+		}, {
+			dataField: "sdev08",
+			headerText: "표준편차",
+			width: 100
+		}]
+	}, {
+		headerText: "2009년",
+		children: [{
+			dataField: "avg09",
+			headerText: "평균(g)",
+			width: 100
+		}, {
+			dataField: "sdev09",
+			headerText: "표준편차",
+			width: 100
+		}]
+	}, {
+		headerText: "2010년",
+		children: [{
+			dataField: "avg10",
+			headerText: "평균(g)",
+			width: 100
+		}, {
+			dataField: "sdev10",
+			headerText: "표준편차",
+			width: 100
+		}]
+	}, {
+		headerText: "2011년",
+		children: [{
+			dataField: "avg11",
+			headerText: "평균(g)",
+			width: 100
+		}, {
+			dataField: "sdev11",
+			headerText: "표준편차",
+			width: 100
+		}]
+	}, {
+		headerText: "2012년",
+		children: [{
+			dataField: "avg12",
+			headerText: "평균(g)",
+			width: 100
+		}, {
+			dataField: "sdev12",
+			headerText: "표준편차",
+			width: 100
+		}]
+	}];
+
+	// 그리드 속성 설정
+	const gridProps = {
+		// 셀 병합 실행
+		enableCellMerge: true,
+		// 행 체크 칼럼(엑스트라 체크박스) 출력
+		showRowCheckColumn: true,
+		// 행 체크 칼럼(엑스트라 체크박스)의 병합은 grubun1 필드와 동일하게 병합 설정
+		rowCheckMergeField: "gubun1",
+		// 마우스 클릭(선택) 시 적용 모드
+		selectionMode: "singleRow",
+		// 마우스 오버 적용 모드
+		hoverMode: "singleRow",
+		// 키보드로 엑스트라 체크 칼럼 포커싱 처리할 수 있는지 여부 (기본값: false)
+		focusableRowCheck: true,
+	};
+
+	// 실제로 #grid_wrap 에 그리드 생성
+	myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+	// ready 이벤트 바인딩
+	AUIGrid.bind(myGridID, "ready", function (event) {
+		// 0, 0 에 셀렉션 선택 시키기
+		AUIGrid.setSelectionByIndex(event.pid, 0, 0);
+	});
+	
+	// 엑스트라 체크박스 클릭 이벤트 바인딩
+	AUIGrid.bind(myGridID, "rowCheckClick", function (event) {
+		const columnIndex = AUIGrid.getColumnIndexByDataField(event.pid, "gubun1"); // rowCheckMergeField 속성 값이 "gubun1"
+		const endRowIndex = AUIGrid.getMergeEndRowIndex(event.pid, event.rowIndex, columnIndex);
+		document.getElementById("elapse").textContent = `${event.rowIndex} ~ ${endRowIndex} 행 인덱스 병합됨. 체크 유무 : ${event.checked}`;
+	});
+};
+
+</script>
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>엑스트라 체크박스 렌더러를 출력(showRowCheckColumn = true)한 경우 키보드 방향키로 체크박스로 이동이 가능(focusableRowCheck = true)하도록 포커싱 처리된 예제입니다.</p>
+		<p>그리드 셀렉션이 존재하는 경우 최좌측 칼럼(대분류)에서 왼쪽 화살표로 엑스트라 체크박스로 포커싱이 가능하며 포커싱이 된 경우 상, 하 방향키로 이동할 수 있습니다.</p>
+		<p>포커싱된 체크박스에서 스페이스 바(space bar) 키를 누르면 체크 설정/해제가 됩니다.</p>
+<div class="src_cover">
+			<pre>// 그리드 속성 설정
+const gridProps = {
+      ...
+	// 엑스트라 체크박스 표시 설정
+	showRowCheckColumn: true,
+	// 행 체크 칼럼(엑스트라 체크박스)의 병합은 grubun1 필드와 동일하게 병합 설정
+	rowCheckMergeField: "gubun1",
+	// 키보드로 엑스트라 체크 칼럼 포커싱 처리할 수 있는지 여부 (기본값: false)
+	focusableRowCheck: true,
+};</pre>
+</div>
+	</div>
+	<div>
+		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+		<div id="grid_wrap" style="width:100%;height:400px; margin:0 auto;"></div>
+	</div>
+	<div class="desc_bottom">
+		<p id="elapse"></p>
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

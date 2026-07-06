@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.js for React.js v1.5.20250807
- * Based on AUIGrid v3.0.16.8
+ * AUIGridReact.js for React.js v1.6.20260706
+ * Based on AUIGrid v3.0.17.1
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
@@ -45,10 +45,17 @@ class AUIGrid extends React.Component {
 	}
 
 	componentDidMount() {
-		$ag.create(this.pid, this.props.columnLayout, this.props.gridProps);
-		$ag.setFooter(this.pid, this.props.footerLayout);
-
-		this.__setupGlobalResize();
+		const initGrid = () => {
+			$ag.create(this.pid, this.props.columnLayout, this.props.gridProps);
+			$ag.setFooter(this.pid, this.props.footerLayout);
+			this.__setupGlobalResize();
+		};
+		if (this.props.waitPortalRendering) {
+			// Portal 시차 해결을 위해 RAF 사용
+			window.requestAnimationFrame(initGrid);
+		} else {
+			initGrid();
+		}
 	}
 
 	componentWillUnmount() {
@@ -83,8 +90,11 @@ class AUIGrid extends React.Component {
 	render() {
 		return <div id={this.id}></div>;
 	}
-	create(columnLayout, props) {
+	create(columnLayout, props, footerLayout) {
 		$ag.create(this.pid, columnLayout, props);
+		if (footerLayout) {
+			$ag.setFooter(this.pid, footerLayout);
+		}
 		this.__setupGlobalResize();
 		return this.pid;
 	}
@@ -263,6 +273,12 @@ class AUIGrid extends React.Component {
 	getColumnValues(dataField, total) {
 		return $ag.getColumnValues.call($ag, this.pid, arguments[0], arguments[1]);
 	}
+	getColumnWidthByDataField(dataField) {
+		return $ag.getColumnWidthByDataField.call($ag, this.pid, arguments[0]);
+	}
+	getColumnWidthList() {
+		return $ag.getColumnWidthList.call($ag, this.pid);
+	}
 	getCurrentPageData() {
 		return $ag.getCurrentPageData.call($ag, this.pid);
 	}
@@ -413,6 +429,9 @@ class AUIGrid extends React.Component {
 	getSelectedText(exceptHidden) {
 		return $ag.getSelectedText.call($ag, this.pid, arguments[0]);
 	}
+	getSortCollator() {
+		return $ag.getSortCollator.call($ag, this.pid);
+	}
 	getSortingFields() {
 		return $ag.getSortingFields.call($ag, this.pid);
 	}
@@ -556,6 +575,9 @@ class AUIGrid extends React.Component {
 	}
 	outdentTreeDepth() {
 		$ag.outdentTreeDepth.call($ag, this.pid);
+	}
+	prependData(items) {
+		$ag.prependData.call($ag, this.pid, arguments[0]);
 	}
 	redo() {
 		$ag.redo.call($ag, this.pid);
@@ -746,6 +768,9 @@ class AUIGrid extends React.Component {
 	setSelectionMode(mode) {
 		$ag.setSelectionMode.call($ag, this.pid, arguments[0]);
 	}
+	setSortCollator(collator) {
+		$ag.setSortCollator.call($ag, this.pid, arguments[0]);
+	}
 	setSorting(sortingInfoArr, onlyLastDepthSorting) {
 		$ag.setSorting.call($ag, this.pid, arguments[0], arguments[1]);
 	}
@@ -830,6 +855,7 @@ AUIGrid.propTypes = {
 	name: PropTypes.string,
 	autoResize: PropTypes.bool,
 	resizeDelayTime: PropTypes.number,
+	waitPortalRendering: PropTypes.bool,
 	gridProps: PropTypes.object,
 	columnLayout: PropTypes.array,
 	footerLayout: PropTypes.array
@@ -839,6 +865,7 @@ AUIGrid.defaultProps = {
 	name: '',
 	autoResize: true,
 	resizeDelayTime: 300,
+	waitPortalRendering: false,
 	gridProps: {},
 	columnLayout: [],
 	footerLayout: []

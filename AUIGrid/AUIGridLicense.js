@@ -1,5 +1,5 @@
 /*!
- * AUIGrid Non-Commercial LICENSE v3.0.16
+ * AUIGrid Non-Commercial LICENSE v3.0.17
  * Authorized Domain(or IP) : localhost, 127.0.0.1
  * www.auisoft.net
  * 
@@ -27,5 +27,5 @@
  * Copyright © AUISoft Co., Ltd. https://www.auisoft.net
  */
  /* eslint-disable */
-const AUIGridLicense = "eyJjdCI6ImhQVmpTY2FHR3R5WWNyU2phWTNnL2o1KzN5L09kWDlkQ1VoS1RSdUtVNXN5bjliRzNwRkJKVkE1MytQdGIwZXViaTYyNXhzSGNwcGpmbEFLT3JWcDVlSnl0NFFMalBrK1pxOThsMkprT25NPSIsIml2IjoiMDViMjY4YzIzZWE1ZjhmMmQwNDMyNmNmMzQyN2Q5NTMiLCJzIjoiZDY1MDE2MDY2OTNjNzNhNiJ9";
+const AUIGridLicense = "eyJjdCI6IkpoOG84RXh5K1VCTGZqSnNEL2pQek5lZFZFT3J6Y3NjQk55cU9nSnFoZHZsZFUxYUNIaUVTUUVCL1Ayd1l0WUR6aVBtdVc5N1g0aHNUUVZyYmY3Y1ZPTE8yT3A1Vkc5ZERER0R1bzBBRXpnPSIsIml2IjoiMDRhZTRjYmNkYjM2YmNjOTU2YzU0MjRkNTY4MTExNmYiLCJzIjoiNTAwOTYyNjk4MDc0YmQ0YSJ9";
 if (typeof window !== "undefined") window.AUIGridLicense = AUIGridLicense;

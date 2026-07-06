@@ -29,6 +29,18 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+<style>
+	/* 커스텀 칼럼 스타일 정의 */
+	.aui-grid-user-custom-left {
+		text-align: left;
+	}
+
+	/* 엑스트라 체크박스 사용자 선택 못하는 표시 스타일 */
+	.disable-check-style {
+		color: #d3825c;
+	}
+</style>
+
 <script>
 	// AUIGrid 생성 후 반환 ID
 	let myGridID;
@@ -46,13 +58,19 @@
 		// 그리드 칼럼 레이아웃 설정
 		const columnLayout = [{
 			dataField: "id",
-			headerText: "Client ID"
+			headerText: "Client ID",
+			disableGrouping: true
 		}, {
 			dataField: "name",
-			headerText: "Name",
+			headerText: "Name"
 		}, {
 			dataField: "product",
 			headerText: "Product",
+			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (value === "Galaxy S25 Ultra") {
+					return "disable-check-style";
+				}
+			}
 		}, {
 			dataField: "date",
 			headerText: "Date"
@@ -64,82 +82,67 @@
 
 		// 그리드 속성 설정
 		const gridProps = {
+			// rowIdField 설정
+			rowIdField: "id",
 			editable: true,
-			// 행 번호 칼럼
-			showRowNumColumn: true,
-			// 행 상태 칼럼
-			showStateColumn: true,
-			// 행 체크박스 칼럼
+			// 엑스트라 체크박스 표시 설정
 			showRowCheckColumn: true,
-			// 행 드래그&드랍 손잡이 칼럼
-			showDragKnobColumn: true,
-			// 엑스트라 칼럼들 순서
-			extraColumnOrders: ["showRowCheckColumn", "showRowNumColumn", "showStateColumn", "showDragKnobColumn"]
+			// 키보드로 엑스트라 체크 칼럼 포커싱 처리할 수 있는지 여부 (기본값: false)
+			focusableRowCheck: true,
+			// 엑스트라 체크박스 disabled 함수
+			rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
+				if (item.product === "Galaxy S25 Ultra") { // 제품이 Galaxy S25 Ultra 인 경우 체크박스 disabeld 처리함
+					return false; // false 반환하면 disabled 처리됨
+				}
+				return true;
+			}
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
 
-	function changeOrders() {
-		// 엑스트라 행 번호, 상태, 드래깅 손잡이, 체크박스 순으로 순서 변경하기
-		AUIGrid.changeExtraColumnOrders(myGridID, ["showRowNumColumn", "showStateColumn", "showDragKnobColumn", "showRowCheckColumn"]);
-	}
+		// ready 이벤트 바인딩
+		AUIGrid.bind(myGridID, "ready", function (event) {
+			// 0, 0 에 셀렉션 선택 시키기
+			AUIGrid.setSelectionByIndex(event.pid, 0, 0);
+		});
+		
+		// 체크박스 클릭 이벤트 바인딩
+		AUIGrid.bind(myGridID, "rowCheckClick", function (event) {
+			const msg = `rowIndex : ${event.rowIndex}, id : ${event.item.id}, name : ${event.item.name}, checked : ${event.checked}, shiftKey : ${event.shiftKey}, shiftIndex : ${event.shiftIndex}`;
+			document.getElementById("elapse").textContent = msg
+		});
 
-	function changeExtraWidth() {
-		// 엑스트라 행 번호 칼럼 너비 100 으로 변경
-		AUIGrid.changeExtraColumnWidth(myGridID, "rowNumColumnWidth", 100);
-	}
-	
-	function hideExtraColumn() {
-		 // 엑스트라 칼럼인 행 번호 칼럼(showRowNumColumn)를 보이지 않게 합니다.
-		 AUIGrid.hideExtraColumn(myGridID, "showRowNumColumn");
-	}
-	
-	function showExtraColumn() {
-	 	// 엑스트라 칼럼인 행 번호 칼럼(showRowNumColumn)를 보이게 합니다.
-	 	AUIGrid.showExtraColumn(myGridID, "showRowNumColumn");
-	}
-	
+		// 전체 체크박스 클릭 이벤트 바인딩
+		AUIGrid.bind(myGridID, "rowAllChkClick", function (event) {
+			document.getElementById("elapse").textContent =`전체 선택  checked : ${event.checked}`;
+		});
+	};
+
 </script>
 </head>
 <body>
 
 <div id="main">
 	<div class="desc">
-		<p>엑스트라 칼럼은 행 드래그&amp;드랍 손잡이(showDragKnobColumn), 행 번호(showRowNumColumn), 행 상태(showStateColumn), 행 체크박스(showRowCheckColumn) 4가지가 존재합니다.</p>
-		<p>4가지 모두 활성화로 설정한 경우 기본 순서는 위의 나열 순서 대로 출력 시킵니다.</p>
-		<p>순서를 변경하고자 한다면 엑스트라 칼럼 출력 속성 이름을 배열에 지정하면 해당 순서에 맞게 출력 시킵니다.</p>
-		<p>예로 작성하면 다음과 같습니다.</p>
-		<div class="src_cover">
-			<pre>
-// 엑스트라 체크박스 칼럼을 맨 앞으로, 나머지 칼럼은 기본 순서 유지 (나머지 칼럼 유지는 배열에 지정하지 않으면 유지 시킴)
-extraColumnOrders = ["showDragKnobColumn"];
- 
-// 엑스트라 체크박스, 행 번호, 상태, 드래깅 손잡이 순으로 순서 지정하기
-extraColumnOrders = ["showRowCheckColumn", "showRowNumColumn", "showStateColumn", "showDragKnobColumn"];</pre>
-		</div>
-		<p>데모는 다음과 같이 행 체크박스를 맨 처음으로 설정하고 나머지는 기본을 유지한 모습입니다.</p>
-		<div class="src_cover">
+		<p>엑스트라 체크박스 렌더러를 출력(showRowCheckColumn = true)한 경우 키보드 방향키로 체크박스로 이동이 가능(focusableRowCheck = true)하도록 포커싱 처리된 예제입니다.</p>
+		<p>그리드 셀렉션이 존재하는 경우 최좌측 칼럼(Client ID)에서 왼쪽 화살표로 엑스트라 체크박스로 포커싱이 가능하며 포커싱이 된 경우 상, 하 방향키로 이동할 수 있습니다.</p>
+		<p>포커싱된 체크박스에서 스페이스 바(space bar) 키를 누르면 체크 설정/해제가 됩니다.</p>
+<div class="src_cover">
 			<pre>// 그리드 속성 설정
 const gridProps = {
       ...
-	// 엑스트라 칼럼들 순서
-	extraColumnOrders : ["showRowCheckColumn"]
+	// 엑스트라 체크박스 표시 설정
+	showRowCheckColumn: true,
+	// 키보드로 엑스트라 체크 칼럼 포커싱 처리할 수 있는지 여부 (기본값: false)
+	focusableRowCheck: true,
 };</pre>
-		</div>
-		<div>
-			<button onclick="changeOrders()" class="btn">엑스트라 행 번호, 상태, 드래깅 손잡이, 체크박스 순으로 순서 변경하기</button>
-			<button onclick="changeExtraWidth()" class="btn">엑스트라 행 번호 칼럼 너비 100 으로 변경</button>
-		</div>
-		<div>
-			<button onclick="hideExtraColumn()" class="btn">엑스트라 행 번호 칼럼 숨기기</button>
-			<button onclick="showExtraColumn()" class="btn">엑스트라 행 번호 칼럼 보이기</button>
-		</div>
+</div>
+		<p><a href="javascript:changeLocation('./extra_renderer_checkbox_focusable_paging.html?erchkfocus')">페이징 모드에서 데모 보기</a> | <a href="javascript:changeLocation('./extra_renderer_checkbox_focusable_merge.html?erchkfocus')">체크박스 병합에서 데모 보기</a></p>
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:280px; margin:0 auto;"></div>
+		<div id="grid_wrap" style="width:100%;height:400px; margin:0 auto;"></div>
 	</div>
 	<div class="desc_bottom">
 		<p id="elapse"></p>

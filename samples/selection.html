@@ -92,6 +92,17 @@
 			headerText: "Date",
 			width: 120
 		}];
+		
+		// 그리드 푸터 설정
+		const footerLayout = [{
+			labelText: "합계",
+			positionField: "id"
+		}, {
+			dataField: "price",
+			positionField: "price",
+			operation: "SUM",
+			formatString: "#,##0"
+		}];
 
 		// 그리드 속성 설정
 		const gridProps = {
@@ -103,12 +114,17 @@
 			// Home, End 키가 칼럼의 시작과 끝으로 이동함.
 			isColumnOriented: true,
 			// 전체 선택 활성화
-			enableSelectionAll: true
+			enableSelectionAll: true,
+			// 푸터 보이게 설정
+			showFooter: true
 		};
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
+		// 푸터 레이아웃 세팅
+		AUIGrid.setFooter(myGridID, footerLayout);
+		
 		// 그리드 ready 이벤트 바인딩
 		AUIGrid.bind(myGridID, "ready", function (event) {
 			AUIGrid.setSelectionByIndex(event.pid, 0, 0); // 첫번째 셀 선택되도록 지정
