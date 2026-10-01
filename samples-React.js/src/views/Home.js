@@ -1,5 +1,7 @@
 import React from 'react';
-import imgHowToCode from '../assets/howtocode.jpg';
+import CodeBlock from './CodeBlock';
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import sampleDefaultCode from '!!raw-loader!../samples/SampleDefault.js';
 
 const Home = () => {
 	return (
@@ -15,20 +17,21 @@ const Home = () => {
 			</p>
 			<p>본 데모는 다음 의존도 및 환경에서 작성되었습니다.</p>
 			<ul className="sub-headline padding-0">
-				<li>"react": "^18.2.0"</li>
-				<li>"react-dom": "^18.2.0",</li>
-				<li>"react-router-dom": "^6.4.0",</li>
-				<li>"react-scripts": "5.0.1",</li>
-				<li>"axios": "^0.27.2",</li>
-				<li>"file-saver": "^2.0.5"</li>
-				<li>"echarts": "^5.4.2"</li>
-				<li>"xlsx": "^0.18.5"</li>
+				<li><strong>react</strong>: ^18.2.0</li>
+				<li><strong>react-dom</strong>: ^18.2.0</li>
+				<li><strong>react-router-dom</strong>: ^6.4.0</li>
+				<li><strong>axios</strong>: ^0.27.2</li>
+				<li><strong>file-saver</strong>: ^2.0.5</li>
+				<li><strong>echarts</strong>: ^5.4.2</li>
+				<li><strong>xlsx</strong>: ^0.18.5</li>
 			</ul>
 
 			<h2 className="headline">HOW TO CODE</h2>
 			<p className="sub-headline"> React 환경에서 다음처럼 코딩하여 AUIGrid 사용이 가능합니다. </p>
 			<h3>이 프로젝트 전체 소스는 정품(또는 평가판)의 ROOT/samples-React.js 폴더에 존재합니다.</h3>
-			<img src={imgHowToCode} alt="HOW TO CODE" style={{ margin: '0 auto', maxWidth: 700 }} />
+			<div className="codeblock-wrap">
+				<CodeBlock language="javascript">{sampleDefaultCode}</CodeBlock>
+			</div>
 			<p>
 				<a href="https://www.auisoft.net/demo/auigrid" className="link-is-link">
 					일반 Javascript 환경의 데모 보러 가기

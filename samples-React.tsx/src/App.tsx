@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import logo from './assets/auisoft.png';
 import './App.css';
@@ -10,7 +10,10 @@ import Showcase04 from './showcases/Showcase04';
 import Showcase05 from './showcases/Showcase05';
 import Showcase06 from './showcases/Showcase06';
 import Showcase07 from './showcases/Showcase07';
+import Showcase08 from './showcases/Showcase08';
+import Showcase09 from './showcases/Showcase09';
 import SampleDefault from './samples/SampleDefault';
+import SampleBandBody from './samples/SampleBandBody';
 import Syling from './samples/Styling';
 import RendererTemplate from './samples/RendererTemplate';
 import DragToDropTwoGrid from './samples/DragToDropTwoGrid';
@@ -34,12 +37,17 @@ const mainMenuList: IMenuItem[] = [
 	{ path: '/Showcase04', name: 'Showcase04', text: '실시간 주식 종목', element: <Showcase04 /> },
 	{ path: '/Showcase05', name: 'Showcase05', text: '국가 별 핸드폰 판매 통계', element: <Showcase05 /> },
 	{ path: '/Showcase06', name: 'Showcase06', text: '손익 계산 내역', element: <Showcase06 /> },
-	{ path: '/Showcase07', name: 'Showcase07', text: '일별 목표치 달성률 그리드', element: <Showcase07 /> }
+	{ path: '/Showcase07', name: 'Showcase07', text: '일별 목표치 달성률 그리드', element: <Showcase07 /> },
+	// WebDemo 9번과 10번을 프레임워크 쇼케이스 8번과 9번으로 연결합니다.
+	{ path:'/Showcase08', name:'Showcase08', text:'반응형 밴드형 워크스페이스', element:<Showcase08 /> },
+	{ path:'/Showcase09', name:'Showcase09', text:'자재 발주 및 입고 검수', element:<Showcase09 /> }
 ];
 
 // 일반 샘플 메뉴 리스트
 const subMenuList: IMenuItem[] = [
 	{ path: '/SampleDefault', name: 'SampleDefault', text: 'JSON 그리드 기본 출력 샘플', element: <SampleDefault /> },
+	// 기본 출력 다음에 밴드형 레이아웃을 비교합니다.
+	{ path: '/SampleBandBody', name: 'SampleBandBody', text: '밴드형 바디 레이아웃 기본', element: <SampleBandBody /> },
 	{ path: '/Styling', name: 'Styling', text: '그리드 행, 열 스타일링(Styling)', element: <Syling /> },
 	{ path: '/SampleTreeGrid', name: 'SampleTreeGrid', text: '트리 그리드 - 일반 데이터를 계층 구조로 표현', element: <SampleTreeGrid /> },
 	{ path: '/EditDropDown', name: 'EditDropDown', text: '에디트렌더러 - 드랍다운리스트렌더러', element: <EditDropDown /> },
@@ -50,7 +58,7 @@ const subMenuList: IMenuItem[] = [
 ];
 
 function App() {
-	const [isNavOpen, setIsNavOpen] = useState<boolean>(window.innerWidth >= 1300 ? true : false);
+	const [isNavOpen, setIsNavOpen] = useState(window.innerWidth >= 1300);
 
 	const handleKnobClick = () => {
 		setIsNavOpen(!isNavOpen);
@@ -64,12 +72,7 @@ function App() {
 
 	useEffect(() => {
 		const handleResize = () => {
-			//console.log('window 리사이징');
-			if (window.innerWidth >= 1300) {
-				setIsNavOpen(true);
-			} else {
-				setIsNavOpen(false);
-			}
+			setIsNavOpen(window.innerWidth >= 1300);
 		};
 
 		window.addEventListener('resize', handleResize);
@@ -112,7 +115,7 @@ function App() {
 							<li key={index}>
 								<NavLink to={item.path} onClick={handleLinkClick} className={({ isActive }) => (isActive ? 'nav-item-active' : '')}>
 									<span className="nav-item">
-										{index + 1}. {item.text}
+										{Number(item.name.replace('Showcase', ''))}. {item.text}
 									</span>
 								</NavLink>
 							</li>

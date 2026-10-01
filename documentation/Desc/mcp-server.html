@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AUIGrid 공식 문서와 실제 예제를 AI 개발 도구에서 조회하는 MCP 연결 및 사용 안내입니다.">
+  <title>AUIGrid MCP Server | AUIGrid 3.0.18 Documentation</title>
+  <link rel="shortcut icon" href="../static/aui.ico">
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="../static/prism.css">
+  <link rel="stylesheet" href="../static/mcp-guide.css">
+  <script src="../static/prism.js" defer></script>
+</head>
+<body class="mcp-guide">
+  <div class="header">
+    <div id="logo-bar">
+      <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft"></a>
+    </div>
+    <span id="title">AUIGrid 3.0.18 Documentation</span>
+  </div>
+  <main class="MainContent">
+    <p><a href="../index.html">문서 홈</a></p>
+    <h1>AI 개발 지원: AUIGrid MCP Server</h1>
+    <p>AUIGrid MCP는 AI 개발 도구가 공식 API 문서와 실제 예제 코드를 찾아 답변하도록 돕습니다.
+      속성의 기본값, 메소드의 인자와 반환값, TypeScript 타입을 확인하고 React와 Vue 예제를 참고해 코드를 작성할 때 사용합니다.</p>
+    <p>MCP(Model Context Protocol)는 AI 도구와 외부 자료를 연결하는 표준입니다.
+      AUIGrid MCP를 연결하면 필요한 문서를 대화에 직접 복사하는 대신 AI가 도구를 호출해 조회할 수 있습니다.</p>
+
+    <!-- 3.0.18 고객 안내에서는 확정된 npm 배포 경로와 두 패키지의 역할을 구분합니다. -->
+    <aside class="mcp-status" aria-label="제공 버전 및 npm 패키지">
+      <strong>AUIGrid 3.0.18부터 제공</strong>
+      <p>MCP 서버는 <a href="https://www.npmjs.com/package/auigrid-mcp-server" target="_blank" rel="noopener noreferrer"><code>auigrid-mcp-server</code></a> 패키지로 제공합니다.
+        TypeScript 타입 패키지인 <a href="https://www.npmjs.com/package/aui-grid" target="_blank" rel="noopener noreferrer"><code>aui-grid</code></a>와 별개이며, 제품 설치 폴더에 복사하지 않고 AI 개발 도구에 연결해 사용합니다.</p>
+    </aside>
+    <nav class="mcp-toc" aria-label="이 페이지 목차">
+      <a href="#prepare">준비</a>
+      <a href="#connect">AI 도구 연결</a>
+      <a href="#usage">사용 예</a>
+      <a href="#tools">제공 도구</a>
+      <a href="#troubleshooting">연결 문제 해결</a>
+      <a href="#migration">0.1.1에서 전환</a>
+    </nav>
+
+    <h2 id="prepare">1. 준비</h2>
+    <p>Node.js 22.12 이상과 로컬 MCP(stdio)를 지원하는 AI 개발 도구가 필요합니다.
+      아래 연결 설정을 추가하면 <strong>AI 도구가 npx로 패키지를 받아 MCP 서버를 자동 실행</strong>합니다.
+      사용자가 소스를 빌드하거나 별도의 웹서버를 운영할 필요는 없습니다.</p>
+    <p>처음 실행하거나 패키지를 갱신할 때는 npm에 접속할 수 있어야 합니다.
+      <code>-y</code>는 패키지 설치 확인을 자동 승인하고, <code>@latest</code>는 npm에 게시된 최신 MCP 패키지를 선택합니다.</p>
+
+    <h2 id="connect">2. AI 도구 연결</h2>
+    <p>사용 중인 도구의 설정을 펼쳐 적용하십시오.
+      기존 설정 파일이 있다면 다른 서버 설정을 유지하고 <code>auigrid</code> 항목을 추가합니다.</p>
+
+    <!-- 도구별 설정 형식이 달라 각각 복사할 수 있게 안내합니다. -->
+    <details open>
+      <summary>Cursor</summary>
+      <p>프로젝트의 <code>.cursor/mcp.json</code>에 다음 설정을 추가합니다.</p>
+      <pre><code class="language-json">{
+  "mcpServers": {
+    "auigrid": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "auigrid-mcp-server@latest"]
+    }
+  }
+}</code></pre>
+      <p>Cursor의 MCP 설정에서 <code>auigrid</code>가 활성화되어 있는지 확인합니다.
+        <a href="https://cursor.com/docs/mcp" target="_blank" rel="noopener noreferrer">Cursor 공식 연결 안내</a></p>
+    </details>
+    <details>
+      <summary>VS Code</summary>
+      <p>프로젝트의 <code>.vscode/mcp.json</code>에 다음 설정을 추가합니다.</p>
+      <pre><code class="language-json">{
+  "servers": {
+    "auigrid": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "auigrid-mcp-server@latest"]
+    }
+  }
+}</code></pre>
+      <p>명령 팔레트의 <code>MCP: List Servers</code>에서 서버를 시작하고 Agent 대화의 도구 목록을 확인합니다.
+        <a href="https://code.visualstudio.com/docs/agent-customization/mcp-servers" target="_blank" rel="noopener noreferrer">VS Code 공식 연결 안내</a></p>
+    </details>
+    <details>
+      <summary>Codex CLI</summary>
+      <p>터미널에서 다음 명령으로 등록한 뒤 Codex를 다시 시작합니다.</p>
+      <pre><code class="language-shell">codex mcp add auigrid -- npx -y auigrid-mcp-server@latest</code></pre>
+      <p><code>codex mcp list</code>에서 등록 상태를 확인하고, Codex 대화의 <code>/mcp</code>에서 연결 상태를 확인합니다.
+        <a href="https://developers.openai.com/codex/mcp/" target="_blank" rel="noopener noreferrer">Codex 공식 연결 안내</a></p>
+    </details>
+    <details>
+      <summary>Claude Code</summary>
+      <p>사용할 프로젝트의 터미널에서 다음 명령으로 등록한 뒤 Claude Code를 다시 시작합니다.</p>
+      <pre><code class="language-shell">claude mcp add --transport stdio auigrid -- npx -y auigrid-mcp-server@latest</code></pre>
+      <p>Claude Code 대화의 <code>/mcp</code>에서 연결 상태를 확인합니다.
+        <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener noreferrer">Claude Code 공식 연결 안내</a></p>
+    </details>
+    <p>연결 후 AI에게 “AUIGrid MCP의 <code>list_versions</code>로 사용 가능한 문서 버전을 확인해 줘”라고 요청하십시오.
+      AUIGrid 제품 버전, MCP 패키지 버전과 npm 타입 패키지 버전은 각각 관리합니다.</p>
+
+    <h2 id="usage">3. 이렇게 질문해 보세요</h2>
+    <ul>
+      <li>“AUIGrid MCP에서 <code>bodyLayoutMode</code>의 설정값과 기본값을 확인하고, 밴드형 칼럼 레이아웃을 작성해 줘.”</li>
+      <li>“React TypeScript의 밴드형 기본 예제를 찾아 우리 컴포넌트에 적용해 줘. 실제 타입 선언도 확인해 줘.”</li>
+      <li>“<code>exportToXlsx</code>와 <code>useExportStyle</code> 문서를 찾아 화면과 내보내기 스타일을 분리하는 예제를 작성해 줘.”</li>
+    </ul>
+    <p>원하는 프레임워크와 언어를 함께 알려 주면 예제를 찾기 쉽습니다.
+      MCP는 포함된 문서와 예제를 조회하며, 코드 작성과 수정은 연결한 AI 도구가 수행합니다.</p>
+
+    <h2 id="tools">4. 제공 도구와 자료 범위</h2>
+    <table>
+      <thead><tr><th scope="col">도구</th><th scope="col">용도</th></tr></thead>
+      <tbody>
+        <tr><td><code>list_versions</code></td><td>포함된 문서, 엔진과 npm 타입 패키지의 버전 확인</td></tr>
+        <tr><td><code>search_docs</code></td><td>공식 API와 안내 문서를 한글 또는 API 이름으로 검색</td></tr>
+        <tr><td><code>get_api</code></td><td>설명, 기본값, 도입 버전과 대응 TypeScript 선언 조회</td></tr>
+        <tr><td><code>list_examples</code></td><td>기능, 프레임워크와 언어에 맞는 예제 검색</td></tr>
+        <tr><td><code>get_example</code></td><td>예제 소스와 관련 파일, 의존성 및 실행 조건 조회</td></tr>
+      </tbody>
+    </table>
+    <p>JavaScript 기본 예제와 React, Vue의 JavaScript 및 TypeScript 예제를 제공합니다.
+      실제로 포함된 예제만 조회할 수 있으며, 공식 문서 링크도 함께 반환합니다.</p>
+    <p>MCP는 패키지에 포함된 자료를 읽으며 웹에서 최신 문서를 자동 수집하지 않습니다.
+      새 자료가 게시되면 MCP를 다시 시작해 갱신합니다. 특정 패키지 버전을 유지하려면 연결 설정의 <code>@latest</code>를 해당 버전으로 바꿉니다.
+      고객 프로젝트나 그리드 데이터를 읽고 조작하는 도구는 포함하지 않습니다.</p>
+    <p>예제 실행에 필요한 AUIGrid 엔진과 라이선스는 별도로 준비해야 합니다.
+      <a href="setup.html">AUIGrid 사용 방법</a>을 참고하십시오.</p>
+
+    <h2 id="troubleshooting">5. 연결되지 않을 때</h2>
+    <ul>
+      <li><strong>npx를 찾을 수 없음:</strong> Node.js 설치 후 AI 도구를 다시 시작합니다. 터미널에서만 인식된다면 설정의 <code>command</code>에 npx의 절대 경로를 지정합니다.</li>
+      <li><strong>패키지를 받지 못함:</strong> 인터넷 및 npm 접속 상태와 사내 프록시 설정을 확인합니다. 최초 설치가 오래 걸리면 AI 도구의 MCP 시작 제한 시간을 늘립니다.</li>
+      <li><strong>도구가 보이지 않음:</strong> AI 도구에서 MCP를 활성화하고 다시 시작합니다. 도구 사용 승인이 표시되면 조회 도구의 사용을 허용합니다.</li>
+      <li><strong>원하는 문서 버전이 없음:</strong> <code>list_versions</code>로 포함된 버전을 확인합니다. 해당 자료가 들어 있는 MCP 패키지를 선택해야 합니다.</li>
+      <li><strong>Node.js 버전 오류:</strong> AI 도구가 사용하는 Node.js를 22.12 이상으로 갱신합니다. 터미널과 AI 도구가 같은 Node.js를 사용하는지도 확인합니다.</li>
+    </ul>
+
+    <!-- 기존 게시본은 도구 인자와 결과 형식도 다르므로 이름만 바꾸는 호환 안내를 하지 않습니다. -->
+    <h2 id="migration">6. 기존 0.1.1에서 전환하기</h2>
+    <p>AUIGrid 3.0.18 문서를 제공하는 새 구현은 기존 <code>auigrid-mcp-server@0.1.1</code>과 도구 호출 형식이 다릅니다.
+      패키지 이름과 npx 실행 명령은 유지하며, <strong>Node.js 지원 조건은 18 이상에서 22.12 이상으로 변경</strong>되었습니다.</p>
+    <p>Node.js를 갱신한 뒤 AI 도구를 다시 시작해 새 도구 목록을 불러오십시오.
+      저장한 프롬프트나 자동화에서 직접 도구를 호출한다면 아래 표에 따라 변경해야 합니다. 기존 도구 이름의 별칭은 제공하지 않습니다.</p>
+    <table>
+      <thead><tr><th scope="col">기존 도구</th><th scope="col">새 도구 및 지정 방법</th></tr></thead>
+      <tbody>
+        <tr><td><code>search_api</code></td><td><code>search_docs</code>에 <code>query</code>를 전달합니다. 필요한 경우 문서 경로인 <code>category</code>를 지정합니다.</td></tr>
+        <tr><td><code>get_api_entry</code></td><td><code>get_api</code>에 검색 결과의 <code>id</code>를 전달합니다. 기존 <code>parent</code> 대신 <code>category</code>로 구분합니다.</td></tr>
+        <tr><td><code>search_methods</code>, <code>get_method</code></td><td><code>search_docs</code>, <code>get_api</code>에 <code>category: "DataGrid/Methods"</code>를 지정합니다.</td></tr>
+        <tr><td><code>search_static_utils</code>, <code>get_static_util</code></td><td><code>search_docs</code>, <code>get_api</code>에 <code>category: "DataGrid/StaticUtils"</code>를 지정합니다.</td></tr>
+        <tr><td><code>search_samples</code>, <code>list_samples</code></td><td><code>list_examples</code>로 조회합니다. <code>query</code>, <code>framework</code>, <code>language</code>로 목록을 좁힐 수 있습니다.</td></tr>
+        <tr><td><code>get_sample</code></td><td><code>get_example</code>에 목록에서 얻은 <code>id</code>를 전달합니다. 기존 파일명인 <code>name</code>을 그대로 넘기지 않습니다.</td></tr>
+        <tr><td><code>ping</code></td><td>연결 확인에는 <code>list_versions</code>를 호출합니다. <code>pong</code> 대신 포함된 자료 버전을 반환합니다.</td></tr>
+      </tbody>
+    </table>
+    <p>기존 <code>kind</code>와 <code>parent</code>는 자동 변환하지 않습니다.
+      같은 이름의 속성이 여러 곳에 있으면 <code>get_api</code>는 후보를 반환하므로, 검색 결과의 <code>id</code>를 지정하십시오.</p>
+    <p>다음은 <code>get_method</code>로 조회하던 메소드를 새 도구로 조회하는 예입니다.</p>
+    <pre><code class="language-json">{
+  "name": "get_api",
+  "arguments": {
+    "name": "exportToXlsx",
+    "category": "DataGrid/Methods",
+    "version": "3.0.18"
+  }
+}</code></pre>
+    <p>예제는 <code>list_examples</code>에 <code>framework: "react"</code>, <code>language: "typescript"</code>를 전달해 찾고,
+      결과의 <code>id</code>로 <code>get_example</code>을 호출합니다.
+      기존 패키지의 모든 예제가 포함된 것은 아닙니다. <code>query</code>는 예제 제목과 기능, 태그를 검색하며 소스 전체를 검색하지 않습니다.</p>
+    <p>새 도구는 Markdown 본문 대신 <strong><code>structuredContent</code> 객체와 같은 내용을 담은 JSON 텍스트</strong>를 반환합니다.
+      결과를 직접 처리하는 코드도 함께 변경해야 합니다. 검색과 목록의 최대 <code>limit</code>은 20입니다.</p>
+    <ul>
+      <li>긴 API: 응답의 <code>nextOffset</code>을 다음 요청의 <code>offset</code>으로 전달합니다.</li>
+      <li>긴 예제: <code>nextStartLine</code>을 <code>startLine</code>으로 전달합니다.</li>
+      <li>검색 결과 없음: 빈 <code>results</code>를 반환합니다. API나 예제 조회 실패: <code>isError: true</code>와 오류 정보를 반환합니다.</li>
+    </ul>
+    <p>도구의 <code>version</code>은 문서 또는 제품 버전입니다.
+      <code>3.0.18</code>와 <code>3.0.18.0</code>은 같은 자료를 가리키며 npm 타입 버전 <code>2.0.18</code>을 지정하지 않습니다.
+      이 패키지는 과거 문서판을 함께 보관하지 않으므로 지원 버전은 <code>list_versions</code>에서 확인하십시오.</p>
+    <p><a href="../DataGrid/package-detail.html">관련 API 문서 보기</a> | <a href="../index.html">문서 홈으로</a></p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<script>
+    // 이전 데모에서 선택한 테마와 관계없이 이 예제는 Nova 다크 화면으로 시작합니다.
+    document.querySelector('link[rel="stylesheet"][href*="/AUIGrid"]').remove();
+    document.documentElement.setAttribute("data-aui-theme", "dark");
+    theme = "nova";
+    // 공용 데모가 저장된 밝기 설정을 복원한 뒤, 이 페이지의 첫 화면만 다크로 맞춥니다.
+    document.addEventListener("DOMContentLoaded", function () {
+        document.documentElement.setAttribute("data-aui-theme", "dark");
+        document.documentElement.style.colorScheme = "dark";
+        document.getElementById("darkToggle").checked = true;
+    });
+</script>
+<link id="grid-theme" rel="stylesheet" href="./style/AUIGrid_nova_style.css">
+<script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+<script src="../export_server_samples/FileSaver.min.js"></script>
+<style>
+    /* 다크 화면에서는 차분한 배경과 밝은 글자로 제품, 금액 및 소계를 구분합니다. */
+    .export-product {
+        background-color: #20364a;
+        color: #9dd6ff;
+        font-weight: bold;
+    }
+
+    .export-price {
+        background-color: #1d332d;
+        color: #9de6ca;
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .export-price-high {
+        background-color: #3b2d1b;
+        color: #ffd68a;
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .export-country-summary {
+        background-color: #243547;
+        color: #a9cfff;
+        font-weight: bold;
+    }
+
+    .export-product-summary {
+        background-color: #26332e;
+        color: #b4dec5;
+        font-weight: bold;
+    }
+
+    .aui-grid-my-footer-sum-total {
+        background-color: #17483c;
+        color: #bbf7d0;
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .my-column,
+    .aui-grid-my-footer-sum-total2 {
+        text-align: right;
+    }
+</style>
+<script>
+    let myGridID;
+
+    function init() {
+        // 진입 후에는 공용 테마 선택으로 다른 화면과도 비교할 수 있습니다.
+        document.getElementById("themeSelect").onchange = changeTheme;
+        // 기본 내보내기 데모(export.html)와 같은 칼럼, 그룹핑 및 푸터 구성을 사용합니다.
+        const columnLayout = [
+            { dataField: "orderId", headerText: "Order ID", width: 140 },
+            { dataField: "country", headerText: "Country", width: 140 },
+            { dataField: "name", headerText: "Name", width: 140 },
+            { dataField: "product", headerText: "Product", width: 140, style: "export-product" },
+            { dataField: "color", headerText: "Color", width: 140 },
+            {
+                dataField: "price", headerText: "Price", width: 140, dataType: "numeric", formatString: "#,##0",
+                style: "my-column", filter: { showIcon: true, useExMenu: true },
+                // 소계는 행 스타일을 따르고, 일반 금액은 800,000 이상일 때 금색으로 강조합니다.
+                styleFunction: function (rowIndex, columnIndex, value, headerText, item) {
+                    if (item._$isGroupSumField) return null;
+                    return value >= 800000 ? "export-price-high" : "export-price";
+                }
+            },
+            { dataField: "phone", headerText: "Phone", width: 140 },
+            { dataField: "date", headerText: "Date", dataType: "date", formatString: "yyyy년 mm월 dd일" }
+        ];
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, {
+            editable: true, enableFilter: true, showFooter: true,
+            showBranchOnGrouping: false, displayTreeOpen: true,
+            enableCellMerge: true, enableSummaryMerge: true, useGroupingPanel: true,
+            groupingFields: ["country", "product"],
+            groupingSummary: { dataFields: ["price"] },
+            // 국가별 소계와 제품별 소계를 구분하며, 내보낼 때도 같은 클래스 이름으로 색상을 보정합니다.
+            rowStyleFunction: function (rowIndex, item) {
+                if (item._$isGroupSumField) {
+                    return item._$depth === 2 ? "export-country-summary" : "export-product-summary";
+                }
+            }
+        });
+        AUIGrid.setFooter(myGridID, [
+            { labelText: "∑", positionField: "#base" },
+            { dataField: "price", positionField: "price", operation: "SUM", formatString: "#,##0", style: "aui-grid-my-footer-sum-total" },
+            { dataField: "price", positionField: "date", operation: "COUNT", formatString: "#,##0", style: "aui-grid-my-footer-sum-total2" },
+            { labelText: "Count=>", positionField: "phone", style: "aui-grid-my-footer-sum-total2" }
+        ]);
+        // 같은 정적 데이터 500건으로 화면과 내보낸 파일을 비교합니다.
+        loadData();
+    }
+
+    function loadData() {
+        requestGridData("./data/country_phone_500.json");
+    }
+
+    function exportExcel() {
+        // 화면 서식과 분리한 기본 스타일 및 강조색을 Excel 내보내기에 직접 지정합니다.
+        AUIGrid.exportToXlsx(myGridID, {
+            fileName: "화면과_내보내기_스타일_분리",
+            // 화면용 기본 CSS 대신 테마 CSS의 -for-export 클래스를 읽습니다.
+            // 기본 글자, 헤더, 본문, 푸터, 행 배경과 행 번호 등의 서식에 적용합니다.
+            // 기본값은 false이며, 생략하면 기존 화면 스타일로 내보냅니다.
+            useExportStyle: true,
+            // 사용자 클래스는 자동 변경되지 않으므로 내보낼 서식을 별도로 지정합니다.
+            // 점(.) 없는 클래스명을 사용하며, 지정하지 않은 속성은 기존 값을 유지합니다.
+            exportStyle: {
+                "export-product": { backgroundColor: "#eff6ff", color: "#1d4ed8" },
+                "export-price": { backgroundColor: "#eefbf5", color: "#166534" },
+                "export-price-high": { backgroundColor: "#fff3dc", color: "#a15c07" },
+                "export-country-summary": { backgroundColor: "#e8eef7", color: "#243f62" },
+                "export-product-summary": { backgroundColor: "#f1f5f9", color: "#475569" },
+                "aui-grid-my-footer-sum-total": { backgroundColor: "#e1f1ea", color: "#14532d" }
+            }
+        });
+    }
+
+    function exportPdf() {
+        // PDF에도 같은 전용 서식과 한글 글꼴을 직접 지정합니다.
+        AUIGrid.exportToPdf(myGridID, {
+            fileName: "화면과_내보내기_스타일_분리",
+            fontPath: "../pdfkit/nyjgothic-medium.ttf",
+            // 화면용 기본 CSS 대신 테마 CSS의 -for-export 클래스를 읽습니다.
+            // 기본 글자, 헤더, 본문, 푸터, 행 배경과 행 번호 등의 서식에 적용합니다.
+            // 기본값은 false이며, 생략하면 기존 화면 스타일로 내보냅니다.
+            useExportStyle: true,
+            // 사용자 클래스는 자동 변경되지 않으므로 내보낼 서식을 별도로 지정합니다.
+            // 점(.) 없는 클래스명을 사용하며, 지정하지 않은 속성은 기존 값을 유지합니다.
+            exportStyle: {
+                "export-product": { backgroundColor: "#eff6ff", color: "#1d4ed8" },
+                "export-price": { backgroundColor: "#eefbf5", color: "#166534" },
+                "export-price-high": { backgroundColor: "#fff3dc", color: "#a15c07" },
+                "export-country-summary": { backgroundColor: "#e8eef7", color: "#243f62" },
+                "export-product-summary": { backgroundColor: "#f1f5f9", color: "#475569" },
+                "aui-grid-my-footer-sum-total": { backgroundColor: "#e1f1ea", color: "#14532d" }
+            }
+        });
+    }
+
+    function changeTheme() {
+        theme = document.getElementById("themeSelect").value;
+        document.querySelector(".themeToolbar").style.display = theme === "nova" ? "" : "none";
+        const link = document.getElementById("grid-theme");
+        // 화면 CSS만 바꾸며 내보내기에 직접 지정한 서식은 유지합니다.
+        link.onload = function () { AUIGrid.resize(myGridID); };
+        link.href = "./style/" + (theme === "default" ? "AUIGrid_style" : "AUIGrid_" + theme + "_style") + ".css";
+    }
+</script>
+</head>
+<body>
+
+<div id="main">
+    <div class="desc">
+        <p><strong style="color:aqua">이 데모 기능을 쉽게 설명하기 위해 일부러 다크 테마로 강제 전환한 것 입니다.</strong></p>
+        <p>그리드는 기본적으로 현재 모습 그대로를 엑셀, PDF 로 내보내기 합니다. 그러나 다크 테마 사용자가 다크한 모습으로 엑셀, PDF 로 내보내기를 원치 않기 때문에 이 기능이 추가되었습니다.</p>
+        <p>웹에서 보여지는 그리드와 엑셀, PDF로 내보내기 하는 스타일을 분리하여 내보내기 할 수 있습니다.</p>
+        <p>엑셀, PDF 내보내기를 할 때 속성으로 useExportStyle : true 를 설정하십시오.</p>
+        <ul>
+            <li><strong>■ useExportStyle: true — 내보내기 전용 기본 서식</strong><br>
+                <p>테마 CSS의 <code>-for-export</code> 클래스를 사용합니다. v3.0.18 버전 이상에서는 모든 테마의 CSS 파일에 -for-export 로 끝나는 CSS가 존재합니다.</p>
+                <p>현재 사용하는 v3.0.18 버전 이상에서 -for-export 로 끝나는 CSS 클래스명을 확인하십시오.</p>
+                <p>예를 들어 헤더는 aui-grid-default-header 가 아닌 <code>.aui-grid-default-header-for-export</code>에서 정의한 스타일로 내보내기를 적용합니다.</p>
+                <p>즉, 웹 상의 그리드에 출력되는 CSS와 엑셀, PDF 내보내기용 CSS 클래스가 분리되어 적용됩니다.</p>
+            <li><strong>■ exportStyle — 사용자 클래스의 내보내기 서식</strong><br>
+                <p><code>useExportStyle: true</code>일 때, <code>style</code>, <code>styleFunction</code>, <code>rowStyleFunction</code> 및 헤더와 푸터에 사용한 CSS 클래스를 원하는 형태로 따로 정의합니다.</p>
+                <p>키에는 점(.) 없이 클래스명을 적습니다. 지정한 속성만 변경하며, 생략한 클래스와 속성은 기존 정의를 사용합니다. 사용자 강조색을 자동으로 바꾸는 옵션은 아니므로 필요한 클래스는 직접 지정합니다.</p>
+            </li>
+        </ul>
+        <p><button class="btn" id="export-excel" onclick="exportExcel()">Excel 내보내기</button>
+            <button class="btn" id="export-pdf" onclick="exportPdf()">PDF 내보내기</button>
+        </p>
+        <div class="src_cover">
+            <pre id="export-options">// 화면의 테마는 유지하고, 내보낸 파일에 사용할 기본 서식과 사용자 서식을 지정합니다.
+AUIGrid.exportToXlsx(myGridID, {
+    fileName: "화면과_내보내기_스타일_분리",
+    // 화면용 기본 CSS 대신 테마 CSS의 -for-export 클래스를 읽습니다.
+    // 기본 글자, 헤더, 본문, 푸터, 행 배경과 행 번호 등의 서식에 적용합니다.
+    // 기본값은 false이며, 생략하면 기존 화면 스타일로 내보냅니다.
+    useExportStyle: true,
+    // 사용자 클래스는 자동 변경되지 않으므로 내보낼 서식을 별도로 지정합니다.
+    // 점(.) 없는 클래스명을 사용하며, 지정하지 않은 속성은 기존 값을 유지합니다.
+    exportStyle: {
+        "export-product": { backgroundColor: "#eff6ff", color: "#1d4ed8" },
+        "export-price": { backgroundColor: "#eefbf5", color: "#166534" },
+        "export-price-high": { backgroundColor: "#fff3dc", color: "#a15c07" },
+        "export-country-summary": { backgroundColor: "#e8eef7", color: "#243f62" },
+        "export-product-summary": { backgroundColor: "#f1f5f9", color: "#475569" },
+        "aui-grid-my-footer-sum-total": { backgroundColor: "#e1f1ea", color: "#14532d" }
+    }
+});
+// PDF도 exportToPdf()에 같은 옵션과 fontPath를 지정합니다.</pre>
+        </div>
+    </div>
+    <div id="grid_wrap" style="width:100%;height:480px;margin:16px auto;"></div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

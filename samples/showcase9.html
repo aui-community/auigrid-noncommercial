@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<!-- Excel 파일 저장과 한글 PDF 출력에 필요한 공용 도구입니다. -->
+<script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+<script src="../export_server_samples/FileSaver.min.js"></script>
+
+<style>
+    /* 공통 헤더, 메뉴, 테마 선택, 버튼과 푸터는 기존 쇼케이스 스타일을 그대로 사용합니다.
+   이 페이지에서는 조작 영역, 미리보기 너비와 그리드 셀의 전용 스타일을 지정합니다. */
+    .showcase-controls {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .showcase-controls .btn[aria-pressed="true"] {
+        background-color: #ee5315;
+        border-color: #ee5315;
+    }
+
+    #previewFrame {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .showcase-width {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 640px;
+        margin: 10px 0;
+    }
+
+    .showcase-width label,
+    .showcase-width output {
+        white-space: nowrap;
+    }
+
+    .showcase-width input {
+        flex: 1;
+        min-width: 0;
+        height: 28px;
+        margin: 0;
+        accent-color: #ee5315;
+    }
+
+    .showcase-width output {
+        min-width: 64px;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    #grid_wrap {
+        width: 100%;
+        height: 430px;
+    }
+
+    /* 셀 스타일은 Excel과 PDF에서도 읽을 수 있도록 단일 클래스로 정의합니다. */
+    .sc-project-cell {
+        background: #f0f8f7;
+        text-align: left;
+    }
+
+    .sc-client-cell {
+        background: #f8fafc;
+        text-align: left;
+        color: #596f80;
+    }
+
+    .sc-project-label {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 0 9px;
+        min-width: 0;
+    }
+
+    .sc-project-icon {
+        width: 25px;
+        height: 25px;
+        flex: none;
+        border-radius: 7px;
+        background: #d4eee5;
+        color: #1a7667;
+        font-size: 11px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+    }
+
+    .sc-project-label b {
+        display: block;
+        font-size: 12px;
+        color: #234b4f;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sc-project-label small {
+        display: block;
+        font-size: 9px;
+        color: #809790;
+        margin-top: 3px;
+        letter-spacing: .6px;
+    }
+
+    .sc-project-label>span:last-child {
+        overflow: hidden;
+    }
+
+    .sc-status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 600;
+        background: #e2f4ed;
+        color: #128568;
+    }
+
+    .sc-status.review {
+        background: #fff1d9;
+        color: #b58123;
+    }
+
+    .sc-status.done {
+        background: #e8ebf7;
+        color: #676da4;
+    }
+
+    .sc-progress {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 7px;
+    }
+
+    .sc-progress-track {
+        height: 4px;
+        background: #e3eceb;
+        flex: 1;
+        overflow: hidden;
+        border-radius: 3px;
+    }
+
+    .sc-progress-track i {
+        display: block;
+        height: 100%;
+        background: #27b698;
+        border-radius: 3px;
+    }
+
+    .sc-progress span {
+        font-size: 10px;
+        min-width: 27px;
+        color: #607e80;
+    }
+</style>
+<script>
+    let myGridID;
+    let currentMode = '';
+    let automaticLayout = true;
+    let resizeFrame = 0;
+    const modeNames = { band: '밴드형', flat: '일반형', flatAll: '전체 펼치기' };
+    const modeHints = { band: '프로젝트와 고객 정보를 위아래로 쌓아 한눈에.', flat: '담당자, 일정, 진행률, 예산을 간결하게 비교.', flatAll: '상위 필드까지 모두 펼쳐 가로로 비교.' };
+
+    // JSON의 문자를 HTML로 표시할 때 태그로 해석되지 않도록 처리합니다.
+    function escapeText(value) {
+        return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+
+    function init() {
+        // 하위 칼럼은 남은 폭을 25%씩 나누고, 좁은 화면에서도 최소 66px을 유지합니다.
+        // 전체 펼치기에서는 applyRestPercentWidth로 상위 칼럼의 고정 폭을 제외합니다.
+        const columnLayout = [{
+            dataField: 'project', headerText: '프로젝트', bodyCell: true, width: 215,
+            style: 'sc-project-cell',
+            renderer: {
+                type: 'TemplateRenderer',
+                // 화면의 번호, 프로젝트명과 ID를 Excel 및 PDF에서는 두 줄의 텍스트로 표시합니다.
+                aliasFunction: function (row, col, value, header, item) {
+                    return item.code + ' ' + value + '\n' + item.id;
+                }
+            },
+            labelFunction: function (row, col, value, header, item) {
+                return '<div class="sc-project-label"><span class="sc-project-icon">' + escapeText(item.code) + '</span><span><b>' + escapeText(value) + '</b><small>' + escapeText(item.id) + '</small></span></div>';
+            },
+            children: [{
+                dataField: 'client', headerText: '고객사', bodyCell: true, width: 145, style: 'sc-client-cell',
+                children: [
+                    { dataField: 'owner', headerText: '담당자', width: '25%', minWidth: 66 },
+                    { dataField: 'due', headerText: '목표일', width: '25%', minWidth: 66, dataType: 'date', dateInputFormat: 'yyyy-mm-dd', formatString: 'mm/dd' }
+                ]
+            }, {
+                dataField: 'status', headerText: '진행 상태', bodyCell: true, width: 110,
+                renderer: { type: 'TemplateRenderer' },
+                labelFunction: function (row, col, value) {
+                    const kind = value === '완료' ? 'done' : value === '검토중' ? 'review' : '';
+                    return '<span class="sc-status ' + kind + '">' + escapeText(value) + '</span>';
+                },
+                children: [{
+                    dataField: 'progress', headerText: '진행률', width: '25%', minWidth: 66, dataType: 'numeric',
+                    renderer: { type: 'TemplateRenderer' },
+                    labelFunction: function (row, col, value) {
+                        const percent = Math.max(0, Math.min(100, Number(value) || 0));
+                        return '<div class="sc-progress"><div class="sc-progress-track"><i style="width:' + percent + '%"></i></div><span>' + percent + '%</span></div>';
+                    }
+                }, {
+                    dataField: 'budget', headerText: '예산(백만)', width: '25%', minWidth: 66, dataType: 'numeric', formatString: '#,##0'
+                }]
+            }]
+        }];
+        myGridID = AUIGrid.create('#grid_wrap', columnLayout, {
+            bodyLayoutMode: 'band', rowHeight: 122, headerHeight: 28, showRowNumColumn: false,
+            rowIdField: 'id', selectionMode: 'singleRow', enableSorting: true, applyRestPercentWidth: true,
+            showStateColumn: false
+        });
+        document.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', function () {
+            automaticLayout = false;
+            applyLayout(button.dataset.mode);
+        }));
+        document.getElementById('autoLayout').addEventListener('click', function () {
+            automaticLayout = !automaticLayout;
+            resizeShowcase();
+        });
+        document.getElementById('previewWidth').addEventListener('input', function () {
+            // 손잡이를 놓기 전에도 폭과 레이아웃을 바꿉니다. 여러 입력은 한 프레임에 모아 반영합니다.
+            automaticLayout = true;
+            scheduleResize();
+        });
+        // 브라우저나 메뉴로 표시 공간이 바뀌면 슬라이더의 최대 폭도 함께 맞춥니다.
+        const observer = new ResizeObserver(scheduleResize);
+        observer.observe(document.getElementById('main'));
+        resizeShowcase();
+        loadProjects();
+    }
+
+    function scheduleResize() {
+        cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(resizeShowcase);
+    }
+
+    // 600px 미만: 세로로 쌓는 band, 600~919px: leaf 중심 flat, 920px 이상: 모든 필드 flatAll.
+    // 이 분기점은 AUIGrid의 고정 정책이 아니라 쇼케이스가 선택한 화면 구성입니다.
+    function resizeShowcase() {
+        const frame = document.getElementById('previewFrame');
+        const slider = document.getElementById('previewWidth');
+        const availableWidth = Math.floor(document.querySelector('#main .desc').clientWidth);
+        const requestedWidth = Number(slider.value);
+        const useFullWidth = requestedWidth === Number(slider.max);
+        // 가장 넓게 설정한 상태는 화면 크기를 따라가며, 작은 화면 밖으로 넘치지 않습니다.
+        slider.min = Math.min(320, availableWidth);
+        slider.max = availableWidth;
+        slider.value = useFullWidth ? availableWidth : Math.min(requestedWidth, availableWidth);
+        frame.style.maxWidth = slider.value + 'px';
+        const width = frame.clientWidth;
+        const nextMode = automaticLayout ? (width < 600 ? 'band' : width < 920 ? 'flat' : 'flatAll') : currentMode;
+        applyLayout(nextMode);
+        document.getElementById('viewportWidth').value = Math.round(width) + ' px';
+        AUIGrid.resize(myGridID);
+    }
+
+    function applyLayout(mode) {
+        if (mode !== currentMode) {
+            // setProp + refresh만으로 표시 구조를 바꿉니다. 칼럼 너비는 그리드가 계산합니다.
+            AUIGrid.setProp(myGridID, { bodyLayoutMode: mode, rowHeight: mode === 'band' ? 122 : 52 });
+            AUIGrid.refresh(myGridID);
+            currentMode = mode;
+        }
+        document.querySelectorAll('[data-mode]').forEach(button => button.setAttribute('aria-pressed', button.dataset.mode === mode));
+        document.getElementById('autoLayout').setAttribute('aria-pressed', automaticLayout);
+        document.getElementById('layoutHint').textContent = modeHints[mode];
+        document.getElementById('layoutState').textContent = (automaticLayout ? '자동 전환' : '직접 선택') + ' / ' + modeNames[mode];
+    }
+
+    // 정적 JSON을 불러오고, 실패 시 안내 후 로딩 표시를 정리합니다.
+    async function loadProjects() {
+        AUIGrid.showAjaxLoader(myGridID);
+        try {
+            const response = await fetch('./data/showcase9.json');
+            if (!response.ok) throw new Error('데이터 요청 실패');
+            AUIGrid.setGridData(myGridID, await response.json());
+        } catch (error) {
+            alert('프로젝트 데이터를 불러오지 못했습니다. 페이지를 새로고침해 주세요.');
+        } finally {
+            AUIGrid.removeAjaxLoader(myGridID);
+        }
+    }
+
+    // 현재 레이아웃의 전체 데이터를 파일에 담습니다.
+    function exportExcel() {
+        AUIGrid.exportToXlsx(myGridID, {
+            fileName: '프로젝트_현황',
+            sheetName: '프로젝트 현황'
+        });
+    }
+    function exportPdf() {
+        const exportProps = {
+            fileName: '프로젝트_현황',
+            fontPath: '../pdfkit/nyjgothic-medium.ttf',
+            orientation: 'landscape'
+        };
+        // 전체 펼치기의 프로젝트명과 ID가 두 줄로 들어가도록 PDF의 행 높이만 지정합니다.
+        if (currentMode === 'flatAll') exportProps.rowHeight = 52;
+        AUIGrid.exportToPdf(myGridID, exportProps);
+    }
+</script>
+</head>
+<body>
+
+<div id="main">
+    <div class="desc">
+        <p>슬라이더로 폭을 줄이거나 넓혀 반응형 레이아웃을 확인해 보세요.</p>
+        <p>좁은 화면은 밴드형, 중간 화면은 일반형, 넓은 화면은 전체 펼치기로 실시간 전환됩니다.</p>
+        <div class="showcase-width">
+            <label for="previewWidth">그리드 폭</label>
+            <input id="previewWidth" type="range" min="320" max="1200" value="1200" step="1">
+            <output id="viewportWidth" for="previewWidth"></output>
+        </div>
+        <div class="showcase-controls" role="group" aria-label="그리드 레이아웃">
+            <span>레이아웃 :</span>
+            <button type="button" class="btn" data-mode="band" aria-pressed="false">밴드형</button>
+            <button type="button" class="btn" data-mode="flat" aria-pressed="false">일반형</button>
+            <button type="button" class="btn" data-mode="flatAll" aria-pressed="false">전체 펼치기</button>
+            <button type="button" class="btn" id="autoLayout" aria-pressed="true">화면에 맞게</button>
+        </div>
+        <div class="showcase-controls">
+            <button type="button" class="btn" onclick="exportExcel()">Excel 내보내기</button>
+            <button type="button" class="btn" onclick="exportPdf()">PDF 내보내기</button>
+        </div>
+        <p><span id="layoutHint"></span> (<span id="layoutState" aria-live="polite"></span>)</p>
+    </div>
+    <div id="previewFrame">
+        <!-- 동일한 데이터와 칼럼 계층으로 화면 크기에 맞는 그리드를 표시합니다. -->
+        <div id="grid_wrap"></div>
+    </div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

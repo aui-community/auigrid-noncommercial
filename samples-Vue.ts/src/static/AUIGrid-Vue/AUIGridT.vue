@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
-	 * AUIGrid.vue for Vue3.js + Typescript v1.5.20250909
-	 * Based on AUIGrid v3.0.16.11
+	 * AUIGrid.vue for Vue.js + Typescript v1.6.20261001
+	 * Based on AUIGrid v3.0.18.0
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */
@@ -37,6 +37,7 @@
 		name?: string;
 		autoResize?: boolean;
 		resizeDelayTime?: number;
+		waitPortalRendering?: boolean;
 		gridProps?: IGrid.Props | null;
 		columnLayout?: IGrid.Column[];
 		footerLayout?: IGrid.Footer[];
@@ -68,6 +69,10 @@
 				type: Number,
 				default: 300
 			},
+			waitPortalRendering: {
+				type: Boolean,
+				default: false
+			},
 			gridProps: {
 				type: Object as () => IGrid.Props,
 				default: null
@@ -83,7 +88,9 @@
 		},
 		data() {
 			return {
-				state: {} as IState
+				state: {} as IState,
+				auiMountGeneration: 0,
+				auiAnimationFrameId: null as number | null
 			};
 		},
 		created: function () {
@@ -98,13 +105,26 @@
 			};
 		},
 		mounted: function () {
-			const columnLayout = this.__getColumnLayoutByProxy();
-			const gridProps = this.__getGridPropsByProxy();
-			const footerLayout = this.__getFooterLayoutByProxy();
-			if (columnLayout !== null) $ag.create(this.state.pid, columnLayout, gridProps);
-			if (footerLayout !== null) $ag.setFooter(this.state.pid, footerLayout);
-			this.__setupEvents();
-			this.__setupGlobalResize();
+			const generation = ++this.auiMountGeneration;
+			const initGrid = () => {
+				if (generation !== this.auiMountGeneration) return;
+				this.auiAnimationFrameId = null;
+				const columnLayout = this.__getColumnLayoutByProxy();
+				const gridProps = this.__getGridPropsByProxy();
+				const footerLayout = this.__getFooterLayoutByProxy();
+				if (columnLayout !== null) $ag.create(this.state.pid, columnLayout, gridProps);
+				if (generation !== this.auiMountGeneration) return;
+				if (footerLayout !== null) $ag.setFooter(this.state.pid, footerLayout);
+				if (generation !== this.auiMountGeneration) return;
+				this.__setupEvents();
+				this.__setupGlobalResize();
+			};
+			if (this.waitPortalRendering) {
+				// Portal(Teleport) 시차 해결을 위해 RAF 사용
+				this.auiAnimationFrameId = window.requestAnimationFrame(initGrid);
+			} else {
+				initGrid();
+			}
 		},
 		beforeUnmount: function () {
 			this.__resetGlobalResize();
@@ -133,7 +153,9 @@
 					'footerDoubleClick',
 					'grouping',
 					'hScrollChange',
+					'indent',
 					'notFound',
+					'outdent',
 					'pageChange',
 					'pageRowCountChange',
 					'pasteEnd',
@@ -167,6 +189,7 @@
 					'keyDown',
 					'pasteBegin',
 					'rowNumCellClick',
+					'rowNumHeaderClick',
 					'rowStateCellClick',
 					'selectionConstraint'
 				];
@@ -188,7 +211,9 @@
 				}
 			},
 			__invoke(n: string, e: any): any {
-				return (this.$attrs['on' + n.replace(/^[a-z]/, (c) => c.toUpperCase())] as (e: any) => any)(e);
+				const name = 'on' + n.replace(/^[a-z]/, (c) => c.toUpperCase());
+				if (!this.$attrs[name]) return;
+				return (this.$attrs[name] as (e: any) => any)(e);
 			},
 			__isEventHandlerDefined(name: string) {
 				return typeof this.$attrs['on' + name.replace(/^[a-z]/, (c) => c.toUpperCase())] === 'function';
@@ -198,15 +223,26 @@
 				window.addEventListener('resize', this.__globalResizeHandler);
 			},
 			__resetGlobalResize() {
-				if (!this.autoResize) return;
+				this.auiMountGeneration++;
+				if (this.auiAnimationFrameId !== null) {
+					window.cancelAnimationFrame(this.auiAnimationFrameId);
+					this.auiAnimationFrameId = null;
+				}
+				if (this.state.timerId !== null) {
+					clearTimeout(this.state.timerId);
+					this.state.timerId = null;
+				}
 				window.removeEventListener('resize', this.__globalResizeHandler);
 			},
 			__globalResizeHandler() {
+				const that = this;
+				const generation = this.auiMountGeneration;
 				const state = this.state;
 				if (this.state.timerId !== null) {
 					clearTimeout(state.timerId);
 				}
 				const timerId = setTimeout(function () {
+					if (generation !== that.auiMountGeneration) return;
 					if ($ag.isCreated(state.pid)) {
 						try {
 							$ag.resize(state.pid);
@@ -236,9 +272,12 @@
 			getPID() {
 				return this.state.pid;
 			},
-			create(columnLayout: IGrid.Column[], props: IGrid.Props) {
+			create(columnLayout: IGrid.Column[], props: IGrid.Props, footerLayout?: IGrid.Footer[]) {
 				if ($ag.isCreated(this.state.pid)) return this.state.pid;
 				$ag.create(this.state.pid, columnLayout, props);
+				if (footerLayout) {
+					$ag.setFooter(this.state.pid, footerLayout);
+				}
 				this.__setupEvents();
 				this.__setupGlobalResize();
 				return this.state.pid;
@@ -346,7 +385,8 @@
 			exportToCsv(props?: any) {
 				$ag.exportToCsv.call($ag, this.state.pid, arguments[0]);
 			},
-			exportToJson(keyValueMode?: boolean, props?: any): any {
+			/** 객체 옵션을 사용합니다. 구형 Boolean 인수의 전달은 유지하지만 옵션 변환은 하지 않습니다. */
+			exportToJson(propsOrLegacyKeyValueMode?: object | boolean, legacyProps?: any): void {
 				$ag.exportToJson.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
 			exportToObject(keyValueMode?: boolean): any {
@@ -418,13 +458,19 @@
 			getColumnValues(dataField: string, total?: boolean): any[] {
 				return $ag.getColumnValues.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
+			getColumnWidthByDataField(dataField: string): number {
+				return $ag.getColumnWidthByDataField.call($ag, this.state.pid, arguments[0]);
+			},
+			getColumnWidthList(): number[] {
+				return $ag.getColumnWidthList.call($ag, this.state.pid);
+			},
 			getCurrentPageData(): any[] {
 				return $ag.getCurrentPageData.call($ag, this.state.pid);
 			},
 			getDataFieldByColumnIndex(columnIndex: number): string {
 				return $ag.getDataFieldByColumnIndex.call($ag, this.state.pid, arguments[0]);
 			},
-			getDepthByRowId(rowId: any): number {
+			getDepthByRowId(rowId: any): number | null | undefined {
 				return $ag.getDepthByRowId.call($ag, this.state.pid, arguments[0]);
 			},
 			getDescendantsByRowId(rowId: any): any[] {
@@ -568,6 +614,9 @@
 			getSelectedText(exceptHidden?: boolean): string {
 				return $ag.getSelectedText.call($ag, this.state.pid, arguments[0]);
 			},
+			getSortCollator() {
+				return $ag.getSortCollator.call($ag, this.state.pid);
+			},
 			getSortingFields(): any[] {
 				return $ag.getSortingFields.call($ag, this.state.pid);
 			},
@@ -640,13 +689,13 @@
 			isFilteredGrid(): boolean {
 				return $ag.isFilteredGrid.call($ag, this.state.pid);
 			},
-			isItemBranchByRowId(rowId: any): boolean {
+			isItemBranchByRowId(rowId: any): boolean | null | undefined {
 				return $ag.isItemBranchByRowId.call($ag, this.state.pid, arguments[0]);
 			},
-			isItemOpenByRowId(rowId: any): boolean {
+			isItemOpenByRowId(rowId: any): boolean | null | undefined {
 				return $ag.isItemOpenByRowId.call($ag, this.state.pid, arguments[0]);
 			},
-			isItemVisibleByRowId(rowId: any): boolean {
+			isItemVisibleByRowId(rowId: any): boolean | null {
 				return $ag.isItemVisibleByRowId.call($ag, this.state.pid, arguments[0]);
 			},
 			isLazyRequestedByIndex(rowIndex: number): boolean {
@@ -739,7 +788,7 @@
 			removeInfoMessage() {
 				$ag.removeInfoMessage.call($ag, this.state.pid);
 			},
-			removeRow(rowIndex: number | string) {
+			removeRow(rowIndex: number | number[] | 'selectedIndex') {
 				$ag.removeRow.call($ag, this.state.pid, arguments[0]);
 			},
 			removeRowByRowId(rowIds: string | number | string[] | number[]) {
@@ -895,7 +944,19 @@
 			setSelectionBlock(startRowIndex: number, endRowIndex?: number, startColumnIndex?: number, endColumnIndex?: number) {
 				$ag.setSelectionBlock.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
 			},
-			setSelectionByIndex(rowIndex: number, columnIndex: number) {
+			// 셀 종류를 조회합니다. 없는 행이나 바디 셀은 null입니다.
+			getBodyCellKind(rowIndex: number, dataField: string): 'branch' | 'leaf' | null {
+				return $ag.getBodyCellKind.call($ag, this.state.pid, arguments[0], arguments[1]);
+			},
+			// 필드명으로 상위 셀과 하위 셀을 선택합니다.
+			setSelectionByDataField(rowIndex: number, dataField: string) {
+				$ag.setSelectionByDataField.call($ag, this.state.pid, arguments[0], arguments[1]);
+			},
+			// 시작 셀을 활성 셀로 유지하면서 필드 사이의 영역을 선택합니다.
+			setSelectionBlockByDataField(startRowIndex: number, endRowIndex: number, startColDataField: string, endColDataField: string) {
+				$ag.setSelectionBlockByDataField.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
+			},
+			setSelectionByIndex(rowIndex: number, columnIndex?: number) {
 				$ag.setSelectionByIndex.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
 			setSelectionColumn(startColIdx: number, endColIdx?: number) {
@@ -903,6 +964,9 @@
 			},
 			setSelectionMode(mode: 'singleCell' | 'singleRow' | 'multipleCells' | 'multipleRows' | 'none') {
 				$ag.setSelectionMode.call($ag, this.state.pid, arguments[0]);
+			},
+			setSortCollator(collator: Intl.Collator | null) {
+				$ag.setSortCollator.call($ag, this.state.pid, arguments[0]);
 			},
 			setSorting(sortingInfoArr: { dataField: string; sortType: number }[], onlyLastDepthSorting?: boolean) {
 				$ag.setSorting.call($ag, this.state.pid, arguments[0], arguments[1]);
@@ -961,7 +1025,7 @@
 			updateGrouping() {
 				$ag.updateGrouping.call($ag, this.state.pid);
 			},
-			updateRow(item: any, rowIndex?: number | string, isMarkEdited?: boolean) {
+			updateRow(item: any, rowIndex: number | 'selectedIndex', isMarkEdited?: boolean) {
 				$ag.updateRow.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2]);
 			},
 			updateRowBlockToValue(startRowIndex: number, endRowIndex: number, dataFields: string | string[], values: any | any[]) {
@@ -990,7 +1054,7 @@
 		readonly releaseDate: string;
 		isCreated: () => boolean;
 		formatDate: (date: string | Date, formatString: string) => string;
-		formatNumber: (number: number, formatString: string, rouding?: 'rounding' | 'ceil' | 'floor') => string;
+		formatNumber: (number: number, formatString: string, rounding?: 'round' | 'ceil' | 'floor' | 'rounding') => string;
 		getActiveGrid: () => string | null;
 		getCreatedGridAll: () => string[];
 		makeValueMasked: (mask: string, value: string) => string;

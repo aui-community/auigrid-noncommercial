@@ -4,56 +4,9 @@
 	import AUIGrid from '@/static/AUIGrid-Vue/AUIGridT.vue';
 	import MyInputRenderer from '../renderers/MyInputRenderer';
 
-	const BASE_URL = import.meta.env.BASE_URL;
-
-	// 그리드 InstanceType
 	type AUIGrid = InstanceType<typeof AUIGrid>;
 
-	// 그리드 객체
 	const myGrid = ref<AUIGrid | null>(null);
-
-	// 그리드 속성 정의
-	const gridProps: IGrid.Props = {
-		width: '100%',
-		height: 480,
-		// 행 높이 설정
-		rowHeight: 34,
-		editable: true,
-		showStateColumn: true
-	};
-
-	// 그리드 칼럼 레이아웃 정의
-	const columnLayout: IGrid.Column[] = [
-		{
-			dataField: 'name',
-			headerText: 'Name',
-			width: 260
-		},
-		{
-			dataField: 'country',
-			headerText: '커스텀 렌더러-Input',
-			width: 280,
-			widthFit: 140,
-			editable: false, // 그리드의 에디팅 사용 안함( 커스텀 렌더러에 자체 에디팅 가능한 input 이 존재하여 에디팅 처리 하기 위함 )
-			headerTooltip: {
-				show: true,
-				tooltipHtml: '사용자 정의 렌더러를 작성한 칼럼입니다.'
-			},
-			renderer: {
-				type: IGrid.RendererKind.CustomRenderer,
-				jsClass: MyInputRenderer
-			}
-		}
-	];
-
-	const cellClick = (event: IGrid.EventKind.CellClick) => {
-		console.log(event);
-	};
-
-	const requestGridData = async () => {
-		const grid = myGrid.value;
-		grid?.setGridData(gridData);
-	};
 
 	const gridData = [
 		{ name: 'Anna', country: 'Japan' },
@@ -79,8 +32,33 @@
 		{ name: 'Steve', country: 'USA' }
 	];
 
+	const columnLayout: IGrid.Column[] = [
+		{ dataField: 'name', headerText: 'Name', width: 260 },
+		{
+			dataField: 'country',
+			headerText: '커스텀 렌더러-Input',
+			width: 280,
+			widthFit: 140,
+			editable: false,
+			headerTooltip: { show: true, tooltipHtml: '사용자 정의 렌더러를 작성한 칼럼입니다.' },
+			renderer: { type: IGrid.RendererKind.CustomRenderer, jsClass: MyInputRenderer }
+		}
+	];
+
+	const gridProps: IGrid.Props = {
+		width: '100%',
+		height: 480,
+		rowHeight: 34,
+		editable: true,
+		showStateColumn: true
+	};
+
+	const cellClick = (event: IGrid.CellClickEvent) => {
+		console.log(event);
+	};
+
 	onMounted(() => {
-		requestGridData();
+		myGrid.value?.setGridData(gridData);
 	});
 </script>
 

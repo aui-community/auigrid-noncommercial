@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<style>
+	/* 소속 셀, 그룹 제목과 별도 소계 행을 색상으로 구분합니다. */
+	.my-team { background: #edf3ff; color: #315da8; }
+	.my-right { text-align: right; }
+	.band-group-team { background:#e5eefb; color:#244f82; font-weight:bold; }
+	.band-group-status { background:#e7f4ec; color:#286045; font-weight:bold; }
+	.band-group-summary { background:#fff3dc; color:#805319; font-weight:bold; }
+</style>
+<script>
+    let myGridID;
+    function init() {
+        createAUIGrid();
+        // 정적 JSON을 읽어 그리드에 표시합니다.
+        requestGridData("./data/band_body_grouping.json");
+    }
+    // 밴드형에 필요한 기본 설정과 이 페이지에서 비교할 기능만 지정합니다.
+    function createAUIGrid() {
+        // children으로 상위 칼럼과 하위 칼럼의 계층을 작성합니다.
+        const columnLayout = [
+            {
+                dataField: "id",
+                headerText: "ID",
+                width: 70,
+                editable: false
+            },
+            {
+                dataField: "team",
+                headerText: "소속",
+                bodyCell: true,
+                // 데이터 셀에만 소속 색상을 적용하여 그룹과 소계 행 스타일을 가리지 않습니다.
+                styleFunction: function(rowIndex, columnIndex, value, headerText, item) {
+                    return item._$isGroupBranch || item._$isGroupSumField ? "" : "my-team";
+                },
+                children: [
+                    {
+                        dataField: "name",
+                        headerText: "이름",
+                        width: 130,
+                    },
+                    {
+                        dataField: "position",
+                        headerText: "직급",
+                        bodyCell: true,
+                        children: [
+                            {
+                                dataField: "age",
+                                headerText: "나이",
+                                width: 70,
+                                dataType: "numeric",
+                            },
+                            {
+                                dataField: "birth",
+                                headerText: "생년월일",
+                                width: 120,
+                                dataType: "date",
+                                dateInputFormat: "yyyy-mm-dd",
+                                formatString: "yyyy/mm/dd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                // 확인은 출력용 상위 셀입니다. 자식 수량과 금액은 아래쪽에 나란히 표시합니다.
+                dataField: "checked",
+                headerText: "확인",
+                bodyCell: true,
+                editable: false,
+                renderer: { type: "CheckBoxEditRenderer" },
+                children: [
+                    {
+                        dataField: "qty",
+                        headerText: "수량",
+                        width: 95,
+                        dataType: "numeric"
+                    },
+                    {
+                        dataField: "amount",
+                        headerText: "금액",
+                        width: 120,
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        style: "my-right"
+                    }
+                ]
+            }
+        ];
+        // 두 번째 그룹 기준인 상태도 데이터 칼럼으로 표시합니다.
+        columnLayout.push({
+            dataField: "status",
+            headerText: "상태",
+            width: 105
+        });
+        const gridProps = {
+            bodyLayoutMode: "band",
+            rowHeight: 120,
+            editable: false,
+            selectionMode: "multipleCells",
+            groupingBranchMode: "singleColumn",
+            groupingFields: ["team", "status"],
+            groupingSummary: {
+                dataFields: ["qty", "amount"],
+                // 그룹 기준과 관계없이 소계 제목은 넓은 소속 셀에 표시합니다.
+                rows: [{
+                    operation: "SUM",
+                    text: { team: "$value 합계", status: "" }
+                }]
+            },
+            // 그룹 제목은 단계별 색상으로, 별도 소계 행은 연한 주황색으로 강조합니다.
+            rowStyleFunction: function(rowIndex, item) {
+                if (item._$isGroupSumField)
+                    return "band-group-summary";
+                if (item._$isGroupBranch)
+                    return item._$depth === 1 ? "band-group-team" : "band-group-status";
+                return "";
+            },
+            keepColumnOrderOnGrouping: true,
+            displayTreeOpen: true,
+            displaySummaryTreeBranch: false,
+            showFooter: true,
+            footerRowCount: 2,
+            footerHeight: 28,
+        };
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+        // Footer는 본문 셀 계층과 별개이며 기존 rowSpan/colSpan으로 2행 블록을 만듭니다.
+        AUIGrid.setFooter(myGridID, [[
+                { positionField: "id", labelText: "합계" },
+                {
+                    positionField: "name",
+                    labelText: "전체 현황",
+                    rowSpan: 2,
+                    colSpan: 3
+                },
+                {
+                    positionField: "qty",
+                    dataField: "qty",
+                    operation: "SUM",
+                    formatString: "#,##0"
+                },
+                {
+                    positionField: "amount",
+                    dataField: "amount",
+                    operation: "SUM",
+                    formatString: "#,##0"
+                }
+            ], [
+                { positionField: "id", labelText: "평균" },
+                {
+                    positionField: "qty",
+                    dataField: "qty",
+                    operation: "AVG",
+                    formatString: "#,##0.0"
+                },
+                {
+                    positionField: "amount",
+                    dataField: "amount",
+                    operation: "AVG",
+                    formatString: "#,##0.0"
+                }
+            ]]);
+    }
+    // 데이터를 다시 불러오지 않고 그룹 제목 행과 별도 소계 행 사이에서 표시를 전환합니다.
+    function changeSummaryDisplay() {
+        const showBranchSummary = document.getElementById("branch-summary").checked;
+        AUIGrid.setProp(myGridID, "displaySummaryTreeBranch", showBranchSummary);
+        AUIGrid.refresh(myGridID);
+    }
+</script>
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p>소속과 상태로 그룹을 나누고 수량과 금액의 소계를 계산합니다. 그룹을 펼치면 밴드형 데이터 행이 나타납니다.</p>
+		<p>아래 2행 푸터는 전체 합계와 평균입니다. 그룹별 소계와 비교해 보세요.</p>
+        <p><label><input type="checkbox" id="branch-summary" onchange="changeSummaryDisplay()"> 브랜치 행에 소계</label>
+            <button class="btn" onclick="AUIGrid.collapseAll(myGridID)">모두 접기</button>
+			<button class="btn" onclick="AUIGrid.expandAll(myGridID)">모두 펼치기</button></p>
+	</div>
+	<div>
+		<div id="grid_wrap" style="width:100%;height:480px;margin:0 auto;"></div>
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

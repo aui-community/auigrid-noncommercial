@@ -1,199 +1,95 @@
-<script>
-	// AUIGrid 컴포넌트
-	import AUIGrid from '../static/AUIGrid-Vue.js/AUIGrid.vue';
+<script setup>
+	import AUIGrid from '@/static/AUIGrid-Vue.js/AUIGrid.vue';
 	import axios from 'axios';
-	// 엑셀, PDF 다운로드를 브라우저에서 처리하기 위한 file-saver
 	import 'file-saver';
-	// AUIGrid PDF 처리 모듈
-	import '../static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
+	import '@/static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
+	import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-	export default {
-		components: {
-			AUIGrid
+	const myGrid = ref(null);
+
+	const columnLayout = [
+		{
+			dataField: 'type0',
+			headerText: '구분',
+			cellMerge: true,
+			style: 'showcase6-my-column-strong',
+			filter: { showIcon: true }
 		},
-
-		data: () => ({
-			// 그리드 칼럼 레이아웃
-			columnLayout: [
-				{
-					dataField: 'type0',
-					headerText: '구분',
-					cellMerge: true,
-					style: 'showcase6-my-column-strong',
-					filter: {
-						showIcon: true
-					}
-				},
-				{
-					dataField: 'type',
-					headerText: '유형',
-					width: 120
-				},
-				{
-					dataField: 'p131,p132,p133,p134,p135,p136,p137,p138,p139,p1310,p1311,p1312',
-					headerText: '월별 추이',
-					width: 120,
-					renderer: {
-						type: 'SparkColumnRenderer'
-					}
-				},
-				{
-					dataField: 'p131',
-					headerText: "'13 1월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p132',
-					headerText: "'13 2월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p133',
-					headerText: "'13 3월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p134',
-					headerText: "'13 4월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p135',
-					headerText: "'13 5월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p136',
-					headerText: "'13 6월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p137',
-					headerText: "'13 7월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p138',
-					headerText: "'13 8월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p139',
-					headerText: "'13 9월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p1310',
-					headerText: "'13 10월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p1311',
-					headerText: "'13 11월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				},
-				{
-					dataField: 'p1312',
-					headerText: "'13 12월",
-					style: 'showcase6-my-column-text-right',
-					dataType: 'numeric',
-					formatString: '#,##0'
-				}
-			],
-
-			// 그리드 속성 정의
-			gridProps: {
-				width: '100%',
-				height: 480,
-				enableCellMerge: true,
-				enableFilter: true,
-				editable: true,
-				// singleRow 선택모드
-				selectionMode: 'multipleCells',
-				// 줄번호 칼럼 렌더러 출력 안함
-				showRowNumColumn: false,
-				// 체크박스 표시 렌더러 출력 안함
-				showRowCheckColumn: false,
-				rowStyleFunction: (rowIndex, item) => {
-					if (item._mySum || item._mySum === 'true') {
-						return 'aui-grid-row-depth2-style';
-					}
-				}
-			}
-		}),
-
-		created() {
-			console.log('Showcase06 생성됨');
+		{
+			dataField: 'type',
+			headerText: '유형',
+			width: 120
 		},
-
-		mounted() {
-			console.log('Showcase06 마운트됨');
-			// 초기 데이터 얻기
-			this.requestGridData();
+		{
+			dataField: 'p131,p132,p133,p134,p135,p136,p137,p138,p139,p1310,p1311,p1312',
+			headerText: '월별 추이',
+			width: 120,
+			renderer: { type: 'SparkColumnRenderer' }
 		},
+		...['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map((m) => ({
+			dataField: `p13${m}`,
+			headerText: `'13 ${m}월`,
+			style: 'showcase6-my-column-text-right',
+			dataType: 'numeric',
+			formatString: '#,##0'
+		}))
+	];
 
-		unmounted() {
-			console.log('Showcase06 언마운트됨');
-		},
-		methods: {
-			// 그리드 데이터 조회하여 삽입
-			requestGridData() {
-				const grid = this.$refs.myGrid;
-				const REQ_URL = './data/profit.json';
-
-				grid.showAjaxLoader();
-				axios.get(REQ_URL).then((result) => {
-					//console.log(result);
-					// 그리드 데이터 삽입
-					grid.setGridData(result.data);
-					grid.removeAjaxLoader();
-				});
-			},
-
-			// 엑셀로 내보내기
-			exportClick() {
-				const grid = this.$refs.myGrid;
-				// 내보내기 실행
-				grid.exportToXlsx({
-					progressBar: true,
-					fileName: '쇼케이스-06'
-				});
-			},
-
-			// PDF 로 내보내기
-			exportPdfClick() {
-				const grid = this.$refs.myGrid;
-				// 내보내기 실행
-				grid.exportToPdf({
-					// 폰트 경로 지정
-					fontPath: './fonts/nyjgothic-medium.ttf',
-					fileName: '쇼케이스-06'
-				});
-			}
+	const gridProps = {
+		width: '100%',
+		height: 480,
+		enableCellMerge: true,
+		enableFilter: true,
+		editable: true,
+		selectionMode: 'multipleCells',
+		showRowNumColumn: false,
+		showRowCheckColumn: false,
+		rowStyleFunction: (_rowIndex, item) => {
+			if (item._mySum || item._mySum === 'true') return 'aui-grid-row-depth2-style';
 		}
 	};
+
+	const exportClick = () => {
+		myGrid.value.exportToXlsx({
+			progressBar: true,
+			fileName: '쇼케이스-06'
+		});
+	};
+
+	const exportPdfClick = () => {
+		const grid = myGrid.value;
+		if (!grid.isAvailabePdf()) {
+			alert('PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)');
+			return;
+		}
+		grid.exportToPdf({
+			fontPath: './fonts/jejugothic-regular.ttf',
+			fileName: '쇼케이스-06'
+		});
+	};
+
+	// 데이터 요청과 그리드 반영. 종료된 컴포넌트에는 응답을 적용하지 않습니다.
+	async function loadGridData(grid, signal) {
+		grid.showAjaxLoader();
+		try {
+			const { data } = await axios.get('./data/profit.json', { signal });
+			if (!signal.aborted) grid.setGridData(data);
+		} catch (error) {
+			if (!signal.aborted) console.error('데이터 로딩 오류:', error);
+		} finally {
+			if (!signal.aborted) grid.removeAjaxLoader();
+		}
+	}
+
+	// KeepAlive의 비활성화 동안에는 유지하고, 실제 unmount에서만 정리합니다.
+	const controller = new AbortController();
+	onMounted(() => {
+		const grid = myGrid.value;
+		loadGridData(grid, controller.signal);
+	});
+	onBeforeUnmount(() => {
+		controller.abort();
+	});
 </script>
 <template>
 	<div>

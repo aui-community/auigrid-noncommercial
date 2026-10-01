@@ -1,9 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import AUIGrid from '../static/AUIGrid-React.js/AUIGridReact';
-// 아파치 ECharts 출력하는 AUIGrid 렌더러
 import AUIGridEChartsRenderer from '../renderers/AUIGrid.EChartsRenderer';
 
-// 그리드 데이터
 const gridData = [
 	{ region: '서울', q1: 373264, q2: 325630, q3: 272396, q4: 427750 },
 	{ region: '경기인천', q1: 390542, q2: 77663, q3: 231813, q4: 296600 },
@@ -21,75 +19,34 @@ const gridData = [
 	{ region: '제주', q1: 487568, q2: 403859, q3: 807833, q4: 145756 }
 ];
 
+const columnLayout = [
+	{ dataField: 'region', headerText: '지역', width: 120 },
+	{
+		dataField: 'chartField',
+		headerText: '비율',
+		width: 300,
+		sortable: false,
+		headerTooltip: { show: true, tooltipHtml: '사용자 정의 렌더러를 작성한 칼럼입니다.' },
+		renderer: { type: 'CustomRenderer', jsClass: AUIGridEChartsRenderer }
+	},
+	{ dataField: 'q1', headerText: 'Q1', dataType: 'numeric' },
+	{ dataField: 'q2', headerText: 'Q2', dataType: 'numeric' },
+	{ dataField: 'q3', headerText: 'Q3', dataType: 'numeric' },
+	{ dataField: 'q4', headerText: 'Q4', dataType: 'numeric' }
+];
+
+const gridProps = {
+	width: '100%',
+	height: 480,
+	rowNumColumnWidth: 30,
+	rowHeight: 102
+};
+
 const CustomRendererEchart = () => {
-	// 그리드 객체
 	const myGrid = useRef();
 
-	// 그리드 칼럼 레이아웃 정의
-	const columnLayout = [
-		{
-			dataField: 'region',
-			headerText: '지역',
-			width: 120
-		},
-		{
-			dataField: 'chartField', // 임의로 유니크하게 입력
-			headerText: '비율',
-			width: 300,
-			sortable: false,
-			headerTooltip: {
-				show: true,
-				tooltipHtml: '사용자 정의 렌더러를 작성한 칼럼입니다.'
-			},
-			renderer: {
-				type: 'CustomRenderer',
-				jsClass: AUIGridEChartsRenderer // AUIGrid 차트 렌더러 커스텀 컴포넌트
-			}
-		},
-		{
-			dataField: 'q1',
-			headerText: 'Q1',
-			dataType: 'numeric'
-		},
-		{
-			dataField: 'q2',
-			headerText: 'Q2',
-			dataType: 'numeric'
-		},
-		{
-			dataField: 'q3',
-			headerText: 'Q3',
-			dataType: 'numeric'
-		},
-		{
-			dataField: 'q4',
-			headerText: 'Q4',
-			dataType: 'numeric'
-		}
-	];
-
-	// 그리드 속성 정의
-	const gridProps = {
-		width: '100%',
-		height: 480,
-		// 행 인덱스 칼럼 30 사이즈
-		rowNumColumnWidth: 30,
-
-		// 행 높이 102
-		// 차트의 높이를 100으로 설정함.
-		rowHeight: 102
-	};
-
 	useEffect(() => {
-		console.log('CustomRendererEchart 마운트됨');
-
-		const grid = myGrid.current;
-		// 그리드 데이터 삽입
-		grid.setGridData(gridData);
-
-		return () => {
-			console.log('CustomRendererEchart 언마운트됨');
-		};
+		myGrid.current.setGridData(gridData);
 	}, []);
 
 	return (

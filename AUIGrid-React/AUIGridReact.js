@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.js for React.js v1.6.20260706
- * Based on AUIGrid v3.0.17.1
+ * AUIGridReact.js for React.js v1.6.20261001
+ * Based on AUIGrid v3.0.18.0
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
@@ -41,18 +41,25 @@ class AUIGrid extends React.Component {
 		this.id = 'aui-grid-wrap-' + (this.props.name !== '' ? this.props.name : this.uuid);
 		this.pid = '#' + this.id;
 		this.timerId = null;
+		this.__auiMountGeneration = 0;
+		this.__auiAnimationFrameId = null;
 		this.__globalResizeHandler = this.__globalResizeHandler.bind(this);
 	}
 
 	componentDidMount() {
+		const generation = ++this.__auiMountGeneration;
 		const initGrid = () => {
+			if (generation !== this.__auiMountGeneration) return;
+			this.__auiAnimationFrameId = null;
 			$ag.create(this.pid, this.props.columnLayout, this.props.gridProps);
+			if (generation !== this.__auiMountGeneration) return;
 			$ag.setFooter(this.pid, this.props.footerLayout);
+			if (generation !== this.__auiMountGeneration) return;
 			this.__setupGlobalResize();
 		};
 		if (this.props.waitPortalRendering) {
 			// Portal 시차 해결을 위해 RAF 사용
-			window.requestAnimationFrame(initGrid);
+			this.__auiAnimationFrameId = window.requestAnimationFrame(initGrid);
 		} else {
 			initGrid();
 		}
@@ -69,22 +76,33 @@ class AUIGrid extends React.Component {
 	}
 
 	__resetGlobalResize() {
-		if (!this.props.autoResize) return;
+		// Invalidate callbacks owned by this mount, including StrictMode remounts.
+		this.__auiMountGeneration++;
+		if (this.__auiAnimationFrameId !== null) {
+			window.cancelAnimationFrame(this.__auiAnimationFrameId);
+			this.__auiAnimationFrameId = null;
+		}
+		if (this.timerId !== null) {
+			clearTimeout(this.timerId);
+			this.timerId = null;
+		}
 		window.removeEventListener('resize', this.__globalResizeHandler);
 	}
 
 	__globalResizeHandler(event) {
 		const that = this;
+		const generation = this.__auiMountGeneration;
 		if (that.timerId !== null) {
 			clearTimeout(that.timerId);
 		}
 		that.timerId = setTimeout(function () {
+			if (generation !== that.__auiMountGeneration) return;
 			if ($ag.isCreated(that.pid)) {
 				try {
 					$ag.resize(that.pid);
 				} catch (e) {}
 			}
-		}, that.resizeDelayTime);
+		}, that.props.resizeDelayTime);
 	}
 
 	render() {
@@ -758,6 +776,18 @@ class AUIGrid extends React.Component {
 	}
 	setSelectionBlock(startRowIndex, endRowIndex, startColumnIndex, endColumnIndex) {
 		$ag.setSelectionBlock.call($ag, this.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
+	}
+	// 셀 종류를 조회합니다. 없는 행이나 바디 셀은 null입니다.
+	getBodyCellKind(rowIndex, dataField) {
+		return $ag.getBodyCellKind.call($ag, this.pid, arguments[0], arguments[1]);
+	}
+	// 필드명으로 상위 셀과 하위 셀을 선택합니다.
+	setSelectionByDataField(rowIndex, dataField) {
+		$ag.setSelectionByDataField.call($ag, this.pid, arguments[0], arguments[1]);
+	}
+	// 시작 셀을 활성 셀로 유지하면서 필드 사이의 영역을 선택합니다.
+	setSelectionBlockByDataField(startRowIndex, endRowIndex, startColDataField, endColDataField) {
+		$ag.setSelectionBlockByDataField.call($ag, this.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
 	}
 	setSelectionByIndex(rowIndex, columnIndex) {
 		$ag.setSelectionByIndex.call($ag, this.pid, arguments[0], arguments[1]);

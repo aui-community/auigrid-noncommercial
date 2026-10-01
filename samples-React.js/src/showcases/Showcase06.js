@@ -1,179 +1,84 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import AUIGrid from '../static/AUIGrid-React.js/AUIGridReact';
 import axios from 'axios';
 import ExportGridDataView from '../samples/ExportGridDataView';
 import './Showcase06.css';
 
+const columnLayout = [
+	{
+		dataField: 'type0',
+		headerText: '구분',
+		cellMerge: true,
+		style: 'showcase6-my-column-strong',
+		filter: { showIcon: true }
+	},
+	{
+		dataField: 'type',
+		headerText: '유형',
+		width: 120
+	},
+	{
+		dataField: 'p131,p132,p133,p134,p135,p136,p137,p138,p139,p1310,p1311,p1312',
+		headerText: '월별 추이',
+		width: 120,
+		renderer: { type: 'SparkColumnRenderer' }
+	},
+	...['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map((m) => ({
+		dataField: `p13${m}`,
+		headerText: `'13 ${m}월`,
+		style: 'showcase6-my-column-text-right',
+		dataType: 'numeric',
+		formatString: '#,##0'
+	}))
+];
+
+const gridProps = {
+	width: '100%',
+	height: 480,
+	enableCellMerge: true,
+	enableFilter: true,
+	editable: true,
+	selectionMode: 'multipleCells',
+	showRowNumColumn: false,
+	showRowCheckColumn: false,
+	rowStyleFunction: (rowIndex, item) => {
+		if (item._mySum || item._mySum === 'true') return 'aui-grid-row-depth2-style';
+	}
+};
+
+// 데이터 요청과 그리드 반영. 종료된 컴포넌트에는 응답을 적용하지 않습니다.
+async function loadGridData(grid, signal) {
+	grid.showAjaxLoader();
+	try {
+		const { data } = await axios.get('./data/profit.json', { signal });
+		if (!signal.aborted) grid.setGridData(data);
+	} catch (error) {
+		if (!signal.aborted) console.error('데이터 로딩 오류:', error);
+	} finally {
+		if (!signal.aborted) grid.removeAjaxLoader();
+	}
+}
+
+// 그리드 생성 뒤 이벤트를 연결합니다. 리스너 해제는 wrapper가 담당합니다.
+function bindGridEvents(grid) {
+	grid.bind(['cellClick', 'headerClick'], (event) => {
+		console.log(event.type);
+	});
+}
+
 const Showcase06 = () => {
-	// 그리드 객체
 	const myGrid = useRef();
 
-	// 그리드 칼럼 레이아웃
-	const columnLayout = [
-		{
-			dataField: 'type0',
-			headerText: '구분',
-			cellMerge: true,
-			style: 'showcase6-my-column-strong',
-			filter: {
-				showIcon: true
-			}
-		},
-		{
-			dataField: 'type',
-			headerText: '유형',
-			width: 120
-		},
-		{
-			dataField: 'p131,p132,p133,p134,p135,p136,p137,p138,p139,p1310,p1311,p1312',
-			headerText: '월별 추이',
-			width: 120,
-			renderer: {
-				type: 'SparkColumnRenderer'
-			}
-		},
-		{
-			dataField: 'p131',
-			headerText: "'13 1월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p132',
-			headerText: "'13 2월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p133',
-			headerText: "'13 3월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p134',
-			headerText: "'13 4월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p135',
-			headerText: "'13 5월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p136',
-			headerText: "'13 6월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p137',
-			headerText: "'13 7월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p138',
-			headerText: "'13 8월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p139',
-			headerText: "'13 9월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p1310',
-			headerText: "'13 10월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p1311',
-			headerText: "'13 11월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'p1312',
-			headerText: "'13 12월",
-			style: 'showcase6-my-column-text-right',
-			dataType: 'numeric',
-			formatString: '#,##0'
-		}
-	];
-
-	// 그리드 속성 정의
-	const gridProps = {
-		width: '100%',
-		height: 480,
-		enableCellMerge: true,
-		enableFilter: true,
-		editable: true,
-		// singleRow 선택모드
-		selectionMode: 'multipleCells',
-		// 줄번호 칼럼 렌더러 출력 안함
-		showRowNumColumn: false,
-		// 체크박스 표시 렌더러 출력 안함
-		showRowCheckColumn: false,
-		rowStyleFunction: (rowIndex, item) => {
-			if (item._mySum || item._mySum === 'true') {
-				return 'aui-grid-row-depth2-style';
-			}
-		}
-	};
-
+	// 생성된 wrapper 참조에 초기화하고, effect가 종료되면 요청/작업을 정리합니다.
 	useEffect(() => {
-		console.log('Showcase06 마운트됨');
-
-		// 최초 마운팅 될 때 그리드 이벤트 세팅
-		setupGridEvents();
-
-		// 최초 마운팅 될 때 그리드 데이터 조회시키기
-		requestGridData();
-
+		const grid = myGrid.current;
+		const controller = new AbortController();
+		bindGridEvents(grid);
+		loadGridData(grid, controller.signal);
 		return () => {
-			console.log('Showcase06 언마운트됨');
+			controller.abort();
 		};
 	}, []);
-
-	// 그리드 이벤트 세팅
-	const setupGridEvents = () => {
-		const grid = myGrid.current;
-		// 그리드 이벤트 바인딩
-		grid.bind(['cellClick', 'headerClick'], (event) => {
-			console.log(event.type);
-		});
-	};
-
-	// 그리드 데이터 조회하여 삽입
-	const requestGridData = () => {
-		const grid = myGrid.current;
-		const REQ_URL = './data/profit.json';
-
-		grid.showAjaxLoader();
-		axios.get(REQ_URL).then((result) => {
-			//console.log(result);
-			// 그리드 데이터 삽입
-			grid.setGridData(result.data);
-			grid.removeAjaxLoader();
-		});
-	};
 
 	return (
 		<div>

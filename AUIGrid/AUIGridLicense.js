@@ -1,8 +1,8 @@
 /*!
- * AUIGrid Non-Commercial LICENSE v3.0.17
+ * AUIGrid Non-Commercial LICENSE v3.0.18
  * Authorized Domain(or IP) : localhost, 127.0.0.1
  * www.auisoft.net
- * 
+ *
  * 1. License Grant
  * Under the terms of this agreement, AUISoft Co., Ltd. (hereinafter "Licensor") grants you a perpetual, worldwide, non-exclusive, royalty-free, and non-transferable license to use AUI Products (hereinafter "Software") for non-commercial purposes only.
  * 2. Permitted Use
@@ -23,9 +23,9 @@
  * To use the software for commercial purposes, you must obtain an appropriate license from the Licensor.For commercial use inquiries, please contact the Company.
  * 6. Localhost Usage Restriction
  * This software is permitted to be used only in a localhost environment.If the software is uploaded to an external web server where a separate access domain or access IP exists, a valid commercial license must be purchased.
- * 
+ *
  * Copyright © AUISoft Co., Ltd. https://www.auisoft.net
  */
- /* eslint-disable */
-const AUIGridLicense = "eyJjdCI6IkpoOG84RXh5K1VCTGZqSnNEL2pQek5lZFZFT3J6Y3NjQk55cU9nSnFoZHZsZFUxYUNIaUVTUUVCL1Ayd1l0WUR6aVBtdVc5N1g0aHNUUVZyYmY3Y1ZPTE8yT3A1Vkc5ZERER0R1bzBBRXpnPSIsIml2IjoiMDRhZTRjYmNkYjM2YmNjOTU2YzU0MjRkNTY4MTExNmYiLCJzIjoiNTAwOTYyNjk4MDc0YmQ0YSJ9";
-if (typeof window !== "undefined") window.AUIGridLicense = AUIGridLicense;
+/* eslint-disable */
+const AUIGridLicense = 'eyJjdCI6IndCUXlGMW1Sd29kUTAveDRiUlNickxDcC9XSFk5V1FZUmhpdWN6VkVnVFFma0ZLUmZwNG4wNFFkbUdGa0lieERHaUFmVlBIVEQ5NnhDK0JoTkRpd0hBR3A0Z3ZwQU9udC9KRm40dGp2RnZNPSIsIml2IjoiMmM3ZWNlMTU1MmVmOTJjNjU2ZTJmYmZkMmVmNWUwYTYiLCJzIjoiMmFiNjgxYWQ4NjBiZjJmNiJ9';
+if (typeof window !== 'undefined') window.AUIGridLicense = AUIGridLicense;

@@ -6,17 +6,19 @@
 	"dependencies": {
 		"@types/file-saver": "^2.0.5",
 		"@types/node": "^16.11.59",
+		"@types/prismjs": "^1.26.6",
 		"@types/react": "^18.0.21",
 		"@types/react-dom": "^18.0.6",
 		"@types/react-router-dom": "^5.3.3",
-		"aui-grid": "^2.0.12",
+		"aui-grid": "^2.0.18",
 		"axios": "^1.0.0",
 		"file-saver": "^2.0.5",
+		"prismjs": "^1.30.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-router-dom": "^6.4.2",
 		"react-scripts": "5.0.1",
-		"typescript": "^4.8.4"
+		"typescript": "4.8.4"
 	},
 	"scripts": {
 		"start": "react-scripts start",
@@ -41,5 +43,8 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
+	},
+	"devDependencies": {
+		"raw-loader": "^4.0.2"
 	}
 }

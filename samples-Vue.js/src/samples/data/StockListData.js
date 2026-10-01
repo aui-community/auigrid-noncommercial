@@ -1,6 +1,6 @@
-const stockData = [
+export const stockData = [
 	{
-		name: '삼성전자',
+		name: '넥소닉테크',
 		close: '1,150,000',
 		gap: '110,00',
 		vars: '-0.95',
@@ -10,7 +10,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: '현대차',
+		name: '에버모션모빌리티',
 		close: '192,000',
 		gap: '500',
 		vars: '0.26',
@@ -20,7 +20,7 @@ const stockData = [
 		own: false
 	},
 	{
-		name: 'SK하이닉스',
+		name: '디지트론반도체',
 		close: '44,200',
 		gap: '1,700',
 		vars: '4.00',
@@ -30,7 +30,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: '한국전력',
+		name: '퓨처에너지코어',
 		close: '47,050',
 		gap: '2,050',
 		vars: '4.56',
@@ -40,7 +40,7 @@ const stockData = [
 		own: false
 	},
 	{
-		name: 'POSCO',
+		name: '아이언마크스틸',
 		close: '338,500',
 		gap: '4,500',
 		vars: '1.35',
@@ -50,7 +50,7 @@ const stockData = [
 		own: false
 	},
 	{
-		name: 'NAVER',
+		name: '큐리언스랩',
 		close: '833,000',
 		gap: '1,000',
 		vars: '-0.12',
@@ -60,7 +60,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: '신한지주',
+		name: '유니뱅크홀딩스',
 		close: '51,500',
 		gap: '600',
 		vars: '-1.15',
@@ -70,7 +70,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: '현대모비스',
+		name: '제노모빌시스템즈',
 		close: '249,500',
 		gap: '2,000',
 		vars: '0.81',
@@ -80,7 +80,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: 'SK텔레콤',
+		name: '넷스트림커넥트',
 		close: '297,500',
 		gap: '1,000',
 		vars: '-0.34',
@@ -90,7 +90,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: '삼성생명',
+		name: '브라이트라이프',
 		close: '108,500',
 		gap: '2,500',
 		vars: '2.36',
@@ -100,7 +100,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: '기아차',
+		name: '트랜조자동차',
 		close: '53,100',
 		gap: '200',
 		vars: '-0.38',
@@ -110,7 +110,7 @@ const stockData = [
 		own: false
 	},
 	{
-		name: '삼성전자우',
+		name: '넥소닉테크우',
 		close: '875,000',
 		gap: '20,000',
 		vars: '-2.23',
@@ -120,7 +120,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: 'LG',
+		name: '루미온그룹',
 		close: '75,800',
 		gap: '0',
 		vars: '0.00',
@@ -130,7 +130,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: 'LG디스플레이',
+		name: '옵티비스플렉스',
 		close: '35,600',
 		gap: '2,100',
 		vars: '6.27',
@@ -140,7 +140,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: 'SK C&C',
+		name: '플럭스아이티',
 		close: '238,500',
 		gap: '6,000',
 		vars: '2.58',
@@ -150,7 +150,7 @@ const stockData = [
 		own: false
 	},
 	{
-		name: 'KT',
+		name: '얼라인텔레콤',
 		close: '35,700',
 		gap: '1,100',
 		vars: '-2.99',
@@ -160,7 +160,7 @@ const stockData = [
 		own: false
 	},
 	{
-		name: '우리금융',
+		name: '네오핀금융',
 		close: '13,650',
 		gap: '100',
 		vars: '0.74',
@@ -170,7 +170,7 @@ const stockData = [
 		own: true
 	},
 	{
-		name: '삼성SDI',
+		name: '일렉트라에너지시스템',
 		close: '134,000',
 		gap: '13,000',
 		vars: '-8.84',
@@ -180,5 +180,3 @@ const stockData = [
 		own: true
 	}
 ];
-
-export default stockData;

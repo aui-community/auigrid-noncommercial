@@ -1,25 +1,16 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-// AUIGrid 엑셀, PDF 바로 다운로딩 처리 모듈
 // eslint-disable-next-line
 import FileSaver from 'file-saver';
-// AUIGrid PDF 처리 모듈
 // eslint-disable-next-line
 import '../static/AUIGrid.pdfkit/AUIGrid.pdfkit';
 
-const ExportGridDataView = (props) => {
-	// 엑셀로 내보내기
+const ExportGridDataView = ({ myGrid, xlsxProps, pdfProps }) => {
 	const exportClick = () => {
-		const grid = props.myGrid.current;
-		// 내보내기 실행
-		grid.exportToXlsx({ ...props.xlsxProps, progressBar: true });
+		myGrid.current.exportToXlsx({ ...xlsxProps, progressBar: true });
 	};
 
-	// PDF 로 내보내기
 	const exportPdfClick = () => {
-		const grid = props.myGrid.current;
-		// 내보내기 실행
-		grid.exportToPdf({ ...props.pdfProps, fontPath: './fonts/nyjgothic-medium.ttf' });
+		myGrid.current.exportToPdf({ ...pdfProps, fontPath: './fonts/nyjgothic-medium.ttf' });
 	};
 	return (
 		<div>

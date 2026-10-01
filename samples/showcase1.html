@@ -88,15 +88,15 @@
 	// 시작점
 	function init() {
 		// 칼럼 레이아웃을 생성하여 반환합니다.
-		const columnLayout = createColumnData();
+		const columnLayout = createColumnLayout();
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid(columnLayout);
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/student_present.json");
+		loadGridData();
 	}
 
 	// 칼럼 레이아웃을 생성하여 반환합니다. (동적 생성)
-	function createColumnData() {
+	function createColumnLayout() {
 		const columnLayout = [{
 			dataField: "name",
 			headerText: "학생이름",
@@ -135,110 +135,14 @@
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid(columnLayout) {
 		// 그리드 속성 설정
-		const gridProps = {
-			editable: true,
-			editableOnFixedCell: true,
-			rowIdField: "no",
-			enableFilter: true,
-			showFooter: true,
-			useContextMenu: true,
-			showStateColumn: true,
-			fixedColumnCount: 1,
-			softRemovePolicy: "exceptNew",
-			skipReadonlyColumns: true,
-			enterKeyColumnBase: true
-		};
+		const gridProps = createGridProps();
 
 		// 그리드 푸터 설정
-		const footerLayout = [{
-			labelText: "합 계",
-			positionField: "name"
-		}, {
-			dataField: "ct",
-			operation: "SUM",
-			positionField: "ct"
-		}, {
-			dataField: "ce",
-			operation: "SUM",
-			positionField: "ce"
-		}, {
-			dataField: "cu",
-			operation: "SUM",
-			positionField: "cu"
-		}, {
-			dataField: "cp",
-			operation: "SUM",
-			positionField: "cp"
-		}, {
-			dataField: "ceu",
-			operation: "SUM",
-			positionField: "ceu"
-		}];
+		const footerLayout = createFooterLayout();
 
 		// 실제로 #grid_wrap 에 그리드 생성
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-		// cellEditEndBefore 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
-			const oldValue = event.oldValue;
-			const value = event.value;
-			// cellEditEndBefore 이벤트에서 사용자가 입력한 텍스트를 강제로 변경가능합니다.
-			// 이름은 어떤것을 입력해도 허용함.
-			if (event.dataField === "name") {
-				document.getElementById("editing_info").textContent = `oldValue : ${oldValue}, new Value : ${value}`;
-				return value;
-			}
-
-			if (!value) return oldValue;
-
-			// 대문자로 모두 변경시킴
-			const normalizedValue = value.toUpperCase();
-			const validValues = ["T", "E", "U", "P", "N"]; // 입력 유효값.
-			if (!validValues.includes(normalizedValue)) {
-				document.getElementById("editing_info").textContent = `"${value}"는 허용되지 않는 값입니다.유효한 값: ${validValues.join(", ")} `;
-				return oldValue;
-			}
-
-			document.getElementById("editing_info").textContent = `oldValue: ${oldValue}, new Value : ${normalizedValue}, (대문자로 변경됨)`;
-			return normalizedValue;
-		});
-
-		// cellEditCancel 이벤트 바인딩
-		// cellEditCancel 이벤트는 사용자가 에디팅을 취소했을 때 발생합니다.
-		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
-			if (event.dataField === "name") {
-				// 학생 이름 입력 안하면 삭제.
-				if (event.item.name === "") {
-					// removeRow 메소드는 에디팅이 현재 열린 경우 취소를 시키게 됨.
-					// 이 때 다시 취소 이벤트가 발생하여 무한으로 빠지는 것을 방지
-					setTimeout(function () {
-						AUIGrid.removeRow(myGridID, event.rowIndex);
-					}, 16);
-				}
-			}
-		});
-
-		// 행추가 이벤트 바인딩
-		// addRowFinish 이벤트 핸들링
-		AUIGrid.bind(myGridID, "addRowFinish", function (event) {
-			// 행 추가 시 추가된 행에 선택자가 이동합니다.
-			// 이 때 칼럼은 기존 칼럼 그래도 유지한채 이동함.
-			// 원하는 칼럼으로 선택자를 보내 강제로 편집기(inputer) 를 열기 위한 코드
-			const selected = AUIGrid.getSelectedIndex(myGridID);
-			if (selected.length <= 0) {
-				return;
-			}
-
-			const rowIndex = selected[0];
-			const colIndex = AUIGrid.getColumnIndexByDataField(myGridID, "name");
-			AUIGrid.setSelectionByIndex(myGridID, rowIndex, colIndex); // name 으로 선택자 이동
-
-			// 빈행 추가 후 인푸터 열기
-			setTimeout(() => {
-				// 빈행 추가 후 isbn 에 인푸터 열기
-				AUIGrid.openInputer(myGridID);
-			}, 16);
-		});
+		bindGridEvents();
 
 		// 푸터 레이아웃 세팅
 		AUIGrid.setFooter(myGridID, footerLayout);
@@ -343,6 +247,160 @@
 			fontPath: "../pdfkit/nyjgothic-medium.ttf"
 		});
 	}
+
+	// 그리드 속성을 정의합니다.
+	function createGridProps() {
+		const gridProps = {
+			editable: true,
+			editableOnFixedCell: true,
+			rowIdField: "no",
+			enableFilter: true,
+			showFooter: true,
+			useContextMenu: true,
+			showStateColumn: true,
+			fixedColumnCount: 1,
+			softRemovePolicy: "exceptNew",
+			skipReadonlyColumns: true,
+			enterKeyColumnBase: true
+		};
+		return gridProps;
+	}
+
+	// 푸터 레이아웃을 정의합니다.
+	function createFooterLayout() {
+		const footerLayout = [{
+			labelText: "합 계",
+			positionField: "name"
+		}, {
+			dataField: "ct",
+			operation: "SUM",
+			positionField: "ct"
+		}, {
+			dataField: "ce",
+			operation: "SUM",
+			positionField: "ce"
+		}, {
+			dataField: "cu",
+			operation: "SUM",
+			positionField: "cu"
+		}, {
+			dataField: "cp",
+			operation: "SUM",
+			positionField: "cp"
+		}, {
+			dataField: "ceu",
+			operation: "SUM",
+			positionField: "ceu"
+		}];
+		return footerLayout;
+	}
+
+	// 그리드 생성 후 편집 이벤트를 연결합니다.
+	function bindGridEvents() {
+
+		// cellEditEndBefore 이벤트 바인딩
+		AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
+			const oldValue = event.oldValue;
+			const value = event.value;
+			// cellEditEndBefore 이벤트에서 사용자가 입력한 텍스트를 강제로 변경가능합니다.
+			// 이름은 어떤것을 입력해도 허용함.
+			if (event.dataField === "name") {
+				document.getElementById("editing_info").textContent = `oldValue : ${oldValue}, new Value : ${value}`;
+				return value;
+			}
+
+			if (!value) return oldValue;
+
+			// 대문자로 모두 변경시킴
+			const normalizedValue = value.toUpperCase();
+			const validValues = ["T", "E", "U", "P", "N"]; // 입력 유효값.
+			if (!validValues.includes(normalizedValue)) {
+				document.getElementById("editing_info").textContent = `"${value}"는 허용되지 않는 값입니다.유효한 값: ${validValues.join(", ")} `;
+				return oldValue;
+			}
+
+			document.getElementById("editing_info").textContent = `oldValue: ${oldValue}, new Value : ${normalizedValue}, (대문자로 변경됨)`;
+			return normalizedValue;
+		});
+
+		// cellEditCancel 이벤트 바인딩
+		// cellEditCancel 이벤트는 사용자가 에디팅을 취소했을 때 발생합니다.
+		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+			if (event.dataField === "name") {
+				// 학생 이름 입력 안하면 삭제.
+				if (event.item.name === "") {
+					// removeRow 메소드는 에디팅이 현재 열린 경우 취소를 시키게 됨.
+					// 이 때 다시 취소 이벤트가 발생하여 무한으로 빠지는 것을 방지
+					scheduleEdit(function () {
+						AUIGrid.removeRow(myGridID, event.rowIndex);
+					});
+				}
+			}
+		});
+
+		// 행추가 이벤트 바인딩
+		// addRowFinish 이벤트 핸들링
+		AUIGrid.bind(myGridID, "addRowFinish", function (event) {
+			// 행 추가 시 추가된 행에 선택자가 이동합니다.
+			// 이 때 칼럼은 기존 칼럼 그래도 유지한채 이동함.
+			// 원하는 칼럼으로 선택자를 보내 강제로 편집기(inputer) 를 열기 위한 코드
+			const selected = AUIGrid.getSelectedIndex(myGridID);
+			if (selected.length <= 0) {
+				return;
+			}
+
+			const rowIndex = selected[0];
+			const colIndex = AUIGrid.getColumnIndexByDataField(myGridID, "name");
+			AUIGrid.setSelectionByIndex(myGridID, rowIndex, colIndex); // name 으로 선택자 이동
+
+			// 빈행 추가 후 인푸터 열기
+			scheduleEdit(() => {
+				// 빈행 추가 후 isbn 에 인푸터 열기
+				AUIGrid.openInputer(myGridID);
+			});
+		});
+	}
+
+	// 데이터 요청과 그리드 반영. 페이지 종료 후 응답을 적용하지 않습니다.
+	const controller = new AbortController();
+	async function loadGridData() {
+		AUIGrid.showAjaxLoader(myGridID);
+		try {
+			const response = await fetch("./data/student_present.json", { signal: controller.signal });
+			if (!response.ok) throw new Error("데이터 요청 실패");
+			const data = await response.json();
+			if (!controller.signal.aborted) AUIGrid.setGridData(myGridID, data);
+		} catch (error) {
+			if (!controller.signal.aborted) console.error("데이터 로딩 오류:", error);
+		} finally {
+			if (!controller.signal.aborted) AUIGrid.removeAjaxLoader(myGridID);
+		}
+	}
+
+	// 편집 이벤트의 재진입을 피하는 기존 16ms 지연을 관리합니다.
+	let disposed = false;
+	const pendingEdits = new Set();
+	function scheduleEdit(callback) {
+		if (disposed) return;
+		const timer = setTimeout(() => {
+			pendingEdits.delete(timer);
+			callback();
+		}, 16);
+		pendingEdits.add(timer);
+	}
+
+	// 뒤로 가기 캐시에 보관되는 페이지는 유지하고, 실제 종료에서만 정리합니다.
+	function disposeDemo(event) {
+		if (event.persisted) return;
+		disposed = true;
+		controller.abort();
+		pendingEdits.forEach(clearTimeout);
+		pendingEdits.clear();
+		AUIGrid.destroy(myGridID);
+		myGridID = null;
+		window.removeEventListener("pagehide", disposeDemo);
+	}
+	window.addEventListener("pagehide", disposeDemo);
 </script>
 </head>
 <body>

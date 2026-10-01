@@ -1,174 +1,80 @@
-<script>
-	// AUIGrid 컴포넌트
-	import AUIGrid from '../static/AUIGrid-Vue.js/AUIGrid.vue';
+<script setup>
+	import AUIGrid from '@/static/AUIGrid-Vue.js/AUIGrid.vue';
 	import axios from 'axios';
+	import { ref, onMounted } from 'vue';
 
-	const PUBLIC_URL = process.env.BASE_URL;
+	const PUBLIC_URL = import.meta.env.BASE_URL;
+	const myMasterGrid = ref(null);
+	const myDetailGrid = ref(null);
 
-	export default {
-		components: {
-			AUIGrid
+	const columnLayoutMaster = [
+		{ dataField: 'id', headerText: 'ID', width: 160 },
+		{ dataField: 'name', headerText: 'Name', width: 160 },
+		{
+			dataField: 'flag',
+			headerText: 'Flag IMG',
+			editable: false,
+			prefix: `${PUBLIC_URL}/assets/`,
+			renderer: { type: 'ImageRenderer', imgHeight: 24, altField: 'country' },
+			width: 100
 		},
+		{ dataField: 'product', headerText: 'Product', width: 140 },
+		{ dataField: 'color', headerText: 'Color', width: 100 },
+		{ dataField: 'price', headerText: 'Price', dataType: 'numeric', style: 'my-right-column', width: 120 },
+		{ dataField: 'quantity', headerText: 'Quantity', dataType: 'numeric', style: 'my-right-column', width: 100 },
+		{ dataField: 'date', headerText: 'Date', dataType: 'date', dateInputFormat: 'yyyy-mm-dd', formatString: 'yyyy년 mm월 dd일', width: 140 }
+	];
 
-		data: () => ({
-			// 상단 마스터 그리드 칼럼 레이아웃 정의
-			columnLayoutMaster: [
-				{
-					dataField: 'id',
-					headerText: 'ID',
-					width: 160
-				},
-				{
-					dataField: 'name',
-					headerText: 'Name',
-					width: 160
-				},
-				{
-					dataField: 'flag',
-					headerText: 'Flag IMG',
-					editable: false,
-					prefix: PUBLIC_URL + '/assets/',
-					renderer: {
-						type: 'ImageRenderer',
-						imgHeight: 24,
-						altField: 'country'
-					},
-					width: 100
-				},
-				{
-					dataField: 'product',
-					headerText: 'Product',
-					width: 140
-				},
-				{
-					dataField: 'color',
-					headerText: 'Color',
-					width: 100
-				},
-				{
-					dataField: 'price',
-					headerText: 'Price',
-					dataType: 'numeric',
-					style: 'my-right-column',
-					width: 120
-				},
-				{
-					dataField: 'quantity',
-					headerText: 'Quantity',
-					dataType: 'numeric',
-					style: 'my-right-column',
-					width: 100
-				},
-				{
-					dataField: 'date',
-					headerText: 'Date',
-					dataType: 'date',
-					dateInputFormat: 'yyyy-mm-dd', // 데이터의 날짜 형식
-					formatString: 'yyyy년 mm월 dd일', // 그리드에 보여줄 날짜 형식
-					wdith: 140
-				}
-			],
-
-			// 상단 마스터 그리드 속성 정의
-			gridMasterProps: {
-				width: '100%',
-				height: 280,
-				selectionMode: 'multipleCells',
-				// 드래깅 행 이동 가능 여부 (기본값 : false)
-				enableDrag: true,
-				// 다수의 행을 한번에 이동 가능 여부(기본값 : true)
-				enableMultipleDrag: true,
-				// 셀에서 바로  드래깅 해 이동 가능 여부 (기본값 : false) - enableDrag=true 설정이 선행
-				enableDragByCellDrag: true,
-				// 드랍 가능 여부 (기본값 : true)
-				enableDrop: true,
-				// 드랍을 받아줄 그리드가 다른 그리드에도 있는지 여부 (기본값 : false)
-				// 즉, 드리드 간의 행 이동인지 여부
-				dropToOthers: true
-			},
-
-			// 하단 디테일 그리드 칼럼 레이아웃 정의
-			columnLayoutDeatil: [
-				{
-					dataField: 'id',
-					headerText: 'ID',
-					width: 160
-				},
-				{
-					dataField: 'name',
-					headerText: 'Name',
-					width: 140
-				},
-				{
-					dataField: 'country',
-					headerText: 'Country',
-					width: 140
-				},
-				{
-					dataField: 'product',
-					headerText: 'Product',
-					width: 180
-				}
-			],
-
-			// 하단 디테일 그리드 속성 정의
-			gridDetailProps: {
-				width: '100%',
-				height: 280,
-				// 드래깅 행 이동 가능 여부 (기본값 : false)
-				enableDrag: true,
-				// 다수의 행을 한번에 이동 가능 여부(기본값 : true)
-				enableMultipleDrag: true,
-				// 셀에서 바로  드래깅 해 이동 가능 여부 (기본값 : false) - enableDrag=true 설정이 선행
-				enableDragByCellDrag: true,
-				// 드랍 가능 여부 (기본값 : true)
-				enableDrop: true,
-				// 드랍을 받아줄 그리드가 다른 그리드에도 있는지 여부 (기본값 : false)
-				// 즉, 드리드 간의 행 이동인지 여부
-				dropToOthers: true
-			}
-		}),
-		created() {
-			console.log('SampleDefault 생성됨');
-		},
-
-		mounted() {
-			console.log('SampleDefault 마운트됨');
-			// 초기 데이터 얻기
-			this.requestGridData();
-
-			// 디테일 그리드는 빈 배열로 삽입
-			const gridDetail = this.$refs.myDetailGrid;
-			gridDetail.setGridData([]);
-		},
-
-		unmounted() {
-			console.log('SampleDefault 언마운트됨');
-		},
-		methods: {
-			// 그리드 데이터 조회하여 삽입
-			requestGridData() {
-				const grid = this.$refs.myMasterGrid;
-				const REQ_URL = './data/normal_100.json';
-
-				grid.showAjaxLoader();
-				axios.get(REQ_URL).then((result) => {
-					//console.log(result);
-					// 그리드 데이터 삽입
-					grid.setGridData(result.data);
-					grid.removeAjaxLoader();
-				});
-			},
-
-			// 드랍 완료 이벤트 핸들러
-			dropEndEventHandler(e) {
-				// 정보 출력
-				const gridDirection = '그리드 ' + e.pid + ' → ' + e.pidToDrop;
-				const msg = gridDirection + ' 드랍 완료 : ' + e.fromRowIndex + '→' + e.toRowIndex + ' 에 ' + e.items.length + ' 행(들) 드랍 됨';
-				console.log(msg);
-			}
-		}
+	const gridMasterProps = {
+		width: '100%',
+		height: 280,
+		selectionMode: 'multipleCells',
+		enableDrag: true,
+		enableMultipleDrag: true,
+		enableDragByCellDrag: true,
+		enableDrop: true,
+		dropToOthers: true
 	};
+
+	const columnLayoutDetail = [
+		{ dataField: 'id', headerText: 'ID', width: 160 },
+		{ dataField: 'name', headerText: 'Name', width: 140 },
+		{ dataField: 'country', headerText: 'Country', width: 140 },
+		{ dataField: 'product', headerText: 'Product', width: 180 }
+	];
+
+	const gridDetailProps = {
+		width: '100%',
+		height: 280,
+		enableDrag: true,
+		enableMultipleDrag: true,
+		enableDragByCellDrag: true,
+		enableDrop: true,
+		dropToOthers: true
+	};
+
+	const dropEndEventHandler = (e) => {
+		const msg = `그리드 ${e.pid} → ${e.pidToDrop} 드랍 완료 : ${e.fromRowIndex}→${e.toRowIndex} 에 ${e.items.length} 행(들) 드랍 됨`;
+		console.log(msg);
+	};
+
+	onMounted(() => {
+		const grid = myMasterGrid.value;
+		grid.showAjaxLoader();
+		axios
+			.get('./data/normal_100.json')
+			.then((result) => {
+				grid.setGridData(result.data);
+			})
+			.catch((error) => {
+				console.error('데이터 로드 실패:', error);
+			})
+			.finally(() => {
+				grid.removeAjaxLoader();
+			});
+
+		myDetailGrid.value.setGridData([]);
+	});
 </script>
 <template>
 	<div>
@@ -179,6 +85,6 @@
 		<h4 style="text-align: left">상단 마스터 그리드</h4>
 		<AUIGrid ref="myMasterGrid" name="master" :columnLayout="columnLayoutMaster" :gridProps="gridMasterProps" @dropEnd="dropEndEventHandler" />
 		<h4 style="text-align: left; height: 20px">하단 디테일 그리드</h4>
-		<AUIGrid ref="myDetailGrid" name="detail" :columnLayout="columnLayoutDeatil" :gridProps="gridDetailProps" @dropEnd="dropEndEventHandler" />
+		<AUIGrid ref="myDetailGrid" name="detail" :columnLayout="columnLayoutDetail" :gridProps="gridDetailProps" @dropEnd="dropEndEventHandler" />
 	</div>
 </template>

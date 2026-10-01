@@ -1,0 +1,151 @@
+/* 공통 헤더, 메뉴, 테마 선택, 버튼과 푸터는 기존 쇼케이스 스타일을 그대로 사용합니다.
+이 페이지에서는 조작 영역, 미리보기 너비와 그리드 셀의 전용 스타일을 지정합니다. */
+ .showcase8-controls {
+     display: flex;
+     align-items: center;
+     flex-wrap: wrap;
+     gap: 4px;
+ }
+
+ .showcase8-controls button[aria-pressed="true"] {
+     background-color: #ee5315;
+     border-color: #ee5315;
+ }
+
+ .showcase8-preview {
+     width: 100%;
+     margin: 0 auto;
+ }
+
+ .showcase8-width {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     max-width: 640px;
+     margin: 10px 0;
+ }
+
+ .showcase8-width label,
+ .showcase8-width output {
+     white-space: nowrap;
+ }
+
+ .showcase8-width input {
+     flex: 1;
+     min-width: 0;
+     height: 28px;
+     margin: 0;
+     accent-color: #ee5315;
+ }
+
+ .showcase8-width output {
+     min-width: 64px;
+     text-align: right;
+     font-variant-numeric: tabular-nums;
+ }
+
+ #aui-grid-wrap-showcase8 {
+     width: 100%;
+     height: 430px;
+ }
+
+ /* 셀 스타일은 Excel과 PDF에서도 읽을 수 있도록 단일 클래스로 정의합니다. */
+ .sc-project-cell {
+     background: #f0f8f7;
+     text-align: left;
+ }
+
+ .sc-client-cell {
+     background: #f8fafc;
+     text-align: left;
+     color: #596f80;
+ }
+
+ .sc-project-label {
+     display: flex;
+     align-items: center;
+     gap: 9px;
+     padding: 0 9px;
+     min-width: 0;
+ }
+
+ .sc-project-icon {
+     width: 25px;
+     height: 25px;
+     flex: none;
+     border-radius: 7px;
+     background: #d4eee5;
+     color: #1a7667;
+     font-size: 11px;
+     display: grid;
+     place-items: center;
+     font-weight: 700;
+ }
+
+ .sc-project-label b {
+     display: block;
+     font-size: 12px;
+     color: #234b4f;
+     overflow: hidden;
+     text-overflow: ellipsis;
+ }
+
+ .sc-project-label small {
+     display: block;
+     font-size: 9px;
+     color: #809790;
+     margin-top: 3px;
+     letter-spacing: .6px;
+ }
+
+ .sc-project-label>span:last-child {
+     overflow: hidden;
+ }
+
+ .sc-status {
+     display: inline-block;
+     padding: 4px 8px;
+     border-radius: 20px;
+     font-size: 10px;
+     font-weight: 600;
+     background: #e2f4ed;
+     color: #128568;
+ }
+
+ .sc-status.review {
+     background: #fff1d9;
+     color: #b58123;
+ }
+
+ .sc-status.done {
+     background: #e8ebf7;
+     color: #676da4;
+ }
+
+ .sc-progress {
+     display: flex;
+     align-items: center;
+     gap: 6px;
+     padding: 0 7px;
+ }
+
+ .sc-progress-track {
+     height: 4px;
+     background: #e3eceb;
+     flex: 1;
+     overflow: hidden;
+     border-radius: 3px;
+ }
+
+ .sc-progress-track i {
+     display: block;
+     height: 100%;
+     background: #27b698;
+     border-radius: 3px;
+ }
+
+ .sc-progress span {
+     font-size: 10px;
+     min-width: 27px;
+     color: #607e80;
+ }

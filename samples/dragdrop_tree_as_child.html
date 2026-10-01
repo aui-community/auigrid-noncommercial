@@ -28,122 +28,108 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style>
-	.tree-item {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		margin: 4px 0;
-	}
-
-	.folder-icon {
-		position: relative;
-		width: 40px;
-		height: 25px;
-		background-color: #f4c542;
-		border-radius: 2px;
-		box-shadow: inset 0 0 0 1px #d4a032;
-	}
-
-	/* 폴더의 탭 부분 */
-	.folder-icon::before {
-		content: "";
-		position: absolute;
-		top: -8px;
-		left: 4px;
-		width: 20px;
-		height: 10px;
-		background-color: #f4c542;
-		border-radius: 2px 2px 0 0;
-		box-shadow: inset 0 0 0 1px #d4a032;
-	}
-</style>
 <script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
-
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/schedule_tree.json");
-	}
-
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "id",
-			headerText: "ID",
-			width: 80
-		}, {
-			dataField: "name",
-			headerText: "Task Name",
-			width: 400
-		}, {
-			dataField: "charge",
-			headerText: "Charge",
-			width: 140
-		}, {
-			dataField: "complete",
-			headerText: "Complete(%)",
-			postfix: "%",
-			width: 120
-		}, {
-			dataField: "start",
-			headerText: "Start Date"
-		}, {
-			dataField: "end",
-			headerText: "End Date"
-		}];
-
-		// 그리드 속성 설정
-		const gridProps = {
-			selectionMode: "singleRow",
-			rowIdField: "id",
-			displayTreeOpen: true,
-			//rowHeight: 34,
-			treeColumnIndex: 1,
-			// 드래깅 행 이동 가능 여부 (기본값 : false)
-			enableDrag: true,
-			// 드랍 가능 여부 (기본값 : true)
-			enableDrop: true,
-			// 셀에서 바로  드래깅 해 이동 가능 여부 (기본값 : false) - enableDrag=true 설정이 선행 
-			enableDragByCellDrag: true,
-			// 트리그리드에서 자식으로 드랍 가능 여부 (기본값 : false)
-			enableDropTreeChild: true,
-			editable: true
-		};
-
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-		// 드래깅 시작 이벤트 바인딩	
-		AUIGrid.bind(myGridID, "dragBegin", function (e) {
-			if (e.items.length === 0) return;
-			const item = e.items[0];
-			// 정보 출력
-			document.getElementById("elapse_b").textContent = `드래깅 시작 : ${item.id}, ${item.name}`;
-		});
-
-		// 드랍 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "dropEnd", function (e) {
-			const direction = e.direction === true ? "위에서 아래로" : "아래에서 위로";
-			const msg = `드랍 완료 : ${e.fromRowIndex} → ${e.toRowIndex} 에 ${e.items.length} 행(들) 드랍 됨( 진행 방향 : ${direction} )`;
-			document.getElementById("elapse_e").textContent = `${msg}, isDropAsChild : ${e.isDropAsChild}`;
-		});
-	}
+    // 이 예제: enableDropTreeChild: true이면 다른 행의 마지막 자식으로 이동할 수 있습니다.
+    // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
+    // AUIGrid 생성 후 반환 ID
+    let myGridID;
+    // 시작점
+    function init() {
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+        // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+        loadGridData();
+    }
+    // AUIGrid 를 생성합니다.
+    function createAUIGrid() {
+        // 그리드 칼럼 레이아웃 설정
+        const columnLayout = [
+            {
+                dataField: "id",
+                headerText: "ID",
+                width: 80
+            }, {
+                dataField: "name",
+                headerText: "Task Name",
+                width: 400
+            }, {
+                dataField: "charge",
+                headerText: "Charge",
+                width: 140
+            }, {
+                dataField: "complete",
+                headerText: "Complete(%)",
+                postfix: "%",
+                width: 120
+            }, {
+                dataField: "start",
+                headerText: "Start Date"
+            }, {
+                dataField: "end",
+                headerText: "End Date"
+            }
+        ];
+        // 그리드 속성 설정
+        const gridProps = {
+            selectionMode: "singleRow",
+            rowIdField: "id",
+            displayTreeOpen: true,
+            //rowHeight: 34,
+            treeColumnIndex: 1,
+            // 드래깅 행 이동 가능 여부 (기본값 : false)
+            enableDrag: true,
+            // 드랍 가능 여부 (기본값 : true)
+            enableDrop: true,
+            // 셀에서 바로  드래깅 해 이동 가능 여부 (기본값 : false) - enableDrag=true 설정이 선행
+            enableDragByCellDrag: true,
+            // 트리그리드에서 자식으로 드랍 가능 여부 (기본값 : false)
+            enableDropTreeChild: true,
+            editable: true
+        };
+        // 실제로 #grid_wrap 에 그리드 생성
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+        // 드래깅 시작 이벤트 바인딩
+        AUIGrid.bind(myGridID, "dragBegin", function (e) {
+            if (e.items.length === 0)
+                return;
+            const item = e.items[0];
+            // 정보 출력
+            document.getElementById("elapse_b").textContent = `드래깅 시작 : ${item.id}, ${item.name}`;
+        });
+        // 드랍 종료 이벤트 바인딩
+        AUIGrid.bind(myGridID, "dropEnd", function (e) {
+            const direction = e.direction === true ? "위에서 아래로" : "아래에서 위로";
+            const msg = `드랍 완료 : ${e.fromRowIndex} → ${e.toRowIndex} 에 ${e.items.length} 행(들) 드랍 됨( 진행 방향 : ${direction} )`;
+            document.getElementById("elapse_e").textContent = `${msg}, isDropAsChild : ${e.isDropAsChild}`;
+        });
+    }
+    // 여러 데모가 같은 JSON 자료를 사용합니다. 실제 서비스에서는 이 주소를 데이터 API로 바꾸세요.
+    // 응답을 받은 뒤 setGridData에 전달하는 과정까지 이 HTML에서 확인할 수 있습니다.
+    async function loadGridData() {
+        AUIGrid.showAjaxLoader(myGridID);
+        try {
+            const response = await fetch("./data/schedule_tree.json");
+            if (!response.ok)
+                throw new Error("데이터를 불러오지 못했습니다.");
+            const data = await response.json();
+            AUIGrid.setGridData(myGridID, data);
+        }
+        catch (error) {
+            document.getElementById("elapse").textContent = error.message;
+        }
+        finally {
+            AUIGrid.removeAjaxLoader(myGridID);
+        }
+    }
 </script>
 </head>
 <body>
 
 <div id="main">
 	<div class="desc">
-		<p>트리 그리드(계층형 그리드)에서 드래그&amp드랍으로 행 이동을 보여주는 데모입니다.</p>
-		<p>enableDropTreeChild 속성을 true 설정하면 트리 그리드에서 자식으로 드랍 가능합니다.</p>
-		<p>자식으로 드랍은 해당 행의 마지막 자식으로 드랍됩니다.</p>
-		<p>참고 : enableDropTreeChild 속성은 v3.0.15.14 이상에서 사용 가능한 속성입니다.</p>
+		<p><code>enableDropTreeChild: true</code>이면 다른 행의 마지막 자식으로 이동할 수 있습니다.</p>
+		<p>행 사이의 선은 앞뒤 이동, 행 위의 표시는 자식으로 이동할 위치를 뜻합니다.</p>
+
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
@@ -153,6 +139,7 @@
 		<p id="elapse_b"></p>
 		<p id="elapse_e"></p>
 	</div>
+        <p id="elapse" role="status"></p>
 </div>
 <div id="footer">
      <div class="copyright">

@@ -53,7 +53,7 @@ export default window.AUIGrid.Class({
 	 ****************************************************************/
 
 	// vue vnode
-	__vNode: null,
+	__vnode: null,
 
 	// 타임 픽커로 사용하는지 여부
 	__isTimePicker: false,
@@ -75,7 +75,7 @@ export default window.AUIGrid.Class({
 	destroy: function (unload) {
 		// vue vnode 제거
 		if (this.element) render(null, this.element);
-		this.__vNode = null;
+		this.__vnode = null;
 
 		// 필수 : 반드시 아래 코드는 추가 해야 합니다.
 		this.$super.destroy(unload);

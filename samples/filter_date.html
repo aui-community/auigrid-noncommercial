@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<style>
+    .release-controls { display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; margin:12px 0; }
+    .release-controls label { display:inline-flex; align-items:center; gap:6px; }
+    .release-controls select, .release-controls input[type=number] { height:30px; }
+    .release-status { min-height:24px; overflow-wrap:anywhere; }
+
+</style>
+<script>
+    // 이 예제: 주문일의 연도, 월, 일 필터와 일반 값 목록을 비교해 보세요. 마지막 칼럼은 같은 날짜를 년, 월, 일 형식으로 표시합니다.
+    // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
+    let myGridID;
+    // 페이지가 준비되면 그리드를 만들고 예제 데이터를 넣습니다.
+    function init() {
+        // 세 날짜 칼럼은 같은 원본을 서로 다른 표시 형식과 필터 메뉴로 보여 줍니다.
+        // 칼럼 정의: dataField에 해당하는 값을 셀에 표시합니다.
+        const columnLayout = [
+            {
+                dataField: 'id',
+                headerText: '주문 번호',
+                width: 120
+            },
+            {
+                dataField: 'customer',
+                headerText: '거래처',
+                width: 160,
+                filter: { showIcon: true }
+            },
+            {
+                dataField: 'orderDate',
+                headerText: '주문일 (연 / 월 / 일)',
+                width: 230,
+                dataType: 'date',
+                dateInputFormat: 'yyyy-mm-dd',
+                formatString: 'yyyy/mm/dd',
+                filter: { showIcon: true, type: 'date' }
+            },
+            {
+                dataField: 'valueDate',
+                headerText: '같은 날짜 (일반 값 목록)',
+                width: 230,
+                dataType: 'date',
+                dateInputFormat: 'yyyy-mm-dd',
+                formatString: 'yyyy/mm/dd',
+                filter: { showIcon: true }
+            },
+            {
+                dataField: 'formattedDate',
+                headerText: '포맷된 날짜',
+                width: 230,
+                dataType: 'date',
+                dateInputFormat: 'yyyy-mm-dd',
+                // 표시 형식을 바꾸어도 날짜 필터는 원본 날짜의 연도, 월, 일을 사용합니다.
+                formatString: 'yyyy년 mm월 dd일',
+                filter: { showIcon: true, type: 'date' }
+            }
+        ];
+        // 그리드 설정: 이 데모에서 비교할 기능을 지정합니다.
+        const gridProps = {
+            rowIdField: 'id',
+            enableFilter: true,
+            filterLayerHeight: 340,
+            filterLayerWidth: 280
+        };
+        myGridID = AUIGrid.create('#grid_wrap', columnLayout, gridProps);
+        AUIGrid.setGridData(myGridID, Array.from({ length: 120 }, (_, i) => {
+            const date = (2024 + i % 3) + '-' + String(1 + Math.floor(i / 3) % 12).padStart(2, '0') + '-' + String(1 + i % 28).padStart(2, '0');
+            return {
+                id: 'O' + (i + 1),
+                customer: ['대성정밀', '한빛테크', '미래산업'][i % 3],
+                orderDate: date,
+                valueDate: date,
+                formattedDate: date
+            };
+        }));
+        AUIGrid.bind(myGridID, 'filtering', showDateCount);
+        showDateCount();
+    }
+    // 필터가 적용된 뒤 남은 행 수를 표시합니다.
+    function showDateCount() {
+        document.getElementById('demo-status').textContent = '필터 결과: ' + AUIGrid.getRowCount(myGridID) + ' / 120건';
+    }
+    // 모든 필터를 해제하고 전체 행 수를 표시합니다.
+    function clearDateFilters() {
+        AUIGrid.clearFilterAll(myGridID);
+        showDateCount();
+    }
+</script>
+</head>
+<body>
+
+<div id="main">
+    <div class="desc">
+		<p>주문일의 연도, 월, 일 필터와 일반 값 목록을 비교해 보세요. 마지막 칼럼은 같은 날짜를 년, 월, 일 형식으로 표시합니다.</p>
+		<p>날짜별 메뉴는 <code>dataType: "date"</code>와 <code>filter: { showIcon: true, type: "date" }</code>로 설정합니다.</p>
+        <div class="release-controls">
+<button class="btn" id="date-clear" onclick="clearDateFilters()">필터 모두 해제</button>
+        </div>
+        <p id="demo-status" class="release-status" role="status" aria-live="polite"></p>
+	</div>
+    <div id="grid_wrap" style="width:100%;height:480px;margin:0 auto;"></div>
+    <div class="desc_bottom">
+        <details><summary>설정 코드</summary><div class="src_cover"><pre id="demo-code">{
+    dataField: &quot;formattedDate&quot;,
+    dataType: &quot;date&quot;, dateInputFormat: &quot;yyyy-mm-dd&quot;, formatString: &quot;yyyy년 mm월 dd일&quot;,
+    filter: { showIcon: true, type: &quot;date&quot; }
+}</pre></div></details>
+        <p id="elapse"></p>
+    </div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

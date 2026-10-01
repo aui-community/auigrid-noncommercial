@@ -1,0 +1,19 @@
+/* 상위 셀과 숫자 정렬은 WebDemo와 같은 색상 및 배치를 사용합니다. */
+.band-basic-team {
+    background: #edf3ff;
+    color: #315da8;
+}
+.band-basic-number {
+    text-align: right;
+}
+.band-basic-controls label {
+    display: inline-block;
+    margin-right: 16px;
+}
+/* 보기 전환과 내보내기는 각각 독립된 버튼 줄에 배치합니다. */
+.band-basic-modes,
+.band-basic-exports {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}

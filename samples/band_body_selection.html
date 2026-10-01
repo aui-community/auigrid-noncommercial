@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<style>
+    /* 상위 셀을 구별하고 선택 테두리와 배경을 비교하기 위한 스타일입니다. */
+    .my-team {
+        background: #edf3ff;
+        color: #315da8;
+    }
+
+</style>
+<script>
+    let myGridID;
+    function init() {
+        createAUIGrid();
+        // 정적 JSON을 읽어 그리드에 표시합니다.
+        requestGridData("./data/band_body_selection.json");
+    }
+    // 편집을 끄고 단일 셀과 연속 범위의 선택만 살펴봅니다.
+    function createAUIGrid() {
+        // children으로 상위 칼럼과 하위 칼럼의 계층을 작성합니다.
+        const columnLayout = [
+            { dataField: "id", headerText: "ID", width: 70 },
+            {
+                dataField: "team", headerText: "소속", bodyCell: true, style: "my-team",
+                children: [
+                    { dataField: "name", headerText: "이름", width: 130 },
+                    {
+                        dataField: "position", headerText: "직급", bodyCell: true,
+                        children: [
+                            { dataField: "age", headerText: "나이", width: 70, dataType: "numeric" },
+                            {
+                                dataField: "birth", headerText: "생년월일", width: 120,
+                                dataType: "date", dateInputFormat: "yyyy-mm-dd", formatString: "yyyy/mm/dd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            { dataField: "qty", headerText: "수량", width: 95, dataType: "numeric" },
+            { dataField: "amount", headerText: "금액", width: 120, dataType: "numeric", formatString: "#,##0" }
+        ];
+
+        // 그리드 속성 정의
+        const gridProps = {
+            bodyLayoutMode: "band",
+            rowHeight: 120,
+            editable: false,
+            selectionMode: "multipleCells"
+        };
+
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+    }
+    // 인덱스는 0부터 시작하며 정렬한 뒤의 현재 화면 순서입니다.
+    function getTargetRow() {
+        const input = document.getElementById("target_row").value;
+        const rowIndex = Number(input);
+        if (!input.trim() || !Number.isInteger(rowIndex) || rowIndex < 0 || rowIndex >= AUIGrid.getRowCount(myGridID)) {
+            alert("행 인덱스를 0~23 사이의 정수로 입력하세요.");
+            return -1;
+        }
+        return rowIndex;
+    }
+    // 상위 셀과 하위 셀 모두 같은 메소드에 필드명을 전달하여 선택합니다.
+    function selectFieldCell(field = document.getElementById("target_field").value) {
+        const rowIndex = getTargetRow();
+        if (rowIndex < 0) return;
+        AUIGrid.setSelectionByDataField(myGridID, rowIndex, field);
+        AUIGrid.setFocus(myGridID);
+    }
+    // 시작 행과 끝 행, 시작 필드와 끝 필드를 지정하여 영역을 선택합니다.
+    function selectCellRange() {
+        AUIGrid.setSelectionBlockByDataField(myGridID, 0, 2, "name", "birth");
+        AUIGrid.setFocus(myGridID);
+    }
+    // 상위 셀의 columnIndex는 첫 하위 칼럼 위치, depth는 헤더의 계층 깊이입니다.
+    // 실제 셀은 dataField로 구분하고, 시작한 셀 하나에만 isPrimeCell=true가 표시됩니다.
+    function showSelectedCells() {
+        const selected = AUIGrid.getSelectedItems(myGridID);
+        const cells = selected.map(function (cell) {
+            return {
+                rowIndex: cell.rowIndex, columnIndex: cell.columnIndex, depth: cell.depth,
+                dataField: cell.dataField, bodyCellKind: cell.bodyCellKind, isPrimeCell: cell.isPrimeCell
+            };
+        });
+        document.getElementById("selection_info").textContent = JSON.stringify(cells, null, 2);
+    }
+    // 종류만 조회할 때에는 현재 행과 필드를 전달합니다. 없는 셀은 null입니다.
+    function showCellKind() {
+        const rowIndex = getTargetRow();
+        if (rowIndex < 0) return;
+        const field = document.getElementById("target_field").value;
+        alert(field + " 셀 종류: " + AUIGrid.getBodyCellKind(myGridID, rowIndex, field));
+    }
+    // 상위 셀을 포함한 범위도 같은 메소드로 선택합니다.
+    // 직급은 나이와 생년월일 위에 걸쳐 있으므로 생년월일도 범위에 포함됩니다.
+    function selectBodyRange() {
+        const rowIndex = getTargetRow();
+        if (rowIndex < 0) return;
+        AUIGrid.setSelectionBlockByDataField(myGridID, rowIndex, rowIndex, "position", "age");
+        AUIGrid.setFocus(myGridID);
+    }
+</script>
+</head>
+<body>
+
+<div id="main">
+    <div class="desc">
+        <p>상위 셀과 하위 셀을 각각 선택합니다. 드래그 또는 Shift+방향키로 범위를 넓힙니다.</p>
+        <p>Ctrl/Cmd+Shift+방향키는 현재 표시 범위의 끝까지 선택합니다.</p>
+        <p><label for="target_row">행 인덱스(0부터) </label><input id="target_row" type="number" min="0" max="23" value="1" style="width:60px;">
+            <label for="target_field">대상 셀 </label><select id="target_field">
+                <option value="name">이름</option>
+                <option value="age">나이</option>
+                <option value="birth">생년월일</option>
+                <option value="team">소속(상위)</option>
+                <option value="position">직급(상위)</option>
+            </select>
+            <button class="btn" onclick="selectFieldCell()">지정 셀 선택</button>
+            <button class="btn" id="select_team" onclick="selectFieldCell('team')">소속 선택</button>
+            <button class="btn" id="select_position" onclick="selectFieldCell('position')">직급 선택</button>
+        </p>
+        <p><code>setSelectionByDataField()</code>에 행 인덱스와 필드명을 전달하여 상위 셀과 하위 셀을 선택합니다.</p>
+        <p>상위 셀의 columnIndex는 첫 하위 칼럼 위치입니다. 선택 정보에서 dataField와 헤더 기준 depth를 함께 확인하세요.</p>
+        <p><button class="btn" onclick="selectCellRange()">0~2행 이름~생년월일 영역 선택</button>
+            <button class="btn" id="select_body_range" onclick="selectBodyRange()">직급~나이 영역 선택</button>
+        </p>
+        <p>직급~나이 영역은 직급의 너비에 맞춰 생년월일도 함께 선택됩니다. 활성 셀은 선택을 시작한 직급입니다.</p>
+        <p><button class="btn" onclick="showSelectedCells()">선택 정보 확인</button>
+            <button class="btn" onclick="showCellKind()">지정 셀 종류 확인</button>
+        </p>
+    </div>
+    <div>
+        <div id="grid_wrap" style="width:100%;height:480px;margin:0 auto;"></div>
+    </div>
+    <div class="desc_bottom">
+        <pre id="selection_info" style="max-height:220px;overflow:auto;"></pre>
+    </div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

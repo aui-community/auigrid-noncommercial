@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
-	 * AUIGrid.vue for Vue3.js + Typescript v1.6.20260706
-	 * Based on AUIGrid v3.0.17.1
+	 * AUIGrid.vue for Vue.js + Typescript v1.6.20261001
+	 * Based on AUIGrid v3.0.18.0
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */
@@ -88,7 +88,9 @@
 		},
 		data() {
 			return {
-				state: {} as IState
+				state: {} as IState,
+				auiMountGeneration: 0,
+				auiAnimationFrameId: null as number | null
 			};
 		},
 		created: function () {
@@ -103,18 +105,23 @@
 			};
 		},
 		mounted: function () {
+			const generation = ++this.auiMountGeneration;
 			const initGrid = () => {
+				if (generation !== this.auiMountGeneration) return;
+				this.auiAnimationFrameId = null;
 				const columnLayout = this.__getColumnLayoutByProxy();
 				const gridProps = this.__getGridPropsByProxy();
 				const footerLayout = this.__getFooterLayoutByProxy();
 				if (columnLayout !== null) $ag.create(this.state.pid, columnLayout, gridProps);
+				if (generation !== this.auiMountGeneration) return;
 				if (footerLayout !== null) $ag.setFooter(this.state.pid, footerLayout);
+				if (generation !== this.auiMountGeneration) return;
 				this.__setupEvents();
 				this.__setupGlobalResize();
 			};
 			if (this.waitPortalRendering) {
 				// Portal(Teleport) 시차 해결을 위해 RAF 사용
-				window.requestAnimationFrame(initGrid);
+				this.auiAnimationFrameId = window.requestAnimationFrame(initGrid);
 			} else {
 				initGrid();
 			}
@@ -146,7 +153,9 @@
 					'footerDoubleClick',
 					'grouping',
 					'hScrollChange',
+					'indent',
 					'notFound',
+					'outdent',
 					'pageChange',
 					'pageRowCountChange',
 					'pasteEnd',
@@ -180,6 +189,7 @@
 					'keyDown',
 					'pasteBegin',
 					'rowNumCellClick',
+					'rowNumHeaderClick',
 					'rowStateCellClick',
 					'selectionConstraint'
 				];
@@ -201,7 +211,9 @@
 				}
 			},
 			__invoke(n: string, e: any): any {
-				return (this.$attrs['on' + n.replace(/^[a-z]/, (c) => c.toUpperCase())] as (e: any) => any)(e);
+				const name = 'on' + n.replace(/^[a-z]/, (c) => c.toUpperCase());
+				if (!this.$attrs[name]) return;
+				return (this.$attrs[name] as (e: any) => any)(e);
 			},
 			__isEventHandlerDefined(name: string) {
 				return typeof this.$attrs['on' + name.replace(/^[a-z]/, (c) => c.toUpperCase())] === 'function';
@@ -211,15 +223,26 @@
 				window.addEventListener('resize', this.__globalResizeHandler);
 			},
 			__resetGlobalResize() {
-				if (!this.autoResize) return;
+				this.auiMountGeneration++;
+				if (this.auiAnimationFrameId !== null) {
+					window.cancelAnimationFrame(this.auiAnimationFrameId);
+					this.auiAnimationFrameId = null;
+				}
+				if (this.state.timerId !== null) {
+					clearTimeout(this.state.timerId);
+					this.state.timerId = null;
+				}
 				window.removeEventListener('resize', this.__globalResizeHandler);
 			},
 			__globalResizeHandler() {
+				const that = this;
+				const generation = this.auiMountGeneration;
 				const state = this.state;
 				if (this.state.timerId !== null) {
 					clearTimeout(state.timerId);
 				}
 				const timerId = setTimeout(function () {
+					if (generation !== that.auiMountGeneration) return;
 					if ($ag.isCreated(state.pid)) {
 						try {
 							$ag.resize(state.pid);
@@ -362,7 +385,8 @@
 			exportToCsv(props?: any) {
 				$ag.exportToCsv.call($ag, this.state.pid, arguments[0]);
 			},
-			exportToJson(keyValueMode?: boolean, props?: any): any {
+			/** 객체 옵션을 사용합니다. 구형 Boolean 인수의 전달은 유지하지만 옵션 변환은 하지 않습니다. */
+			exportToJson(propsOrLegacyKeyValueMode?: object | boolean, legacyProps?: any): void {
 				$ag.exportToJson.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
 			exportToObject(keyValueMode?: boolean): any {
@@ -446,7 +470,7 @@
 			getDataFieldByColumnIndex(columnIndex: number): string {
 				return $ag.getDataFieldByColumnIndex.call($ag, this.state.pid, arguments[0]);
 			},
-			getDepthByRowId(rowId: any): number {
+			getDepthByRowId(rowId: any): number | null | undefined {
 				return $ag.getDepthByRowId.call($ag, this.state.pid, arguments[0]);
 			},
 			getDescendantsByRowId(rowId: any): any[] {
@@ -665,13 +689,13 @@
 			isFilteredGrid(): boolean {
 				return $ag.isFilteredGrid.call($ag, this.state.pid);
 			},
-			isItemBranchByRowId(rowId: any): boolean {
+			isItemBranchByRowId(rowId: any): boolean | null | undefined {
 				return $ag.isItemBranchByRowId.call($ag, this.state.pid, arguments[0]);
 			},
-			isItemOpenByRowId(rowId: any): boolean {
+			isItemOpenByRowId(rowId: any): boolean | null | undefined {
 				return $ag.isItemOpenByRowId.call($ag, this.state.pid, arguments[0]);
 			},
-			isItemVisibleByRowId(rowId: any): boolean {
+			isItemVisibleByRowId(rowId: any): boolean | null {
 				return $ag.isItemVisibleByRowId.call($ag, this.state.pid, arguments[0]);
 			},
 			isLazyRequestedByIndex(rowIndex: number): boolean {
@@ -920,7 +944,19 @@
 			setSelectionBlock(startRowIndex: number, endRowIndex?: number, startColumnIndex?: number, endColumnIndex?: number) {
 				$ag.setSelectionBlock.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
 			},
-			setSelectionByIndex(rowIndex: number, columnIndex: number) {
+			// 셀 종류를 조회합니다. 없는 행이나 바디 셀은 null입니다.
+			getBodyCellKind(rowIndex: number, dataField: string): 'branch' | 'leaf' | null {
+				return $ag.getBodyCellKind.call($ag, this.state.pid, arguments[0], arguments[1]);
+			},
+			// 필드명으로 상위 셀과 하위 셀을 선택합니다.
+			setSelectionByDataField(rowIndex: number, dataField: string) {
+				$ag.setSelectionByDataField.call($ag, this.state.pid, arguments[0], arguments[1]);
+			},
+			// 시작 셀을 활성 셀로 유지하면서 필드 사이의 영역을 선택합니다.
+			setSelectionBlockByDataField(startRowIndex: number, endRowIndex: number, startColDataField: string, endColDataField: string) {
+				$ag.setSelectionBlockByDataField.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
+			},
+			setSelectionByIndex(rowIndex: number, columnIndex?: number) {
 				$ag.setSelectionByIndex.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
 			setSelectionColumn(startColIdx: number, endColIdx?: number) {
@@ -1018,7 +1054,7 @@
 		readonly releaseDate: string;
 		isCreated: () => boolean;
 		formatDate: (date: string | Date, formatString: string) => string;
-		formatNumber: (number: number, formatString: string, rouding?: 'rounding' | 'ceil' | 'floor') => string;
+		formatNumber: (number: number, formatString: string, rounding?: 'round' | 'ceil' | 'floor' | 'rounding') => string;
 		getActiveGrid: () => string | null;
 		getCreatedGridAll: () => string[];
 		makeValueMasked: (mask: string, value: string) => string;

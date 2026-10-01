@@ -174,6 +174,11 @@
 		AUIGrid.setCellMerge(myGridID, isMerged);
 		AUIGrid.setCellMerge(myGridID2, isMerged);
 	};
+    // 셀은 개별적으로 선택하고 편집하며, 텍스트의 표시 위치만 바꿉니다.
+    function changeMergeLabelPosition(position) {
+        AUIGrid.setProp(myGridID2, { cellMergeLabelPosition: position });
+        AUIGrid.refresh(myGridID2);
+    }
 </script>
 
 </head>
@@ -196,6 +201,12 @@
 
 	<div style="margin-top:10px;">
 		<h1 style="margin-left:30px;">■ cellMergeRowSpan = false 설정</h1>
+        <p style="margin-left:30px;">텍스트 위치:
+            <select onchange="changeMergeLabelPosition(this.value)">
+                <option value="top">첫 행 (기본값)</option>
+                <option value="center">보이는 병합 구간의 중앙</option>
+            </select>
+        </p>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
 		<div id="grid_wrap2" style="width:100%;height:280px; margin:0 auto;"></div>
 	</div>

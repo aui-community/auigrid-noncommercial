@@ -1,7 +1,7 @@
 // useAUIGridTemplateHandler.js
 
 /**
- * AUIGrid TemplateRenderer에서 사용할 함수를 전역(window)에 등록합니다.
+ * AUIGrid TemplateRenderer에서 사용할 함수를 전역에 등록합니다.
  * @param {string} name 전역 함수 이름 (예: "myApplyBtnClick")
  * @param {Function} handlerFn 실제 핸들러 함수
  */
@@ -17,7 +17,7 @@ export function registerAUIGridTemplateHandler(name, handlerFn) {
 	}
 
 	Object.defineProperty(window, name, {
-		value: function (...args) {
+		value: (...args) => {
 			try {
 				handlerFn(...args);
 			} catch (e) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useId } from 'react';
+import { useEffect, useRef, useId } from 'react';
 import AUIGrid from '../static/AUIGrid-React.js/AUIGridReact';
 import MyInputRenderer from '../renderers/MyInputRenderer';
 
@@ -26,70 +26,40 @@ const gridData = [
 	{ name: 'Steve', country: 'USA' }
 ];
 
-const CustomRendererInput = () => {
-	// 그리드 객체
-	const myGrid = useRef();
+const columnLayout = [
+	{ dataField: 'name', headerText: 'Name', width: 260 },
+	{
+		dataField: 'country',
+		headerText: '커스텀 렌더러-Input',
+		width: 280,
+		widthFit: 140,
+		editable: false,
+		headerTooltip: { show: true, tooltipHtml: '사용자 정의 렌더러를 작성한 칼럼입니다.' },
+		renderer: { type: 'CustomRenderer', jsClass: MyInputRenderer }
+	}
+];
 
-	// 그리드 name 에 정의할 고유값
+const gridProps = {
+	width: '100%',
+	height: 480,
+	rowHeight: 34,
+	editable: true,
+	showStateColumn: true
+};
+
+const CustomRendererInput = () => {
+	const myGrid = useRef();
 	const uid = useId();
 
-	// 그리드 칼럼 레이아웃 정의
-	const columnLayout = [
-		{
-			dataField: 'name',
-			headerText: 'Name',
-			width: 260
-		},
-		{
-			dataField: 'country',
-			headerText: '커스텀 렌더러-Input',
-			width: 280,
-			widthFit: 140,
-			editable: false, // 그리드의 에디팅 사용 안함( 커스텀 렌더러에 자체 에디팅 가능한 input 이 존재하여 에디팅 처리 하기 위함 )
-			headerTooltip: {
-				show: true,
-				tooltipHtml: '사용자 정의 렌더러를 작성한 칼럼입니다.'
-			},
-			renderer: {
-				type: 'CustomRenderer',
-				jsClass: MyInputRenderer
-			}
-		}
-	];
-
-	// 그리드 속성 정의
-	const gridProps = {
-		width: '100%',
-		height: 480,
-		// 행 높이 설정
-		rowHeight: 34,
-		editable: true,
-		showStateColumn: true
-	};
-
 	useEffect(() => {
-		console.log('CustomRendererInput 마운트됨');
-
-		// 최초 마운팅 될 때 그리드 이벤트 세팅
-		setupGridEvents();
-
 		const grid = myGrid.current;
-		// 그리드 데이터 삽입
-		grid.setGridData(gridData);
 
-		return () => {
-			console.log('CustomRendererInput 언마운트됨');
-		};
-	}, []);
-
-	// 그리드 이벤트 세팅
-	const setupGridEvents = () => {
-		const grid = myGrid.current;
-		// 그리드 이벤트 바인딩
 		grid.bind(['cellClick'], (event) => {
 			console.log(event);
 		});
-	};
+
+		grid.setGridData(gridData);
+	}, []);
 
 	return (
 		<div>

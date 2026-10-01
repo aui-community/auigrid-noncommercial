@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<!-- Excel 파일 저장과 한글 PDF 출력에 필요한 공용 도구입니다. -->
+<script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+<script src="../export_server_samples/FileSaver.min.js"></script>
+<style>
+    /* 공통 헤더, 메뉴, 설명과 버튼은 다른 쇼케이스의 스타일을 사용합니다. */
+    .po-tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .po-tools .btn[aria-pressed="true"] {
+        background: #ee5315;
+        border-color: #ee5315;
+    }
+
+    #grid_wrap {
+        width: 100%;
+        height: 570px;
+    }
+
+    #grid_wrap .aui-grid-button-renderer {
+        max-width: 84px;
+    }
+
+    /* style과 styleFunction에 사용하는 셀 스타일은 Excel에서도 읽을 수 있게 단일 클래스로 정의합니다. */
+    .po-supplier {
+        background: #e8f0fc;
+        color: #3269ae;
+    }
+
+    .po-number {
+        text-align: right;
+        padding-right: 10px;
+    }
+
+    .po-shortage {
+        color: #b16a0a;
+        font-weight: bold;
+    }
+
+    .po-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .po-badge.pass {
+        background: #dcf4e7;
+        color: #247548;
+    }
+
+    .po-badge.hold {
+        background: #fff0d7;
+        color: #a56a14;
+    }
+
+    .po-badge.wait {
+        background: #edf0f4;
+        color: #65758b;
+    }
+</style>
+<script>
+    let myGridID;
+
+    // JSON의 문자열을 HTML 셀에 표시할 때 태그로 해석되지 않게 합니다.
+    function escapeText(value) {
+        return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    }
+
+    function init() {
+        // 한 발주 라인이 하나의 데이터입니다. 상위 칼럼도 고유한 dataField를 갖습니다.
+        const columnLayout = [
+            // 발주 라인은 행의 고유 ID이므로 편집하지 않습니다.
+            { dataField: 'lineId', headerText: '발주 라인', width: 150, editable: false },
+            {
+                dataField: 'supplier', headerText: '공급사', bodyCell: true, bodyCellHeight: 30,
+                width: 150, style: 'po-supplier',
+                // editRenderer는 더블클릭하거나 F2를 누를 때 열립니다. 상위 셀에도 지정할 수 있습니다.
+                editRenderer: {
+                    type: 'DropDownListRenderer',
+                    list: ['(주)대성정밀', '한빛전자(주)', '우진패키징(주)', '세림모션', '이음테크', '한결소재']
+                },
+                children: [
+                    { dataField: 'material', headerText: '자재명', width: 140, editRenderer: { type: 'InputEditRenderer', maxlength: 50 } },
+                    {
+                        dataField: 'category', headerText: '자재 분류', bodyCell: true, bodyCellHeight: 30, width: 115,
+                        // renderer는 셀에 항상 표시됩니다. 목록을 눌러 바로 값을 바꿉니다.
+                        renderer: {
+                            type: 'DropDownListRenderer',
+                            list: ['기구 부품', '체결류', '전자 부품', '센서', '포장재', '구동 부품']
+                        },
+                        children: [
+                            { dataField: 'spec', headerText: '규격', width: 130, editRenderer: { type: 'InputEditRenderer', maxlength: 80 } },
+                            {
+                                dataField: 'due', headerText: '납기 요청일', width: 105, dataType: 'date', dateInputFormat: 'yyyy-mm-dd', formatString: 'yyyy/mm/dd',
+                                // 달력에서 고른 날짜는 JSON과 같은 형식으로 저장합니다.
+                                editRenderer: { type: 'CalendarRenderer', defaultFormat: 'yyyy-mm-dd', onlyCalendar: true }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                dataField: 'confirmed', headerText: '발주', bodyCell: true, bodyCellHeight: 30, width: 85,
+                // 그리드의 기본 체크박스로 값을 변경합니다.
+                renderer: { type: 'CheckBoxEditRenderer', editable: true },
+                // 파일에는 체크 상태를 읽기 쉬운 텍스트로 표시합니다.
+                labelFunction: function (row, col, value) { return value ? '확정' : '미확정'; },
+                children: [
+                    {
+                        dataField: 'orderQty', headerText: '발주 수량', width: 90, dataType: 'numeric', formatString: '#,##0',
+                        renderer: { type: 'NumberStepRenderer', min: 0, max: 1000000, step: 1 }
+                    },
+                    {
+                        dataField: 'orderAmount', headerText: '발주 금액', width: 115, dataType: 'numeric', formatString: '#,##0', style: 'po-number', editable: false,
+                        // 수량을 편집하면 단가를 곱한 금액과 푸터 합계도 함께 갱신됩니다.
+                        expFunction: function (row, col, item) { return item.orderQty * item.unitPrice; }
+                    }
+                ]
+            },
+            {
+                dataField: 'receipt', headerText: '입고', bodyCell: true, bodyCellHeight: 30, width: 110, editable: false,
+                renderer: {
+                    type: 'ButtonRenderer',
+                    disabledFunction: function (row, col, value, item) { return item.receivedQty === 0; },
+                    // 모달 대신 클릭한 발주 라인을 간단히 알립니다.
+                    onClick: function (event) { alert(event.item.lineId + ' 입고 전표 클릭'); }
+                },
+                labelFunction: function (row, col, value) { return value ? '입고 전표' : '미입고'; },
+                children: [
+                    {
+                        dataField: 'receivedQty', headerText: '입고 수량', width: 90, dataType: 'numeric', formatString: '#,##0',
+                        // 수량은 셀에 표시된 숫자 입력과 증감 버튼으로 바로 변경합니다.
+                        renderer: { type: 'NumberStepRenderer', min: 0, max: 1000000, step: 1 }
+                    },
+                    {
+                        dataField: 'receivedAmount', headerText: '입고 금액', width: 115, dataType: 'numeric', formatString: '#,##0', style: 'po-number', editable: false,
+                        expFunction: function (row, col, item) { return item.receivedQty * item.unitPrice; }
+                    }
+                ]
+            },
+            {
+                dataField: 'inspection', headerText: '검수', bodyCell: true, bodyCellHeight: 30, width: 85,
+                renderer: { type: 'TemplateRenderer' },
+                // 평소에는 배지로 표시하고 편집 시에는 선택 목록을 엽니다.
+                editRenderer: { type: 'DropDownListRenderer', list: ['합격', '보류', '대기'] },
+                labelFunction: function (row, col, value) {
+                    const color = value === '합격' ? 'pass' : value === '보류' ? 'hold' : 'wait';
+                    return '<span class="po-badge ' + color + '">' + escapeText(value) + '</span>';
+                },
+                children: [
+                    {
+                        dataField: 'passedQty', headerText: '합격 수량', width: 90, dataType: 'numeric', formatString: '#,##0',
+                        renderer: { type: 'NumberStepRenderer', min: 0, max: 1000000, step: 1 },
+                        styleFunction: function (row, col, value, header, item) { return value < item.receivedQty ? 'po-shortage' : ''; }
+                    },
+                    {
+                        dataField: 'passedAmount', headerText: '합격 금액', width: 115, dataType: 'numeric', formatString: '#,##0', style: 'po-number', editable: false,
+                        expFunction: function (row, col, item) { return item.passedQty * item.unitPrice; }
+                    }
+                ]
+            }
+        ];
+        myGridID = AUIGrid.create('#grid_wrap', columnLayout, {
+            bodyLayoutMode: 'band', rowHeight: 90, headerHeight: 28, rowIdField: 'lineId', rowIdTrustMode: true,
+            selectionMode: 'singleRow', enableSorting: true,
+            editable: true, editBeginMode: 'doubleClick', showFooter: true, footerHeight: 32, showStateColumn: false
+        });
+        // 발주 번호 옆에 여섯 숫자 칼럼의 합계를 표시합니다. 세 레이아웃에서 같은 필드를 사용합니다.
+        AUIGrid.setFooter(myGridID, [
+            { positionField: 'lineId', labelText: '조회 합계' },
+            ...['orderQty', 'orderAmount', 'receivedQty', 'receivedAmount', 'passedQty', 'passedAmount'].map(field => ({
+                positionField: field, dataField: field, operation: 'SUM', formatString: '#,##0'
+            }))
+        ]);
+        // 체크 설정과 해제가 완료되면 해당 발주 라인과 상태만 알립니다.
+        AUIGrid.bind(myGridID, 'cellEditEnd', function (event) {
+            if (event.dataField === 'confirmed') {
+                alert(event.item.lineId + ' 발주 체크 ' + (event.value ? '설정' : '해제'));
+            }
+        });
+        loadOrders();
+    }
+
+    // 정적 JSON을 불러오고, 실패 시 안내 후 로딩 표시를 정리합니다.
+    async function loadOrders() {
+        AUIGrid.showAjaxLoader(myGridID);
+        try {
+            const response = await fetch('./data/showcase10.json');
+            if (!response.ok) throw new Error('데이터 요청 실패');
+            AUIGrid.setGridData(myGridID, await response.json());
+        } catch (error) {
+            alert('발주 데이터를 불러오지 못했습니다. 페이지를 새로고침해 주세요.');
+        } finally {
+            AUIGrid.removeAjaxLoader(myGridID);
+        }
+    }
+
+    // 그리드를 다시 만들지 않고 같은 데이터와 정렬을 유지하며 보기를 바꿉니다.
+    function changeLayout(mode) {
+        const height = mode === 'band' ? 90 : 36;
+        AUIGrid.setProp(myGridID, { bodyLayoutMode: mode, rowHeight: height });
+        AUIGrid.refresh(myGridID);
+        document.querySelectorAll('[data-mode]').forEach(button => button.setAttribute('aria-pressed', button.dataset.mode === mode));
+    }
+
+    function exportExcel() {
+        // 체크는 labelFunction의 확정/미확정으로, 상태는 원본 값으로 내보냅니다. 현재 레이아웃을 사용합니다.
+        AUIGrid.exportToXlsx(myGridID, {
+            fileName: '자재_발주_입고_검수',
+            sheetName: '자재 구매 현황',
+            exportWithStyle: true
+        });
+    }
+    // 한글 글꼴과 가로 용지를 사용하여 현재 레이아웃을 PDF로 저장합니다.
+    function exportPdf() {
+        AUIGrid.exportToPdf(myGridID, {
+            fileName: '자재_발주_입고_검수',
+            fontPath: '../pdfkit/nyjgothic-medium.ttf',
+            orientation: 'landscape'
+        });
+    }
+    // 실제 페이지 종료 시 그리드를 정리합니다. 뒤로 가기 캐시는 그대로 복원합니다.
+    window.addEventListener('pagehide', function (event) {
+        if (!event.persisted && myGridID) AUIGrid.destroy(myGridID);
+    });
+</script>
+</head>
+<body>
+
+<div id="main">
+    <div class="desc">
+        <p><strong>자재 발주 및 입고 검수 관리</strong> — 발주부터 입고와 검수까지, 자재 구매 현황을 한 행에서 확인합니다.</p>
+        <p>목록과 숫자 증감 버튼을 직접 조작하거나, 셀을 더블클릭하여 드롭다운과 달력 등 다양한 편집기를 사용해 보세요.</p>
+        <p class="po-tools">
+            <button class="btn" data-mode="band" aria-pressed="true" onclick="changeLayout('band')">밴드형 보기</button>
+            <button class="btn" data-mode="flat" aria-pressed="false" onclick="changeLayout('flat')">일반형 보기</button>
+            <button class="btn" data-mode="flatAll" aria-pressed="false" onclick="changeLayout('flatAll')">전체 펼치기</button>
+        </p>
+        <!-- 파일 저장 버튼은 레이아웃 전환 버튼의 바로 아래 줄에 배치합니다. -->
+        <p class="po-tools">
+            <button class="btn" onclick="exportExcel()">Excel 내보내기</button>
+            <button class="btn" onclick="exportPdf()">PDF 내보내기</button>
+        </p>
+    </div>
+    <div id="grid_wrap"></div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

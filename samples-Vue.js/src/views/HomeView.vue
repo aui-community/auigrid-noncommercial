@@ -1,3 +1,7 @@
+<script setup>
+	import CodeBlock from '@/views/CodeBlock.vue';
+	import sampleDefaultCode from '@/samples/SampleDefault.vue?raw';
+</script>
 <template>
 	<div class="home-main">
 		<h1 class="home-title">AUIGrid for Vue 3</h1>
@@ -8,19 +12,19 @@
 		</p>
 		<p>본 데모는 다음 의존도 및 환경에서 작성되었습니다.</p>
 		<ul class="sub-headline padding-0">
-			<li>"core-js": "^3.8.3",</li>
-			<li>"vue": "^3.5.10",</li>
-			<li>"vue-router": "^4.3.3",</li>
-			<li>"vuex": "^4.1.0",</li>
-			<li>"axios": "^0.27.2",</li>
-			<li>"file-saver": "^2.0.5"</li>
-			<li>"echarts": "^5.4.2"</li>
-			<li>"xlsx": "^0.18.5"</li>
+			<li><strong>vue</strong>: ^3.5.14</li>
+			<li><strong>vue-router</strong>: ^4.5.1</li>
+			<li><strong>axios</strong>: ^1.9.0</li>
+			<li><strong>file-saver</strong>: ^2.0.5</li>
+			<li><strong>echarts</strong>: ^5.6.0</li>
+			<li><strong>xlsx</strong>: ^0.18.5</li>
 		</ul>
 		<h2 class="headline">HOW TO CODE</h2>
 		<p class="sub-headline">Vue 3 환경에서 다음처럼 코딩하여 AUIGrid 사용이 가능합니다.</p>
 		<h3>이 프로젝트 전체 소스는 정품(또는 평가판)의 ROOT/samples-Vue.js 폴더에 존재합니다.</h3>
-		<img src="../assets/howtocode.jpg" alt="HOW TO CODE" style="margin: 0 auto; max-width: 720px" />
+		<div class="codeblock-wrap">
+			<CodeBlock language="javascript">{{ sampleDefaultCode }}</CodeBlock>
+		</div>
 		<p>
 			<a href="https://www.auisoft.net/demo/auigrid" class="link-is-link"> 일반 Javascript 환경의 데모 보러 가기 </a>
 		</p>

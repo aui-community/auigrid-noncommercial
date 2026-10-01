@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
 		document.removeEventListener('DOMContentLoaded', arguments.callee, false);
 		if (typeof init === 'function') init();
+		// 배포 샘플도 홈페이지와 같이 창 크기 변경 후 공개 resize API로 표시 크기를 맞춥니다.
+		let resizeTimerId;
+		window.addEventListener('resize', function () {
+			clearTimeout(resizeTimerId);
+			resizeTimerId = setTimeout(function () {
+				if (typeof AUIGrid === 'undefined') return;
+				if (typeof myGridID !== 'undefined') AUIGrid.resize(myGridID);
+				if (typeof myGridID2 !== 'undefined') AUIGrid.resize(myGridID2);
+			}, 200);
+		});
 }, false);
 
 // AUIGrid.defaultProps 에 공통적인 속성을 설정합니다.

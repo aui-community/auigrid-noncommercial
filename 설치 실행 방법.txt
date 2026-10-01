@@ -41,6 +41,11 @@
 --------------------------------------------------------------------------------
 4 Vue, React 샘플 실행 방법
 
+	샘플에는 src/static/AUIGrid 폴더를 포함하지 않습니다.
+	실행 전에 제품 패키지의 AUIGrid 폴더를 각 샘플의 src/static/ 아래로 복사하십시오.
+	사용할 AUIGridLicense.js도 복사한 AUIGrid 폴더에 넣은 뒤 아래 명령을 실행합니다.
+	TypeScript 샘플의 타입은 package.json에 지정된 aui-grid 패키지로 설치됩니다.
+
 	4.1. samples-React.js
 	   - 프레임워크: React (JS 기반)
 	   - 빌드 도구: CRA

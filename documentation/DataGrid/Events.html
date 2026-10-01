@@ -27,7 +27,7 @@
 <div id="logo-bar">
 <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
 </div>
-<span id="title">AUIGrid 3.0.17 Documentation</span>
+<span id="title">AUIGrid 3.0.18 Documentation</span>
 </div>
 <div class="classDescContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
@@ -38,9 +38,8 @@
 </div>
 </div>
 <div id="desc_top">
-<p></p>
-<p>AUIGrid 에서 송출되는 이벤트 리스트입니다.</p>
-<p></p>
+<p><p>그리드의 사용자 조작과 상태 변경을 처리하는 이벤트 목록입니다. 발생 조건과 전달되는 이벤트 정보, 반환값의 의미는 각 항목을 확인하십시오.</p></p>
+
 </div>
 </div>
 <div class="summarySection">
@@ -54,15 +53,14 @@
 <span class="signatureLink">addColumn</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0<br>
-<p>addColumn() 을 통해 열(column) 을 추가한 경우 발생하는 이벤트입니다.</p>
+<p>addColumn()으로 칼럼을 추가했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>columnIndex : 추가된 열의 인덱스</li>
 <li>dataFields : 추가된 열들이 출력하고 있는 데이터의 KeyField들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "addColumn", function( event ) {
      console.log(event.type + " 이벤트, 삽입된 열 개수 : " + event.dataFields.length);
 });</code></pre>
@@ -74,14 +72,14 @@
 <span class="signatureLink">addRow</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>사용자가 Insert 키, Ctrl+Insert 키 또는 addRow(), addTreeRow() 를 통해 행(Row)을 추가(삽입)한 경우 발생하는 이벤트입니다.</p>
+<p>Insert, Ctrl+Insert 키 또는 addRow(), addTreeRow()로 행을 추가했을 때 발생합니다.</p>
+<p><a href="Properties.html#keepViewOnAdd">keepViewOnAdd</a>=true이면 정렬과 필터를 적용한 결과에서 표시 가능한 첫 추가 행을 선택하기 전에 발생합니다. 추가한 행이 모두 숨겨져 새 선택이 없어도 이 이벤트는 발생하며, items에는 숨겨진 행을 포함한 추가 행들이 담깁니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>items : 추가된 행(Row) 아이템들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "addRow", function( event ) {
      console.log(event.type + " 이벤트, 삽입된 행 개수 : " + event.items.length);
 });</code></pre>
@@ -93,7 +91,8 @@
 <span class="signatureLink">addRowFinish</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>사용자가 Insert 키, Ctrl+Insert 키 또는 addRow(), addTreeRow() 를 통해 행(Row)을 추가(삽입)한 경우 발생하는 이벤트입니다.</p>
+<p>Insert, Ctrl+Insert 키 또는 addRow(), addTreeRow()로 행을 추가했을 때 발생합니다.</p>
+<p>위의 새 행 선택 설명은 기본값 keepViewOnAdd=false의 동작입니다. <a href="Properties.html#keepViewOnAdd">keepViewOnAdd</a>=true이면 표시 가능한 첫 추가 행을 선택한 후 발생합니다. 추가 행이 모두 필터 또는 접힌 트리에 가려져 선택이 바뀌지 않은 경우에는 selectionChange 없이 addRow, addRowFinish가 발생합니다. items에는 숨겨진 행도 포함됩니다.</p>
 <p>addRowFinish 이벤트와 addRow 이벤트의 차이는 다음과 같습니다.</p>
 <ul>
 <li>addRow : 행 추가 시 그리드가 추가한 행을 선택(selection) 하는데 이 때 selectionChange 이벤트가 발생합니다. addRow 이벤트는 selectionChange 이벤트 이전에 발생합니다.</li>
@@ -103,10 +102,9 @@
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>items : 추가된 행(Row) 아이템들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "addRowFinish", function( event ) {
      console.log(event.type + " 이벤트, 삽입된 행 개수 : " + event.items.length);
 });</code></pre>
@@ -118,20 +116,20 @@
 <span class="signatureLink">addTreeColumn</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0<br>
-<p>addTreeColumn() 을 통해 특정 열(column)의 자식으로 열을 추가한 경우 발생하는 이벤트입니다.</p>
+<p>addTreeColumn()으로 특정 칼럼의 자식 칼럼을 추가했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>columnIndex : 추가된 열의 인덱스</li>
 <li>index : 부모를 기준으로 추가된 열의 자식 인덱스</li>
 <li>dataFields : 추가된 열들이 출력하고 있는 데이터의 KeyField들 (Array)</li>
 <li>parentDataField : 추가된 열의 부모의 dataField</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "addTreeColumn", function( event ) {
      console.log(event.type + " 이벤트, 삽입된 열 개수 : " + event.dataFields.length + ", 부모 dataField : " + event.parentDataField);
 });</code></pre>
+<p><a href="../../samples/editing_column_tree_crud.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="beforeInsertRow">
@@ -140,16 +138,15 @@
 <span class="signatureLink">beforeInsertRow</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>편집 가능(editable=true)인 경우 Insert 또는 Ctrl+Insert 등의 키 입력 시 새 행(Row)이 삽입됩니다.</p>
+<p>편집 가능한 그리드(editable=true)에서 Insert, Ctrl+Insert 키로 새 행을 삽입하기 전에 발생합니다.</p>
 <p>이 때 새 행의 초기값을 결정 짓도록 삽입 전에 발생하는 이벤트입니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>columnInfoList : 열(Column)의 출력 정보를 갖는 배열 (Array) </li>
 <li>isClipboard : 붙여 넣기로 인해 새 행이 추가되었는지 여부(Boolean) (v3.0.4 지원)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "beforeInsertRow", function(event) {
     const newRow = {};
     const cols = event.columnInfoList;
@@ -165,6 +162,7 @@
 });</code></pre>
 <p> Retrun : (Object) 새 행(Row) 아이템의 초기값을 담는 Object 를 반환하면 적용시킵니다. 만약 반환하지 않으면 빈 행이 출력됩니다.</p>
 <p> 주의 : addRow(), addTreeRow() 로 행(Row)을 추가할 때는 발생하지 않습니다. 즉, 사용자의 키보드 인터페이스 (Insert, Ctrl + Insert) 에 의해서만 발생합니다.</p>
+<p><a href="../../samples/editing_readonly.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="beforeRemoveColumn">
@@ -173,15 +171,14 @@
 <span class="signatureLink">beforeRemoveColumn</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0<br>
-<p>removeColumn() 을 통해 열(column) 을 삭제할 때 삭제 전에 발생하는 이벤트입니다.</p>
+<p>removeColumn()으로 칼럼을 삭제하기 전에 발생합니다. 칼럼 삭제 전 처리가 필요한 경우 사용합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>columnIndexes : 삭제될 열의 인덱스 묶음 (Array)</li>
 <li>dataFields : 삭제될 열의 dataField 묶음 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "beforeRemoveColumn", function( event ) {
      console.log(event.type + " 이벤트, 삭제될 열 개수 : " + event.dataFields.length);
      //return false; // 반환을 false 로 처리하면 삭제 실행을 취소함.
@@ -195,20 +192,20 @@
 <span class="signatureLink">beforeRemoveRow</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>사용자가 Ctrl + Del 키 또는 removeRow() 또는 removeRow() 또는 removeRowByRowId() 메소드를 통해 행(Row)을 삭제할 때 삭제 전에 발생하는 이벤트입니다.</p>
+<p>Ctrl+Delete 키 또는 removeRow(), removeRowByRowId()로 행을 삭제하기 전에 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>softRemoveRowMode : 소프트 제거 모드 사용 여부 즉, 그리드 상에 실제로 삭제될 지 또는 마크 될지 여부</li>
 <li>items : 삭제될 행(Row) 아이템들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "beforeRemoveRow", function( event ) {
      console.log(event.type + " 이벤트,  삭제될 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
      //return false; // 반환을 false 로 처리하면 삭제 실행을 취소함.
 });</code></pre>
 <p>Return : (Boolean) false 를 반환하면 삭제 처리를 하지 않습니다. 따라서 실제 삭제 전 확인 단계를 거칠 수 있습니다.</p>
+<p><a href="../../samples/editing_remove_rows.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="beforeRemoveSoftRows">
@@ -217,16 +214,15 @@
 <span class="signatureLink">beforeRemoveSoftRows</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>softRemoveRowMode = true 를 사용할 때 사용자가 행(Row)을 삭제 한 경우, 삭제된 행(Row)은 마크가 생기게 됩니다.</p>
+<p>소프트 삭제로 표시된 행을 removeSoftRows()로 실제 제거하기 전에 발생합니다. softRemoveRowMode=true인 경우의 삭제 처리에 사용합니다.</p>
 <p>이를 그리드에서 실제로 삭제하는 메소드인 AUIGrid.removeSoftRows()를 호출 한 경우 실제 삭제 전에 발생하는 이벤트입니다.</p>
 <p>이 이벤트는 softRemoveRowMode 를 false 로 설정한 경우 발생하지 않습니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>items : 삭제될 행(Row) 아이템들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "beforeRemoveSoftRows", function( event ) {
      console.log(event.type + " 이벤트, 삭제될 행 개수 : " + event.items.length);
 });</code></pre>
@@ -239,26 +235,28 @@
 <span class="signatureLink">cellClick</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.2.4<br>
-<p>단일 셀 클릭 시 발생하는 이벤트입니다.</p>
+<p>셀을 클릭했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>rowIndex : 행(Row) 인덱스</li>
-<li>columnIndex : 열(Column) 인덱스</li>
-<li>dataField : 행(Row) 아이템에서 현재 열(Column)이 출력되고 있는 데이터의 KeyField</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowIndex : 행 인덱스</li>
+<li>columnIndex : 칼럼 인덱스. 밴드형 상위 셀은 첫 하위 leaf의 위치</li>
+<li>depth : 밴드형 바디에서 헤더 기준 칼럼 계층 깊이. 최상위는 1</li>
+<li>bodyCellKind : 밴드형 셀의 종류. 상위 셀은 "branch", 하위 셀은 "leaf"</li>
+<li>dataField : 칼럼의 데이터 필드명</li>
 <li>editable : 해당 셀의 수정 가능 여부</li>
-<li>value : 셀에 출력되고 있는 값(value)</li>
-<li>rowIdValue : rowIdField 로 지정한 키에 대한 값. 즉, 행(Row)의 고유값 (rowIdField 설정 선행 필수)</li>
-<li>headerText : 현재 열(Column)의 헤더 텍스트</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
+<li>value : 셀 값</li>
+<li>rowIdValue : rowIdField로 지정한 행 고유 값</li>
+<li>headerText : 헤더 텍스트</li>
+<li>item : 해당 행의 데이터 (Object)</li>
 <li>treeIcon : 트리그리드인 경우 트리그리드의 열기/닫기 버턴 클릭 여부(Boolean)</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellClick", function( event ) {
       console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
 });</code></pre>
+<p><a href="../../samples/cell_click.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="cellDoubleClick">
@@ -267,25 +265,27 @@
 <span class="signatureLink">cellDoubleClick</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>단일 셀 더블클릭 시 발생하는 이벤트입니다.</p>
+<p>셀을 더블클릭했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>rowIndex : 행(Row) 인덱스</li>
-<li>columnIndex : 열(Column) 인덱스</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowIndex : 행 인덱스</li>
+<li>columnIndex : 칼럼 인덱스. 밴드형 상위 셀은 첫 하위 leaf의 위치</li>
+<li>depth : 밴드형 바디에서 헤더 기준 칼럼 계층 깊이. 최상위는 1</li>
 <li>editable : 해당 셀의 수정 가능 여부</li>
-<li>value : 셀에 출력되고 있는 값(value)</li>
-<li>rowIdValue : rowIdField 로 지정한 키에 대한 값. 즉, 행(Row)의 고유값 (rowIdField 설정 선행 필수)</li>
-<li>headerText : 현재 열(Column)의 헤더 텍스트</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
-<li>dataField : 행(Row) 아이템에서 현재 열(Column)이 출력되고 있는 데이터의 KeyField</li>
+<li>value : 셀 값</li>
+<li>rowIdValue : rowIdField로 지정한 행 고유 값</li>
+<li>headerText : 헤더 텍스트</li>
+<li>item : 해당 행의 데이터 (Object)</li>
+<li>bodyCellKind : 밴드형 셀의 종류. 상위 셀은 "branch", 하위 셀은 "leaf"</li>
+<li>dataField : 칼럼의 데이터 필드명</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) {
       console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " dbl clicked");
 });</code></pre>
+<p><a href="../../samples/cell_double_click.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="cellEditBegin">
@@ -294,28 +294,30 @@
 <span class="signatureLink">cellEditBegin</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>편집, 수정 모드에서 셀 편집(수정) 시작 시 발생하는 이벤트입니다.</P>
+<p>셀 편집을 시작하기 전에 발생합니다. false를 반환하면 편집을 막습니다. true를 반환해도 editable:false 설정은 바뀌지 않습니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>rowIndex : 행(Row) 인덱스</li>
-<li>columnIndex : 열(Column) 인덱스</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowIndex : 행 인덱스</li>
+<li>columnIndex : 칼럼 인덱스. 밴드형 상위 셀은 첫 하위 leaf의 위치</li>
+<li>depth : 밴드형 바디에서 헤더 기준 칼럼 계층 깊이. 최상위는 1</li>
 <li>value : 원래 데이터의 해당 셀 값(value)</li>
-<li>headerText : 현재 열(Column)의 헤더 텍스트</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
-<li>dataField : 행(Row) 아이템에서 현재 열(Column)이 출력되고 있는 데이터의 KeyField</li>
+<li>headerText : 헤더 텍스트</li>
+<li>item : 해당 행의 데이터 (Object)</li>
+<li>bodyCellKind : 밴드형 셀의 종류. 상위 셀은 "branch", 하위 셀은 "leaf"</li>
+<li>dataField : 칼럼의 데이터 필드명</li>
 <li>position : 셀의 전역 좌표계(Body 기준) 또는 지역 좌표계(그리드 부모 기준) 위치(x좌표 : event.position.x, y좌표 : event.position.y, x지역좌표 : event.position.localX, y지역좌표 : event.position.localY)</li>
 <li>size : 해당 셀의 가로, 세로 사이즈(width : event.size.width, height : event.size.height) </li>
 <li>isClipboard : 붙여 넣기(Ctrl+V) 로 이벤트가 발생했는지 여부 (Boolean) </li>
 <li>which : 편집 시작을 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellEditBegin", function( event ) {
       console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditBegin");
       // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
 });</code></pre>
- <p>Return : (Boolean) false 를 반환하면 편집, 수정을 못하도록 막습니다.</p>
+<p>Return : (Boolean) false 를 반환하면 편집, 수정을 못하도록 막습니다.</p>
+<p><a href="../../samples/editing_prevent.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="cellEditCancel">
@@ -324,24 +326,26 @@
 <span class="signatureLink">cellEditCancel</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>편집, 수정 모드에서 셀 편집(수정) 취소 시 발생하는 이벤트입니다.</P>
+<p>Escape 키 등으로 셀 편집이 취소되었을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>rowIndex : 행(Row) 인덱스</li>
-<li>columnIndex : 열(Column) 인덱스</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowIndex : 행 인덱스</li>
+<li>columnIndex : 칼럼 인덱스. 밴드형 상위 셀은 첫 하위 leaf의 위치</li>
+<li>depth : 밴드형 바디에서 헤더 기준 칼럼 계층 깊이. 최상위는 1</li>
 <li>value : 원래 데이터의 해당 셀 값(value)</li>
-<li>headerText : 현재 열(Column)의 헤더 텍스트</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
-<li>dataField : 행(Row) 아이템에서 현재 열(Column)이 출력되고 있는 데이터의 KeyField</li>
+<li>headerText : 헤더 텍스트</li>
+<li>item : 해당 행의 데이터 (Object)</li>
+<li>bodyCellKind : 밴드형 셀의 종류. 상위 셀은 "branch", 하위 셀은 "leaf"</li>
+<li>dataField : 칼럼의 데이터 필드명</li>
 <li>isClipboard : 붙여 넣기(Ctrl+V) 로 이벤트가 발생했는지 여부 (Boolean) </li>
 <li>which : 편집 취소를 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellEditCancel", function( event ) {
       console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditCancel");
 });</code></pre>
+<p><a href="../../samples/editing_default.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="cellEditEnd">
@@ -350,27 +354,29 @@
 <span class="signatureLink">cellEditEnd</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>편집, 수정 모드에서 셀 편집(수정) 종료 시 발생하는 이벤트입니다.</P>
+<p>셀 편집 결과를 알립니다. oldValue와 value로 변경 전후 값을 확인합니다. 반환값으로 취소할 수 없으며 적용 전 값을 바꾸려면 cellEditEndBefore를 사용하십시오.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>rowIndex : 행(Row) 인덱스</li>
-<li>columnIndex : 열(Column) 인덱스</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowIndex : 행 인덱스</li>
+<li>columnIndex : 칼럼 인덱스. 밴드형 상위 셀은 첫 하위 leaf의 위치</li>
+<li>depth : 밴드형 바디에서 헤더 기준 칼럼 계층 깊이. 최상위는 1</li>
 <li>oldValue : 변경 전 셀 값(value)</li>
 <li>value : 변경 된 셀 값(value)</li>
-<li>headerText : 현재 열(Column)의 헤더 텍스트</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
-<li>dataField : 행(Row) 아이템에서 현재 열(Column)이 출력되고 있는 데이터의 KeyField</li>
+<li>headerText : 헤더 텍스트</li>
+<li>item : 해당 행의 데이터 (Object)</li>
+<li>bodyCellKind : 밴드형 셀의 종류. 상위 셀은 "branch", 하위 셀은 "leaf"</li>
+<li>dataField : 칼럼의 데이터 필드명</li>
 <li>isClipboard : 붙여 넣기(Ctrl+V) 로 이벤트가 발생했는지 여부 (Boolean) </li>
 <li>which : 편집 완료를 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
 <li>mergeStartIndex : 셀 병합된 셀 전체가 수정 적용되었을 때 병합 시작 인덱스(Number)</li>
 <li>mergeEndIndex : 셀 병합된 셀 전체가 수정 적용되었을 때 병합 종료 인덱스(Number)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
       console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditEnd");
 });</code></pre>
+<p><a href="../../samples/editing_default.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="cellEditEndBefore">
@@ -379,28 +385,31 @@
 <span class="signatureLink">cellEditEndBefore</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>편집, 수정 모드에서 셀 편집(수정) 종료 바로 직전에 발생하는 이벤트입니다.</P>
-<p>이 이벤트 핸들러의 반환값이 곧 최종 수정값으로 적용됩니다.</p>
-<p>즉, 개발자가 사용자에 의해 입력된 값을 최종적으로 판단할 수 있는 이벤트입니다. 이 이벤트 핸들러에서 값을 체크하십시오.</p>
+<p>셀 편집을 마치기 직전에 발생합니다. 반환값으로 최종 수정값을 지정할 수 있습니다.</p>
+
+
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>rowIndex : 행(Row) 인덱스</li>
-<li>columnIndex : 열(Column) 인덱스</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowIndex : 행 인덱스</li>
+<li>columnIndex : 칼럼 인덱스. 밴드형 상위 셀은 첫 하위 leaf의 위치</li>
+<li>depth : 밴드형 바디에서 헤더 기준 칼럼 계층 깊이. 최상위는 1</li>
 <li>oldValue : 변경 전 셀 값(value)</li>
 <li>value : 변경 된 셀 값(value)</li>
-<li>headerText : 현재 열(Column)의 헤더 텍스트</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
-<li>dataField : 행(Row) 아이템에서 현재 열(Column)이 출력되고 있는 데이터의 KeyField</li>
+<li>headerText : 헤더 텍스트</li>
+<li>item : 해당 행의 데이터 (Object)</li>
+<li>bodyCellKind : 밴드형 셀의 종류. 상위 셀은 "branch", 하위 셀은 "leaf"</li>
+<li>dataField : 칼럼의 데이터 필드명</li>
 <li>isClipboard : 붙여 넣기(Ctrl+V) 로 이벤트가 발생했는지 여부 (Boolean) </li>
 <li>which : 편집 완료를 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellEditEndBefore", function( event ) {
       return removeComma(event.value); // 사용자가 입력한 값에 컴마가 있으면 제거 후 적용
 });</code></pre>
-<p>Return : (String) 수정에 적용될 최종값. 이 핸들러의 반환값은 반드시 지정해야 합니다. 이 반환값이 곧 최종 수정값입니다.</p> 
+<p>Return : (Any) 최종 수정값. undefined이거나 반환값이 없으면 event.value를 사용합니다. 이전 값을 유지하려면 event.oldValue를 반환하십시오. 숫자, Boolean, null 등 실제 데이터 타입을 유지하여 반환합니다.</p>
+
+
 </td>
 </tr>
 <tr id="cellLongTap">
@@ -409,20 +418,19 @@
 <span class="signatureLink">cellLongTap</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.2<br>
-<p>터치 기기(touch devices)에서 단일 셀을 길게 누르고 있을 때 발생하는 이벤트입니다.</p>
+<p>터치 기기에서 셀을 길게 눌렀을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>rowIndex : 행(Row) 인덱스</li>
-<li>columnIndex : 열(Column) 인덱스</li>
-<li>value : 셀에 출력되고 있는 값(value)</li>
-<li>headerText : 현재 열(Column)의 헤더 텍스트</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
-<li>dataField : 행(Row) 아이템에서 현재 열(Column)이 출력되고 있는 데이터의 KeyField</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowIndex : 행 인덱스</li>
+<li>columnIndex : 칼럼 인덱스</li>
+<li>value : 셀 값</li>
+<li>headerText : 헤더 텍스트</li>
+<li>item : 해당 행의 데이터 (Object)</li>
+<li>dataField : 칼럼의 데이터 필드명</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "cellLongTap", function( event ) {
       console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " longTapped");
 });</code></pre>
@@ -434,10 +442,10 @@
 <span class="signatureLink">columnStateChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>그리드의 열(Column)을 사용자가 드래깅으로 자리를 바꾸거나 사이즈를 바꾼 경우 발생하는 이벤트입니다.</p>
+<p>사용자가 칼럼을 드래그하여 위치나 너비를 변경했을 때 발생합니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>property : 변경된 열(Column)의 속성(columnIndex or width) (String) </li>
 <li>dataField : 적용된 열(Column)의 dataField 값 (String)</li>
 <li>headerText : 적용된 열(Column)의 헤더 텍스트 (String)</li>
@@ -446,7 +454,6 @@
 <li>old : 바뀌기 전의 값 (Object) </li>
 <li>current : 사용자에 의해 변경된 새로운 값(현재 값) (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "columnStateChange", function(event) {
      let str = "event type : " + event.type;
      str += ", dataField : " + event.dataField;
@@ -462,22 +469,22 @@
 <span class="signatureLink">contextMenu</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.8<br>
-<p>그리드에서 마우스 오른쪽 버턴 즉, 컨텍스트 메뉴를 활성화 했을 경우 발생하는 이벤트입니다.</p>
+<p>헤더 또는 바디에서 마우스 오른쪽 버튼으로 컨텍스트 메뉴를 열 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>target : 헤더(header) 또는 바디(body) 에서 발생했는지를 나타냄</li>
+<li>bodyCellKind : 밴드형 셀의 종류. 상위 셀은 "branch", 하위 셀은 "leaf"</li>
 <li>dataField : 컨텍스트 활성화 된 지점의 열(Column) 데이터 필드명 (String) </li>
 <li>headerText : 컨텍스트 활성화 된 지점의 열(Column) 헤더 텍스트 (String) </li>
 <li>columnIndex : 컨텍스트 활성화 된 지점의 열(Column) 인덱스 (Number) </li>
 <li>rowIndex : 바디 컨텍스트 활성화 된 지점의 행(Row) 인덱스 (target 값이 "body" 인 경우에만 유효) (Number) </li>
-<li>depth : 헤더 컨텍스트 활성화 된 지점의 헤더 그룹핑 depth 값(target 값이 "header" 인 경우만 유효) (Number)</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
+<li>depth : 헤더 또는 밴드형 바디 칼럼의 계층 깊이. 최상위는 1 (Number)</li>
+<li>item : 해당 행의 데이터 (Object)</li>
 <li>pageX : 컨텍스트 활성화 된 지점의 전역 좌표 X 값 (Number) </li>
 <li>pageY : 컨텍스트 활성화 된 지점의 전역 좌표 Y 값 (Number) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "contextMenu", function( event ) {
     console.log("이벤트명: " + event.type + ", 컨텍스트 활성화 된 곳 : " + event.target);
 });</code></pre>
@@ -491,15 +498,14 @@
 <span class="signatureLink">copyBegin</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.8<br>
-<p>그리드에서 복사(Ctrl + C) 를 할 때 복사가 시작되는 경우 발생하는 이벤트입니다.</p>
-<p>그리드에 의존하지 않고 사용자가 직접 파싱하여 적용 시킬 수 있습니다.</p>
+<p>복사를 시작할 때 발생합니다. 반환값으로 복사를 취소하거나 복사할 텍스트를 바꿀 수 있습니다.</p>
+
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>data : 클립보드에 복사할 값 (String) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "copyBegin", function(event) {
      console.log("복사 시작!!");
      console.log(event.data);
@@ -511,6 +517,7 @@
      return "a\tb\tc\r\n1\t2\t3"; // 반환되는 값이 곧 클립보드로 복사됨.
 });</code></pre>
 <p> Retrun : (Boolean or String) 만약 false 를 반환하면 기본 행위인 복사를 하지 않습니다. 또한 TSV 데이터로 행구분은 캐리지리턴(\r\n)으로 구성된 스트링을 반환하면 해당 값을 클립보드에 적용시킵니다.</p>
+<p><a href="../../samples/editing_copy_control.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="copyEnd">
@@ -519,13 +526,15 @@
 <span class="signatureLink">copyEnd</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.8<br>
-<p>그리드에서 복사(Ctrl + C) 를 할 때 값이 시스템 클립보드에 복사 완료된 경우 이벤트입니다.</p>
+<p>클립보드에 복사할 텍스트를 전달한 뒤 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>data : 클립보드에 복사된 값 (String) </li>
 </ul>
+<p>data는 최종 복사 텍스트이며 copyBegin에서 바꾼 문자열도 반영합니다.</p>
+<p><a href="../../samples/selection_all_column.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="dragBegin">
@@ -534,15 +543,14 @@
 <span class="signatureLink">dragBegin</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.4<br>
- <p>행(Row) 드래깅을 시작할 때 발생하는 이벤트입니다.</p>
- <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
- <ul>
+<p>행 드래그를 시작할 때 발생합니다.</p>
+<p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
+<ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>rowIndex : 드래깅 시작 행(Row) 인덱스</li>
 <li>items : 드래깅 되는 행(Row) 아이템들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "dragBegin", function( event ) {
    if(event.rowIndex === 0) {   
        return false; // 0번째 행은 드래깅 막음
@@ -557,18 +565,17 @@
 <span class="signatureLink">dropCancel</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.4<br>
- <p>행(Row) 드래깅 이 후 드랍이 성공하지 않은 경우 즉, 드랍 실패한 경우 발생하는 이벤트입니다.</p>
- <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
- <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
- <li>pidToDrop : 드랍되는 그리드의 부모 DIV ID</li>
- <li>fromRowIndex : 드래깅된 시점의 행(Row) 인덱스</li>
- <li>toRowIndex : 드랍되는 그리드의 드랍 시점의 행(Row) 인덱스</li>
- <li>direction : 드래깅 시점에서 드랍되는 곳의 행(Row) 인덱스가 증가한 경우 true (Boolean)</li>
- <li>items : 드래깅되고 있으며 드랍될 행(Row) 아이템들 (Array)</li>
- </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
+<p>행 드래그 후 드롭이 성공하지 못했을 때 발생합니다.</p>
+<p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
+<ul>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>pidToDrop : 드랍되는 그리드의 부모 DIV ID</li>
+<li>fromRowIndex : 드래깅된 시점의 행(Row) 인덱스</li>
+<li>toRowIndex : 드랍되는 그리드의 드랍 시점의 행(Row) 인덱스. 유효한 드롭 위치가 없어 취소된 경우 undefined입니다.</li>
+<li>direction : 드래깅 시점에서 드랍되는 곳의 행(Row) 인덱스가 증가한 경우 true (Boolean). toRowIndex가 undefined인 경우 false입니다.</li>
+<li>items : 드래깅되고 있으며 드랍될 행(Row) 아이템들 (Array)</li>
+</ul>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "dropCancel", function(event ) {
    console.log(event.pidToDrop + " 그리드에 " + event.items.length + " 행(들)을 드랍하는데 실패하였습니다.");
 });</code></pre>
@@ -580,19 +587,18 @@
 <span class="signatureLink">dropEnd</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.4<br>
- <p>행(Row) 드래깅 이 후 드랍 종료에 발생하는 이벤트입니다.</p>
- <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
- <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
- <li>pidToDrop : 드랍되는 그리드의 부모 DIV ID</li>
- <li>fromRowIndex : 드래깅된 시점의 행(Row) 인덱스</li>
- <li>toRowIndex : 드랍되는 그리드의 드랍 시점의 행(Row) 인덱스</li>
- <li>dropColumnIndex : 드랍되는 그리드의 드랍 시점의 열(Column) 인덱스</li>
- <li>direction : 드래깅 시점에서 드랍되는 곳의 행(Row) 인덱스가 증가한 경우 true (Boolean)</li>
- <li>items : 드래깅되고 있으며 드랍될 행(Row) 아이템들 (Array)</li>
- </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
+<p>행 드래그 후 드롭이 종료되었을 때 발생합니다.</p>
+<p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
+<ul>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>pidToDrop : 드랍되는 그리드의 부모 DIV ID</li>
+<li>fromRowIndex : 드래깅된 시점의 행(Row) 인덱스</li>
+<li>toRowIndex : 드랍되는 그리드의 드랍 시점의 행(Row) 인덱스</li>
+<li>dropColumnIndex : 드랍되는 그리드의 드랍 시점의 열(Column) 인덱스</li>
+<li>direction : 드래깅 시점에서 드랍되는 곳의 행(Row) 인덱스가 증가한 경우 true (Boolean)</li>
+<li>items : 드래깅되고 있으며 드랍될 행(Row) 아이템들 (Array)</li>
+</ul>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "dropEnd", function(event ) {
    console.log(event.pidToDrop + " 그리드에 " + event.items.length + " 행(들)을 드랍 완료하였습니다.");
 });</code></pre>
@@ -604,21 +610,20 @@
 <span class="signatureLink">dropEndBefore</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.4<br>
- <p>행(Row) 드래깅 이 후 드랍 종료 바로 직전에 발생하는 이벤트입니다.</p>
- <p>이 이벤트 핸들러에서 드랍의 액션이 "이동(move)" 인지 "복사(copy)" 인지 결정 가능합니다.</p>
- <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
- <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
- <li>pidToDrop : 드랍되는 그리드의 부모 DIV ID</li>
- <li>fromRowIndex : 드래깅된 시점의 행(Row) 인덱스</li>
- <li>toRowIndex : 드랍되는 그리드의 드랍 시점의 행(Row) 인덱스</li>
- <li>dropColumnIndex : 드랍되는 그리드의 드랍 시점의 열(Column) 인덱스</li>
- <li>direction : 드래깅 시점에서 드랍되는 곳의 행(Row) 인덱스가 증가한 경우 true (Boolean)</li>
- <li>items : 드래깅되고 있으며 드랍될 행(Row) 아이템들 (Array)</li>
- <li>isMoveMode : 드랍 액션이 이동인지 복사인지 결정지을 속성 (Boolean)</li>
- </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
+<p>행 드롭이 종료되기 직전에 발생합니다. 드롭 동작을 이동(move)으로 처리할지 복사(copy)로 처리할지 결정할 때 사용합니다.</p>
+<p>이 이벤트 핸들러에서 드랍의 액션이 "이동(move)" 인지 "복사(copy)" 인지 결정 가능합니다.</p>
+<p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
+<ul>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>pidToDrop : 드랍되는 그리드의 부모 DIV ID</li>
+<li>fromRowIndex : 드래깅된 시점의 행(Row) 인덱스</li>
+<li>toRowIndex : 드랍되는 그리드의 드랍 시점의 행(Row) 인덱스</li>
+<li>dropColumnIndex : 드랍되는 그리드의 드랍 시점의 열(Column) 인덱스</li>
+<li>direction : 드래깅 시점에서 드랍되는 곳의 행(Row) 인덱스가 증가한 경우 true (Boolean)</li>
+<li>items : 드래깅되고 있으며 드랍될 행(Row) 아이템들 (Array)</li>
+<li>isMoveMode : 드랍 액션이 이동인지 복사인지 결정지을 속성 (Boolean)</li>
+</ul>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "dropEndBefore", function( event ) {
    // 이벤트의 isMoveMode 속성을 false 설정하면 행(Row) 복사를 합니다.
    event.isMoveMode = false;
@@ -636,21 +641,23 @@
 <span class="signatureLink">filtering</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>사용자가 필터링(Filtering)을 설정하거나 변경, 해제 시 발생하는 이벤트입니다.</p>
+<p>필터를 설정하거나 변경, 해제했을 때 발생합니다.</p>
+<p>filterCache의 필드별 값은 일반 값 필터에서는 배열, numeric 유형 필터에서는 조건 문자열입니다. 함수 기반 필터의 상태도 문자열로 전달될 수 있습니다. getFilterCache()와 같은 표현을 사용하며, 배열 전용 메서드를 사용하기 전에 Array.isArray()로 값의 형태를 확인하십시오.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>filterCache : 현재 필터링 설정된 정보들 (Object)</li>
 </ul>
 <p>만약 필터링이 name 필드 "Anna", "Lawrence" 만 출력하게 설정되었다면 다음과 같은 filterCache 정보를 담고 있습니다.</p>
 <p>{ "name" : [ "Anna", "Lawrence" ] }</p>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "filtering", function( event ) {
      for(let n in event.filterCache) {
          console.log( event.filterCache[n] );
      }
 });</code></pre>
+<p><a href="Properties.html#useTreeFilterMenu">useTreeFilterMenu</a>의 계층 메뉴에서 적용한 필드는 filterCache 값에 <code>{ type: "tree", rowIds: string[] }</code> 또는 <code>{ type: "group", fields: string[], paths: string[][] }</code> 객체가 포함됩니다. 나머지 일반 및 숫자 필터는 기존 배열, 문자열을 유지합니다. TypeScript에서는 계층 필터를 사용하는 핸들러에 <code>TreeFilteringEvent</code>를 지정하여 객체의 type에 따라 구별할 수 있습니다. 기존 <code>FilteringEvent</code> 선언은 일반 및 숫자 필터 사용 코드와의 호환성을 위해 유지합니다.</p>
+<p><a href="../../samples/filter_demo.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="footerClick">
@@ -659,11 +666,11 @@
 <span class="signatureLink">footerClick</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>그리드 푸터 클릭 시 발생하는 이벤트입니다.</p>
+<p>푸터 셀을 한 번 클릭했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>footerIndex : 푸터 열(Column) 인덱스</li>
 <li>footerText : 푸터 텍스트</li>
 <li>footerValue : 포매팅 전 푸터의 값</li>
@@ -671,10 +678,10 @@
 <li>pageY : 클릭이 발생한 지점의 전역 Y 좌표 값</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "footerClick", function( event ) {
     console.log(event.type + " : " + event.footerIndex + " text : " + event.footerText);
 });</code></pre>
+<p><a href="../../samples/footer_click.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="footerDoubleClick">
@@ -683,11 +690,11 @@
 <span class="signatureLink">footerDoubleClick</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>그리드 푸터 더블 클릭 시 발생하는 이벤트입니다.</p>
+<p>푸터 셀을 더블클릭했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>footerIndex : 푸터 열(Column) 인덱스</li>
 <li>footerText : 푸터 텍스트</li>
 <li>footerValue : 포매팅 전 푸터의 값</li>
@@ -695,7 +702,6 @@
 <li>pageY : 더블 클릭이 발생한 지점의 전역 Y 좌표 값</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "footerDoubleClick", function( event ) {
     console.log(event.type + " : " + event.footerIndex + " text : " + event.footerText);
 });</code></pre>
@@ -707,15 +713,14 @@
 <span class="signatureLink">grouping</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>사용자가 그룹핑(Grouping)을 설정하거나 변경, 해제 시 발생하는 이벤트입니다.</p>
+<p>그룹핑을 설정하거나 변경, 해제했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>groupingFields : 현재 그룹핑 된 그룹핑 필드들 (Array)</li>
 <li>groupingSummary : 그룹핑 썸머리를 설정한 경우 적용되는 썸머리 객체 (Object)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "grouping", function( event ) {
      console.log("이벤트명: " + event.type + ", 현재 그룹핑 필드들 : " + event.groupingFields.join(", ") );
 });</code></pre>
@@ -727,11 +732,11 @@
 <span class="signatureLink">headerClick</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>그리드 헤더 클릭 시 발생하는 이벤트입니다.</p>
+<p>칼럼 헤더를 클릭했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>columnIndex : 헤더 열(Column) 인덱스</li>
 <li>headerText : 헤더 텍스트</li>
 <li>depth : 헤더의 depth 즉, 헤더를 그룹핑으로 정의한 경우 최상위가 1depth (단일 계층인 경우 depth 는 1)</li>
@@ -741,7 +746,6 @@
 <li>pageY : 클릭이 발생한 지점의 전역 Y 좌표 값</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "headerClick", function( event ) {
      console.log(event.type + " : " + event.headerText + ", dataField : " + event.dataField + ", index : " + event.columnIndex + ", depth : " + event.item.depth);
      // 이벤트 핸들링 함수에서 false 를 반환하면 기본 행위를 하지 않음.
@@ -749,6 +753,8 @@
      // return false; // 정렬 실행 안함. 
 });</code></pre>
 <p>Return : (Boolean) false 를 반환하면 기본 행위인 정렬을 실행하지 않습니다.</p>
+<p>bodyLayoutMode="band"에서 bodyCell=true와 dataField를 갖는 branch 헤더는 자신의 값을 정렬합니다. false를 반환하면 정렬을 취소합니다. 브랜치 헤더와 바디 상위 셀은 첫 하위 leaf의 columnIndex와 헤더 기준 depth를 공유합니다. depth는 1부터 시작합니다.</p>
+<p><a href="../../samples/header_click.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="hScrollChange">
@@ -757,17 +763,16 @@
 <span class="signatureLink">hScrollChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>그리드의 수평 스크롤(가로 스크롤)이 있는 경우, 수평 스크롤의 값이 변경되었을 때 발생하는 이벤트입니다.</p>
+<p>가로 스크롤이 있는 그리드에서 가로 스크롤 위치가 변경되면 발생합니다. 현재 위치와 이동 범위는 이벤트 객체에서 확인할 수 있습니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>position : 현재 스크롤의 위치 (Number)</li>
 <li>oldPosition : 변경 전 스크롤의 위치 (Number)</li>
-<li>minPosition : 수직 스크롤의 최대 위치 (Number)</li>
-<li>maxPosition : 수직 스크롤의 최소 위치 (Number)</li>
+<li>minPosition : 수평 스크롤의 최소 위치 (Number)</li>
+<li>maxPosition : 수평 스크롤의 최대 위치 (Number)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "hScrollChange", function( event ) {
      console.log( event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition + ")" );
 });</code></pre>
@@ -780,14 +785,13 @@
 <span class="signatureLink">indent</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.12<br>
-<p>사용자가 Alt + Shift + 오른쪽 화살표 키 또는 indentTreeDepth 메소드를 통해 행 깊이(depth) 올리기(Indent)를 한 경우 발생하는 이벤트입니다.</p>
+<p>Alt+Shift+오른쪽 방향키 또는 indentTreeDepth()로 행을 들여썼을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>items : 실제로 행 깊이(depth) 적용된 행(Row) 아이템들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "indent", function( event ) {
      console.log(event.type + " 이벤트, 적용된 행 개수 : " + event.items.length);
 });</code></pre>
@@ -799,18 +803,17 @@
 <span class="signatureLink">keyDown</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>그리드에서 키보드를 누른 경우 발생하는 키다운(keyDown) 이벤트입니다.</p>
+<p>그리드에서 키를 눌렀을 때 발생합니다.</p>
 <p>그리드에서 특정 키는 미리 지정된 행위를 합니다.(예: 화살표 키-선택 이동, Insert 키-행(Row) 삽입 등)</p>
 <p>이런 약속된 행위를 막고 사용자가 원하는 코드를 실행시킬 수 있습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>keyCode : 키보드 누른 경우 해당 키코드 번호 (Number) </li>
 <li>ctrlKey : Ctrl 키 같이 눌렀는지 여부 (Boolean)</li>
 <li>shiftKey : Shift 키 같이 눌렀는지 여부 (Boolean)</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "keyDown", function(event) {
     if(event.keyCode === 13) { // 엔터 키
          console.log("엔터 키 누름");
@@ -820,6 +823,7 @@
 });</code></pre>
 <p> Retrun : (Boolean) 만약 false 를 반환하면 그리드에 미리 지정된 행위를 하지 않습니다.</p>
 <p> 참고 : 그리드에 기본 단축키를 변경하거나 새로운 단축키를 추가할 수 있는 이벤트입니다.</p>
+<p><a href="../../samples/keyboard_event.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="notFound">
@@ -828,15 +832,14 @@
 <span class="signatureLink">notFound</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>사용자가 그리드의 특정 문자열을 검색(search) 하였을 때 문자열을 찾지 못할 경우 발생하는 이벤트입니다.</p>
+<p>그리드에서 문자열을 검색했지만 일치하는 값을 찾지 못했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>term : 사용자가 찾고자 했던 문자열(String)</li>
 <li>wrapFound : wrapSearch 를 한 경우 한 바퀴 돌아 같은 행(Row)을 찾은 경우. 즉, 문자열에 해당되는 행이 단 1개 인 경우 true임</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "notFound", function( event ) {
     console.log('다음 문자열을 찾을 수 없습니다 - "' + event.term + '"');
 });</code></pre>
@@ -848,14 +851,13 @@
 <span class="signatureLink">outdent</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.12<br>
-<p>사용자가 Alt + Shift + 왼쪽 화살표 키 또는 outdentTreeDepth 메소드를 통해 행 깊이(depth) 내리기(Outdent)를 한 경우 발생하는 이벤트입니다.</p>
+<p>Alt+Shift+왼쪽 방향키 또는 outdentTreeDepth()로 행을 내어썼을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>items : 실제로 행 깊이(depth) 적용된 행(Row) 아이템들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "outdent", function( event ) {
      console.log(event.type + " 이벤트, 적용된 행 개수 : " + event.items.length);
 });</code></pre>
@@ -867,16 +869,15 @@
 <span class="signatureLink">pageChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.11<br>
-<p>페이징을 사용하는 경우(usePaging=true) 페이징이 변경될 때 발생하는 이벤트입니다.</p>
+<p>페이징(usePaging=true)을 사용하는 그리드에서 페이지가 변경되었을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>currentPage : 현재 페이지 번호</li>
 <li>oldPage : 변경 되기 전의 페이지 번호</li>
 <li>totalPageCount : 전체 페이지 수</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "pageChange", function(event) {
     console.log("eventType : " + event.type + ", currentPage : " + event.currentPage + ", oldPage : " + event.oldPage);
  });</code></pre>
@@ -888,16 +889,15 @@
 <span class="signatureLink">pageRowCountChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.5<br>
- <p>페이징을 사용한 경우 1 페이지에 출력되는 행(Row)의 개수가 변경되었을 때 발생하는 이벤트입니다.</p>
- <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
- <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
- <li>rowCount : 현재 1페이지에 출력되는 행(Row)의 개수</li>
- <li>oldRowCount : 이전의 1페이지에 출력되었던 행(Row)의 개수</li>
- <li>totalPageCount : 전체 페이지 개수</li>
- </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
+<p>페이징을 사용하는 그리드에서 한 페이지에 표시할 행 수가 변경되었을 때 발생합니다.</p>
+<p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
+<ul>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowCount : 현재 1페이지에 출력되는 행(Row)의 개수</li>
+<li>oldRowCount : 이전의 1페이지에 출력되었던 행(Row)의 개수</li>
+<li>totalPageCount : 전체 페이지 개수</li>
+</ul>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "pageRowCountChange", function(event ) {
    console.log("페이지 행 개수 변경 이벤트 : " + event.oldRowCount + " → "  + event.rowCount + ", 전체 페이지 수 : " + event.totalPageCount);
 });</code></pre>
@@ -909,15 +909,14 @@
 <span class="signatureLink">pasteBegin</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.5<br>
-<p>편집 가능 그리드에서 붙여넣기(Ctrl + V) 를 할 때 붙여넣기가 시작되는 경우 발생하는 이벤트입니다.</p>
-<p>그리드에 의존하지 않고 사용자가 직접 파싱하여 적용 시킬 수 있습니다.</p>
+<p>붙여넣기를 시작할 때 발생합니다. 반환값으로 붙여넣기를 취소하거나 적용할 데이터를 바꿀 수 있습니다.</p>
+
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>clipboardData : 클립보드에 저장된 값(String) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "pasteBegin", function(event) {
      console.log("붙여 넣기 시작!!");
      console.log(event.clipboardData);
@@ -927,6 +926,7 @@
      // return [["a1", "a2"], ["b1", "b2"]];
 });</code></pre>
 <p> Retrun : (Boolean or Array) 만약 false 를 반환하면 기본 행위인 붙여 넣기를 하지 않습니다. 또한 Array 을 반환하면 그 반환값을 그리드에 붙여 넣기 적용시킵니다.</p>
+<p><a href="../../samples/editing_copy_control.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="pasteEnd">
@@ -935,18 +935,18 @@
 <span class="signatureLink">pasteEnd</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.8<br>
-<p>편집 가능 그리드에서 붙여넣기(Ctrl + V) 를 할 때 붙여넣기가 완료된 경우 발생하는 이벤트입니다.</p>
+<p>붙여넣기 처리를 마친 뒤 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>clipboardData : 그리드에 붙여 넣기 된 데이터 (Array) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "pasteEnd", function(event) {
      AUIGrid.setSelectionByIndex(0, 0); // 0, 0 으로 선택자 이동시킴.
      console.log("붙여 넣기 완료!!");
 });</code></pre>
+<p>clipboardData는 붙여넣기 입력 배열이며 성공한 셀 목록은 아닙니다. 셀별 변경 결과는 cellEditEnd에서 확인하십시오.</p>
 </td>
 </tr>
 <tr id="ready">
@@ -955,14 +955,13 @@
 <span class="signatureLink">ready</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>데이터가 삽입되어 그리드 렌더링이 완료되고 사용자에 의해 접근 가능해진 경우 발생하는 이벤트입니다.</p>
+<p>데이터가 입력되어 그리드 렌더링이 완료되고 접근할 수 있게 되었을 때 발생합니다.</p>
 <p>이 이벤트는 데이터가 변경되었을 때 다시 발생됩니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "ready", function(event) {
     console.log(event.type);
 });</code></pre>
@@ -974,14 +973,13 @@
 <span class="signatureLink">removeColumn</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0<br>
-<p>removeColumn() 을 통해 행(Row)을 삭제한 경우 발생하는 이벤트입니다.</p>
+<p>removeColumn()으로 칼럼을 삭제했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>dataFields : 삭제된 열의 dataField 묶음 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "removeColumn", function( event ) {
      console.log(event.type + " 이벤트, 삭제된 열 개수 : " + event.dataFields.length);
 });</code></pre>
@@ -993,15 +991,14 @@
 <span class="signatureLink">removeRow</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>사용자가 Ctrl + Del 키 또는 removeRow() 또는 removeRowByRowId() 메소드를 통해 행(Row)을 삭제한 경우 발생하는 이벤트입니다.</p>
+<p>Ctrl+Delete 키 또는 removeRow(), removeRowByRowId()로 행을 삭제했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>softRemoveRowMode : 소프트 제거 모드 사용 여부 즉, 그리드 상에 실제로 삭제가 됐는지 또는 마크 됐지는 여부</li>
 <li>items : 삭제된 행(Row) 아이템들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "removeRow", function( event ) {
      console.log(event.type + " 이벤트, 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 });</code></pre>
@@ -1013,19 +1010,19 @@
 <span class="signatureLink">removeSoftRows</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>softRemoveRowMode = true 를 사용할 때 사용자가 행(Row)을 삭제 한 경우, 삭제된 행은 마크가 생기게 됩니다.</p>
+<p>소프트 삭제로 표시된 행을 removeSoftRows()로 실제 제거했을 때 발생합니다.</p>
 <p>이를 그리드에서 실제로 삭제하는 메소드인 AUIGrid.removeSoftRows()를 호출 한 경우 발생하는 이벤트입니다.</p>
 <p>이 이벤트는 softRemoveRowMode 를 false 로 설정한 경우 발생하지 않습니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>items : 삭제된 행(Row) 아이템들 (Array)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "removeSoftRows", function( event ) {
      console.log(event.type + " 이벤트, 삭제된 행 개수 : " + event.items.length);
 });</code></pre>
+<p><a href="../../samples/editing_remove_rows.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="rowAllCheckClick">
@@ -1036,10 +1033,9 @@
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
 <p><strong>[deprecated Ver 2.8]</strong> 이 이벤트는 event 객체가 아닌 checked 값 파라메터로 갖습니다. rowAllChkClick 이벤트를 사용하십시오.</p>
 <p>엑스트라 체크박스 열(Column)에 있는 전체 선택 체크박스 클릭 시 발생합니다.</p>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowAllCheckClick", function( checked ) {
      console.log("전체 선택  checked : " + checked);
-}</code></pre>
+});</code></pre>
 </td>
 </tr>
 <tr id="rowAllChkClick">
@@ -1048,18 +1044,17 @@
 <span class="signatureLink">rowAllChkClick</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>엑스트라 체크박스 열(Column)에 있는 전체 선택 체크박스 클릭 시 발생합니다.</p>
+<p>행 체크박스 칼럼의 헤더에 있는 전체 체크박스를 클릭했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>checked : 체크 유무 (Boolean)</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
      console.log("전체 선택 checked : " + event.checked);
-}</code></pre>
+});</code></pre>
 </td>
 </tr>
 <tr id="rowCheckClick">
@@ -1068,19 +1063,18 @@
 <span class="signatureLink">rowCheckClick</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.9<br>
-<p>엑스트라 체크박스 열(Column)에 있는 행(Row) 체크박스를 클릭했을 때 발생합니다</p>
+<p>엑스트라 행 체크박스를 클릭했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>checked : 체크 여부 (Boolean)</li>
-<li>rowIndex : 행(Row) 인덱스</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
+<li>rowIndex : 행 인덱스</li>
+<li>item : 해당 행의 데이터 (Object)</li>
 <li>shiftKey : 쉬프트키를 누른 채 클릭했는지 여부(Boolean)</li>
 <li>shiftIndex : 쉬프트키를 누른 채 클릭했을 때 다중 선택 설정/해제 되는 상대적 행(Row) 인덱스</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowCheckClick", function( event ) {
       const {item, rowIndex, checked} = event;
       if(item._$groupParentValue && item._$isBranch) { // 그룹핑하여 계층형으로 출력된 경우
@@ -1097,22 +1091,22 @@
 <span class="signatureLink">rowNumCellClick</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.8<br>
-<p>엑스트라 행(Row) 번호 열(Column)을 클릭 했을 때 발생하는 이벤트입니다.</p>
+<p>행 번호 칼럼의 셀을 클릭했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>rowNum : 행(Row) 번호 텍스트 값 </li>
-<li>rowIndex : 행(Row) 인덱스 </li>
+<li>rowIndex : 행 인덱스 </li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowNumCellClick", function(event) {
     console.log("eventType : " + event.type + ", rowNum : " + event.rowNum + ", rowIndex : " + event.rowIndex);
     // false 반환하면 기본 행위 안함
     return false;
  });</code></pre>
 <p> Retrun : (Boolean) 만약 false 를 반환하면 기본 행위인 행(또는 셀) 선택을 하지 않습니다.</p>
+<p><a href="../../samples/extra_renderer_rownum.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="rowNumHeaderClick">
@@ -1121,17 +1115,17 @@
 <span class="signatureLink">rowNumHeaderClick</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.11.17<br>
- <p>엑스트라 행(Row) 번호 헤더를 클릭 했을 때 발생하는 이벤트입니다.</p>
+<p>행 번호 칼럼의 헤더를 클릭했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowNumHeaderClick", function(event) {
     console.log("eventType : " + event.type);
  });</code></pre>
+<p><a href="../../samples/extra_renderer_rownum.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="rowStateCellClick">
@@ -1139,32 +1133,31 @@
 <div class="summarySignature">
 <span class="signatureLink">rowStateCellClick</span>
 </div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br> 
- <p>엑스트라 행(Row) 상태 열(Column)을 설정한 경우(showStateColumn=true) 해당 셀을 클릭 시 발생하는 이벤트입니다.</p>
- <p>만약 수정 가능한 그리드(editable=true) 이고, 복구 가능 설정(enableRestore=true) 인 경우, 상태 아이콘을 클릭하면 해당 행(Row)이 이전 상태로 복구됩니다.</p>
- <p>즉, 수정, 삭제, 추가에 대한 이전 상태의 복구의 의미는 다음과 같습니다.</p>
- <ul>
- <li>수정 상태 클릭 : 수정 전 원본 데이터 값으로 복구됩니다.(즉, 수정 취소)</li>
- <li>삭제 상태 클릭 : 삭제를 취소합니다.(단, softRemoveRowMode=true 인 경우에 해당)</li>
- <li>추가 상태 클릭 : 행(Row) 추가를 취소합니다.(단, softRemovePolicy = "exceptNew" 인 경우만 해당)</li>
- </ul>
- <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
- <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
- <li>rowIndex : 해당 행(Row)의 인덱스</li>
- <li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
- <li>marker : 해당 행(Row)의 편집 상태. 유효값은 다음과 같습니다.
- <ul style="margin-left:20px;"><li>"added" : 클릭한 행(Row) 상태가 추가된 행 임을 의미합니다.</li>
-       <li>"added-edited" : 클릭한 행 상태가 추가되고, 수정된 행 임을 의미합니다.</li>
-       <li>"edited" : 클릭한 행 상태가 수정된 행 임을 의미합니다.</li>
-       <li>"normal" : 클릭한 행 상태가 어떤 편집 행위도 이루어지지 않은 일반행 임을 의미합니다.</li>
-       <li>"removed" : 클릭한 행 상태가 삭제된 행 임을 의미합니다.</li>
-  </ul></li>
- </ul>
- <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
- <pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowStateCellClick", function( event ) {
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
+<p>행 상태 칼럼(showStateColumn=true)의 셀을 클릭했을 때 발생합니다.</p>
+<p>만약 수정 가능한 그리드(editable=true) 이고, 복구 가능 설정(enableRestore=true) 인 경우, 상태 아이콘을 클릭하면 해당 행(Row)이 이전 상태로 복구됩니다.</p>
+<p>즉, 수정, 삭제, 추가에 대한 이전 상태의 복구의 의미는 다음과 같습니다.</p>
+<ul>
+<li>수정 상태 클릭 : 수정 전 원본 데이터 값으로 복구됩니다.(즉, 수정 취소)</li>
+<li>삭제 상태 클릭 : 삭제를 취소합니다.(단, softRemoveRowMode=true 인 경우에 해당)</li>
+<li>추가 상태 클릭 : 행(Row) 추가를 취소합니다.(단, softRemovePolicy = "exceptNew" 인 경우만 해당)</li>
+</ul>
+<p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
+<ul>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>item : 해당 행의 데이터 (Object)</li>
+<li>rowIndex : 해당 행(Row)의 인덱스</li>
+<li>orgEvent : 자바스크립트의 오리지널 이벤트 객체 (Object) </li>
+<li>marker : 해당 행(Row)의 편집 상태. 유효값은 다음과 같습니다.
+<ul style="margin-left:20px;"><li>"added" : 클릭한 행(Row) 상태가 추가된 행 임을 의미합니다.</li>
+      <li>"added-edited" : 클릭한 행 상태가 추가되고, 수정된 행 임을 의미합니다.</li>
+      <li>"edited" : 클릭한 행 상태가 수정된 행 임을 의미합니다.</li>
+      <li>"normal" : 클릭한 행 상태가 어떤 편집 행위도 이루어지지 않은 일반행 임을 의미합니다.</li>
+      <li>"removed" : 클릭한 행 상태가 삭제된 행 임을 의미합니다.</li>
+ </ul></li>
+</ul>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "rowStateCellClick", function( event ) {
      if(event.marker === "edited") { // 현재 수정된 상태를 클릭 한 경우
          if(confirm("수정 취소 즉, 원래 값으로 복구 하시겠습니까?")) {
              return true;
@@ -1172,8 +1165,9 @@
          return false;
      }
   });</code></pre>
- <p>Return : (Boolean) false 를 반환하면 복구 행위를 하지 않습니다.</p>
- </td>
+<p>Return : (Boolean) false 를 반환하면 복구 행위를 하지 않습니다.</p>
+<p><a href="../../samples/restore_edited_row_state.html" target="_blank">관련 데모 보기</a></p>
+</td>
 </tr>
 <tr id="selectionChange">
 <td class="summaryTableSignatureCol">
@@ -1181,33 +1175,16 @@
 <span class="signatureLink">selectionChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>selectionMode 가 "none" 이 아닌 경우 셀 또는 행 선택이 변경되었을 때 발생하는 이벤트입니다.</p>
-<p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
-<ul>
-<li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>primeCell : 다수의 선택 셀 중 기본이 되는 주요 셀 정보 (Object)</li>
-<li>selectedItems : 선택된 아이템들을 요소로 갖는 배열(Array-Object)</li>
-</ul>
-<p>selectedItems 는 배열이며, 배열의 개별 아이템에 대한 객체는 다음 요소를 갖습니다.</p>
-<p>primeCell 의 요소 또한 다음과 같습니다.</p>
-<ul>
-<li>rowIndex : 행(Row)의 인덱스</li>
-<li>columnIndex : 열(Column)의 인덱스</li>
-<li>dataField : 선택 열(Column)이 출력하고 있는 그리드 데이터의 필드명</li>
-<li>headerText : 선택 열(Column)의 헤더 텍스트</li>
-<li>editable : 선택 열(Column)의 수정 가능 여부</li>
-<li>value : 선택 셀의 현재 그리드 값</li>
-<li>rowIdValue : rowIdField 로 지정한 키에 대한 값. 즉, 행의 고유값 (rowIdField 설정 선행 필수)</li>
-<li>item : 선택 행 아이템들을 갖는 Object</li>
-</ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
-<pre><code class="language-javascript">AUIGrid.bind(myGridID, "selectionChange", function( event ) {
-    // 다수의 선택 셀 중 기본이 되는 주요 셀 정보
-    const primeCell = event.primeCell; // 선택된 대표 셀
-    console.log("현재 셀 : ( " + primeCell.rowIndex + ", " + primeCell.headerText + " ), 값 : " + primeCell.value);
+<p>셀 또는 행의 선택이 변경되었을 때 발생합니다.</p>
+<p><a href="Methods.html#clearSelection">clearSelection()</a>으로 선택을 해제할 때는 발생하지 않습니다.</p>
+<p>이벤트 객체의 요소는 다음과 같습니다.</p><ul><li>type : 이벤트 유형</li><li>pid : 그리드 부모 DIV의 ID</li><li>primeCell : 선택을 시작한 활성 셀 정보</li><li>selectedItems : 선택 정보 배열. simplifySelectionEvent:true이면 생략</li></ul>
+<p>셀 정보의 항목은 <a href="Methods.html#getSelectedItems">getSelectedItems()</a>를 참고하십시오.</p>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "selectionChange", function(event) {
+    const cell = event.primeCell;
+    console.log(cell.rowIndex, cell.dataField, cell.value);
 });</code></pre>
-<p>Also See : <a href="./Properties.html#simplifySelectionEvent">simplifySelectionEvent</a>
+<p>Also See : <a href="Properties.html#triggerSelectionChangeOnCell">triggerSelectionChangeOnCell</a> | <a href="Properties.html#dispatchSelectionChangeMoving">dispatchSelectionChangeMoving</a></p>
+<p><a href="../../samples/cell_selection_change.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="selectionConstraint">
@@ -1216,28 +1193,28 @@
 <span class="signatureLink">selectionConstraint</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>3.0.8.3<br>
- <p>셀렉션 변경 전에 셀렉션 제한(통제)를 체크 할 때 발생하는 이벤트입니다.</p>
- <p>이 이벤트는 사용자가 셀 클릭이나 방향키 이동을 통해 셀렉션 변경을 주 목적으로 행한 경우만 발생합니다.</p>
- <p>즉, 검색(serach)나 셀 수정 등과 같이 주 목적이 따로 있을 때 그 결과로 셀렉션이 변경되는 경우 이벤트는 발생 하지 않습니다.</p>
- <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
- <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
- <li>rowIndex : 현재 셀렉션의 행(Row) 인덱스</li>
- <li>columnIndex : 현재 셀렉션의 열(Column) 인덱스</li>
- <li>toRowIndex : 사용자가 변경 시킬 행(Row) 인덱스</li>
- <li>toColumnIndex : 사용자가 변경 시킬 열(Column) 인덱스</li>
- <li>dataField : toColumnIndex 에 해당되는 데이터의 KeyField</li>
- <li>stopPropagation : confirm과 같이 Modal 을 띄워서 확인 하는 경우 event 의 stopPropagation 요소에 true 를 설정하여 진행을 막음. </li>
- <li>which : 셀렉션 변경을 어떤 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
- </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
+<p>선택을 변경하기 전에 선택 이동을 허용할지 판단할 때 발생합니다.</p>
+<p>이 이벤트는 사용자가 셀 클릭이나 방향키 이동을 통해 셀렉션 변경을 주 목적으로 행한 경우만 발생합니다.</p>
+<p>즉, 검색(serach)나 셀 수정 등과 같이 주 목적이 따로 있을 때 그 결과로 셀렉션이 변경되는 경우 이벤트는 발생 하지 않습니다.</p>
+<p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
+<ul>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowIndex : 현재 셀렉션의 행(Row) 인덱스</li>
+<li>columnIndex : 현재 셀렉션의 열(Column) 인덱스</li>
+<li>toRowIndex : 사용자가 변경 시킬 행(Row) 인덱스</li>
+<li>toColumnIndex : 사용자가 변경 시킬 열(Column) 인덱스</li>
+<li>dataField : toColumnIndex 에 해당되는 데이터의 KeyField</li>
+<li>stopPropagation : confirm과 같이 Modal 을 띄워서 확인 하는 경우 event 의 stopPropagation 요소에 true 를 설정하여 진행을 막음. </li>
+<li>which : 셀렉션 변경을 어떤 어떤 방식으로 수행 했는지에 대한 정보(String or Number)</li>
+</ul>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "selectionConstraint", function(event) {
     if(event.toRowIndex < 5) {
         return false; // 5행까지 셀렉션 변경을 하지 않음
     }
 });</code></pre>
- <p>Return : (Boolean) false 를 반환하면 사용자의 셀렉션 변경을 막습니다.</p>
+<p>Return : (Boolean) false 를 반환하면 사용자의 셀렉션 변경을 막습니다.</p>
+<p><a href="../../samples/cell_selection_constraint.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="sorting">
@@ -1246,19 +1223,19 @@
 <span class="signatureLink">sorting</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>사용자가 정렬(Sorting)을 설정하거나 변경, 해제 시 발생하는 이벤트입니다.</p>
+<p>정렬을 설정하거나 변경, 해제했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>sortingFields : 현재 정렬된 필드 및 정렬 방법들 (Array)</li>
 </ul>
 <p>만약 정렬을 "Name 오름차순, County 내림차순" 설정한 경우 다음과 같은 sortingFields 정보를 담고 있습니다.</p>
 <p>[{dataField : "name", sortType : 1}, {dataField : "country", sortType : -1}]</p>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "sorting", function( event ) {
      console.log("이벤트명: " + event.type + ", 현재 소팅 필드 개수 : " + event.sortingFields.length );
-});</code></pre>
+});</code></pre><p>band의 상위 칼럼을 정렬한 경우 sortingFields 항목의 columnIndex는 첫 하위 leaf의 인덱스입니다. 정렬할 칼럼은 dataField로 식별합니다.</p>
+<p><a href="../../samples/sorting_demo.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="treeLazyRequest">
@@ -1267,22 +1244,21 @@
 <span class="signatureLink">treeLazyRequest</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.12<br>
-<p>트리 lazyLoading 모드를 사용하는 경우(treeLazyMode=true) 특정 트리 행(Row)의 열기/닫기 아이콘을 눌렀을 때 발생하는 이벤트입니다.</p>
+<p>treeLazyMode=true인 트리에서 행의 펼치기, 접기 아이콘을 눌렀을 때 발생합니다. 해당 행에 표시할 자식 데이터를 제공하는 데 사용합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>rowIndex : 해당 아이템의 rowIndex</li>
 <li>depth : 트리 아이템의 depth 즉, 최상위 브랜치 아이템이 1 depth 이며 아래로 내려갈 수록 depth 1씩 증가함</li>
 <li>item : 열기/닫기의 대상이 된 브랜치(branch) 행(Row) 아이템 객체 (Object)</li>
-<li>response : 응답으로 설정할 함수(Function)</li>
+<li>response : 자식 배열을 전달할 함수(Function). false를 전달하면 자식을 추가하지 않고 현재 요청의 로딩 표시를 종료합니다.</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "treeLazyRequest", function(event) {
  const item = event.item;
  // 자식 데이터 요청
  $.ajax({
-  url: "./data/get_my_children.do?pid=" + item.id + "&name=" + item.name,
+  url: "./data/get_my_children.do?pid=" + item.id + "&amp;name=" + item.name,
   success: function(data) {
    // 성공 시 완전한 배열 객체로 삽입하십시오.
    event.response(data);
@@ -1298,21 +1274,21 @@
 <span class="signatureLink">treeOpenChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>트리 그리드 일 때 브랜치(branch) 아이템의 열기/닫기을 클릭하여 열기/닫기 상태 변경 시 발생하는 이벤트입니다.</p>
+<p>트리 브랜치의 펼치기, 접기 아이콘을 클릭하여 열림 상태가 변경되었을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>isOpen : 현재 열린 상태인지 닫힌 상태인지 여부</li>
 <li>rowIndex : 해당 아이템의 rowIndex</li>
 <li>depth : 트리 아이템의 depth 즉, 최상위 브랜치 아이템이 1 depth 이며 아래로 내려갈 수록 depth 1씩 증가함</li>
 <li>item : 열기/닫기의 대상이 된 브랜치(branch) 행(Row) 아이템 객체 (Object)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "treeOpenChange", function( event ) {
      console.log(event.type + " : " + event.isOpen + ", rowIndex : " + event.rowIndex);
 });</code></pre>
 <p>이 이벤트는 사용자에 의해 열기/닫기 아이콘을 클릭 한 경우만 발생합니다.</p>
+<p><a href="../../samples/treeData_open_item.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="undoRedoChange">
@@ -1321,31 +1297,30 @@
 <span class="signatureLink">undoRedoChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
- <p>수정 편집 가능한 그리드에서 실행 취소(Undo), 다시 실행(Redo) 또는 커맨드 스택의 변화가 생긴 경우 발생하는 이벤트입니다.</p>
- <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
- <ul>
- <li>type : 이벤트 유형</li>
- <li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
- <li>action : 다시 실행, 실행 취소 등과 같이 어떤 행위로 인해 이 이벤트가 발생했는지 나태내며 다음과 같은 값을 갖습니다.
- <ul style="margin-left:20px;"><li>"add" : 커맨드 스택에 새로운 커맨드가 추가됨</li>
-      <li>"clear" : 커맨드 스택이 초기화 됨</li>
-      <li>"redo" : 다시 실행이 행해짐</li>
-      <li>"undo" : 실행 취소가 행해짐</li>
- </ul></li>
- <li>stackIndex : 커맨드 스택에서 현재 커맨드의 인덱스</li>
- <li>stackSize : 커맨드 스택의 총 길이</li>
- <li>redoable : 다시 실행(redo) 가능 여부</li>
- <li>undoable : 실행 취소(undo) 가능 여부</li>
- </ul>
- <p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
- <pre><code class="language-javascript">AUIGrid.bind(myGridID, "undoRedoChange", function( event ) {
+<p>편집 가능한 그리드에서 Undo와 Redo를 실행하거나 관련 작업 기록이 변경되었을 때 발생합니다.</p>
+<p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
+<ul>
+<li>type : 이벤트 유형</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>action : 다시 실행, 실행 취소 등과 같이 어떤 행위로 인해 이 이벤트가 발생했는지 나타내며 다음과 같은 값을 갖습니다.
+<ul style="margin-left:20px;"><li>"add" : 커맨드 스택에 새로운 커맨드가 추가됨</li>
+     <li>"clear" : 커맨드 스택이 초기화 됨</li>
+     <li>"redo" : 다시 실행이 행해짐</li>
+     <li>"undo" : 실행 취소가 행해짐</li>
+</ul></li>
+<li>stackIndex : 커맨드 스택에서 현재 커맨드의 인덱스</li>
+<li>stackSize : 커맨드 스택의 총 길이</li>
+<li>redoable : 다시 실행(redo) 가능 여부</li>
+<li>undoable : 실행 취소(undo) 가능 여부</li>
+</ul>
+<pre><code class="language-javascript">AUIGrid.bind(myGridID, "undoRedoChange", function( event ) {
         // Undo, Redo 버턴 가능한지 버턴 업데이트 
-        if(event.undoable) $("#undoBtn).removeClass("disabled"); // Undo버턴 비활성화 제거
-        else $("#undoBtn).addClass("disabled"); // Undo 버턴 비활성화
-        if(event.redoable) $("#redoBtn).removeClass("disabled");
-        else $("#redoBtn).addClass("disabled");
+        if(event.undoable) $("#undoBtn").removeClass("disabled"); // Undo버턴 비활성화 제거
+        else $("#undoBtn").addClass("disabled"); // Undo 버턴 비활성화
+        if(event.redoable) $("#redoBtn").removeClass("disabled");
+        else $("#redoBtn").addClass("disabled");
   });</code></pre>
- </td>
+</td>
 </tr>
 <tr id="updateRow">
 <td class="summaryTableSignatureCol">
@@ -1353,19 +1328,18 @@
 <span class="signatureLink">updateRow</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.12.5<br>
-<p>updateRow 메소드를 통해 사용자가 행(Row)을 수정한 경우 발생하는 이벤트입니다.</p>
+<p>updateRow()로 행을 수정했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
-<li>rowIndex : 행(Row) 인덱스</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
+<li>rowIndex : 행 인덱스</li>
 <li>columnIndexes : 수정된 열(Column) 인덱스들(배열)</li>
 <li>values : 수정된 값들(배열)</li>
 <li>headerTexts : 수정된 열(Column)의 헤더 텍스트들(배열)</li>
-<li>item : 해당 행(Row)에 출력되고 있는 행 아이템 객체 (Object)</li>
+<li>item : 해당 행의 데이터 (Object)</li>
 <li>dataFields : 행(Row) 아이템에서 수정된 열(Column)이 출력되고 있는 데이터의 KeyField들(배열)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "updateRow", function( event ) {
       console.log("rowIndex : " + event.rowIndex + ", columnIndexes : " + event.columnIndexes + " updateRow");
 });</code></pre>
@@ -1377,17 +1351,17 @@
 <span class="signatureLink">updateRows</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.12.5<br>
-<p>updateRows, updateRowsById 메소드를 통해 사용자가 행(Row)을 수정한 경우 발생하는 이벤트입니다.</p>
+<p>updateRows() 또는 updateRowsById()로 행을 수정했을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>items : 변경된 행(Row) 아이템 객체 (Array-Object)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "updateRows", function( event ) {
       console.log( "items : " + JSON.stringify(event.items) );
 });</code></pre>
+<p><a href="../../samples/editing_setvalue.html" target="_blank">관련 데모 보기</a></p>
 </td>
 </tr>
 <tr id="vScrollChange">
@@ -1396,22 +1370,22 @@
 <span class="signatureLink">vScrollChange</span>
 </div>
 </td><td class="summaryTableDescription"><span class="label">Type : </span>Event &nbsp; <span class="label">Version: </span>2.7<br>
-<p>그리드의 수직 스크롤(세로 스크롤)이 있는 경우, 수직 스크롤의 값이 변경되었을 때 발생하는 이벤트입니다.</p>
-<p>사용자가 마우스 휠이나 다른 특정 행위로 수직 스크롤이 변경되면 발생합니다.</p>
+<p>세로 스크롤 위치가 변경되었을 때 발생합니다.</p>
 <p>이벤트 핸들러로 전달되는 파라메터의 event 객체 요소는 다음과 같습니다.</p>
 <ul>
 <li>type : 이벤트 유형</li>
-<li>pid : 사용자에 의해 작성된 그리드의 부모 DIV ID (샘플 상의 myGridID 와 일치함)</li>
+<li>pid : 그리드 부모 DIV의 ID</li>
 <li>position : 현재 스크롤의 위치 (Number)</li>
 <li>oldPosition : 변경 전 스크롤의 위치 (Number)</li>
-<li>minPosition : 수직 스크롤의 최대 위치 (Number)</li>
-<li>maxPosition : 수직 스크롤의 최소 위치 (Number)</li>
+<li>minPosition : 수직 스크롤의 최소 위치 (Number)</li>
+<li>maxPosition : 수직 스크롤의 최대 위치 (Number)</li>
 </ul>
-<p>이 이벤트를 핸들링하는 방법은 다음과 같습니다.</p>
 <pre><code class="language-javascript">AUIGrid.bind(myGridID, "vScrollChange", function( event ) {
      console.log( event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition + ")" );
 });</code></pre>
 <p>주의 : 이 이벤트 핸들러에서 무리한 작업을 하면 그리드 스크롤링 시 성능이 저하됩니다.</p>
+<p>position, oldPosition, minPosition과 maxPosition의 단위는 usePaging이 true이면 현재 페이지 안의 픽셀, false이면 행 인덱스입니다.</p>
+<p>페이징을 사용하지 않으면 같은 행 안의 픽셀 이동만으로는 발생하지 않습니다. 연속 입력은 화면 갱신 시점에 합쳐 처리할 수 있으므로 입력 횟수와 이벤트 횟수는 다를 수 있습니다.</p>
 </td>
 </tr>
 </table>

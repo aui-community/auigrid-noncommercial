@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.tsx for React.js + Typescript v1.5.20250909
- * Based on AUIGrid v3.0.16.11
+ * AUIGridReact.tsx for React.js + Typescript v1.6.20261001
+ * Based on AUIGrid v3.0.18.0
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
@@ -35,6 +35,7 @@ interface IProps {
 	name?: string;
 	autoResize?: boolean;
 	resizeDelayTime?: number;
+	waitPortalRendering?: boolean;
 	gridProps?: IGrid.Props | null;
 	columnLayout?: IGrid.Column[];
 	footerLayout?: IGrid.Footer[];
@@ -54,6 +55,9 @@ declare global {
 const $ag: any = typeof window === 'undefined' ? {} : window.AUIGrid;
 
 class AUIGrid extends React.Component<IProps, IState> {
+	private __auiMountGeneration = 0;
+	private __auiAnimationFrameId: number | null = null;
+	private __auiResizeTimerId: ReturnType<typeof setTimeout> | null = null;
 	constructor(props: IProps) {
 		super(props);
 		//crypto 로 uuid 생성함. (유니크 값)
@@ -72,15 +76,29 @@ class AUIGrid extends React.Component<IProps, IState> {
 		name: '',
 		autoResize: true,
 		resizeDelayTime: 300,
+		waitPortalRendering: false,
 		gridProps: null,
 		columnLayout: [],
 		footerLayout: []
 	};
 
 	componentDidMount() {
-		$ag.create(this.state.pid, this.props.columnLayout, this.props.gridProps);
-		$ag.setFooter(this.state.pid, this.props.footerLayout);
-		this.__setupGlobalResize();
+		const generation = ++this.__auiMountGeneration;
+		const initGrid = () => {
+			if (generation !== this.__auiMountGeneration) return;
+			this.__auiAnimationFrameId = null;
+			$ag.create(this.state.pid, this.props.columnLayout, this.props.gridProps);
+			if (generation !== this.__auiMountGeneration) return;
+			$ag.setFooter(this.state.pid, this.props.footerLayout);
+			if (generation !== this.__auiMountGeneration) return;
+			this.__setupGlobalResize();
+		};
+		if (this.props.waitPortalRendering) {
+			// Portal 시차 해결을 위해 RAF 사용
+			this.__auiAnimationFrameId = window.requestAnimationFrame(initGrid);
+		} else {
+			initGrid();
+		}
 	}
 
 	componentWillUnmount() {
@@ -98,27 +116,44 @@ class AUIGrid extends React.Component<IProps, IState> {
 	}
 
 	private __resetGlobalResize() {
-		if (!this.props.autoResize) return;
+		// Invalidate callbacks owned by this mount, including StrictMode remounts.
+		this.__auiMountGeneration++;
+		if (this.__auiAnimationFrameId !== null) {
+			window.cancelAnimationFrame(this.__auiAnimationFrameId);
+			this.__auiAnimationFrameId = null;
+		}
+		if (this.__auiResizeTimerId !== null) {
+			clearTimeout(this.__auiResizeTimerId);
+			this.__auiResizeTimerId = null;
+		}
 		window.removeEventListener('resize', this.__globalResizeHandler);
 	}
 
 	private __globalResizeHandler(event: Event) {
 		const state = this.state;
-		if (state.timerId !== null) {
-			clearTimeout(state.timerId);
+		const that = this;
+		const generation = this.__auiMountGeneration;
+		if (this.__auiResizeTimerId !== null) {
+			clearTimeout(this.__auiResizeTimerId);
 		}
 		const timerId = setTimeout(function () {
+			if (generation !== that.__auiMountGeneration) return;
 			if ($ag.isCreated(state.pid)) {
 				try {
 					$ag.resize(state.pid);
 				} catch (e) {}
 			}
 		}, this.props.resizeDelayTime);
+		// Keep the existing state shape; scheduling must not wait for setState.
+		this.__auiResizeTimerId = timerId;
 		this.setState({ timerId: timerId });
 	}
 
-	create(columnLayout: IGrid.Column[], props: IGrid.Props) {
+	create(columnLayout: IGrid.Column[], props: IGrid.Props, footerLayout?: IGrid.Footer[]): string {
 		$ag.create(this.state.pid, columnLayout, props);
+		if (footerLayout) {
+			$ag.setFooter(this.state.pid, footerLayout);
+		}
 		this.__setupGlobalResize();
 		return this.state.pid;
 	}
@@ -225,7 +260,8 @@ class AUIGrid extends React.Component<IProps, IState> {
 	exportToCsv(props?: any) {
 		$ag.exportToCsv.call($ag, this.state.pid, arguments[0]);
 	}
-	exportToJson(keyValueMode?: boolean, props?: any): any {
+	/** 객체 옵션을 사용합니다. 구형 Boolean 인수의 전달은 유지하지만 옵션 변환은 하지 않습니다. */
+	exportToJson(propsOrLegacyKeyValueMode?: object | boolean, legacyProps?: any): void {
 		$ag.exportToJson.call($ag, this.state.pid, arguments[0], arguments[1]);
 	}
 	exportToObject(keyValueMode?: boolean): any {
@@ -297,13 +333,19 @@ class AUIGrid extends React.Component<IProps, IState> {
 	getColumnValues(dataField: string, total?: boolean): any[] {
 		return $ag.getColumnValues.call($ag, this.state.pid, arguments[0], arguments[1]);
 	}
+	getColumnWidthByDataField(dataField: string): number {
+		return $ag.getColumnWidthByDataField.call($ag, this.state.pid, arguments[0]);
+	}
+	getColumnWidthList(): number[] {
+		return $ag.getColumnWidthList.call($ag, this.state.pid);
+	}
 	getCurrentPageData(): any[] {
 		return $ag.getCurrentPageData.call($ag, this.state.pid);
 	}
 	getDataFieldByColumnIndex(columnIndex: number): string {
 		return $ag.getDataFieldByColumnIndex.call($ag, this.state.pid, arguments[0]);
 	}
-	getDepthByRowId(rowId: any): number {
+	getDepthByRowId(rowId: any): number | null | undefined {
 		return $ag.getDepthByRowId.call($ag, this.state.pid, arguments[0]);
 	}
 	getDescendantsByRowId(rowId: any): any[] {
@@ -447,6 +489,9 @@ class AUIGrid extends React.Component<IProps, IState> {
 	getSelectedText(exceptHidden?: boolean): string {
 		return $ag.getSelectedText.call($ag, this.state.pid, arguments[0]);
 	}
+	getSortCollator() {
+		return $ag.getSortCollator.call($ag, this.state.pid);
+	}
 	getSortingFields(): any[] {
 		return $ag.getSortingFields.call($ag, this.state.pid);
 	}
@@ -519,13 +564,13 @@ class AUIGrid extends React.Component<IProps, IState> {
 	isFilteredGrid(): boolean {
 		return $ag.isFilteredGrid.call($ag, this.state.pid);
 	}
-	isItemBranchByRowId(rowId: any): boolean {
+	isItemBranchByRowId(rowId: any): boolean | null | undefined {
 		return $ag.isItemBranchByRowId.call($ag, this.state.pid, arguments[0]);
 	}
-	isItemOpenByRowId(rowId: any): boolean {
+	isItemOpenByRowId(rowId: any): boolean | null | undefined {
 		return $ag.isItemOpenByRowId.call($ag, this.state.pid, arguments[0]);
 	}
-	isItemVisibleByRowId(rowId: any): boolean {
+	isItemVisibleByRowId(rowId: any): boolean | null {
 		return $ag.isItemVisibleByRowId.call($ag, this.state.pid, arguments[0]);
 	}
 	isLazyRequestedByIndex(rowIndex: number): boolean {
@@ -618,7 +663,7 @@ class AUIGrid extends React.Component<IProps, IState> {
 	removeInfoMessage() {
 		$ag.removeInfoMessage.call($ag, this.state.pid);
 	}
-	removeRow(rowIndex: number | string) {
+	removeRow(rowIndex: number | number[] | 'selectedIndex') {
 		$ag.removeRow.call($ag, this.state.pid, arguments[0]);
 	}
 	removeRowByRowId(rowIds: string | number | string[] | number[]) {
@@ -774,7 +819,19 @@ class AUIGrid extends React.Component<IProps, IState> {
 	setSelectionBlock(startRowIndex: number, endRowIndex?: number, startColumnIndex?: number, endColumnIndex?: number) {
 		$ag.setSelectionBlock.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
 	}
-	setSelectionByIndex(rowIndex: number, columnIndex: number) {
+	// 셀 종류를 조회합니다. 없는 행이나 바디 셀은 null입니다.
+	getBodyCellKind(rowIndex: number, dataField: string): 'branch' | 'leaf' | null {
+		return $ag.getBodyCellKind.call($ag, this.state.pid, arguments[0], arguments[1]);
+	}
+	// 필드명으로 상위 셀과 하위 셀을 선택합니다.
+	setSelectionByDataField(rowIndex: number, dataField: string) {
+		$ag.setSelectionByDataField.call($ag, this.state.pid, arguments[0], arguments[1]);
+	}
+	// 시작 셀을 활성 셀로 유지하면서 필드 사이의 영역을 선택합니다.
+	setSelectionBlockByDataField(startRowIndex: number, endRowIndex: number, startColDataField: string, endColDataField: string) {
+		$ag.setSelectionBlockByDataField.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
+	}
+	setSelectionByIndex(rowIndex: number, columnIndex?: number) {
 		$ag.setSelectionByIndex.call($ag, this.state.pid, arguments[0], arguments[1]);
 	}
 	setSelectionColumn(startColIdx: number, endColIdx?: number) {
@@ -782,6 +839,9 @@ class AUIGrid extends React.Component<IProps, IState> {
 	}
 	setSelectionMode(mode: 'singleCell' | 'singleRow' | 'multipleCells' | 'multipleRows' | 'none') {
 		$ag.setSelectionMode.call($ag, this.state.pid, arguments[0]);
+	}
+	setSortCollator(collator: Intl.Collator | null) {
+		$ag.setSortCollator.call($ag, this.state.pid, arguments[0]);
 	}
 	setSorting(sortingInfoArr: { dataField: string; sortType: number }[], onlyLastDepthSorting?: boolean) {
 		$ag.setSorting.call($ag, this.state.pid, arguments[0], arguments[1]);
@@ -840,7 +900,7 @@ class AUIGrid extends React.Component<IProps, IState> {
 	updateGrouping() {
 		$ag.updateGrouping.call($ag, this.state.pid);
 	}
-	updateRow(item: any, rowIndex?: number | string, isMarkEdited?: boolean) {
+	updateRow(item: any, rowIndex: number | 'selectedIndex', isMarkEdited?: boolean) {
 		$ag.updateRow.call($ag, this.state.pid, arguments[0], arguments[1], arguments[2]);
 	}
 	updateRowBlockToValue(startRowIndex: number, endRowIndex: number, dataFields: string | string[], values: any | any[]) {
@@ -870,7 +930,7 @@ export const agUtils: {
 	readonly releaseDate: string;
 	isCreated: () => boolean;
 	formatDate: (date: string | Date, formatString: string) => string;
-	formatNumber: (number: number, formatString: string, rouding?: 'rounding' | 'ceil' | 'floor') => string;
+	formatNumber: (number: number, formatString: string, rounding?: 'round' | 'ceil' | 'floor' | 'rounding') => string;
 	getActiveGrid: () => string | null;
 	getCreatedGridAll: () => string[];
 	makeValueMasked: (mask: string, value: string) => string;

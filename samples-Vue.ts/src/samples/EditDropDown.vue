@@ -7,13 +7,10 @@
 
 	const BASE_URL = import.meta.env.BASE_URL;
 
-	// 그리드 InstanceType
 	type AUIGrid = InstanceType<typeof AUIGrid>;
 
-	// 그리드 객체
 	const myGrid = ref<AUIGrid | null>(null);
 
-	// 드랍다운리스트의 리스트들
 	const posListRef = ref<any>([]);
 	const myListRef = ref<any>([]);
 	const colorListRef = ref<any>([]);
@@ -23,7 +20,6 @@
 	const groupBListRef = ref<any>([]);
 	const groupCListRef = ref<any>([]);
 
-	// 그리드 칼럼 레이아웃 정의
 	const columnLayout: IGrid.Column[] = [
 		{
 			dataField: 'position',
@@ -31,25 +27,17 @@
 			width: 140,
 			renderer: {
 				type: IGrid.RendererKind.IconRenderer,
-				iconWidth: 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+				iconWidth: 16,
 				iconHeight: 16,
 				iconPosition: 'aisleRight',
-				iconTableRef: {
-					// icon 값 참조할 테이블 레퍼런스
-					default: BASE_URL + '/assets/arrow-down-black-icon.png' // default
-				},
-				onClick: () => {
-					// 수정으로 진입함.
-					myGrid.value?.openInputer();
-				}
+				iconTableRef: { default: BASE_URL + '/assets/arrow-down-black-icon.png' },
+				onClick: () => myGrid.value?.openInputer()
 			},
 			editRenderer: {
 				type: IGrid.EditRendererKind.DropDownListRenderer,
 				showEditorBtn: false,
-				showEditorBtnOver: false, // 마우스 오버 시 에디터버턴 보이기
-				listFunction: () => {
-					return posListRef.value;
-				}
+				showEditorBtnOver: false,
+				listFunction: () => posListRef.value
 			}
 		},
 		{
@@ -57,32 +45,22 @@
 			headerText: '이름',
 			headerTooltip: { show: true, tooltipHtml: '출력 리스트를 사용자 정의 하여 복잡한 구조로 작성. key-value 모드' },
 			width: 140,
-			labelFunction: (rowIndex, columnIndex, value) => {
-				let retStr = '';
-				const myList = myListRef.value;
-				for (let i = 0, len = myList.length; i < len; i++) {
-					if (myList[i]['id'] === value) {
-						retStr = myList[i]['name'];
-						break;
-					}
-				}
-				return retStr === '' ? value : retStr;
+			labelFunction: (_rowIndex, _columnIndex, value) => {
+				const found = myListRef.value.find((item: any) => item.id === value);
+				return found ? found.name : value;
 			},
 			editRenderer: {
 				type: IGrid.EditRendererKind.DropDownListRenderer,
-				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				showEditorBtnOver: true,
 				keyField: 'id',
 				valueField: 'name',
-				listFunction: () => {
-					return myListRef.value;
-				},
-				// 드랍 리스트의 개별 아이템에 대하여 출력할 양식을 HTML 로 작성하여 반환하면 리스트로 출력됩니다.
-				listTemplateFunction: (rowIndex: number, columnIndex: number, text: string, item: any, dataField: string, listItem: any) => {
+				listFunction: () => myListRef.value,
+				listTemplateFunction: (_rowIndex: number, _columnIndex: number, _text: string, _item: any, _dataField: string, listItem: any) => {
 					let html = '<div style="display:block;text-align:left;white-space:nowrap">';
-					html += '<img src="./assets/' + listItem.flag + '" width="30" height="20" style="vertical-align:middle;padding-right:10px;"/>';
-					for (let n in listItem) {
+					html += `<img src="./assets/${listItem.flag}" width="30" height="20" style="vertical-align:middle;padding-right:10px;"/>`;
+					for (const n in listItem) {
 						if (n !== 'flag') {
-							html += '<span style="display:inline-block;width:80px;">' + listItem[n] + '</span>';
+							html += `<span style="display:inline-block;width:80px;">${listItem[n]}</span>`;
 						}
 					}
 					html += '</div>';
@@ -100,35 +78,24 @@
 			},
 			editRenderer: {
 				type: IGrid.EditRendererKind.DropDownListRenderer,
-				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+				showEditorBtnOver: true,
 				easyMode: false,
-				listFunction: () => {
-					return colorListRef.value;
-				}
+				listFunction: () => colorListRef.value
 			}
 		},
 		{
 			dataField: 'color2',
 			headerText: '조건 리스트',
 			width: 140,
-			headerTooltip: {
-				show: true,
-				tooltipHtml: '특정 조건에 따라 다르게 리스트 출력<br>컬러 값에 따라 리스트가 다르게 나옵니다.'
-			},
+			headerTooltip: { show: true, tooltipHtml: '특정 조건에 따라 다르게 리스트 출력<br>컬러 값에 따라 리스트가 다르게 나옵니다.' },
 			editRenderer: {
 				type: IGrid.EditRendererKind.DropDownListRenderer,
-				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-				// 같은 행의 color 값을 보고 출력시킬 list 를 결정함.
-				listFunction: (rowIndex: number, columnIndex: number, item: any) => {
-					if (item.color === 'Black') {
-						return ['어두움', '단순함', '악함', '더러움'];
-					} else if (item.color === 'White') {
-						return ['밝음', '순수함', '선함', '깨끗함'];
-					} else if (item.color === 'Red') {
-						return ['강렬함', '열정적임'];
-					} else {
-						return ['차분함', '시원함', '희망적임'];
-					}
+				showEditorBtnOver: true,
+				listFunction: (_rowIndex: number, _columnIndex: number, item: any) => {
+					if (item.color === 'Black') return ['어두움', '단순함', '악함', '더러움'];
+					if (item.color === 'White') return ['밝음', '순수함', '선함', '깨끗함'];
+					if (item.color === 'Red') return ['강렬함', '열정적임'];
+					return ['차분함', '시원함', '희망적임'];
 				}
 			}
 		},
@@ -136,28 +103,16 @@
 			dataField: 'dept',
 			headerText: '부서명',
 			width: 140,
-			headerTooltip: {
-				show: true,
-				tooltipHtml: 'key-value 형태의 수정 예제. 실제 데이터는 001, 002 와 같이 구성됨.'
-			},
-			labelFunction: (rowIndex, columnIndex, value) => {
-				let retStr = value;
-				const keyValueList = keyValueListRef.value;
-				for (let i = 0, len = keyValueList.length; i < len; i++) {
-					if (keyValueList[i]['code'] === value) {
-						retStr = keyValueList[i]['value'];
-						break;
-					}
-				}
-				return retStr;
+			headerTooltip: { show: true, tooltipHtml: 'key-value 형태의 수정 예제. 실제 데이터는 001, 002 와 같이 구성됨.' },
+			labelFunction: (_rowIndex, _columnIndex, value) => {
+				const found = keyValueListRef.value.find((item: any) => item.code === value);
+				return found ? found.value : value;
 			},
 			editRenderer: {
 				type: IGrid.EditRendererKind.DropDownListRenderer,
-				keyField: 'code', // key 에 해당되는 필드명
-				valueField: 'value', // value 에 해당되는 필드명
-				listFunction: () => {
-					return keyValueListRef.value; //key-value Object 로 구성된 리스트
-				}
+				keyField: 'code',
+				valueField: 'value',
+				listFunction: () => keyValueListRef.value
 			}
 		},
 		{
@@ -166,11 +121,9 @@
 			width: 140,
 			editRenderer: {
 				type: IGrid.EditRendererKind.DropDownListRenderer,
-				descendants: ['leaf'], // 자손 필드들
-				descendantDefaultValues: ['-'], // 변경 시 자손들에게 기본값 지정
-				listFunction: () => {
-					return groupListRef.value;
-				}
+				descendants: ['leaf'],
+				descendantDefaultValues: ['-'],
+				listFunction: () => groupListRef.value
 			}
 		},
 		{
@@ -179,72 +132,46 @@
 			width: 140,
 			editRenderer: {
 				type: IGrid.EditRendererKind.DropDownListRenderer,
-				listFunction: (rowIndex: number, columnIndex: number, item: any) => {
-					if (item.group === 'A') {
-						// 그룹 필드에서 선택된 값 비교
-						return groupAListRef.value;
-					} else if (item.group === 'B') {
-						return groupBListRef.value;
-					} else {
-						return groupCListRef.value;
-					}
+				listFunction: (_rowIndex: number, _columnIndex: number, item: any) => {
+					if (item.group === 'A') return groupAListRef.value;
+					if (item.group === 'B') return groupBListRef.value;
+					return groupCListRef.value;
 				}
 			}
 		}
 	];
 
-	// 그리드 속성 정의
 	const gridProps: IGrid.Props = {
 		width: '100%',
 		height: 480,
 		editable: true
 	};
 
-	onMounted(() => {
-		async function fetchListData() {
-			// 드랍다운리스트에서 사용할 list 들 async로 얻기
-			const response = await axios.get('./data/drop_list_data.json');
-			console.log(response);
+	onMounted(async () => {
+		const response = await axios.get('./data/drop_list_data.json');
+		posListRef.value = response.data.posList;
+		myListRef.value = response.data.myList;
+		colorListRef.value = response.data.colorList;
+		keyValueListRef.value = response.data.keyValueList;
+		groupListRef.value = response.data.groupList;
+		groupAListRef.value = response.data.groupAList;
+		groupBListRef.value = response.data.groupBList;
+		groupCListRef.value = response.data.groupCList;
 
-			// 드랍다운 리스트들 값 할당.
-			posListRef.value = response.data.posList;
-			myListRef.value = response.data.myList;
-			colorListRef.value = response.data.colorList;
-			keyValueListRef.value = response.data.keyValueList;
-			groupListRef.value = response.data.groupList;
-			groupAListRef.value = response.data.groupAList;
-			groupBListRef.value = response.data.groupBList;
-			groupCListRef.value = response.data.groupCList;
-
-			// 최초 마운팅 될 때 그리드 데이터 조회시키기
-			requestGridData();
-		}
-
-		// 드랍다운리스트의 리스트들 요청
-		fetchListData();
-
-		console.log('EditDropDown 마운트됨');
+		myGrid.value?.setGridData(data);
 	});
 
-	// 그리드 데이터 삽입
-	const requestGridData = () => {
-		const grid = myGrid.value as AUIGrid;
-		grid?.setGridData(data);
-	};
-
-	// 그리드 데이터 확인
 	const getGridData = () => {
-		const grid = myGrid.value as AUIGrid;
-		console.log(grid.getGridData());
+		console.log((myGrid.value as AUIGrid).getGridData());
 	};
 </script>
 <template>
 	<div>
 		<div class="desc">
-			<p>리액트에서 상태 관리는 보통 useState 로 하지만, useState 상태는 리액트 라이프사이클에 의해 재렌더링을 하기 때문에 useRef 로 상태 값 관리만 합니다.</p>
-			<p>즉, 상태값에 따라 DOM 의 변화가 생겨야 하는 경우는 useState, 그렇지 않은 경우 useRef.</p>
-			<p>그리고 useState 로 값 변경 시 함수형 컴포넌트는 해당 함수를 다시 호출함으로써 모든 선언문들이 재정의됩니다. 이것은 메모리 어딘가에 또 다시 선언되어 보관된다는 뜻임.</p>
-			<p>최초의 columnLayout 이 그리드의 진짜 칼럼레이아웃이며 이후 useState 나 기타 Hook 에 의해 다시 선언된 columnLayout 들은 그리드와 무관한 메모리 어딘가에 선언만 된 상태임.(이들의 참조값은 엄연히 다름)</p>
+			<p>Vue 의 &lt;script setup&gt; 은 컴포넌트 인스턴스가 생성될 때 딱 한 번만 실행됩니다. React 함수형 컴포넌트처럼 상태가 바뀔 때마다 전체 코드가 재실행되는 구조가 아니므로, 리렌더링을 피하기 위해 상태 관리 방식을 따로 구분할 필요가 없습니다.</p>
+			<p>posListRef, myListRef 등을 ref() 로 선언한 것은 단순히 비동기로 받아온 드랍다운 리스트 데이터를 담아두기 위함이며, ref 로 선언하든 일반 변수로 선언하든 그리드 동작에는 차이가 없습니다.</p>
+			<p>columnLayout 은 컴포넌트 생성 시 단 한 번만 정의되고, 그 안의 listFunction: () =&gt; xxxRef.value 는 그리드가 실제로 호출하는 시점의 값을 그대로 읽어옵니다.</p>
+			<p>따라서 API 응답을 받은 후 ref 의 값만 갱신하면, columnLayout 을 다시 만들거나 그리드에 재적용할 필요 없이 드랍다운 리스트에 자연스럽게 반영됩니다.</p>
 			<button class="btn" @click="getGridData">그리드 데이터 콘솔에 출력</button>
 		</div>
 		<AUIGrid ref="myGrid" :columnLayout="columnLayout" :gridProps="gridProps" />

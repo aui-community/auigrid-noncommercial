@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+<style>
+	/* 기존 사용자 칼럼 스타일처럼 상위 셀과 숫자 정렬만 구별합니다. */
+	.my-team { background: #edf3ff; color: #315da8; }
+	.my-right { text-align: right; }
+</style>
+<script>
+    let myGridID;
+    function init() {
+        createAUIGrid();
+        // 정적 JSON을 읽어 그리드에 표시합니다.
+        requestGridData("./data/band_body_noscroll.json");
+    }
+    // 밴드형에 필요한 기본 설정과 이 페이지에서 비교할 기능만 지정합니다.
+    function createAUIGrid(mode = "horizontal") {
+        // children으로 상위 칼럼과 하위 칼럼의 계층을 작성합니다.
+        const columnLayout = [
+            {
+                dataField: "id",
+                headerText: "ID",
+                width: 70,
+                editable: false
+            },
+            {
+                dataField: "team",
+                headerText: "소속",
+                bodyCell: true,
+                style: "my-team",
+                children: [
+                    {
+                        dataField: "name",
+                        headerText: "이름",
+                        width: 130,
+                    },
+                    {
+                        dataField: "position",
+                        headerText: "직급",
+                        bodyCell: true,
+                        children: [
+                            {
+                                dataField: "age",
+                                headerText: "나이",
+                                width: 70,
+                                dataType: "numeric",
+                            },
+                            {
+                                dataField: "birth",
+                                headerText: "생년월일",
+                                width: 120,
+                                dataType: "date",
+                                dateInputFormat: "yyyy-mm-dd",
+                                formatString: "yyyy/mm/dd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                // 확인은 출력용 상위 셀입니다. 자식 수량과 금액은 아래쪽에 나란히 표시합니다.
+                dataField: "checked",
+                headerText: "확인",
+                bodyCell: true,
+                editable: false,
+                renderer: { type: "CheckBoxEditRenderer" },
+                children: [
+                    {
+                        dataField: "qty",
+                        headerText: "수량",
+                        width: 95,
+                        dataType: "numeric"
+                    },
+                    {
+                        dataField: "amount",
+                        headerText: "금액",
+                        width: 120,
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        style: "my-right"
+                    }
+                ]
+            }
+        ];
+        // 긴 문장은 셀 안에서 잘릴 수 있으므로 툴팁으로 전체 내용을 확인합니다.
+        columnLayout.push({
+            dataField: "note",
+            headerText: "담당 업무",
+            width: 220,
+            tooltip: { show: true }
+        });
+        const gridProps = {
+            bodyLayoutMode: "band",
+            rowHeight: 120,
+            rowIdField: "id",
+            editable: false,
+            selectionMode: "multipleCells",
+            showTooltip: true,
+            // 기존 채우기 모드는 칼럼 너비를 비율로 계산하여 컨테이너 안에 배분합니다.
+            fillColumnSizeMode: mode !== "vertical",
+            autoGridHeight: mode !== "horizontal",
+        };
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+    }
+    // 크기 설정을 비교하는 예제이므로 공개 생성/제거 API로 구성을 다시 만듭니다.
+    function changeScrollMode(mode) {
+        AUIGrid.destroy(myGridID);
+        createAUIGrid(mode);
+        // 정적 JSON을 읽어 그리드에 표시합니다.
+        requestGridData("./data/band_body_noscroll.json");
+    }
+</script>
+</head>
+<body>
+
+<div id="main">
+	<div class="desc">
+		<p><code>fillColumnSizeMode</code>는 칼럼을 가로 폭에 맞추고, <code>autoGridHeight</code>는 모든 행이 보이도록 그리드 높이를 늘립니다.</p>
+		<p>각 버튼으로 가로, 세로, 양쪽 스크롤이 없는 구성을 비교하세요.</p>
+        <p><button class="btn" onclick="changeScrollMode('horizontal')">가로 스크롤 없음</button>
+			<button class="btn" onclick="changeScrollMode('vertical')">세로 스크롤 없음</button>
+			<button class="btn" onclick="changeScrollMode('both')">가로/세로 모두 없음</button></p>
+	</div>
+	<div>
+		<div id="grid_wrap" style="width:100%;height:480px;margin:0 auto;"></div>
+	</div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

@@ -2,21 +2,15 @@
 	import { ref, onMounted, onBeforeUnmount } from 'vue';
 	import * as IGrid from 'aui-grid';
 	import AUIGrid from '@/static/AUIGrid-Vue/AUIGridT.vue';
-	// 엑셀, PDF 다운로드를 브라우저에서 처리하기 위한 file-saver
 	import 'file-saver';
-	// AUIGrid PDF 처리 모듈
 	import '@/static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
 	import './Showcase04.css';
 
 	const BASE_URL = import.meta.env.BASE_URL;
 
-	// 그리드 InstanceType
 	type AUIGrid = InstanceType<typeof AUIGrid>;
 
-	// 그리드 객체
 	const myGrid = ref<AUIGrid | null>(null);
-
-	let timer: any = null;
 
 	// eslint-disable-next-line
 	// prettier-ignore
@@ -26,93 +20,47 @@
 	// prettier-ignore
 	const prices = [150000, 230000, 420000, 1200000, 320000, 100000, 240000, 320000, 520000, 820000, 300000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000];
 
-	// eslint-disable-next-line
-	const gaps = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+	const createRandomData = (): any[] =>
+		names.map((name, i) => ({
+			id: i + 1,
+			name,
+			price: prices[i],
+			open: prices[i],
+			high: prices[i],
+			low: prices[i],
+			gap: 0,
+			volume: 0
+		}));
 
-	// eslint-disable-next-line
-	const volumes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+	const createRandomRows = (gaps: number[], volumes: number[]): any[] => {
+		const codeCount = names.length;
+		const randomCount = Math.floor(Math.random() * 10);
+		const codes: number[] = [];
 
-	// count 수만큼 랜덤 데이터 생성
-	const createRandomData = () => {
-		let data = [];
-		let count = names.length;
-		for (let i = 0; i < count; i++) {
-			data.push({
-				id: i + 1,
-				name: names[i],
-				price: prices[i],
-				open: prices[i],
-				high: prices[i],
-				low: prices[i],
-				gap: 0,
-				volume: 0
-			});
+		for (let i = 0; i < randomCount; i++) {
+			codes.push(Math.ceil(Math.random() * codeCount));
 		}
 
-		// AUIGrid 에 데이터 삽입합니다.
-		return data;
-	};
+		return codes.map((code) => {
+			const isPlus = Math.random() > 0.5;
+			let gap = isPlus ? 3000 : -3000;
+			const index = code - 1;
+			const limitGap = prices[index] * 0.3;
 
-	// 주식 종목 중 랜덤하게 갱신할 종목을 선택해서...랜덤하게 상승, 하락을 결정해 그리드에 반영시킴.
-	const createRandomRows = () => {
-		let rows = [];
-		let codes = [];
-		let code;
-		let gap;
-		let isPlus = false;
-		let index;
-		let price;
-		let codeCount = names.length; // 종목개수
-		let limitGap;
-		let i;
-
-		// 랜덤 개수만큼 갱신
-		let count = Math.floor(Math.random() * 10);
-
-		for (i = 0; i < count; i++) {
-			code = Math.ceil(Math.random() * codeCount);
-			codes.push(code);
-		}
-
-		for (i = 0, count = codes.length; i < count; i++) {
-			isPlus = Math.random() > 0.5 ? true : false; // 상승, 하락 랜덤 결정
-			gap = 3000; // 호가
-
-			if (!isPlus) {
-				gap *= -1;
-			}
-
-			index = codes[i] - 1;
-
-			price = prices[index];
-
-			// 상하한 제한
-			limitGap = price * 0.3;
-
-			// 대비 값(상승 또는 하락 대비 가격)
 			gaps[index] += gap;
 			gap = gaps[index];
 
-			// 상하한가인 경우
 			if (Math.abs(gap) > limitGap) {
 				gap = gap > 0 ? limitGap : -limitGap;
 			}
 
-			price += gap;
-			volumes[index] += Math.floor(Math.random() * 10000); // 거래량 랜덤 누적
+			const price = prices[index] + gap;
+			volumes[index] += Math.floor(Math.random() * 10000);
 
-			// 갱신할 행들
-			rows.push({
-				id: codes[i], // rowIdField 로 설정한 id(중요)
-				price: price, // 현재가
-				gap: gap, // 대비가
-				volume: volumes[index] // 거래량
-			});
-		}
-		return rows;
+			return { id: code, price, gap, volume: volumes[index] };
+		});
 	};
 
-	// 그리드 칼럼 레이아웃 정의
 	const columnLayout: IGrid.Column[] = [
 		{
 			dataField: 'name',
@@ -136,17 +84,17 @@
 			renderer: {
 				type: IGrid.RendererKind.IconRenderer,
 				iconPosition: 'aisle',
-				iconWidth: 7, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+				iconWidth: 7,
 				iconHeight: 6,
-				iconFunction: (rowIndex, columnIndex, value, item) => {
+				iconFunction: (_rowIndex, _columnIndex, _value, item) => {
 					if (item.gap < 0) return BASE_URL + '/assets/ico_down.gif';
-					else if (item.gap > 0) return BASE_URL + '/assets/ico_up.gif';
+					if (item.gap > 0) return BASE_URL + '/assets/ico_up.gif';
 					return BASE_URL + '/assets/ico_flat.gif';
 				}
 			},
-			styleFunction: (rowIndex, columnIndex, value, headerText, item) => {
+			styleFunction: (_rowIndex, _columnIndex, _value, _headerText, item) => {
 				if (item.gap < 0) return 'my-custom-down';
-				else if (item.gap > 0) return 'my-custom-up';
+				if (item.gap > 0) return 'my-custom-up';
 				return 'my-custom-normal';
 			}
 		},
@@ -158,17 +106,14 @@
 			postfix: ' %',
 			style: 'my-right-style',
 			width: 120,
-			expFunction: (rowIndex, columnIndex, item) => {
-				// 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				// expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-				let oldPrice: number = item.price - item.gap;
-				let rate: number = Number(((item.gap / oldPrice) * 100).toFixed(2));
-				return rate;
+			expFunction: (_rowIndex, _columnIndex, item) => {
+				const oldPrice = item.price - item.gap;
+				return Number(((item.gap / oldPrice) * 100).toFixed(2));
 			},
 			// eslint-disable-next-line
-			styleFunction: (rowIndex, columnIndex, value, headerText, item) => {
+			styleFunction: (_rowIndex, _columnIndex, _value, _headerText, item) => {
 				if (item.gap < 0) return 'my-custom-down';
-				else if (item.gap > 0) return 'my-custom-up';
+				if (item.gap > 0) return 'my-custom-up';
 				return 'my-custom-normal';
 			}
 		},
@@ -176,10 +121,7 @@
 			dataField: 'rateGraph',
 			headerText: '등락율 그래프',
 			width: 120,
-			expFunction: (rowIndex, columnIndex, item) => {
-				// 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				return item.rate;
-			},
+			expFunction: (_rowIndex, _columnIndex, item) => item.rate,
 			renderer: {
 				type: IGrid.RendererKind.BarRenderer,
 				showLabel: false,
@@ -210,10 +152,7 @@
 			dataType: 'numeric',
 			formatString: '#,##0',
 			style: 'my-custom-up',
-			expFunction: (rowIndex, columnIndex, item) => {
-				// 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				return Math.max(item.high, item.price);
-			},
+			expFunction: (_rowIndex, _columnIndex, item) => Math.max(item.high, item.price),
 			width: 120
 		},
 		{
@@ -222,67 +161,50 @@
 			dataType: 'numeric',
 			formatString: '#,##0',
 			style: 'my-custom-down',
-			expFunction: (rowIndex, columnIndex, item) => {
-				// 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				return Math.min(item.price, item.low);
-			},
+			expFunction: (_rowIndex, _columnIndex, item) => Math.min(item.price, item.low),
 			width: 120
 		}
 	];
 
-	// 그리드 속성 정의
 	const gridProps = {
 		width: '100%',
 		height: 480,
-		// row 를 구별짓는 유니크한 값을 갖는 필드 설정
 		rowIdField: 'id'
 	};
 
-	onMounted(() => {
-		console.log('Showcase04 마운트됨');
-
-		// 최초 마운팅 될 때 그리드 데이터 조회시키기
-		const grid = myGrid.value as AUIGrid;
+	// 초기 데이터 삽입과 주기 갱신을 분리합니다.
+	function loadGridData(grid: AUIGrid) {
 		grid.setGridData(createRandomData());
+	}
 
-		// 0.3초마다 특정 행들 갱신
-		timer = setInterval(refreshRows, 300);
-	});
+	function startUpdates(grid: AUIGrid) {
+		// 다른 mount 또는 다른 그리드와 누적 값을 공유하지 않습니다.
+		const gaps: number[] = Array(names.length).fill(0);
+		const volumes: number[] = Array(names.length).fill(0);
+		const timer = setInterval(() => {
+			grid.refreshRows(createRandomRows(gaps, volumes), 'my-refresh-row-flash-style', 200);
+		}, 300);
+		return () => clearInterval(timer);
+	}
 
-	onBeforeUnmount(() => {
-		//  타이머 클리어 시킴
-		clearInterval(timer);
-	});
-
-	// 특정 행들만 갱신
-	// 주식 종목 중 랜덤하게 갱신할 종목을 선택해서...랜덤하게 상승, 하락을 결정해 그리드에 반영시킴.
-	const refreshRows = () => {
+	let stopUpdates = () => {};
+	onMounted(() => {
 		const grid = myGrid.value as AUIGrid;
+		loadGridData(grid);
+		stopUpdates = startUpdates(grid);
+	});
+	// KeepAlive의 비활성화에서는 기존 갱신을 유지합니다.
+	onBeforeUnmount(() => stopUpdates());
 
-		// 변경 시킬 행들 얻어 옴.
-		const rows: any[] = createRandomRows();
-
-		// AUIGrid 에 갱신할 행들 삽입
-		// refreshRows 사용하기 전에 반드시 rowIdField 속성을 선행으로 설정해야합니다.
-		grid.refreshRows(rows, 'my-refresh-row-flash-style', 200);
-	};
-
-	// 엑셀로 내보내기
 	const exportClick = () => {
-		const grid = myGrid.value as AUIGrid;
-		// 내보내기 실행
-		grid.exportToXlsx({
+		(myGrid.value as AUIGrid).exportToXlsx({
 			progressBar: true,
 			fileName: '쇼케이스-02'
 		});
 	};
 
-	// PDF 로 내보내기
 	const exportPdfClick = () => {
-		const grid = myGrid.value as AUIGrid;
-		// 내보내기 실행
-		grid.exportToPdf({
-			// 폰트 경로 지정
+		(myGrid.value as AUIGrid).exportToPdf({
 			fontPath: './fonts/nyjgothic-medium.ttf',
 			fileName: '쇼케이스-02'
 		});
@@ -298,8 +220,6 @@
 			<p>이 데모와 같이 빠른 속도로 주식 정보를 갱신하는 것은 일반 Ajax 통신으론 불가능합니다.</p>
 			<p>만약, 웹 상에서 주식 정보를 실시간으로 빠르게 갱신하고자 한다면 웹소켓(Web Socket)으로 구성하는 것이 최선일 것입니다.</p>
 		</div>
-		<!-- AUIGrid 컴포넌트 설정 -->
-		<!-- name 속성을 설정하면 해당 값이 포함되어 그리드의 id 가 설정됨.(예: aui-grid-wrap-이름) -->
 		<AUIGrid ref="myGrid" name="showcase4" :columnLayout="columnLayout" :gridProps="gridProps" />
 	</div>
 </template>
@@ -308,17 +228,14 @@
 		text-align: right;
 	}
 
-	/* 행 갱신 시 깜빡이게 하는 스타일 */
 	#aui-grid-wrap-showcase4 .my-refresh-row-flash-style {
 		background: #dfdfdf;
 	}
 
-	/* 주식 하락 색상*/
 	#aui-grid-wrap-showcase4 .my-custom-down {
 		color: #0000ff;
 		text-align: right;
 	}
-	/* 주식 상승 색상*/
 	#aui-grid-wrap-showcase4 .my-custom-up {
 		color: #ff0000;
 		text-align: right;
@@ -328,12 +245,10 @@
 		text-align: right;
 	}
 
-	/* 바게이지 양수 음수 함께 사용되는 영역에서 음수 바 재정의*/
 	#aui-grid-wrap-showcase4 .aui-grid-bar-renderer-negative {
 		background: #4641d9;
 		border: 1px solid #4641d9;
 	}
-	/* 바게이지 양수 음수 함께 사용되는 영역에서 양수 바 재정의*/
 	#aui-grid-wrap-showcase4 .aui-grid-bar-renderer-positive {
 		background: #df4d4d;
 		border: 1px solid #df4d4d;

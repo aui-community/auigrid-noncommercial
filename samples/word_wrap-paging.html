@@ -37,55 +37,74 @@
 </style>
 
 <script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
-
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/message_100.json");
-	}
-
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "id",
-			headerText: "ID",
-			width: 140
-		}, {
-			dataField: "msg",
-			headerText: "Message",
-			style: "my-custom-column",
-			width: 500,
-			widthFit: 500
-		}, {
-			dataField: "date",
-			headerText: "Date",
-			width: 160
-		}];
-
-		// 그리드 속성 설정
-		const gridProps = {
-			// 워드랩 적용 
-			wordWrap: true,
-			// 페이징 사용
-			usePaging: true,
-			// 그리드가 생성하는 세로 스크롤 없이 그리드 높이 설정
-			autoGridHeight: true,
-			editable: true,
-			selectionMode: "multipleCells",
-			// 페이지 행 개수 select UI 출력 여부 (기본값 : false)
-			showPageRowSelect: true,
-			// 현재 페이지의 행들 대상으로 전체 체크 설정
-			isRowAllCheckCurrentView: true
-		};
-
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	};
+    // 이 예제: 줄바꿈과 페이징을 함께 사용하고 autoGridHeight: true로 현재 페이지의 모든 행을 펼쳐 표시합니다.
+    // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
+    // AUIGrid 생성 후 반환 ID
+    let myGridID;
+    // 시작점
+    function init() {
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+        // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+        loadGridData();
+    }
+    // AUIGrid 를 생성합니다.
+    function createAUIGrid() {
+        // 그리드 칼럼 레이아웃 설정
+        const columnLayout = [
+            {
+                dataField: "id",
+                headerText: "ID",
+                width: 140
+            }, {
+                dataField: "msg",
+                headerText: "Message",
+                style: "my-custom-column",
+                width: 500,
+                widthFit: 500
+            }, {
+                dataField: "date",
+                headerText: "Date",
+                width: 160
+            }
+        ];
+        // 그리드 속성 설정
+        const gridProps = {
+            // 워드랩 적용
+            wordWrap: true,
+            // 페이징 사용
+            usePaging: true,
+            // 그리드가 생성하는 세로 스크롤 없이 그리드 높이 설정
+            autoGridHeight: true,
+            editable: true,
+            selectionMode: "multipleCells",
+            // 페이지 행 개수 select UI 출력 여부 (기본값 : false)
+            showPageRowSelect: true,
+            // 현재 페이지의 행들 대상으로 전체 체크 설정
+            isRowAllCheckCurrentView: true
+        };
+        // 실제로 #grid_wrap 에 그리드 생성
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+    }
+    ;
+    // 여러 데모가 같은 JSON 자료를 사용합니다. 실제 서비스에서는 이 주소를 데이터 API로 바꾸세요.
+    // 응답을 받은 뒤 setGridData에 전달하는 과정까지 이 HTML에서 확인할 수 있습니다.
+    async function loadGridData() {
+        AUIGrid.showAjaxLoader(myGridID);
+        try {
+            const response = await fetch("./data/message_100.json");
+            if (!response.ok)
+                throw new Error("데이터를 불러오지 못했습니다.");
+            const data = await response.json();
+            AUIGrid.setGridData(myGridID, data);
+        }
+        catch (error) {
+            document.getElementById("elapse").textContent = error.message;
+        }
+        finally {
+            AUIGrid.removeAjaxLoader(myGridID);
+        }
+    }
 </script>
 
 </head>
@@ -93,11 +112,9 @@
 
 <div id="main">
 	<div class="desc">
-		<p>많은 수의 행, 열에서 불가피하게 wordWrap 을 사용해야 한다면 usePaging = true 설정으로 페이징 모드를 사용해야 합니다.</p>
-		<p>본 데모는 wordWrap: true, autoGridHeight: true, usePaging: true 을 설정한 모습니다.</p>
-		<p>따라서 1) autoGridHeight 속성 설정으로 인해 그리드의 세로 스크롤이 생성되지 않아 스크롤의 제약이 없으며,</p>
-		<p>2) wordWrap 속성 설정으로 행 높이가 가변적으로 적용되어 셀의 내용이 모두 출력되며,</p>
-		<p>3) usePaging 속성 설정으로 인해 많은 수의 행, 열에서도 퍼포먼스 문제 없이 사용 가능합니다.</p>
+		<p>줄바꿈과 페이징을 함께 사용하고 <code>autoGridHeight: true</code>로 현재 페이지의 모든 행을 펼쳐 표시합니다.</p>
+		<p>페이지마다 내용 길이에 맞춰 그리드 높이가 달라집니다.</p>
+
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->

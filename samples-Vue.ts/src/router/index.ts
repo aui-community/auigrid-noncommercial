@@ -46,12 +46,17 @@ const router = createRouter({
 			component: () => import('../showcases/ShowCase07.vue')
 		},
 
-		// 샘플들
+		// 새 밴드형 쇼케이스는 기존 wrapper와 앱 레이아웃을 사용합니다.
+        { path:'/Showcase08', name:'Showcase08', component:() => import('../showcases/ShowCase08.vue') },
+        { path:'/Showcase09', name:'Showcase09', component:() => import('../showcases/ShowCase09.vue') },
+
+        // 샘플들
 		{
 			path: '/SampleDefault',
 			name: 'SampleDefault',
 			component: () => import('../samples/SampleDefault.vue')
 		},
+		{ path: '/SampleBandBody', name: 'SampleBandBody', component: () => import('../samples/SampleBandBody.vue') },
 		{
 			path: '/StylingView',
 			name: 'StylingView',

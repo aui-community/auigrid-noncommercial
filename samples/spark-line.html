@@ -48,198 +48,219 @@
 	}
 </style>
 <script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
-
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/revenue_region.json");
-	}
-
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "region",
-			headerText: "지역",
-			style: "aui-grid-my-column",
-			width: 120
-		}, {
-			dataField: "p1201,p1202,p1203,p1204,p1205,p1206,p1207,p1208,p1209,p1210,p1211,p1212",
-			headerText: "월별 추이",
-			width: 120,
-			sortable: false,
-			renderer: {
-				type: "SparkLineRenderer"
-			},
-			tooltip: {
-				tooltipFunction: toolTipCustomFunction
-			}
-		}, {
-			dataField: "p1201,p1202,p1203,p1204,p1205,p1206,p1207,p1208,p1209,p1210,p1211,p1212",
-			headerText: "라인 스타일링",
-			width: 120,
-			sortable: false,
-			renderer: {
-				type: "SparkLineRenderer",
-				markMaxValue: true,
-				markMinValue: true,
-				markFirstValue: true,
-				markLastValue: true,
-				maxColor: "#191919",
-				minColor: "#0054FF",
-				firstColor: "#A566FF",
-				lastColor: "#A566FF",
-				lineColor: "#2F9D27"
-			},
-			tooltip: {
-				tooltipFunction: toolTipCustomFunction
-			}
-		}, {
-			dataField: "p1201",
-			headerText: "`23 1월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1202",
-			headerText: "`23 2월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1203",
-			headerText: "`23 3월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1204",
-			headerText: "`23 4월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1205",
-			headerText: "`23 5월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1206",
-			headerText: "`23 6월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1207",
-			headerText: "`23 7월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1208",
-			headerText: "`23 8월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1209",
-			headerText: "`23 9월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1210",
-			headerText: "`23 10월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1211",
-			headerText: "`23 11월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}, {
-			dataField: "p1212",
-			headerText: "`23 12월",
-			dataType: "numeric",
-			formatString: "#,##0"
-		}];
-
-		// 그리드 속성 설정
-		const gridProps = {
-			editable: true,
-			// singleRow 선택모드
-			selectionMode: "multipleCells",
-			// 고정칼럼 3 적용
-			fixedColumnCount: 3,
-			// 툴팁 사용
-			showTooltip: true,
-			// 줄번호 칼럼 렌더러 출력
-			showRowNumColumn: false
-		};
-
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
-
-	// 툴팁 사용자 정의 함수
-	function toolTipCustomFunction(rowIndex, columnIndex, value, headerText, item, dataField) {
-		const fields = dataField.split(",");
-		const count = fields.length;
-
-		let min = Number.MAX_VALUE, minMonth = 0;
-		let max = Number.MIN_VALUE, maxMonth = 0;
-		let sum = 0;
-
-		for (let i = 0; i < count; i++) {
-			const v = Number(item[fields[i]]);
-			if (v < min) {
-				min = v;
-				minMonth = i;
-			}
-			if (v > max) {
-				max = v;
-				maxMonth = i;
-			}
-			sum += v;
-		}
-
-		const avg = sum / count;
-
-		const fMax = AUIGrid.formatNumber(max, "#,##0");
-		const fMin = AUIGrid.formatNumber(min, "#,##0");
-		const fSum = AUIGrid.formatNumber(sum, "#,##0");
-		const fAvg = AUIGrid.formatNumber(avg, "#,##0.00");
-
-		let str = item.region;
-		str += `<br><span style='color:#2F9D27;'>최대 : ${fMax} (${maxMonth + 1}월)</span>`;
-		str += `<br><span style='color:#FF2424;'>최소 : ${fMin} (${minMonth + 1}월)</span>`;
-		str += `<br>합계 : ${fSum}`;
-		str += `<br>평균 : ${fAvg}`;
-
-		return str;
-	}
-
-	// 엑셀 내보내기(Export);
-	function exportClick() {
-		// 내보내기 실행
-		AUIGrid.exportToXlsx(myGridID);
-	}
-
-	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
-	function exportPdfClick() {
-		// 내보내기 실행
-		AUIGrid.exportToPdf(myGridID, {
-			fontPath: "../pdfkit/nyjgothic-medium.ttf"
-		});
-	}
+    // 이 예제: 월별 매출을 선 그래프로 표시합니다. 최솟값은 빨강, 최댓값은 녹색입니다.
+    // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
+    // AUIGrid 생성 후 반환 ID
+    let myGridID;
+    // 시작점
+    function init() {
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+        // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+        loadGridData();
+    }
+    // AUIGrid 를 생성합니다.
+    function createAUIGrid() {
+        // 그리드 칼럼 레이아웃 설정
+        const columnLayout = [
+            {
+                dataField: "region",
+                headerText: "지역",
+                style: "aui-grid-my-column",
+                width: 120
+            }, {
+                dataField: "p1201,p1202,p1203,p1204,p1205,p1206,p1207,p1208,p1209,p1210,p1211,p1212",
+                headerText: "월별 추이",
+                width: 120,
+                sortable: false,
+                renderer: {
+                    type: "SparkLineRenderer"
+                },
+                tooltip: {
+                    tooltipFunction: toolTipCustomFunction
+                }
+            }, {
+                dataField: "p1201,p1202,p1203,p1204,p1205,p1206,p1207,p1208,p1209,p1210,p1211,p1212",
+                headerText: "라인 스타일링",
+                width: 120,
+                sortable: false,
+                renderer: {
+                    type: "SparkLineRenderer",
+                    markMaxValue: true,
+                    markMinValue: true,
+                    markFirstValue: true,
+                    markLastValue: true,
+                    maxColor: "#191919",
+                    minColor: "#0054FF",
+                    firstColor: "#A566FF",
+                    lastColor: "#A566FF",
+                    lineColor: "#2F9D27"
+                },
+                tooltip: {
+                    tooltipFunction: toolTipCustomFunction
+                }
+            }, {
+                dataField: "p1201",
+                headerText: "`23 1월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1202",
+                headerText: "`23 2월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1203",
+                headerText: "`23 3월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1204",
+                headerText: "`23 4월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1205",
+                headerText: "`23 5월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1206",
+                headerText: "`23 6월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1207",
+                headerText: "`23 7월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1208",
+                headerText: "`23 8월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1209",
+                headerText: "`23 9월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1210",
+                headerText: "`23 10월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1211",
+                headerText: "`23 11월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }, {
+                dataField: "p1212",
+                headerText: "`23 12월",
+                dataType: "numeric",
+                formatString: "#,##0"
+            }
+        ];
+        // 그리드 속성 설정
+        const gridProps = {
+            editable: true,
+            // singleRow 선택모드
+            selectionMode: "multipleCells",
+            // 고정칼럼 3 적용
+            fixedColumnCount: 3,
+            // 툴팁 사용
+            showTooltip: true,
+            // 줄번호 칼럼 렌더러 출력
+            showRowNumColumn: false
+        };
+        // 실제로 #grid_wrap 에 그리드 생성
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+    }
+    // 툴팁 사용자 정의 함수
+    function toolTipCustomFunction(rowIndex, columnIndex, value, headerText, item, dataField) {
+        const fields = dataField.split(",");
+        const count = fields.length;
+        let min = Number.MAX_VALUE, minMonth = 0;
+        let max = Number.MIN_VALUE, maxMonth = 0;
+        let sum = 0;
+        for (let i = 0; i < count; i++) {
+            const v = Number(item[fields[i]]);
+            if (v < min) {
+                min = v;
+                minMonth = i;
+            }
+            if (v > max) {
+                max = v;
+                maxMonth = i;
+            }
+            sum += v;
+        }
+        const avg = sum / count;
+        const fMax = AUIGrid.formatNumber(max, "#,##0");
+        const fMin = AUIGrid.formatNumber(min, "#,##0");
+        const fSum = AUIGrid.formatNumber(sum, "#,##0");
+        const fAvg = AUIGrid.formatNumber(avg, "#,##0.00");
+        let str = item.region;
+        str += `<br><span style='color:#2F9D27;'>최대 : ${fMax} (${maxMonth + 1}월)</span>`;
+        str += `<br><span style='color:#FF2424;'>최소 : ${fMin} (${minMonth + 1}월)</span>`;
+        str += `<br>합계 : ${fSum}`;
+        str += `<br>평균 : ${fAvg}`;
+        return str;
+    }
+    // 엑셀 내보내기(Export);
+    function exportClick() {
+        // 내보내기 실행
+        AUIGrid.exportToXlsx(myGridID);
+    }
+    // PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
+    function exportPdfClick() {
+        // 내보내기 실행
+        AUIGrid.exportToPdf(myGridID, {
+            fontPath: "../pdfkit/nyjgothic-medium.ttf"
+        });
+    }
+    let originalDemoRowHeight;
+    // 같은 데이터에서 행 높이와 렌더러 높이를 분리하고 기본 설정으로 되돌립니다.
+    function compareRendererHeight(compact) {
+        if (originalDemoRowHeight === undefined)
+            originalDemoRowHeight = AUIGrid.getProp(myGridID, 'rowHeight');
+        AUIGrid.setProp(myGridID, 'rowHeight', compact ? 90 : originalDemoRowHeight);
+        AUIGrid.refresh(myGridID);
+        for (const columnIndex of [1, 2])
+            AUIGrid.setRendererProp(myGridID, columnIndex, { height: compact ? 30 : NaN });
+    }
+    // 여러 데모가 같은 JSON 자료를 사용합니다. 실제 서비스에서는 이 주소를 데이터 API로 바꾸세요.
+    // 응답을 받은 뒤 setGridData에 전달하는 과정까지 이 HTML에서 확인할 수 있습니다.
+    async function loadGridData() {
+        AUIGrid.showAjaxLoader(myGridID);
+        try {
+            const response = await fetch("./data/revenue_region.json");
+            if (!response.ok)
+                throw new Error("데이터를 불러오지 못했습니다.");
+            const data = await response.json();
+            AUIGrid.setGridData(myGridID, data);
+        }
+        catch (error) {
+            document.getElementById("elapse").textContent = error.message;
+        }
+        finally {
+            AUIGrid.removeAjaxLoader(myGridID);
+        }
+    }
 </script>
 </head>
 <body>
 
 <div id="main">
 	<div class="desc">
-		<p>스파크 라인(Spark Line) 렌더러를 출력하여 1~12월의 매출 추이를 표시한 예제입니다.</p>
-		<p>월별 매출에서 최소값과 최대값을 각각 빨강색과 녹색으로 표시하였습니다.</p>
-		<p><span class="btn" onclick="exportPdfClick()">PDF로 저장</span>
+		<p>월별 매출을 선 그래프로 표시합니다. 최솟값은 빨강, 최댓값은 녹색입니다.</p>
+		<p>렌더러의 <code>height</code>로 차트 높이를 조절하고 Excel, PDF로 저장해 보세요.</p>
+        <p><button class="btn" id="renderer-height-compact" onclick="compareRendererHeight(true)">90px 행에 렌더러 30px</button>
+            <button class="btn" id="renderer-height-reset" onclick="compareRendererHeight(false)">기본 높이 복원</button>
+            <a href="javascript:changeLocation('./renderer_height.html?renderer_height')">5종 렌더러와 자동 줄바꿈 비교</a></p>
+        <p><span class="btn" onclick="exportPdfClick()">PDF로 저장</span>
 			<span class="btn" onclick="exportClick()">엑셀(xlsx)로 저장</span><span>(엑셀2010 이상에서만 표현 가능)</span>
 		</p>
-		<p>참고 : 스파크 라인을 엑셀로 동일하게 내보내기 하려면 연속적인 값이여야 하며 그리드가 출력하고 있는 값이여야 합니다. (엑셀이 스파크 라인을 출력하는 엑셀의 규칙)</p>
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet">
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<style>
+    .release-controls { display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; margin:12px 0; }
+    .release-controls label { display:inline-flex; align-items:center; gap:6px; }
+    .release-controls select, .release-controls input[type=number] { height:30px; }
+    .release-status { min-height:24px; overflow-wrap:anywhere; }
+
+</style>
+<script>
+    // 이 예제: keepViewOnAdd: true로 행 추가 후에도 정렬과 필터를 유지합니다. 현재는 팀 A만 수량 내림차순으로 표시합니다.
+    // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
+    let myGridID, sequence = 0;
+    // 페이지가 준비되면 그리드를 만들고 예제 데이터를 넣습니다.
+    function init() {
+        resetKeepView();
+    }
+    // 기존 그리드를 제거하고 선택한 비교 조건으로 초기 데이터를 다시 만듭니다.
+    function resetKeepView() {
+        if (myGridID)
+            AUIGrid.destroy(myGridID);
+        sequence = 0;
+        // 칼럼 정의: dataField에 해당하는 값을 셀에 표시합니다.
+        const columnLayout = [
+            {
+                dataField: 'id',
+                headerText: 'ID',
+                width: 130
+            },
+            {
+                dataField: 'team',
+                headerText: '팀',
+                width: 150,
+                filter: { showIcon: true }
+            },
+            {
+                dataField: 'name',
+                headerText: '담당자',
+                width: 180
+            },
+            {
+                dataField: 'qty',
+                headerText: '수량',
+                width: 150,
+                dataType: 'numeric'
+            }
+        ];
+        // 그리드 설정: 이 데모에서 비교할 기능을 지정합니다.
+        const gridProps = {
+            rowIdField: 'id',
+            rowIdTrustMode: true,
+            editable: true,
+            enableUndoRedo: true,
+            enableFilter: true,
+            showStateColumn: true,
+            selectionMode: 'singleRow',
+            keepViewOnAdd: document.getElementById('keep-view').checked
+        };
+        myGridID = AUIGrid.create('#grid_wrap', columnLayout, gridProps);
+        AUIGrid.setGridData(myGridID, [
+            {
+                id: 'A1',
+                team: 'A',
+                name: '김민수',
+                qty: 10
+            }, {
+                id: 'A2',
+                team: 'A',
+                name: '이서연',
+                qty: 40
+            }, {
+                id: 'B1',
+                team: 'B',
+                name: '박지훈',
+                qty: 50
+            }
+        ]);
+        AUIGrid.setFilterByValues(myGridID, 'team', ['A']);
+        AUIGrid.setSorting(myGridID, [
+            { dataField: 'qty', sortType: -1 }
+        ]);
+        AUIGrid.setSelectionByIndex(myGridID, 0, 0);
+        for (const event of ['selectionChange', 'filtering', 'sorting', 'addRowFinish', 'undoRedoChange'])
+            AUIGrid.bind(myGridID, event, showKeepViewState);
+        showKeepViewState();
+    }
+    // 표시되지 않는 B 행도 원본에 추가하고, 표시 가능한 A 행만 정렬된 위치에 나타납니다.
+    function addKeepRows(visible) {
+        sequence++;
+        const rows = [
+            {
+                id: 'B-new-' + sequence,
+                team: 'B',
+                name: '새 담당자 B',
+                qty: 30
+            }
+        ];
+        if (visible)
+            rows.push({
+                id: 'A-new-' + sequence,
+                team: 'A',
+                name: '새 담당자 A',
+                qty: 20
+            });
+        AUIGrid.addRow(myGridID, rows, 'last');
+        document.getElementById('demo-code').textContent = 'AUIGrid.addRow(myGridID, ' + JSON.stringify(rows, null, 4) + ', "last");';
+        showKeepViewState();
+    }
+    // 전체 행과 필터로 보이는 행을 따로 세어 결과를 표시합니다.
+    function showKeepViewState() {
+        const selected = AUIGrid.getSelectedItems(myGridID);
+        document.getElementById('demo-status').textContent = '전체 ' + AUIGrid.getOrgGridData(myGridID).length + '건 / 표시 ' + AUIGrid.getRowCount(myGridID) + '건 / 필터 ' + (AUIGrid.isFilteredGrid(myGridID) ? '유지' : '없음') +
+            ' / 정렬 ' + (AUIGrid.getSortingFields(myGridID).length ? '수량 내림차순' : '없음') + ' / 선택 ' + (selected.length ? selected[0].item.id : '없음');
+    }
+    // 행 추가를 취소한 뒤 정렬과 필터 상태를 확인합니다.
+    function undoKeep() {
+        AUIGrid.undo(myGridID);
+        showKeepViewState();
+    }
+    // 취소한 행 추가를 다시 실행합니다.
+    function redoKeep() {
+        AUIGrid.redo(myGridID);
+        showKeepViewState();
+    }
+    // 숨겨진 행도 볼 수 있도록 필터를 해제합니다.
+    function clearKeepFilter() {
+        AUIGrid.clearFilterAll(myGridID);
+        showKeepViewState();
+    }
+</script>
+</head>
+<body>
+
+<div id="main">
+    <div class="desc">
+		<p><code>keepViewOnAdd: true</code>로 행 추가 후에도 정렬과 필터를 유지합니다. 현재는 팀 A만 수량 내림차순으로 표시합니다.</p>
+		<p>A와 B를 추가하면 A만 보입니다. B도 원본에는 추가되므로 필터를 해제해 확인하세요. 체크를 끄면 기본 동작과 비교할 수 있습니다.</p>
+        <div class="release-controls">
+            <label><input type="checkbox" id="keep-view" checked>정렬과 필터 유지</label>
+            <button class="btn" id="keep-reset" onclick="resetKeepView()">선택한 설정으로 초기화</button>
+            <button class="btn" id="keep-add" onclick="addKeepRows(true)">B, A 행 함께 추가</button>
+            <button class="btn" id="keep-hidden" onclick="addKeepRows(false)">B 행만 추가</button>
+            <button class="btn" id="keep-undo" onclick="undoKeep()">실행 취소</button>
+            <button class="btn" id="keep-redo" onclick="redoKeep()">다시 실행</button>
+            <button class="btn" id="keep-clear" onclick="clearKeepFilter()">필터 해제</button>
+        </div>
+        <p id="demo-status" class="release-status" role="status" aria-live="polite"></p>
+	</div>
+    <div id="grid_wrap" style="width:100%;height:480px;margin:0 auto;"></div>
+    <div class="desc_bottom">
+        <details><summary>설정 코드</summary><div class="src_cover"><pre id="demo-code">const gridProps = { keepViewOnAdd: true, enableUndoRedo: true };
+AUIGrid.addRow(myGridID, [
+    { id: &quot;B-new&quot;, team: &quot;B&quot;, name: &quot;새 담당자 B&quot;, qty: 30 },
+    { id: &quot;A-new&quot;, team: &quot;A&quot;, name: &quot;새 담당자 A&quot;, qty: 20 }
+], &quot;last&quot;);</pre></div></details>
+        <p id="elapse"></p>
+    </div>
+</div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

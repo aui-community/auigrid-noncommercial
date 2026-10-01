@@ -1,304 +1,136 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import AUIGrid from '../static/AUIGrid-React.js/AUIGridReact';
 import axios from 'axios';
 import ExportGridDataView from '../samples/ExportGridDataView';
 import './Showcase05.css';
 
-// 엑셀, PDF 내보내기 속성
 const exportProps = {
 	fileName: '쇼케이스-05',
-
-	// 헤더 내용
 	headers: [
-		{
-			text: '',
-			height: 20 // 첫행 빈줄
-		},
+		{ text: '', height: 20 },
 		{
 			text: '국가별 핸드폰 판매 통계',
 			height: 40,
-			style: {
-				fontSize: 20,
-				textAlign: 'center',
-				color: '#ff0000',
-				fontWeight: 'bold',
-				underline: true,
-				background: '#DAD9FF'
-			}
+			style: { fontSize: 20, textAlign: 'center', color: '#ff0000', fontWeight: 'bold', underline: true, background: '#DAD9FF' }
 		},
-		{
-			text: '',
-			height: 5,
-			style: {
-				background: '#555555'
-			} // 빈줄 색깔 경계 만듬
-		}
+		{ text: '', height: 5, style: { background: '#555555' } }
 	],
-
-	// 푸터 내용
 	footers: [
-		{
-			text: '',
-			height: 5,
-			style: {
-				background: '#555555'
-			} // 빈줄 색깔 경계 만듬
-		},
+		{ text: '', height: 5, style: { background: '#555555' } },
 		{
 			text: 'Copyright © AUISoft Co., Ltd.',
 			height: 24,
-			style: {
-				textAlign: 'right',
-				fontWeight: 'bold',
-				color: '#ffffff',
-				background: '#222222'
-			}
+			style: { textAlign: 'right', fontWeight: 'bold', color: '#ffffff', background: '#222222' }
 		}
 	]
 };
 
+const columnLayout = [
+	{
+		dataField: 'country',
+		headerText: 'Country',
+		width: 150,
+		filter: { showIcon: true, useExMenu: true }
+	},
+	{
+		dataField: 'product',
+		headerText: 'Product',
+		width: 150,
+		filter: { showIcon: true, useExMenu: true }
+	},
+	...Array.from({ length: 12 }, (_, i) => ({
+		dataField: `m${i + 1}`,
+		headerText: `${i + 1}월`,
+		dataType: 'numeric',
+		formatString: '#,##0',
+		width: 100,
+		disableGrouping: true,
+		style: 'showcase5-aui-grid-my-right-style'
+	}))
+];
+
+const footerLayout = [
+	{ labelText: '∑', positionField: '#base' },
+	...Array.from({ length: 12 }, (_, i) => ({
+		dataField: `m${i + 1}`,
+		positionField: `m${i + 1}`,
+		operation: 'SUM',
+		formatString: '#,##0',
+		style: 'showcase5-aui-grid-my-custom-sum-total'
+	}))
+];
+
+const gridProps = {
+	width: '100%',
+	height: 480,
+	useContextMenu: true,
+	showBranchOnGrouping: false,
+	enableFilter: true,
+	showFooter: true,
+	editable: true,
+	selectionMode: 'singleRow',
+	useGroupingPanel: true,
+	groupingFields: ['country', 'product'],
+	groupingSummary: {
+		dataFields: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10', 'm11', 'm12']
+	},
+	displayTreeOpen: true,
+	enableCellMerge: true,
+	cellMergeRowSpan: false,
+	rowStyleFunction: (rowIndex, item) => {
+		if (item._$isGroupSumField) {
+			switch (item._$depth) {
+				case 2:
+					return 'aui-grid-row-depth1-style';
+				case 3:
+					return 'aui-grid-row-depth2-style';
+				case 4:
+					return 'aui-grid-row-depth3-style';
+				default:
+					return 'aui-grid-row-depth-default-style';
+			}
+		}
+		return null;
+	}
+};
+
+// 데이터 요청과 그리드 반영. 종료된 컴포넌트에는 응답을 적용하지 않습니다.
+async function loadGridData(grid, signal) {
+	grid.showAjaxLoader();
+	try {
+		const { data } = await axios.get('./data/country_phone_month_500.json', { signal });
+		if (!signal.aborted) grid.setGridData(data);
+	} catch (error) {
+		if (!signal.aborted) console.error('데이터 로딩 오류:', error);
+	} finally {
+		if (!signal.aborted) grid.removeAjaxLoader();
+	}
+}
+
+// 그리드 생성 뒤 이벤트를 연결합니다. 리스너 해제는 wrapper가 담당합니다.
+function bindGridEvents(grid) {
+	grid.bind('cellClick', (event) => {
+		console.log(event.type);
+	});
+
+	grid.bind('headerClick', (event) => {
+		console.log(event.type);
+	});
+}
+
 const Showcase05 = () => {
-	// 그리드 객체
 	const myGrid = useRef();
 
-	// 그리드 칼럼 레이아웃
-	const columnLayout = [
-		{
-			dataField: 'country',
-			headerText: 'Country',
-			width: 150,
-			filter: {
-				showIcon: true,
-				useExMenu: true
-			}
-		},
-		{
-			dataField: 'product',
-			headerText: 'Product',
-			width: 150,
-			filter: {
-				showIcon: true,
-				useExMenu: true
-			}
-		},
-		{
-			dataField: 'm1',
-			headerText: '1월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm2',
-			headerText: '2월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm3',
-			headerText: '3월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm4',
-			headerText: '4월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm5',
-			headerText: '5월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm6',
-			headerText: '6월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm7',
-			headerText: '7월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm8',
-			headerText: '8월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm9',
-			headerText: '9월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm10',
-			headerText: '10월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm11',
-			headerText: '11월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		},
-		{
-			dataField: 'm12',
-			headerText: '12월',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			width: 100,
-			disableGrouping: true,
-			style: 'showcase5-aui-grid-my-right-style'
-		}
-	];
-
-	// 푸터 레이아웃 설정
-	const footerLayout = [
-		{
-			labelText: '∑',
-			positionField: '#base'
-		}
-	];
-
-	// 푸터 추가 설정
-	for (let i = 1; i <= 12; i++) {
-		footerLayout.push({
-			dataField: 'm' + i,
-			positionField: 'm' + i,
-			operation: 'SUM',
-			formatString: '#,##0',
-			style: 'showcase5-aui-grid-my-custom-sum-total'
-		});
-	}
-
-	// 그리드 속성 정의
-	const gridProps = {
-		width: '100%',
-		height: 480,
-		useContextMenu: true,
-		showBranchOnGrouping: false,
-		enableFilter: true,
-		showFooter: true,
-		editable: true,
-		// singleRow 선택모드
-		selectionMode: 'singleRow',
-		// 그룹핑 패널 사용
-		useGroupingPanel: true,
-		// 차례로 country, product 순으로 그룹핑을 합니다.
-		// 즉, 각 나라별, 각 제품을 구매한 사용자로 그룹핑
-		groupingFields: ['country', 'product'],
-		// 그룹핑 후 합계필드를 출력하도록 설정합니다.
-		groupingSummary: {
-			// 합계 필드는 1월 ~ 12월에 대하여 실시 합니다.
-			dataFields: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10', 'm11', 'm12']
-		},
-		// 최초 보여질 때 모두 열린 상태로 출력 여부
-		displayTreeOpen: true,
-		// 그룹핑 후 셀 병함 실행
-		enableCellMerge: true,
-		// enableCellMerge 할 때 실제로 rowspan 적용 시킬지 여부
-		// 만약 false 설정하면 실제 병합은 하지 않고 데이터 값만 같은 데이터 출력 시키지 않음. (기본값 : true)
-		cellMergeRowSpan: false,
-		// 그리드 ROW 스타일 함수 정의
-		rowStyleFunction: (rowIndex, item) => {
-			if (item._$isGroupSumField) {
-				// 그룹핑으로 만들어진 합계 필드인지 여부
-				// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
-				// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
-				switch (
-					item._$depth // 계층형의 depth 비교 연산
-				) {
-					case 2:
-						return 'aui-grid-row-depth1-style';
-					case 3:
-						return 'aui-grid-row-depth2-style';
-					case 4:
-						return 'aui-grid-row-depth3-style';
-					default:
-						return 'aui-grid-row-depth-default-style';
-				}
-			}
-			return null;
-		}
-	};
-
+	// 생성된 wrapper 참조에 초기화하고, effect가 종료되면 요청/작업을 정리합니다.
 	useEffect(() => {
-		console.log('Showcase05 마운트됨');
-
-		// 최초 마운팅 될 때 그리드 이벤트 세팅
-		setupGridEvents();
-
-		// 최초 마운팅 될 때 그리드 데이터 조회시키기
-		requestGridData();
-
+		const grid = myGrid.current;
+		const controller = new AbortController();
+		bindGridEvents(grid);
+		loadGridData(grid, controller.signal);
 		return () => {
-			console.log('Showcase05 언마운트됨');
+			controller.abort();
 		};
 	}, []);
-
-	// 그리드 이벤트 세팅
-	const setupGridEvents = () => {
-		const grid = myGrid.current;
-		// 그리드 이벤트 바인딩
-		grid.bind('cellClick', (event) => {
-			console.log(event.type);
-		});
-
-		grid.bind('headerClick', (event) => {
-			console.log(event.type);
-		});
-	};
-
-	// 그리드 데이터 조회하여 삽입
-	const requestGridData = () => {
-		const grid = myGrid.current;
-		grid.showAjaxLoader();
-		axios.get('./data/country_phone_month_500.json').then((result) => {
-			//console.log(result);
-			// 그리드 데이터 삽입
-			grid.setGridData(result.data);
-			grid.removeAjaxLoader();
-		});
-	};
 
 	return (
 		<div>

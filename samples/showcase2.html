@@ -67,12 +67,57 @@
 		// AUIGrid 그리드를 생성합니다.
 		createAUIGrid();
 		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/schedule_tree.json");
+		loadGridData();
 	}
 
 	// AUIGrid 를 생성합니다.
 	function createAUIGrid() {
 		// 그리드 칼럼 레이아웃 설정
+		const columnLayout = createColumnLayout();
+
+		// 그리드 속성 설정
+		const gridProps = createGridProps();
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+	}
+
+	let isExpanded = true;
+	function expand() {
+		if (!isExpanded) {
+			AUIGrid.expandAll(myGridID);
+			isExpanded = true;
+			return;
+		}
+		// 모두 닫기
+		AUIGrid.collapseAll(myGridID);
+		isExpanded = false;
+	}
+
+	// 트리 depth 별 오픈하기
+	function showItemsOnDepth(event) {
+		const depthSelect = document.getElementById("depthSelect");
+		const depth = depthSelect.value;
+		// 해당 depth 까지 오픈함
+		AUIGrid.showItemsOnDepth(myGridID, Number(depth));
+	}
+
+	// 엑셀 내보내기(Export);
+	function exportClick() {
+		// 내보내기 실행
+		AUIGrid.exportToXlsx(myGridID);
+	}
+
+	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
+	function exportPdfClick() {
+		// 내보내기 실행
+		AUIGrid.exportToPdf(myGridID, {
+			fontPath: "../pdfkit/nyjgothic-medium.ttf"
+		});
+	}
+
+	// 칼럼 레이아웃을 정의합니다.
+	function createColumnLayout() {
 		const columnLayout = [{
 			dataField: "id",
 			headerText: "ID",
@@ -205,8 +250,11 @@
 			headerText: "Issues",
 			style: "left"
 		}];
+		return columnLayout;
+	}
 
-		// 그리드 속성 설정
+	// 그리드 속성을 정의합니다.
+	function createGridProps() {
 		const gridProps = {
 			// 마우스 선택(클릭) 적용 모드
 			selectionMode: "singleRow",
@@ -223,44 +271,34 @@
 			showRowCheckColumn: false,
 			showRowNumColumn: false
 		};
-
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+		return gridProps;
 	}
 
-	let isExpanded = true;
-	function expand() {
-		if (!isExpanded) {
-			AUIGrid.expandAll(myGridID);
-			isExpanded = true;
-			return;
+	// 데이터 요청과 그리드 반영. 페이지 종료 후 응답을 적용하지 않습니다.
+	const controller = new AbortController();
+	async function loadGridData() {
+		AUIGrid.showAjaxLoader(myGridID);
+		try {
+			const response = await fetch("./data/schedule_tree.json", { signal: controller.signal });
+			if (!response.ok) throw new Error("데이터 요청 실패");
+			const data = await response.json();
+			if (!controller.signal.aborted) AUIGrid.setGridData(myGridID, data);
+		} catch (error) {
+			if (!controller.signal.aborted) console.error("데이터 로딩 오류:", error);
+		} finally {
+			if (!controller.signal.aborted) AUIGrid.removeAjaxLoader(myGridID);
 		}
-		// 모두 닫기
-		AUIGrid.collapseAll(myGridID);
-		isExpanded = false;
 	}
 
-	// 트리 depth 별 오픈하기
-	function showItemsOnDepth(event) {
-		const depthSelect = document.getElementById("depthSelect");
-		const depth = depthSelect.value;
-		// 해당 depth 까지 오픈함
-		AUIGrid.showItemsOnDepth(myGridID, Number(depth));
+	// 뒤로 가기 캐시에 보관되는 페이지는 유지하고, 실제 종료에서만 정리합니다.
+	function disposeDemo(event) {
+		if (event.persisted) return;
+		controller.abort();
+		AUIGrid.destroy(myGridID);
+		myGridID = null;
+		window.removeEventListener("pagehide", disposeDemo);
 	}
-
-	// 엑셀 내보내기(Export);
-	function exportClick() {
-		// 내보내기 실행
-		AUIGrid.exportToXlsx(myGridID);
-	}
-
-	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
-	function exportPdfClick() {
-		// 내보내기 실행
-		AUIGrid.exportToPdf(myGridID, {
-			fontPath: "../pdfkit/nyjgothic-medium.ttf"
-		});
-	}
+	window.addEventListener("pagehide", disposeDemo);
 </script>
 </head>
 <body>

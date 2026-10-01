@@ -1,7 +1,7 @@
 <script>
 	/**
-	 * AUIGrid.vue for Vue.js v1.5.20260706
-	 * Based on AUIGrid v3.0.17.1
+	 * AUIGrid.vue for Vue.js v1.6.20261001
+	 * Based on AUIGrid v3.0.18.0
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */
@@ -20,7 +20,12 @@
 		window.AUIGrid.defaultProps = {
 			// 모바일인 경우 자동으로 작은 사이즈의 스크롤을 표시할지 여부
 			// 여기서 정의했기 때문에 앞으로 모든 그리드는 속성 autoScrollSize: true 를 상속 받아 적용됨.
-			autoScrollSize: true
+			autoScrollSize: true,
+
+			// 다른 framework wrapper와 동일하게 선택 이벤트를 간소화합니다.
+			// 일반 선택에서 selectedItems가 필요하면 gridProps.simplifySelectionEvent를 false로 지정합니다.
+			// enableSelectionAll이 true이면 엔진에서 간소화가 강제됩니다.
+			simplifySelectionEvent: true
 		};
 	}
 
@@ -61,7 +66,8 @@
 			}
 		},
 		data: () => ({
-			timerId: null
+			timerId: null,
+			auiMountGeneration: 0
 		}),
 		created: function () {
 			//crypto 로 uuid 생성함. (유니크 값)
@@ -71,11 +77,14 @@
 			this.timerId = null;
 		},
 		mounted: function () {
+			const generation = ++this.auiMountGeneration;
 			const columnLayout = this.__getColumnLayoutByProxy();
 			const gridProps = this.__getGridPropsByProxy();
 			const footerLayout = this.__getFooterLayoutByProxy();
 			if (columnLayout !== null) $ag.create(this.pid, columnLayout, gridProps);
+			if (generation !== this.auiMountGeneration) return;
 			if (footerLayout !== null) $ag.setFooter(this.pid, footerLayout);
+			if (generation !== this.auiMountGeneration) return;
 			this.__setupEvents();
 			this.__setupGlobalResize();
 		},
@@ -112,7 +121,9 @@
 					'footerDoubleClick',
 					'grouping',
 					'hScrollChange',
+					'indent',
 					'notFound',
+					'outdent',
 					'pageChange',
 					'pageRowCountChange',
 					'pasteEnd',
@@ -146,6 +157,7 @@
 					'keyDown',
 					'pasteBegin',
 					'rowNumCellClick',
+					'rowNumHeaderClick',
 					'rowStateCellClick',
 					'selectionConstraint'
 				];
@@ -196,7 +208,9 @@
 					}
 				} else {
 					// for Vue 3
-					return this.$attrs['on' + n.replace(/^[a-z]/, (c) => c.toUpperCase())](e);
+					const name = 'on' + n.replace(/^[a-z]/, (c) => c.toUpperCase());
+					if (!this.$attrs[name]) return;
+					return this.$attrs[name](e);
 				}
 			},
 			__isEventHandlerDefined(name) {
@@ -211,15 +225,22 @@
 				window.addEventListener('resize', this.__globalResizeHandler);
 			},
 			__resetGlobalResize() {
-				if (!this.autoResize) return;
+				this.auiMountGeneration++;
+				if (this.timerId !== null) {
+					clearTimeout(this.timerId);
+					this.timerId = null;
+				}
 				window.removeEventListener('resize', this.__globalResizeHandler);
 			},
 			__globalResizeHandler() {
+				const that = this;
+				const generation = this.auiMountGeneration;
 				const pid = this.pid;
 				if (this.timerId !== null) {
 					clearTimeout(this.timerId);
 				}
 				const timerId = setTimeout(function () {
+					if (generation !== that.auiMountGeneration) return;
 					if ($ag.isCreated(pid)) {
 						try {
 							$ag.resize(pid);
@@ -253,9 +274,12 @@
 			getPID() {
 				return this.pid;
 			},
-			create(columnLayout, props) {
+			create(columnLayout, props, footerLayout) {
 				if ($ag.isCreated(this.pid)) return this.pid;
 				$ag.create(this.pid, columnLayout, props);
+				if (footerLayout) {
+					$ag.setFooter(this.pid, footerLayout);
+				}
 				this.__setupEvents();
 				this.__setupGlobalResize();
 				return this.pid;
@@ -296,6 +320,12 @@
 			},
 			changeColumnLayout(newLayout) {
 				$ag.changeColumnLayout.call($ag, this.pid, arguments[0]);
+			},
+			changeExtraColumnOrders(orders) {
+				$ag.changeExtraColumnOrders.call($ag, this.pid, arguments[0]);
+			},
+			changeExtraColumnWidth(name, width) {
+				$ag.changeExtraColumnWidth.call($ag, this.pid, arguments[0], arguments[1]);
 			},
 			changeFooterLayout(newLayout) {
 				$ag.changeFooterLayout.call($ag, this.pid, arguments[0]);
@@ -428,6 +458,12 @@
 			},
 			getColumnValues(dataField, total) {
 				return $ag.getColumnValues.call($ag, this.pid, arguments[0], arguments[1]);
+			},
+			getColumnWidthByDataField(dataField) {
+				return $ag.getColumnWidthByDataField.call($ag, this.pid, arguments[0]);
+			},
+			getColumnWidthList() {
+				return $ag.getColumnWidthList.call($ag, this.pid);
 			},
 			getCurrentPageData() {
 				return $ag.getCurrentPageData.call($ag, this.pid);
@@ -564,17 +600,23 @@
 			getSelectedIndex() {
 				return $ag.getSelectedIndex.call($ag, this.pid);
 			},
-			getSelectedItems() {
-				return $ag.getSelectedItems.call($ag, this.pid);
+			getSelectedItems(performanceMode) {
+				return $ag.getSelectedItems.call($ag, this.pid, arguments[0]);
 			},
 			getSelectedPrimeIndexOnMerge() {
 				return $ag.getSelectedPrimeIndexOnMerge.call($ag, this.pid);
+			},
+			getSelectedRowIndexes() {
+				return $ag.getSelectedRowIndexes.call($ag, this.pid);
 			},
 			getSelectedRows() {
 				return $ag.getSelectedRows.call($ag, this.pid);
 			},
 			getSelectedText(exceptHidden) {
 				return $ag.getSelectedText.call($ag, this.pid, arguments[0]);
+			},
+			getSortCollator() {
+				return $ag.getSortCollator.call($ag, this.pid);
 			},
 			getSortingFields() {
 				return $ag.getSortingFields.call($ag, this.pid);
@@ -602,6 +644,9 @@
 			},
 			hideColumnGroup(dataField) {
 				$ag.hideColumnGroup.call($ag, this.pid, arguments[0]);
+			},
+			hideExtraColumn(name) {
+				$ag.hideExtraColumn.call($ag, this.pid, arguments[0]);
 			},
 			hideFooterLater() {
 				$ag.hideFooterLater.call($ag, this.pid);
@@ -716,6 +761,9 @@
 			},
 			outdentTreeDepth() {
 				$ag.outdentTreeDepth.call($ag, this.pid);
+			},
+			prependData(items) {
+				$ag.prependData.call($ag, this.pid, arguments[0]);
 			},
 			redo() {
 				$ag.redo.call($ag, this.pid);
@@ -897,11 +945,29 @@
 			setSelectionBlock(startRowIndex, endRowIndex, startColumnIndex, endColumnIndex) {
 				$ag.setSelectionBlock.call($ag, this.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
 			},
+			// 셀 종류를 조회합니다. 없는 행이나 바디 셀은 null입니다.
+			getBodyCellKind(rowIndex, dataField) {
+				return $ag.getBodyCellKind.call($ag, this.pid, arguments[0], arguments[1]);
+			},
+			// 필드명으로 상위 셀과 하위 셀을 선택합니다.
+			setSelectionByDataField(rowIndex, dataField) {
+				$ag.setSelectionByDataField.call($ag, this.pid, arguments[0], arguments[1]);
+			},
+			// 시작 셀을 활성 셀로 유지하면서 필드 사이의 영역을 선택합니다.
+			setSelectionBlockByDataField(startRowIndex, endRowIndex, startColDataField, endColDataField) {
+				$ag.setSelectionBlockByDataField.call($ag, this.pid, arguments[0], arguments[1], arguments[2], arguments[3]);
+			},
 			setSelectionByIndex(rowIndex, columnIndex) {
 				$ag.setSelectionByIndex.call($ag, this.pid, arguments[0], arguments[1]);
 			},
+			setSelectionColumn(startColIdx, endColIdx) {
+				$ag.setSelectionColumn.call($ag, this.pid, arguments[0], arguments[1]);
+			},
 			setSelectionMode(mode) {
 				$ag.setSelectionMode.call($ag, this.pid, arguments[0]);
+			},
+			setSortCollator(collator) {
+				$ag.setSortCollator.call($ag, this.pid, arguments[0]);
 			},
 			setSorting(sortingInfoArr, onlyLastDepthSorting) {
 				$ag.setSorting.call($ag, this.pid, arguments[0], arguments[1]);
@@ -920,6 +986,9 @@
 			},
 			showColumnGroup(dataField) {
 				$ag.showColumnGroup.call($ag, this.pid, arguments[0]);
+			},
+			showExtraColumn(name) {
+				$ag.showExtraColumn.call($ag, this.pid, arguments[0]);
 			},
 			showFooterLater() {
 				$ag.showFooterLater.call($ag, this.pid);
@@ -982,6 +1051,7 @@
 	};
 
 	export const agUtils = {
+		isCreated: $ag.isCreated,
 		formatDate: $ag.formatDate,
 		formatNumber: $ag.formatNumber,
 		getActiveGrid: $ag.getActiveGrid,

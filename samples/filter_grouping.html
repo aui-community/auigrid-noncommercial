@@ -41,139 +41,163 @@
 </style>
 
 <script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
-
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_500.json");
-	}
-
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "Name",
-			filter: {
-				showIcon: true
-			}
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			filter: {
-				showIcon: true
-			}
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			filter: {
-				showIcon: true
-			}
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			headerStyle: "my-column",
-			filter: {
-				showIcon: true
-			}
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			headerStyle: "my-column",
-			style: "my-colum-right",
-			filter: {
-				showIcon: true,
-				type: "numeric"
-			}
-		}, {
-			dataField: "date",
-			headerText: "Date",
-			filter: {
-				showIcon: true
-			}
-		}];
-
-		// 그리드 푸터 설정
-		const footerLayout = [{
-			labelText: "∑",
-			positionField: "#base"
-		}, {
-			dataField: "price",
-			positionField: "price",
-			formatString: "#,##0",
-			prefix: "Sum : ",
-			operation: "SUM",
-			style: "my-colum-right"
-		}, {
-			dataField: "price",
-			positionField: "date",
-			operation: "COUNT",
-			style: "my-colum-right"
-		}];
-
-		const gridProps = {
-			showRowNumColumn: true,
-			showRowCheckColumn: false,
-			showStateColumn: true,
-			enableColumnResize: false,
-			enableMovingColumn: false,
-			useGroupingPanel: true,
-			enableFilter: true,
-			showFooter: true,
-			displayTreeOpen: true,
-			enableCellMerge: true,
-			// 브랜치에 해당되는 행을 출력 여부
-			showBranchOnGrouping: false,
-			// country, product 로 그룹핑
-			groupingFields: ["country", "product"],
-			// 그룹핑 후 합계필드를 출력하도록 설정합니다.
-			groupingSummary: {
-				// 합계 필드는 price 에 대하여 실시 합니다.
-				dataFields: ["price"]
-			},
-			// 그리드 ROW 스타일 함수 정의
-			rowStyleFunction: function (rowIndex, item) {
-				if (item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
-					// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
-					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
-					switch (item._$depth) {  // 계층형의 depth 비교 연산
-						case 2:
-							return "aui-grid-row-depth1-style";
-						case 3:
-							return "aui-grid-row-depth2-style";
-						case 4:
-							return "aui-grid-row-depth3-style";
-						default:
-							return "aui-grid-row-depth-default-style";
-					}
-				}
-			}
-		}; // end of gridProps;
-
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-		// 필터링, 그룹핑 이벤트 바인딩
-		AUIGrid.bind(myGridID, ["filtering", "grouping"], function (event) {
-			console.log(event);
-		});
-
-		// 푸터 레이아웃 세팅
-		AUIGrid.setFooter(myGridID, footerLayout);
-	}
+    // 이 예제: 그룹핑한 데이터에 필터를 적용합니다. Country와 Product의 필터를 열어 일반 목록과 트리 목록을 비교하세요.
+    // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
+    // AUIGrid 생성 후 반환 ID
+    let myGridID;
+    // 시작점
+    function init() {
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+        // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+        loadGridData();
+    }
+    // AUIGrid 를 생성합니다.
+    function createAUIGrid() {
+        // 그리드 칼럼 레이아웃 설정
+        const columnLayout = [
+            {
+                dataField: "name",
+                headerText: "Name",
+                filter: {
+                    showIcon: true
+                }
+            }, {
+                dataField: "country",
+                headerText: "Country",
+                filter: {
+                    showIcon: true
+                }
+            }, {
+                dataField: "product",
+                headerText: "Product",
+                filter: {
+                    showIcon: true
+                }
+            }, {
+                dataField: "quantity",
+                headerText: "Quantity",
+                dataType: "numeric",
+                headerStyle: "my-column",
+                filter: {
+                    showIcon: true
+                }
+            }, {
+                dataField: "price",
+                headerText: "Price",
+                dataType: "numeric",
+                headerStyle: "my-column",
+                style: "my-colum-right",
+                filter: {
+                    showIcon: true,
+                    type: "numeric"
+                }
+            }, {
+                dataField: "date",
+                headerText: "Date",
+                filter: {
+                    showIcon: true
+                }
+            }
+        ];
+        // 그리드 푸터 설정
+        const footerLayout = [
+            {
+                labelText: "∑",
+                positionField: "#base"
+            }, {
+                dataField: "price",
+                positionField: "price",
+                formatString: "#,##0",
+                prefix: "Sum : ",
+                operation: "SUM",
+                style: "my-colum-right"
+            }, {
+                dataField: "price",
+                positionField: "date",
+                operation: "COUNT",
+                style: "my-colum-right"
+            }
+        ];
+        const gridProps = {
+            showRowNumColumn: true,
+            showRowCheckColumn: false,
+            showStateColumn: true,
+            enableColumnResize: false,
+            enableMovingColumn: false,
+            useGroupingPanel: true,
+            enableFilter: true,
+            useTreeFilterMenu: true,
+            showFooter: true,
+            displayTreeOpen: true,
+            enableCellMerge: true,
+            // 브랜치에 해당되는 행을 출력 여부
+            showBranchOnGrouping: false,
+            // country, product 로 그룹핑
+            groupingFields: ["country", "product"],
+            // 그룹핑 후 합계필드를 출력하도록 설정합니다.
+            groupingSummary: {
+                // 합계 필드는 price 에 대하여 실시 합니다.
+                dataFields: ["price"]
+            },
+            // 그리드 ROW 스타일 함수 정의
+            rowStyleFunction: function (rowIndex, item) {
+                if (item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
+                    // 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
+                    // 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
+                    switch (item._$depth) { // 계층형의 depth 비교 연산
+                        case 2:
+                            return "aui-grid-row-depth1-style";
+                        case 3:
+                            return "aui-grid-row-depth2-style";
+                        case 4:
+                            return "aui-grid-row-depth3-style";
+                        default:
+                            return "aui-grid-row-depth-default-style";
+                    }
+                }
+            }
+        }; // end of gridProps;
+        // 실제로 #grid_wrap 에 그리드 생성
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+        // 필터링, 그룹핑 이벤트 바인딩
+        AUIGrid.bind(myGridID, ["filtering", "grouping"], function (event) {
+            console.log(event);
+        });
+        // 푸터 레이아웃 세팅
+        AUIGrid.setFooter(myGridID, footerLayout);
+    }
+    // 적용 중인 필터는 유지하고 다음에 여는 메뉴의 표시 방식만 바꿉니다.
+    function changeTreeFilterMenu() {
+        AUIGrid.setProp(myGridID, 'useTreeFilterMenu', document.getElementById('tree-filter-menu').checked);
+    }
+    // 여러 데모가 같은 JSON 자료를 사용합니다. 실제 서비스에서는 이 주소를 데이터 API로 바꾸세요.
+    // 응답을 받은 뒤 setGridData에 전달하는 과정까지 이 HTML에서 확인할 수 있습니다.
+    async function loadGridData() {
+        AUIGrid.showAjaxLoader(myGridID);
+        try {
+            const response = await fetch("./data/normal_500.json");
+            if (!response.ok)
+                throw new Error("데이터를 불러오지 못했습니다.");
+            const data = await response.json();
+            AUIGrid.setGridData(myGridID, data);
+        }
+        catch (error) {
+            document.getElementById("elapse").textContent = error.message;
+        }
+        finally {
+            AUIGrid.removeAjaxLoader(myGridID);
+        }
+    }
 </script>
 </head>
 <body>
 
 <div id="main">
 	<div class="desc">
-		<p>일반 데이터를 그리드의 그룹핑 기능으로 그룹핑했을 때 필터를 어떻게 사용할 수 있는지를 보여주는 데모입니다.</p>
+		<p>그룹핑한 데이터에 필터를 적용합니다. Country와 Product의 필터를 열어 일반 목록과 트리 목록을 비교하세요.</p>
+		<p><code>useTreeFilterMenu: true</code>이면 그룹핑 칼럼의 목록을 계층으로 표시합니다. 일반 칼럼의 필터는 그대로 유지됩니다.</p>
+        <p><label><input id="tree-filter-menu" type="checkbox" checked onchange="changeTreeFilterMenu()">계층 필터 메뉴 사용</label></p>
 	</div>
 	<div>
 		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->

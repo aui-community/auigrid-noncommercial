@@ -69,7 +69,10 @@
 			path: '/Showcase07',
 			name: 'Showcase07',
 			text: '일별 목표치 달성률 그리드'
-		}
+		},
+		// WebDemo 9번과 10번을 프레임워크 쇼케이스 8번과 9번으로 연결합니다.
+		{ path:'/Showcase08', name:'Showcase08', text:'반응형 밴드형 워크스페이스' },
+		{ path:'/Showcase09', name:'Showcase09', text:'자재 발주 및 입고 검수' }
 	];
 	// 일반 샘플 메뉴 리스트
 	const subMenuList: IMenuItem[] = [
@@ -78,6 +81,8 @@
 			name: 'SampleDefault',
 			text: 'JSON 그리드 출력 샘플(제거, 재생성)'
 		},
+		// 기본 출력 다음에 밴드형 레이아웃을 비교합니다.
+		{ path: '/SampleBandBody', name: 'SampleBandBody', text: '밴드형 바디 레이아웃 기본' },
 		{
 			path: '/StylingView',
 			name: 'StylingView',
@@ -141,7 +146,7 @@
 				</li>
 				<li :key="item.name" v-for="(item, index) in mainMenuList">
 					<RouterLink :to="item.path" @click="handleLinkClick" active-class="nav-item-active"
-						><span class="nav-item">{{ index + 1 }}. {{ item.text }}</span></RouterLink
+						><span class="nav-item">{{ Number(item.name.replace('Showcase', '')) }}. {{ item.text }}</span></RouterLink
 					>
 				</li>
 			</ul>

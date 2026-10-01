@@ -1,99 +1,67 @@
-<script>
-	// AUIGrid 컴포넌트
-	import AUIGrid from '../static/AUIGrid-Vue.js/AUIGrid.vue';
+<script setup>
+	import AUIGrid from '@/static/AUIGrid-Vue.js/AUIGrid.vue';
 	import axios from 'axios';
-	// AUIGrid 커스텀 에디트렌더러 import
-	import MyTextareaEditor from '../editRenderers/MyTextareaEditor';
+	import MyTextareaEditor from '@/editRenderers/MyTextareaEditor';
+	import { ref, onMounted } from 'vue';
 
-	export default {
-		components: {
-			AUIGrid
-		},
+	const myGrid = ref(null);
 
-		data: () => ({
-			// 그리드 속성 정의
-			gridProps: {
-				width: '100%',
-				height: 480,
-				editable: true,
-				// 워드랩 개행 처리
-				wordWrap: true,
-				selectionMode: 'multipleCells'
-			},
-
-			// 그리드 칼럼 레이아웃
-			columnLayout: [
-				{
-					dataField: 'no',
-					headerText: 'No.',
-					width: 50
-				},
-				{
-					dataField: 'title',
-					headerText: 'Title',
-					width: 200,
-					editRenderer: {
-						type: 'CustomEditRenderer',
-						jsClass: MyTextareaEditor,
-						vPosition: 'top',
-						fitWidth: true
-					}
-				},
-				{
-					dataField: 'content',
-					headerText: 'Content',
-					style: 'my-wrap-column', // 줄바꿈 문자 들어온 값 그대로 개행 시키기 위한 스타일
-					width: 400,
-					editRenderer: {
-						type: 'CustomEditRenderer',
-						jsClass: MyTextareaEditor,
-						vPosition: 'top',
-						fitWidth: true,
-						extraProps: {
-							confirm: '확 인(Ctrl+Enter)',
-							cancel: '취 소(Esc)'
-						}
-					}
-				},
-				{
-					dataField: 'date',
-					headerText: 'Date',
-					width: 140
-				}
-			]
-		}),
-		created() {
-			console.log('CustomEditRendererTextarea 생성됨');
-		},
-
-		mounted() {
-			console.log('CustomEditRendererTextarea 마운트됨');
-			// 초기 데이터 얻기
-			this.requestGridData();
-		},
-
-		unmounted() {
-			console.log('CustomEditRendererTextarea 언마운트됨');
-		},
-		methods: {
-			// 그리드 데이터 조회하여 삽입
-			requestGridData() {
-				const grid = this.$refs.myGrid;
-				const REQ_URL = './data/article_list.json';
-				grid.showAjaxLoader();
-				axios.get(REQ_URL).then((result) => {
-					//console.log(result);
-					// 그리드 데이터 삽입
-					grid.setGridData(result.data);
-					grid.removeAjaxLoader();
-				});
-			}
-		}
+	const gridProps = {
+		width: '100%',
+		height: 480,
+		editable: true,
+		wordWrap: true,
+		selectionMode: 'multipleCells'
 	};
+
+	const columnLayout = [
+		{ dataField: 'no', headerText: 'No.', width: 50 },
+		{
+			dataField: 'title',
+			headerText: 'Title',
+			width: 200,
+			editRenderer: {
+				type: 'CustomEditRenderer',
+				jsClass: MyTextareaEditor,
+				vPosition: 'top',
+				fitWidth: true
+			}
+		},
+		{
+			dataField: 'content',
+			headerText: 'Content',
+			style: 'my-wrap-column',
+			width: 400,
+			editRenderer: {
+				type: 'CustomEditRenderer',
+				jsClass: MyTextareaEditor,
+				vPosition: 'top',
+				fitWidth: true,
+				extraProps: { confirm: '확 인(Ctrl+Enter)', cancel: '취 소(Esc)' }
+			}
+		},
+		{ dataField: 'date', headerText: 'Date', width: 140 }
+	];
+
+	onMounted(() => {
+		const grid = myGrid.value;
+		grid.showAjaxLoader();
+		axios
+			.get('./data/article_list.json')
+			.then((result) => {
+				grid.setGridData(result.data);
+			})
+			.catch((error) => {
+				console.error('데이터 로드 실패:', error);
+			})
+			.finally(() => {
+				grid.removeAjaxLoader();
+			});
+	});
 </script>
 <template>
 	<div>
-		<div className="desc">
+		<div class="desc">
 			<p>Vue에서 어떻게 CustomEditRenderer 를 정의하고 사용하는지를 보여주는 데모입니다.</p>
 			<p>이 샘플은 일반 JS에 작성한 AUIGrid.TextareaEditor 를 Vue로 출력한 모습입니다.</p>
 			<p>
@@ -104,7 +72,6 @@
 	</div>
 </template>
 <style>
-	/* 줄바꿈 문자 들어온 값 그대로 개행 시키기 위한 스타일 */
 	.my-wrap-column .aui-grid-renderer-base {
 		white-space: pre-wrap;
 	}

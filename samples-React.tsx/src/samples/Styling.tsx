@@ -1,138 +1,67 @@
-import React, { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import * as IGrid from 'aui-grid';
 import AUIGrid from '../static/AUIGrid-React.tsx/AUIGridReact';
 import axios from 'axios';
 import ExportGridDataView from './ExportGridDataView';
 import './Styling.css';
 
-const Syling = () => {
-	// 그리드 객체
+const columnLayout: IGrid.Column[] = [
+	{ dataField: 'orderId', headerText: 'Order ID', width: 140 },
+	{ dataField: 'country', headerText: 'Country', style: 'my-column-style2' },
+	{ dataField: 'name', headerText: 'Name' },
+	{
+		dataField: 'product',
+		headerText: 'Product',
+		style: 'my-column-style',
+		styleFunction: (_rowIndex, _columnIndex, value) => {
+			if (value === 'Galaxy S25') return 'my-cell-style';
+		}
+	},
+	{ dataField: 'price', headerText: 'Price', dataType: 'numeric', style: 'my-right-column' },
+	{ dataField: 'phone', headerText: 'Phone' },
+	{ dataField: 'date', headerText: 'Date' }
+];
+
+const footerLayout: IGrid.Footer[] = [
+	{ dataField: 'price', positionField: 'price', operation: 'SUM', formatString: '#,##0', style: 'aui-grid-my-footer-sum-total2' },
+	{ dataField: 'price', positionField: 'date', operation: 'COUNT', style: 'aui-grid-my-footer-sum-total2' },
+	{ labelText: 'Count=>', positionField: 'phone', style: 'aui-grid-my-footer-sum-total2' }
+];
+
+const gridProps: IGrid.Props = {
+	width: '100%',
+	height: 480,
+	showFooter: true,
+	editable: true,
+	showRowNumColumn: true,
+	showRowCheckColumn: true,
+	displayTreeOpen: true,
+	selectionMode: 'multipleCells',
+	useGroupingPanel: true,
+	rowStyleFunction: (_rowIndex, item) => {
+		if (item.country === 'USA') return 'my-row-style';
+	}
+};
+
+const Styling = () => {
 	const myGrid = useRef<AUIGrid>(null);
 
-	// 그리드 칼럼 레이아웃 정의
-	const columnLayout: IGrid.Column[] = [
-		{
-			dataField: 'orderId',
-			headerText: 'Order ID',
-			width: 140
-		},
-		{
-			dataField: 'country',
-			headerText: 'Country',
-			style: 'my-column-style2'
-		},
-		{
-			dataField: 'name',
-			headerText: 'Name'
-		},
-		{
-			dataField: 'product',
-			headerText: 'Product',
-			style: 'my-column-style',
-			styleFunction: (rowIndex, columnIndex, value) => {
-				if (value === 'Galaxy S25') {
-					return 'my-cell-style';
-				}
-			}
-		},
-		{
-			dataField: 'price',
-			headerText: 'Price',
-			dataType: 'numeric',
-			style: 'my-right-column'
-		},
-		{
-			dataField: 'phone',
-			headerText: 'Phone'
-		},
-		{
-			dataField: 'date',
-			headerText: 'Date'
-		}
-	];
-
-	// 푸터 레이아웃 설정
-	const footerLayout: IGrid.Footer[] = [
-		{
-			dataField: 'price',
-			positionField: 'price',
-			operation: 'SUM',
-			formatString: '#,##0',
-			style: 'aui-grid-my-footer-sum-total2'
-		},
-		{
-			dataField: 'price',
-			positionField: 'date',
-			operation: 'COUNT',
-			style: 'aui-grid-my-footer-sum-total2'
-		},
-		{
-			labelText: 'Count=>',
-			positionField: 'phone',
-			style: 'aui-grid-my-footer-sum-total2'
-		}
-	];
-
-	// 그리드 속성 정의
-	const gridProps: IGrid.Props = {
-		width: '100%',
-		height: 480,
-		showFooter: true,
-		editable: true,
-		showRowNumColumn: true,
-		showRowCheckColumn: true,
-		displayTreeOpen: true,
-		// singleRow 선택모드
-		selectionMode: 'multipleCells',
-		// 그룹핑 패널 사용
-		useGroupingPanel: true,
-		// row Styling 함수
-		rowStyleFunction: (rowIndex, item) => {
-			if (item.country === 'USA') {
-				return 'my-row-style';
-			}
-		}
-	};
-
 	useEffect(() => {
-		console.log('Syling 마운트됨');
-
-		// 최초 마운팅 될 때 그리드 데이터 조회시키기
-		requestGridData();
-
-		return () => {
-			console.log('Syling 언마운트됨');
-		};
-	}, []);
-
-	// row Styling 함수를 다른 함수로 변경
-	const changeRowStyleFunction = () => {
 		const grid = myGrid.current as AUIGrid;
-
-		// row Styling 함수를 다른 함수로 변경
-		grid.setProp('rowStyleFunction', (rowIndex: number, item: any) => {
-			if (item.country === 'UK') {
-				return 'my-row-style';
-			}
-		});
-
-		// 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
-		grid.update();
-	};
-
-	// 그리드 데이터 조회하여 삽입
-	const requestGridData = () => {
-		const grid = myGrid.current as AUIGrid;
-		const REQ_URL = './data/country_phone_500.json';
-
 		grid.showAjaxLoader();
-		axios.get(REQ_URL).then((result) => {
-			//console.log(result);
-			// 그리드 데이터 삽입
+		axios.get('./data/country_phone_500.json').then((result) => {
 			grid.setGridData(result.data);
 			grid.removeAjaxLoader();
 		});
-	};
+	}, []);
+
+	const changeRowStyleFunction = useCallback(() => {
+		const grid = myGrid.current as AUIGrid;
+		grid.setProp('rowStyleFunction', (_rowIndex: number, item: any) => {
+			if (item.country === 'UK') return 'my-row-style';
+		});
+		grid.update();
+	}, []);
 
 	return (
 		<div>
@@ -152,4 +81,4 @@ const Syling = () => {
 	);
 };
 
-export default Syling;
+export default Styling;
