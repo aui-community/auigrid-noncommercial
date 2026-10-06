@@ -1,0 +1,14 @@
+[
+	{ "time": "09:00 ~ 09:30", "mon": "신규 입사자 교육", "tue": null, "wed": "프로젝트 실무", "thu": null, "fri": "정기 세미나" },
+	{ "time": "09:30 ~ 10:00", "mon": "신규 입사자 교육", "tue": null, "wed": "프로젝트 실무", "thu": null, "fri": "정기 세미나" },
+	{ "time": "10:00 ~ 10:30", "mon": "제품 교육", "tue": "고객 응대 교육", "wed": null, "thu": "보고서 작성", "fri": null },
+	{ "time": "10:30 ~ 11:00", "mon": "제품 교육", "tue": "고객 응대 교육", "wed": null, "thu": "보고서 작성", "fri": null },
+	{ "time": "11:00 ~ 11:30", "mon": null, "tue": "개인정보 보호", "wed": "데이터 분석", "thu": null, "fri": "팀 리더 교육" },
+	{ "time": "11:30 ~ 12:00", "mon": null, "tue": "개인정보 보호", "wed": "데이터 분석", "thu": null, "fri": "팀 리더 교육" },
+	{ "time": "12:00 ~ 12:30", "mon": null, "tue": null, "wed": null, "thu": null, "fri": null },
+	{ "time": "12:30 ~ 13:00", "mon": null, "tue": null, "wed": null, "thu": null, "fri": null },
+	{ "time": "13:00 ~ 13:30", "mon": "업무 도구 실습", "tue": null, "wed": "협업 워크숍", "thu": "안전 교육", "fri": null },
+	{ "time": "13:30 ~ 14:00", "mon": "업무 도구 실습", "tue": null, "wed": "협업 워크숍", "thu": "안전 교육", "fri": null },
+	{ "time": "14:00 ~ 14:30", "mon": null, "tue": "프레젠테이션 실습", "wed": "협업 워크숍", "thu": null, "fri": "교육 결과 공유" },
+	{ "time": "14:30 ~ 15:00", "mon": null, "tue": "프레젠테이션 실습", "wed": null, "thu": null, "fri": "교육 결과 공유" }
+]

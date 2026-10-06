@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,153 +37,258 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+        <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+        <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style>
-	.aui-grid-default-column {
-		text-align: right;
-	}
+        <style>
+            .aui-grid-default-column {
+                text-align: right;
+            }
 
-	.aui-grid-default-footer {
-		text-align: right;
-	}
+            .aui-grid-default-footer {
+                text-align: right;
+            }
 
-	.aui-grid-my-column {
-		text-align: center;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            .aui-grid-my-column {
+                text-align: center;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 삽입
-		AUIGrid.setGridData(myGridID, gridData);
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 삽입
+                AUIGrid.setGridData(myGridID, gridData);
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "p2401",
-			headerText: "`24 1월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			xlsxNumeric: true // 엑셀에 실제 숫자값으로 내보내기 함.
-		}, {
-			dataField: "p2402",
-			headerText: "`24 2월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}, {
-			dataField: "p2403",
-			headerText: "`24 3월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}, {
-			dataField: "p2404",
-			headerText: "`24 4월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}, {
-			dataField: "p2405",
-			headerText: "`24 5월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}, {
-			dataField: "p2406",
-			headerText: "`24 6월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "p2401",
+                        headerText: "`24 1월",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        xlsxNumeric: true // 엑셀에 실제 숫자값으로 내보내기 함.
+                    },
+                    {
+                        dataField: "p2402",
+                        headerText: "`24 2월",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    },
+                    {
+                        dataField: "p2403",
+                        headerText: "`24 3월",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    },
+                    {
+                        dataField: "p2404",
+                        headerText: "`24 4월",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    },
+                    {
+                        dataField: "p2405",
+                        headerText: "`24 5월",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    },
+                    {
+                        dataField: "p2406",
+                        headerText: "`24 6월",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    }
+                ];
 
-		// 그리드 푸터 설정
-		const footerLayout = [{
-			labelText: "∑",
-			positionField: "#base"
-		}, {
-			dataField: "p2401",
-			positionField: "p2401",
-			operation: "SUM",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}, {
-			dataField: "p2402",
-			positionField: "p2402",
-			operation: "SUM",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}, {
-			dataField: "p2403",
-			positionField: "p2403",
-			operation: "SUM",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}, {
-			dataField: "p2404",
-			positionField: "p2404",
-			operation: "SUM",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}, {
-			dataField: "p2405",
-			positionField: "p2405",
-			operation: "SUM",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}, {
-			dataField: "p2406",
-			positionField: "p2406",
-			operation: "SUM",
-			formatString: "#,##0",
-			xlsxNumeric: true
-		}];
+                // 그리드 푸터 설정
+                const footerLayout = [
+                    {
+                        labelText: "∑",
+                        positionField: "#base"
+                    },
+                    {
+                        dataField: "p2401",
+                        positionField: "p2401",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    },
+                    {
+                        dataField: "p2402",
+                        positionField: "p2402",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    },
+                    {
+                        dataField: "p2403",
+                        positionField: "p2403",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    },
+                    {
+                        dataField: "p2404",
+                        positionField: "p2404",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    },
+                    {
+                        dataField: "p2405",
+                        positionField: "p2405",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    },
+                    {
+                        dataField: "p2406",
+                        positionField: "p2406",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        xlsxNumeric: true
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			editable: true,
-			showFooter: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    editable: true,
+                    showFooter: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 푸터 레이아웃 세팅
-		AUIGrid.setFooter(myGridID, footerLayout);
-	}
+                // 푸터 레이아웃 세팅
+                AUIGrid.setFooter(myGridID, footerLayout);
+            }
 
-	// 엑셀 내보내기
-	function exportToXlsx() {
-		AUIGrid.exportToXlsx(myGridID);
-	}
+            // 엑셀 내보내기
+            function exportToXlsx() {
+                AUIGrid.exportToXlsx(myGridID);
+            }
 
-	// 그리드 데이터
-	const gridData = [{ "p2401": 29255.751, "p2402": 3823.378, "p2403": 41212.823, "p2404": 23590.235, "p2405": 2448.296, "p2406": 32107.704 }, { "p2401": 54374.55, "p2402": 87234.056, "p2403": 45987.87, "p2404": 11091.455, "p2405": 82144.722, "p2406": 75501.729 }, { "p2401": 66904.017, "p2402": 1952.701, "p2403": 58603.54, "p2404": 48023.533, "p2405": 93911.47, "p2406": 24009.975 }, { "p2401": 16412.34, "p2402": 58300.477, "p2403": 92042.498, "p2404": 40087.331, "p2405": 85772.042, "p2406": 23849.779 }, { "p2401": 82004.538, "p2402": 9420.859, "p2403": 66286.95, "p2404": 43979.225, "p2405": 94878.831, "p2406": 85768.203 }, { "p2401": 32563.168, "p2402": 84336.059, "p2403": 37673.615, "p2404": 67447.628, "p2405": 16722.124, "p2406": 77966.204 }, { "p2401": 72938.327, "p2402": 76123.628, "p2403": 33881.893, "p2404": 43855.07, "p2405": 98512.707, "p2406": 91990.392 }, { "p2401": 38123.53, "p2402": 27523.468, "p2403": 5934.014, "p2404": 42097.665, "p2405": 23249.859, "p2406": 68614.59 }, { "p2401": 20835.324, "p2402": 84015.898, "p2403": 1299.714, "p2404": 42307.815, "p2405": 12222.069, "p2406": 68374.894 }, { "p2401": 76496.285, "p2402": 36723.652, "p2403": 43838.274, "p2404": 43229.142, "p2405": 63568.136, "p2406": 90477.135 }];
-</script>
-</head>
-<body>
+            // 그리드 데이터
+            const gridData = [
+                {
+                    "p2401": 29255.751,
+                    "p2402": 3823.378,
+                    "p2403": 41212.823,
+                    "p2404": 23590.235,
+                    "p2405": 2448.296,
+                    "p2406": 32107.704
+                },
+                {
+                    "p2401": 54374.55,
+                    "p2402": 87234.056,
+                    "p2403": 45987.87,
+                    "p2404": 11091.455,
+                    "p2405": 82144.722,
+                    "p2406": 75501.729
+                },
+                {
+                    "p2401": 66904.017,
+                    "p2402": 1952.701,
+                    "p2403": 58603.54,
+                    "p2404": 48023.533,
+                    "p2405": 93911.47,
+                    "p2406": 24009.975
+                },
+                {
+                    "p2401": 16412.34,
+                    "p2402": 58300.477,
+                    "p2403": 92042.498,
+                    "p2404": 40087.331,
+                    "p2405": 85772.042,
+                    "p2406": 23849.779
+                },
+                {
+                    "p2401": 82004.538,
+                    "p2402": 9420.859,
+                    "p2403": 66286.95,
+                    "p2404": 43979.225,
+                    "p2405": 94878.831,
+                    "p2406": 85768.203
+                },
+                {
+                    "p2401": 32563.168,
+                    "p2402": 84336.059,
+                    "p2403": 37673.615,
+                    "p2404": 67447.628,
+                    "p2405": 16722.124,
+                    "p2406": 77966.204
+                },
+                {
+                    "p2401": 72938.327,
+                    "p2402": 76123.628,
+                    "p2403": 33881.893,
+                    "p2404": 43855.07,
+                    "p2405": 98512.707,
+                    "p2406": 91990.392
+                },
+                {
+                    "p2401": 38123.53,
+                    "p2402": 27523.468,
+                    "p2403": 5934.014,
+                    "p2404": 42097.665,
+                    "p2405": 23249.859,
+                    "p2406": 68614.59
+                },
+                {
+                    "p2401": 20835.324,
+                    "p2402": 84015.898,
+                    "p2403": 1299.714,
+                    "p2404": 42307.815,
+                    "p2405": 12222.069,
+                    "p2406": 68374.894
+                },
+                {
+                    "p2401": 76496.285,
+                    "p2402": 36723.652,
+                    "p2403": 43838.274,
+                    "p2404": 43229.142,
+                    "p2405": 63568.136,
+                    "p2406": 90477.135
+                }
+            ];
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>그리드에 출력된 숫자는 formatString 에 의해 포맷팅되어 출력된 모습입니다.</p>
-		<p>예로 첫 셀의 값인 "29,256" 의 실제 값은 29255.751 입니다. 이 실제값을 보기 좋게 "#,##0" 으로 포맷팅하였습니다.</p>
-		<p>기본적으로 엑셀로 내보내기 할 때 "29,256" 은 그대로 "29,256" 으로 내보내기 됩니다.</p>
-		<p>그러나 엑셀 내보내기 할 때 29255.751 로 내보내기 할 수 있습니다.</p>
-		<p>xlsxNumeric을 true 로 설정하면 엑셀에서 더블클릭 시 보이는 값(또는 엑셀의 수식창의 값)은 29255.751 로 나타나게 됩니다.</p>
-		<p>참고 : xlsxNumeric 은 formatString 이외 prefix, postfix, labelFunction 등으로 포맷팅한 경우 무시됩니다.(formatString 설정 시에만 사용 가능함)</p>
-		<p>또한 rounding 속성으로 소수점을 반올림처리 할 때만 유효합니다.</p>
-		<p><span onclick="exportToXlsx();" class="btn">엑셀로 내보내기</span></p>
-		<div class="src_cover">
-			<pre>
+            <div id="main">
+                <div class="desc">
+                    <p>그리드에 출력된 숫자는 formatString 에 의해 포맷팅되어 출력된 모습입니다.</p>
+                    <p>
+                        예로 첫 셀의 값인 "29,256" 의 실제 값은 29255.751 입니다. 이 실제값을 보기 좋게 "#,##0" 으로
+                        포맷팅하였습니다.
+                    </p>
+                    <p>기본적으로 엑셀로 내보내기 할 때 "29,256" 은 그대로 "29,256" 으로 내보내기 됩니다.</p>
+                    <p>그러나 엑셀 내보내기 할 때 29255.751 로 내보내기 할 수 있습니다.</p>
+                    <p>
+                        xlsxNumeric을 true 로 설정하면 엑셀에서 더블클릭 시 보이는 값(또는 엑셀의 수식창의 값)은
+                        29255.751 로 나타나게 됩니다.
+                    </p>
+                    <p>
+                        참고 : xlsxNumeric 은 formatString 이외 prefix, postfix, labelFunction 등으로 포맷팅한 경우
+                        무시됩니다.(formatString 설정 시에만 사용 가능함)
+                    </p>
+                    <p>또한 rounding 속성으로 소수점을 반올림처리 할 때만 유효합니다.</p>
+                    <p><span onclick="exportToXlsx()" class="btn">엑셀로 내보내기</span></p>
+                    <div class="src_cover">
+                        <pre>
 const columnLayout = [{
 	...
 }, {
@@ -185,16 +298,16 @@ const columnLayout = [{
 	formatString : "#,##0",
 	xlsxNumeric : true // 엑셀에 실제 숫자값으로 내보내기 함.
 </pre>
-		</div>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:320px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 320px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

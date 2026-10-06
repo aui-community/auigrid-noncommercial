@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,151 +37,166 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+        <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+        <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+        <style>
+            /* 칼럼 스타일 전체 재정의 */
+            .aui-grid-default-column {
+                text-align: right;
+            }
 
-<style>
-	/* 칼럼 스타일 전체 재정의 */
-	.aui-grid-default-column {
-		text-align: right;
-	}
+            .aui-grid-tree-leaf-icon {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                background: transparent;
+                margin: 0 2px 0 4px;
+            }
 
-	.aui-grid-tree-leaf-icon {
-		display: inline-block;
-		width: 16px;
-		height: 16px;
-		background: transparent;
-		margin: 0 2px 0 4px;
-	}
+            /****** 트리 아이콘 재정의 끝******/
 
-	/****** 트리 아이콘 재정의 끝******/
+            /* 그리드 총합 행에 적용할 스타일 정의*/
+            .my-custom-sum-row {
+                text-align: right;
+                font-weight: bold;
+                color: #2f9d27;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	/* 그리드 총합 행에 적용할 스타일 정의*/
-	.my-custom-sum-row {
-		text-align: right;
-		font-weight: bold;
-		color: #2F9D27;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/revenue_tree.json");
+            }
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/revenue_tree.json");
-	}
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "qtr",
+                        headerText: "분기",
+                        cellMerge: true, // 셀병합 실행 칼럼 설정
+                        width: 150
+                    },
+                    {
+                        dataField: "p1",
+                        headerText: "춘천/강원",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        width: 120
+                    },
+                    {
+                        dataField: "p2",
+                        headerText: "서울/경기",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        width: 120
+                    },
+                    {
+                        dataField: "p3",
+                        headerText: "대전/충청",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        width: 120
+                    },
+                    {
+                        dataField: "p4",
+                        headerText: "광주/전라",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        width: 120
+                    },
+                    {
+                        dataField: "p5",
+                        headerText: "부산/경상",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        width: 120
+                    },
+                    {
+                        dataField: "p6",
+                        headerText: "제주",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        width: 120
+                    },
+                    {
+                        dataField: "p7",
+                        headerText: "기타",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        width: 120
+                    }
+                ];
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "qtr",
-			headerText: "분기",
-			cellMerge: true, // 셀병합 실행 칼럼 설정
-			width: 150
-		}, {
-			dataField: "p1",
-			headerText: "춘천/강원",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120
-		}, {
-			dataField: "p2",
-			headerText: "서울/경기",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120
-		}, {
-			dataField: "p3",
-			headerText: "대전/충청",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120
-		}, {
-			dataField: "p4",
-			headerText: "광주/전라",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120
-		}, {
-			dataField: "p5",
-			headerText: "부산/경상",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120
-		}, {
-			dataField: "p6",
-			headerText: "제주",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120
-		}, {
-			dataField: "p7",
-			headerText: "기타",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120
-		}];
+                // 그리드 속성 설정
+                const gridProps = {
+                    editable: true,
+                    fixedColumnCount: 1,
+                    fixedRowCount: 1,
+                    defaultColumnWidth: 100,
+                    displayTreeOpen: true,
+                    enableCellMerge: true, // 셀병합 사용.
+                    // row Styling 함수
+                    rowStyleFunction: function (rowIndex, item) {
+                        // TOTAL SUM 에 해당되는 행 스타일하기
+                        if (item.isTotalSumField) {
+                            // 데이터 작성 시 Sum Row 는 isTotalSumField 을 추가시켜놓음 ( 데이터 참고 )
+                            return "my-custom-sum-row";
+                        }
+                    }
+                };
 
-		// 그리드 속성 설정
-		const gridProps = {
-			editable: true,
-			fixedColumnCount: 1,
-			fixedRowCount: 1,
-			defaultColumnWidth: 100,
-			displayTreeOpen: true,
-			enableCellMerge: true, // 셀병합 사용.
-			// row Styling 함수
-			rowStyleFunction: function (rowIndex, item) {
-				// TOTAL SUM 에 해당되는 행 스타일하기
-				if (item.isTotalSumField) { // 데이터 작성 시 Sum Row 는 isTotalSumField 을 추가시켜놓음 ( 데이터 참고 )
-					return "my-custom-sum-row";
-				}
-			}
-		};
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
+            let isExpanded = true;
+            function expand() {
+                if (!isExpanded) {
+                    AUIGrid.expandAll(myGridID);
+                    isExpanded = true;
+                    return;
+                }
+                AUIGrid.collapseAll(myGridID);
+                isExpanded = false;
+            }
 
-	let isExpanded = true;
-	function expand() {
-		if (!isExpanded) {
-			AUIGrid.expandAll(myGridID);
-			isExpanded = true;
-			return;
-		}
-		AUIGrid.collapseAll(myGridID);
-		isExpanded = false;
-	}
+            // 엑셀 내보내기(Export);
+            function exportClick() {
+                // 내보내기 실행
+                AUIGrid.exportToXlsx(myGridID);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-	// 엑셀 내보내기(Export);
-	function exportClick() {
-		// 내보내기 실행
-		AUIGrid.exportToXlsx(myGridID);
-	}
-</script>
-</head>
-<body>
-
-<div id="main">
-	<div class="desc" style="height:150px;">
-		<p>트리 그리드(계층형 데이터 표현)에서 셀 병합을 한 모습입니다.</p>
-		<p>셀 병합은 셀 병합 칼럼에 같은 데이터(같은 텍스트)인 경우 자동으로 병합이 됩니다. (enableCellMerge=true 설정)</p>
-		<p>총합(TOTAL SUM) 에 해당되는 행을 고정 행으로 지정하고 스타일을 적용 시킨 모습입니다.</p>
-		<p><button onclick="expand()" class="btn">모두 열기/ 닫기</button><button class="btn" onclick="exportClick()">엑셀(xlsx)로 저장</button></p>
-	</div>
-	<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-	<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc" style="height: 150px">
+                    <p>트리 그리드(계층형 데이터 표현)에서 셀 병합을 한 모습입니다.</p>
+                    <p>
+                        셀 병합은 셀 병합 칼럼에 같은 데이터(같은 텍스트)인 경우 자동으로 병합이 됩니다.
+                        (enableCellMerge=true 설정)
+                    </p>
+                    <p>총합(TOTAL SUM) 에 해당되는 행을 고정 행으로 지정하고 스타일을 적용 시킨 모습입니다.</p>
+                    <p>
+                        <button onclick="expand()" class="btn">모두 열기/ 닫기</button
+                        ><button class="btn" onclick="exportClick()">엑셀(xlsx)로 저장</button>
+                    </p>
+                </div>
+                <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

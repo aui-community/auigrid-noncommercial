@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -28,412 +36,325 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+        <!-- 제품 테마는 유지하고 업무 화면의 조작 도구만 별도로 구성합니다. -->
+        <link href="./style/showcase-workspaces.css?v=20261006-3" rel="stylesheet" />
+        <script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <script src="../export_server_samples/FileSaver.min.js"></script>
+        <script>
+            let myGridID;
+            let nextResource = 601;
+            const states = ["가동", "예약", "점검", "유휴"];
+            const stateClasses = {
+                "가동": "resource-active",
+                "예약": "resource-reserved",
+                "점검": "resource-maintenance",
+                "유휴": "resource-idle"
+            };
+            const sites = ["수도권 센터", "중부 센터", "남부 센터", "동부 센터", "서부 센터"];
+            const resourceTypes = [
+                "자율이동 로봇",
+                "무인 운반차",
+                "전동 지게차",
+                "3D 프린터",
+                "정밀 측정기",
+                "비전 검사기"
+            ];
+            const dayFields = Array.from({ length: 31 }, (_, index) => "d" + (index + 1));
+            const numberFormat = new Intl.NumberFormat("ko-KR");
+            // 자원마다 다른 연속 가동, 예약 및 점검 구간을 만들며 같은 번호는 항상 같은 일정을 갖습니다.
+            function makeResource(index, empty = false) {
+                const type = resourceTypes[index % resourceTypes.length],
+                    serial = String(index + 1).padStart(4, "0");
+                const item = {
+                    id: "R" + serial,
+                    asset: type + " #" + serial,
+                    category: type,
+                    site: sites[Math.floor(index / resourceTypes.length) % sites.length]
+                };
+                dayFields.forEach((field, day) => {
+                    const phase = (day + index * 7) % 31;
+                    const weekend = [0, 6].includes(new Date(2026, 9, day + 1).getDay());
+                    item[field] = empty
+                        ? "유휴"
+                        : phase < 2
+                          ? "점검"
+                          : phase < 6
+                            ? "예약"
+                            : weekend && index % 3 !== 0
+                              ? "유휴"
+                              : phase > 27
+                                ? "유휴"
+                                : "가동";
+                });
+                return item;
+            }
+            // 출석표처럼 날짜 셀의 상태를 세어 월간 집계와 가동률을 즉시 계산합니다.
+            function stateCount(row, col, item, field) {
+                const expected = {
+                    active: "가동",
+                    reserved: "예약",
+                    maintenance: "점검",
+                    idle: "유휴",
+                    utilization: "가동"
+                }[field];
+                const count = dayFields.reduce((sum, day) => sum + (item[day] === expected ? 1 : 0), 0);
+                return field === "utilization" ? count / 31 : count;
+            }
+            function init() {
+                const columns = [
+                    {
+                        dataField: "asset",
+                        headerText: "관리 자원",
+                        width: 190,
+                        editable: false,
+                        style: "workspace-left"
+                    },
+                    { dataField: "site", headerText: "운영 거점", width: 100, editable: false },
+                    {
+                        headerText: "월간 집계 (일)",
+                        children: [
+                            ...[
+                                ["active", "가동"],
+                                ["reserved", "예약"],
+                                ["maintenance", "점검"],
+                                ["idle", "유휴"]
+                            ].map(([field, label]) => ({
+                                dataField: field,
+                                headerText: label,
+                                width: 48,
+                                dataType: "numeric",
+                                editable: false,
+                                expFunction: stateCount,
+                                headerStyle: stateClasses[label]
+                            })),
+                            {
+                                dataField: "utilization",
+                                headerText: "가동률",
+                                width: 140,
+                                dataType: "numeric",
+                                editable: false,
+                                expFunction: stateCount,
+                                // 계산된 0~1 비율을 막대와 백분율 텍스트로 함께 표시합니다.
+                                renderer: {
+                                    type: "PercentageRenderer",
+                                    showBar: true,
+                                    showLabel: true,
+                                    precision: 0,
+                                    offset: 8
+                                }
+                            }
+                        ]
+                    }
+                ];
+                const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
+                dayFields.forEach((field, index) => {
+                    const day = new Date(2026, 9, index + 1).getDay();
+                    columns.push({
+                        headerText: weekdays[day],
+                        children: [
+                            {
+                                dataField: field,
+                                headerText: String(index + 1),
+                                width: 44,
+                                headerStyle: day === 0 || day === 6 ? "resource-weekend" : "",
+                                styleFunction: (row, col, value) => stateClasses[value],
+                                editRenderer: { type: "DropDownListRenderer", list: states }
+                            }
+                        ]
+                    });
+                });
+                myGridID = AUIGrid.create("#grid_wrap", columns, {
+                    rowIdField: "id",
+                    rowIdTrustMode: true,
+                    editable: true,
+                    enableUndoRedo: true,
+                    softRemoveRowMode: false,
+                    showStateColumn: true,
+                    showRowNumColumn: true,
+                    rowHeight: 28,
+                    headerHeight: 26,
+                    showFooter: true,
+                    enableFilter: true,
+                    selectionMode: "multipleCells",
+                    fixedColumnCount: matchMedia("(max-width:760px)").matches ? 0 : 2
+                });
+                AUIGrid.setFooter(myGridID, [
+                    { positionField: "asset", labelText: "조회 자원 일수 합계", colSpan: 2 },
+                    ...["active", "reserved", "maintenance", "idle"].map((field) => ({
+                        dataField: field,
+                        positionField: field,
+                        operation: "SUM",
+                        formatString: "#,##0"
+                    }))
+                ]);
+                AUIGrid.bind(myGridID, "cellEditEndBefore", (event) =>
+                    dayFields.includes(event.dataField) && !states.includes(event.value) ? event.oldValue : event.value
+                );
+                AUIGrid.bind(myGridID, ["cellEditEnd", "undoRedoChange"], () =>
+                    queueMicrotask(() => {
+                        if (myGridID) updateResourceCount();
+                    })
+                );
+                AUIGrid.setGridData(
+                    myGridID,
+                    Array.from({ length: 600 }, (_, index) => makeResource(index))
+                );
+                updateResourceCount();
+                window.addEventListener("resize", syncFixedColumns);
+            }
+            function updateResourceCount() {
+                document.getElementById("resource-count").textContent =
+                    numberFormat.format(AUIGrid.getRowCount(myGridID)) +
+                    " / " +
+                    numberFormat.format(AUIGrid.getOrgGridData(myGridID).length) +
+                    "개 자원";
+                document.getElementById("resource-undo").disabled = !AUIGrid.undoable(myGridID);
+            }
+            function filterResources() {
+                AUIGrid.forceEditingComplete(myGridID, null);
+                const site = document.getElementById("resource-site").value,
+                    type = document.getElementById("resource-type").value,
+                    query = document.getElementById("resource-search").value.trim().toLowerCase();
+                AUIGrid.setFilter(
+                    myGridID,
+                    "asset",
+                    (field, value, item) =>
+                        (site === "전체" || item.site === site) &&
+                        (type === "전체" || item.category === type) &&
+                        (!query || item.asset.toLowerCase().includes(query))
+                );
+                updateResourceCount();
+            }
+            function applyState() {
+                AUIGrid.forceEditingComplete(myGridID, null);
+                const updates = new Map(),
+                    value = document.getElementById("resource-state").value;
+                // 행 ID별 변경을 모아 한 번에 적용하면 범위 편집도 한 번의 Undo로 취소할 수 있습니다.
+                AUIGrid.getSelectedItems(myGridID).forEach((cell) => {
+                    if (!dayFields.includes(cell.dataField)) return;
+                    if (!updates.has(cell.item.id)) updates.set(cell.item.id, { id: cell.item.id });
+                    updates.get(cell.item.id)[cell.dataField] = value;
+                });
+                if (updates.size) AUIGrid.updateRowsById(myGridID, [...updates.values()]);
+                document.getElementById("resource-message").textContent = updates.size
+                    ? updates.size + "개 자원의 선택한 날짜를 " + value + " 상태로 변경했습니다."
+                    : "먼저 날짜 셀이나 날짜 범위를 선택하세요.";
+                updateResourceCount();
+            }
+            function addResource() {
+                AUIGrid.forceEditingComplete(myGridID, null);
+                document.getElementById("resource-site").value = "전체";
+                document.getElementById("resource-type").value = "전체";
+                document.getElementById("resource-search").value = "";
+                filterResources();
+                AUIGrid.addRow(myGridID, makeResource(nextResource++ - 1, true), "last");
+                updateResourceCount();
+            }
+            function removeResource() {
+                AUIGrid.forceEditingComplete(myGridID, null);
+                AUIGrid.removeRow(myGridID, "selectedIndex");
+                updateResourceCount();
+            }
+            function undoResource() {
+                AUIGrid.forceEditingComplete(myGridID, null);
+                AUIGrid.undo(myGridID);
+                updateResourceCount();
+            }
+            // 좁은 화면에서는 고정 열을 풀어 날짜 칼럼에도 충분한 스크롤 영역을 제공합니다.
+            function syncFixedColumns() {
+                if (myGridID) AUIGrid.setFixedColumnCount(myGridID, matchMedia("(max-width:760px)").matches ? 0 : 2);
+            }
+            function exportReport(format) {
+                AUIGrid.forceEditingComplete(myGridID, null);
+                const props = { fileName: "자원운영표_2026_10" };
+                if (format === "pdf")
+                    AUIGrid.exportToPdf(myGridID, { ...props, fontPath: "../pdfkit/nyjgothic-medium.ttf" });
+                else AUIGrid.exportToXlsx(myGridID, props);
+            }
+            function disposeDemo(event) {
+                if (event.persisted) return;
+                AUIGrid.destroy(myGridID);
+                myGridID = null;
+                window.removeEventListener("resize", syncFixedColumns);
+                window.removeEventListener("pagehide", disposeDemo);
+            }
+            window.addEventListener("pagehide", disposeDemo);
+        </script>
+    </head>
+<body class="demo-typography">
 
-<!-- PDF 내보내기 필수 JS 추가-->
-<script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
-
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
-
-<style>
-	/* 커스텀 셀 스타일 정의 */
-	.mycustom-n {
-		background: #eeeeee;
-		color: #000;
-	}
-
-	.mycustom-t {
-		background: #53C14B;
-		color: #000;
-	}
-
-	.mycustom-u {
-		background: #DE4F4F;
-		color: #000;
-	}
-
-	.mycustom-e {
-		background: #F2CB61;
-		color: #000;
-	}
-
-	.mycustom-p {
-		background: #FFF29E;
-		color: #000;
-	}
-
-	.legend {
-		display: inline-block;
-		text-align: center;
-		width: 30px;
-		margin: 0.5em;
-		padding: 0.25em;
-	}
-
-	.custmom-bar {
-		border: 1px solid #E4E4E4;
-		background: #008299;
-		background: -webkit-linear-gradient(left, #5CD1E5, #008299);
-		background: -moz-linear-gradient(left, #5CD1E5, #008299);
-		background: -ms-linear-gradient(left, #5CD1E5, #008299);
-		background: -o-linear-gradient(left, #5CD1E5, #008299);
-		background: linear-gradient(to right, #5CD1E5, #008299);
-	}
-</style>
-
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
-
-	// 시작점
-	function init() {
-		// 칼럼 레이아웃을 생성하여 반환합니다.
-		const columnLayout = createColumnLayout();
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		loadGridData();
-	}
-
-	// 칼럼 레이아웃을 생성하여 반환합니다. (동적 생성)
-	function createColumnLayout() {
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "학생이름",
-			filter: {
-				showIcon: true,
-				useExMenu: true
-			}
-		}];
-
-		const column = {
-			headerText: "합 계",
-			children: [
-				{ dataField: "ct", expFunction: myExpFunction, editable: false, headerText: "T", width: 40, headerStyle: "mycustom-t", dataType: "numeric", headerTooltip: { show: true, tooltipHtml: "지각" } },
-				{ dataField: "ce", expFunction: myExpFunction, editable: false, headerText: "E", width: 40, headerStyle: "mycustom-e", dataType: "numeric", headerTooltip: { show: true, tooltipHtml: "사정 상 결석" } },
-				{ dataField: "cu", expFunction: myExpFunction, editable: false, headerText: "U", width: 40, headerStyle: "mycustom-u", dataType: "numeric", headerTooltip: { show: true, tooltipHtml: "무단 결석" } },
-				{ dataField: "cp", expFunction: myExpFunction, editable: false, headerText: "P", width: 40, headerStyle: "mycustom-p", dataType: "numeric", headerTooltip: { show: true, tooltipHtml: "출석" } },
-				{ dataField: "ceu", expFunction: myExpFunction, editable: false, headerText: "결석 일수", width: 100, dataType: "numeric", renderer: { type: "BarRenderer", max: 10, style: "custmom-bar" } }]
-		};
-		columnLayout.push(column);
-
-		const days = ["일", "월", "화", "수", "목", "금", "토"];
-		for (let i = 1; i <= 31; i++) {
-			const column = {};
-			column.headerText = days[i % 7];
-			column.children = [{
-				dataField: "d" + i,
-				headerText: i,
-				width: 40,
-				styleFunction: cellStyleFunction
-			}];
-			columnLayout.push(column);
-		}
-		return columnLayout;
-	}
-
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
-		// 그리드 속성 설정
-		const gridProps = createGridProps();
-
-		// 그리드 푸터 설정
-		const footerLayout = createFooterLayout();
-
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-		bindGridEvents();
-
-		// 푸터 레이아웃 세팅
-		AUIGrid.setFooter(myGridID, footerLayout);
-	}
-
-	// 셀스타일 함수 정의
-	function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField) {
-		if (value === "N")
-			return "mycustom-n";
-		else if (value === "T")
-			return "mycustom-t";
-		else if (value === "U")
-			return "mycustom-u";
-		else if (value === "E")
-			return "mycustom-e";
-		else if (value === "P")
-			return "mycustom-p";
-	}
-
-	// 행 아이템에서 T, E, U, P 개수를 구하는 수식 함수.
-	function myExpFunction(rowIndex, columnIndex, item, dataField) {
-		let opValue;
-		if (dataField === "ceu") { // E, U 개수 구하기
-			return Object.values(item).filter(v => v === "E" || v === "U").length;
-		}
-
-		// T, E, U, P 각각 개별 개수 구하기
-		switch (dataField) {
-			case "ct": // 지각 합
-				opValue = "T";
-				break;
-			case "ce": // 사정상 결적 합
-				opValue = "E";
-				break;
-			case "cu": // 무단 결석 합
-				opValue = "U";
-				break;
-			default:
-			case "cp": // 출석 합
-				opValue = "P";
-				break;
-		}
-		// opValue와 동일한 개수 구하여 반환
-		return Object.values(item).filter(v => v === opValue).length;
-	}
-
-	// 행 추가, 삽입
-	function addRow() {
-		// 그리드의 편집 인푸터가 열린 경우 에디팅 완료 상태로 만듬.
-		AUIGrid.forceEditingComplete(myGridID, null);
-
-		//새행 만들기
-		const item = {};
-		item.name = "";
-		// 휴일(holidays) 에 해당하는 날은 "N"(예: 휴무), 그 외에는 "P"(예: 근무)로 값을 채움
-		const holidays = [6, 7, 13, 14];
-		for (let i = 1; i <= 31; i++) {
-			item[`d${i}`] = holidays.includes(i) ? "N" : "P";
-		}
-		AUIGrid.addRow(myGridID, item, "last");
-	}
-
-	// 행 삭제
-	function removeRow() {
-		AUIGrid.removeRow(myGridID, "selectedIndex");
-	}
-
-	// 삭제해서 마크 된(줄이 그어진) 행을 복원 합니다.(삭제 취소)
-	function restoreSoftRow() {
-		// 선택 행 삭제 취소(선택 행이 삭제 됐다면...)
-		AUIGrid.restoreSoftRows(myGridID, "selectedIndex");
-	}
-
-	// 삭제해서 마크 된(줄이 그어진) 행을 그리드에서 제거 합니다.
-	function removeSoftRows() {
-		// 삭제 처리된 아이템 있는지 보기
-		const removedRows = AUIGrid.getRemovedItems(myGridID, true);
-
-		if (removedRows.length <= 0) {
-			alert("삭제 처리되어 마크된 행이 없습니다.")
-			return;
-		}
-
-		// softRemoveRowMode 가 true 일 때 삭제를 하면 그리드 상에 마크가 되는데
-		// 이를 실제로 그리드에서 삭제 함.
-		if (confirm("다시 복구 할 수 없습니다. 삭제 하시겠습니까?")) {
-			AUIGrid.removeSoftRows(myGridID);
-		}
-	}
-
-	// 엑셀 내보내기(Export);
-	function exportClick() {
-		// 내보내기 실행
-		AUIGrid.exportToXlsx(myGridID);
-	}
-
-	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
-	function exportPdfClick() {
-		// 내보내기 실행
-		AUIGrid.exportToPdf(myGridID, {
-			// 폰트 경로 지정 (필수)
-			fontPath: "../pdfkit/nyjgothic-medium.ttf"
-		});
-	}
-
-	// 그리드 속성을 정의합니다.
-	function createGridProps() {
-		const gridProps = {
-			editable: true,
-			editableOnFixedCell: true,
-			rowIdField: "no",
-			enableFilter: true,
-			showFooter: true,
-			useContextMenu: true,
-			showStateColumn: true,
-			fixedColumnCount: 1,
-			softRemovePolicy: "exceptNew",
-			skipReadonlyColumns: true,
-			enterKeyColumnBase: true
-		};
-		return gridProps;
-	}
-
-	// 푸터 레이아웃을 정의합니다.
-	function createFooterLayout() {
-		const footerLayout = [{
-			labelText: "합 계",
-			positionField: "name"
-		}, {
-			dataField: "ct",
-			operation: "SUM",
-			positionField: "ct"
-		}, {
-			dataField: "ce",
-			operation: "SUM",
-			positionField: "ce"
-		}, {
-			dataField: "cu",
-			operation: "SUM",
-			positionField: "cu"
-		}, {
-			dataField: "cp",
-			operation: "SUM",
-			positionField: "cp"
-		}, {
-			dataField: "ceu",
-			operation: "SUM",
-			positionField: "ceu"
-		}];
-		return footerLayout;
-	}
-
-	// 그리드 생성 후 편집 이벤트를 연결합니다.
-	function bindGridEvents() {
-
-		// cellEditEndBefore 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
-			const oldValue = event.oldValue;
-			const value = event.value;
-			// cellEditEndBefore 이벤트에서 사용자가 입력한 텍스트를 강제로 변경가능합니다.
-			// 이름은 어떤것을 입력해도 허용함.
-			if (event.dataField === "name") {
-				document.getElementById("editing_info").textContent = `oldValue : ${oldValue}, new Value : ${value}`;
-				return value;
-			}
-
-			if (!value) return oldValue;
-
-			// 대문자로 모두 변경시킴
-			const normalizedValue = value.toUpperCase();
-			const validValues = ["T", "E", "U", "P", "N"]; // 입력 유효값.
-			if (!validValues.includes(normalizedValue)) {
-				document.getElementById("editing_info").textContent = `"${value}"는 허용되지 않는 값입니다.유효한 값: ${validValues.join(", ")} `;
-				return oldValue;
-			}
-
-			document.getElementById("editing_info").textContent = `oldValue: ${oldValue}, new Value : ${normalizedValue}, (대문자로 변경됨)`;
-			return normalizedValue;
-		});
-
-		// cellEditCancel 이벤트 바인딩
-		// cellEditCancel 이벤트는 사용자가 에디팅을 취소했을 때 발생합니다.
-		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
-			if (event.dataField === "name") {
-				// 학생 이름 입력 안하면 삭제.
-				if (event.item.name === "") {
-					// removeRow 메소드는 에디팅이 현재 열린 경우 취소를 시키게 됨.
-					// 이 때 다시 취소 이벤트가 발생하여 무한으로 빠지는 것을 방지
-					scheduleEdit(function () {
-						AUIGrid.removeRow(myGridID, event.rowIndex);
-					});
-				}
-			}
-		});
-
-		// 행추가 이벤트 바인딩
-		// addRowFinish 이벤트 핸들링
-		AUIGrid.bind(myGridID, "addRowFinish", function (event) {
-			// 행 추가 시 추가된 행에 선택자가 이동합니다.
-			// 이 때 칼럼은 기존 칼럼 그래도 유지한채 이동함.
-			// 원하는 칼럼으로 선택자를 보내 강제로 편집기(inputer) 를 열기 위한 코드
-			const selected = AUIGrid.getSelectedIndex(myGridID);
-			if (selected.length <= 0) {
-				return;
-			}
-
-			const rowIndex = selected[0];
-			const colIndex = AUIGrid.getColumnIndexByDataField(myGridID, "name");
-			AUIGrid.setSelectionByIndex(myGridID, rowIndex, colIndex); // name 으로 선택자 이동
-
-			// 빈행 추가 후 인푸터 열기
-			scheduleEdit(() => {
-				// 빈행 추가 후 isbn 에 인푸터 열기
-				AUIGrid.openInputer(myGridID);
-			});
-		});
-	}
-
-	// 데이터 요청과 그리드 반영. 페이지 종료 후 응답을 적용하지 않습니다.
-	const controller = new AbortController();
-	async function loadGridData() {
-		AUIGrid.showAjaxLoader(myGridID);
-		try {
-			const response = await fetch("./data/student_present.json", { signal: controller.signal });
-			if (!response.ok) throw new Error("데이터 요청 실패");
-			const data = await response.json();
-			if (!controller.signal.aborted) AUIGrid.setGridData(myGridID, data);
-		} catch (error) {
-			if (!controller.signal.aborted) console.error("데이터 로딩 오류:", error);
-		} finally {
-			if (!controller.signal.aborted) AUIGrid.removeAjaxLoader(myGridID);
-		}
-	}
-
-	// 편집 이벤트의 재진입을 피하는 기존 16ms 지연을 관리합니다.
-	let disposed = false;
-	const pendingEdits = new Set();
-	function scheduleEdit(callback) {
-		if (disposed) return;
-		const timer = setTimeout(() => {
-			pendingEdits.delete(timer);
-			callback();
-		}, 16);
-		pendingEdits.add(timer);
-	}
-
-	// 뒤로 가기 캐시에 보관되는 페이지는 유지하고, 실제 종료에서만 정리합니다.
-	function disposeDemo(event) {
-		if (event.persisted) return;
-		disposed = true;
-		controller.abort();
-		pendingEdits.forEach(clearTimeout);
-		pendingEdits.clear();
-		AUIGrid.destroy(myGridID);
-		myGridID = null;
-		window.removeEventListener("pagehide", disposeDemo);
-	}
-	window.addEventListener("pagehide", disposeDemo);
-</script>
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<span class="btn" style="float:right;" onclick="exportClick()">엑셀(xlsx)로 저장</span>
-		<span class="btn" style="float:right;" onclick="exportPdfClick()">PDF로 저장</span>
-		<p style="clear:both;">학생 출석 레코드를 표현 할 때 각각의 셀에 스타일을 적용시킨 것입니다.</p>
-		<ul class="nav_u">
-			<li><span class="legend mycustom-t">T</span><span>지각</span></li>
-			<li><span class="legend mycustom-e">E</span><span>유고</span></li>
-			<li><span class="legend mycustom-u">U</span><span>무단</span></li>
-			<li><span class="legend mycustom-p">P</span><span>출석</span></li>
-			<li><span class="legend mycustom-n">N</span><span>휴교</span></li>
-		</ul>
-		<p>날짜의 값(T, E, U, P, N) 수정 시 동적으로 합계가 변경됩니다.</p>
-		<div>
-			<span class="btn" onclick="addRow()">학생 추가</span>
-			<span class="btn" onclick="removeRow()">선택 삭제</span>
-			<span class="btn" onclick="restoreSoftRow()">삭제 취소</span>
-			<span class="btn" onclick="removeSoftRows()">삭제 처리된 행들 완전 삭제</span>
-			<p>(삭제 시 softRemoveRowMode = true 설정으로 바로 그리드에서 제거하지 않음.)</p>
-		</div>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p>에디팅 적용 전 검사(cellEditEndBefore) : <span id="editing_info"></span></p>
-	</div>
-</div>
+            <div id="main" class="workspace-demo resource-planner">
+                <div class="workspace-heading">
+                    <div>
+                        <h2>산업 장비 자원 운영표</h2>
+                        <p>600개 장비의 날짜별 가동, 예약과 점검 일정을 한눈에 관리하세요.</p>
+                    </div>
+                    <strong class="resource-month">2026년 10월</strong>
+                </div>
+                <div class="workspace-toolbar">
+                    <div class="workspace-controls">
+                        <label
+                            >거점<select id="resource-site" onchange="filterResources()">
+                                <option>전체</option>
+                                <option>수도권 센터</option>
+                                <option>중부 센터</option>
+                                <option>남부 센터</option>
+                                <option>동부 센터</option>
+                                <option>서부 센터</option>
+                            </select></label
+                        ><label
+                            >자원 종류<select id="resource-type" onchange="filterResources()">
+                                <option>전체</option>
+                                <option>자율이동 로봇</option>
+                                <option>무인 운반차</option>
+                                <option>전동 지게차</option>
+                                <option>3D 프린터</option>
+                                <option>정밀 측정기</option>
+                                <option>비전 검사기</option>
+                            </select></label
+                        ><input
+                            type="search"
+                            id="resource-search"
+                            class="workspace-search"
+                            placeholder="자원명 또는 번호 검색"
+                            aria-label="자원 검색"
+                            oninput="filterResources()"
+                        />
+                    </div>
+                    <span id="resource-count"></span>
+                </div>
+                <div class="resource-legend" aria-label="운영 상태 범례">
+                    <span class="resource-active">가동</span><span class="resource-reserved">예약</span
+                    ><span class="resource-maintenance">점검</span><span class="resource-idle">유휴</span
+                    ><small>날짜를 더블클릭해 상태를 변경하세요. 집계는 자동 계산됩니다.</small>
+                </div>
+                <div class="workspace-toolbar">
+                    <div class="workspace-controls">
+                        <select id="resource-state" aria-label="범위에 적용할 상태">
+                            <option>가동</option>
+                            <option>예약</option>
+                            <option>점검</option>
+                            <option>유휴</option></select
+                        ><button type="button" class="btn" onclick="applyState()">선택 날짜에 적용</button
+                        ><button type="button" class="btn" id="resource-undo" onclick="undoResource()">
+                            실행 취소
+                        </button>
+                    </div>
+                    <div class="workspace-controls">
+                        <button type="button" class="btn" onclick="addResource()">자원 추가</button
+                        ><button type="button" class="btn" onclick="removeResource()">선택 삭제</button
+                        ><button type="button" class="btn" onclick="exportReport('xlsx')">Excel 내보내기</button
+                        ><button type="button" class="btn" onclick="exportReport('pdf')">PDF 내보내기</button>
+                    </div>
+                </div>
+                <div id="grid_wrap"></div>
+                <div class="workspace-note">
+                    <p id="resource-message" role="status">
+                        드래그로 날짜 범위를 선택하면 여러 일정의 상태를 한 번에 변경할 수 있습니다.
+                    </p>
+                    <p>가상 자원 데이터 / 가동률 = 가동 일수 ÷ 31일</p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

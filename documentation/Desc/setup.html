@@ -9,27 +9,49 @@
   <meta content="IE=edge" http-equiv="X-UA-Compatible">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="-1">
-  <meta content="width=1200" name="viewport">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
   <meta content="AUIGrid API Documentation" property="og:title">
   <meta content="https://www.auisoft.net/documentation/auigrid" property="og:url">
   <meta content="AUIGrid API Documentation" property="og:description">
   <meta content="AUIGrid API Documentation" name="keywords">
   <title> AUIGrid Documentation</title>
-  <link href="../static/aui.ico" rel="shortcut icon" />
-  <link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen">
+  
+  <link rel="stylesheet" href="../static/prism.css">
+<link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen">
+<link rel="stylesheet" href="../static/typography.css">
+<link rel="stylesheet" href="../static/code-examples.css">
   <!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
-  <link rel="stylesheet" href="../static/prism.css"/>
-  <script type="text/javascript"src="../static/prism.js"></script>
+  <script src="../static/prism.js" data-manual></script>
+<script src="../static/code-examples.js"></script>
+
+<link rel="icon" href="../static/favicon.ico" sizes="any">
+<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
+<meta name="theme-color" content="#222729">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../static/docs-brand.css">
 </head>
 
-<body>
-  <div class="header">
-    <div id="logo-bar">
-      <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
-    </div>
-    <span id="title">AUIGrid 3.0.18 Documentation</span>
-  </div>
+<body class="demo-typography docs-site">
+  <header class="docs-header"><div class="docs-header-inner">
+    <a id="logo-bar" class="docs-brand" href="https://www.auisoft.net/" aria-label="AUISoft 홈페이지">
+      <img src="../static/favicon.svg" width="40" height="40" alt="">
+      <span>AUISoft<small>에이유아이소프트</small></span>
+    </a>
+    <span id="title" class="docs-context">AUIGrid 3.0.19 Documentation</span>
+    <nav class="docs-navigation" aria-label="주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="../index.html">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav>
+    <details class="docs-mobile-navigation"><summary>메뉴</summary><nav aria-label="모바일 주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="../index.html">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav></details>
+  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">1. AUIGrid 소개 및 사용 방법</span></nav>
   <div class="MainContent">
 
     <h1>1. AUIGrid 소개 및 사용 방법</h1>
@@ -86,7 +108,14 @@
 &lt;!-- AUIGrid CSS 테마 파일 (원하는 테마로 변경 가능) --&gt;
 &lt;link rel="stylesheet" href="./AUIGrid/AUIGrid_style.css" /&gt;</code> </pre>
 
-    <p><strong>주의:</strong> AUIGrid는 현재 공식 CDN을 제공하지 않음</p>
+    <h3>비상업용 버전의 CDN으로 시작하기</h3>
+    <p>AUIGrid는 비상업용 버전의 CDN을 제공합니다. 정품은 CDN으로 제공하지 않습니다.
+      비상업용 목적의 <code>localhost</code> 또는 <code>127.0.0.1</code> 환경에서 무료로 시작할 수 있습니다.</p>
+    <p><a href="noncommercial.html">비상업용 CDN 시작 안내</a>에서 연결 코드와 데이터가 포함된 HTML 예제를 확인하십시오.
+      <a href="https://github.com/aui-community/auigrid-noncommercial">GitHub 저장소</a>에서 라이브러리와 React/Vue 샘플을 내려받을 수도 있습니다.</p>
+
+    <p>localhost 이외의 테스트 서버나 접속 도메인/IP에서 확인하려면 <a href="https://www.auisoft.net/dcenter.html">평가판을 내려받아</a> 사용할 수 있습니다.
+      <a href="noncommercial.html#trial">평가판 안내</a>에서 접속 주소 입력 방법과 실행 절차를 확인하십시오.</p>
 
     <h2>1.5 폴더 구조</h2>
     <p>제품 패키지를 압축을 해제하면 다음 디렉토리가 보입니다.</p>
@@ -106,7 +135,7 @@
 
     <h2>1.6 일반 JS 샘플 실행 방법</h2>
     <ol>
-      <li>제품 패키지를 압축을 해제한 후 웹 서버에 FTP 또는 파일 복사 방식으로 업로드합니다.</li>
+      <li>제품 패키지를 압축 해제한 후 해당 라이선스가 허용하는 웹 서버에 배치합니다. 비상업용 배포본은 로컬 웹 서버에 배치합니다.</li>
       <li><code class="language-html">/samples</code> 또는 <code class="language-html">/documentation</code> 폴더의 <code class="language-html">index.html</code>을 브라우저로 실행합니다.</li>
       <li>AUIGrid 샘플 기능을 바로 확인하고 테스트할 수 있습니다.</li>
     </ol>
@@ -125,14 +154,14 @@
         <tr>
           <td>samples-React.js</td>
           <td>React (JS 기반)</td>
-          <td>CRA</td>
-          <td><code>npm install && npm start</code></td>
+          <td>Vite</td>
+          <td><code>npm install && npm run dev</code></td>
         </tr>
         <tr>
           <td>samples-React.tsx</td>
           <td>React + TypeScript</td>
-          <td>CRA</td>
-          <td><code>npm install && npm start</code></td>
+          <td>Vite</td>
+          <td><code>npm install && npm run dev</code></td>
         </tr>
         <tr>
           <td>samples-Vue.js</td>
@@ -150,11 +179,11 @@
     </table>
 
 	<p><strong>공통 실행 흐름:</strong></p>
-	<p>React 샘플(<code>samples-React.js</code>, <code>samples-React.tsx</code>)</p>
+	<p>React 샘플(<code>samples-React.js</code>, <code>samples-React.tsx</code>)은 Node.js 20.19 이상(20.x) 또는 22.12 이상에서 실행합니다. 기존 <code>npm start</code>도 사용할 수 있습니다.</p>
 	<pre><code class="language-html">
 	cd [샘플폴더]
 	npm install
-	npm start
+	npm run dev
 	</code></pre>
 	<p>Vue 샘플(<code>samples-Vue.js</code>, <code>samples-Vue.ts</code>)</p>
 	<pre><code class="language-html">
@@ -164,6 +193,6 @@
 	</code></pre>
 
   </div>
-</body>
+<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
 
 </html>

@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -28,50 +36,72 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style>
-	pre {
-		font-size: 12px;
-		font-family: 'Malgun Gothic', '맑은 고딕', AppleSDGothicNeo-Light, sans-serif;
-		font-size: 14px;
-		line-height: 1.267em;
-	}
+        <style>
+            pre {
+                font-size: 12px;
+                font-family: "Malgun Gothic", "맑은 고딕", AppleSDGothicNeo-Light, sans-serif;
+                font-size: 14px;
+                line-height: 1.267em;
+            }
 
-	.desc_my_strong {
-		font-weight: bold;
-		padding-top: 10px;
-	}
+            .desc_my_strong {
+                font-weight: bold;
+                padding-top: 10px;
+            }
 
-	.desc_my_ul {
-		list-style: disc;
-		list-style-position: inside;
-		line-height: 1.5em;
-	}
-</style>
-<script>
-	function init() { };
-</script>
-</head>
-<body>
+            .desc_my_ul {
+                list-style: disc;
+                list-style-position: inside;
+                line-height: 1.5em;
+            }
+        </style>
+        <script>
+            function init() {}
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>사용자 정의 에디트렌더러(CustomEditRenderer)는 그리드에서 제공되는 기본 에디트렌더러가 아닌 사용자(개발자)가 직접 작성한 에디터를 그리드의 editRenderer 로 정의하여 셀 수정 방식을 결정할 수 있는 에디트렌더러 입니다.</p>
-		<p>사용자 정의 에디트렌더러 작성에는 기본 이상의 자바스크립트, CSS, HTML 스킬이 필요합니다.</p>
-		<p>심화된 개발자의 심화된 에디터 작성을 위해 제공하는 기능으로 사용자 정의 에디트렌더러는 사용자(개발자)가 직접 개발하는 영역입니다.</p>
-		<p>이에 대한 기술지원은 제공하지 않으니 참고하여 해당 기능 개발/이용하시길 바랍니다. 전적으로 개발자 영역입니다.</p>
-		<p>사용자 에디트렌더러 작성은 <strong>AUIGrid.EditRendererBase 클래스를 확장(extend)</strong>하여 작성합니다.</p>
-		<p>(사용자 렌더러와 에디트렌더러는 각각 AUIGrid.RendererBase 와 AUIGrid.EditRendererBase 클래스를 확장하니 혼동하지 않도록 주의하십시오.)</p>
-		<p class="desc_my_strong">사용자 정의 에디트렌더러 사용의 장점</p>
-		<ul class="desc_my_ul">
-			<li>AUIGrid 에서 제공하는 에디트렌더러의 한계를 넘어 원하는 형태의 셀 수정 방식을 개발자가 직접 결정, 개발 할 수 있습니다.</li>
-		</ul>
-		<p class="desc_my_strong">사용자 정의 에디트렌더러 사용의 단점</p>
-		<ul class="desc_my_ul">
-			<li>editingOnKeyDown (키보드 입력으로 바로 편집할 수 있는지 여부) 속성 사용에 제한이 있습니다. 키보드 F2, 스페이스바 키만 에디팅 진입을 하게 됩니다.</li>
-		</ul>
-		<p>다음은 실제로 작성한 사용자 에디트렌더러 예제입니다.</p>
-		<div class="src_cover" style="max-height:800px;">
-			<pre>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        사용자 정의 에디트렌더러(CustomEditRenderer)는 그리드에서 제공되는 기본 에디트렌더러가 아닌
+                        사용자(개발자)가 직접 작성한 에디터를 그리드의 editRenderer 로 정의하여 셀 수정 방식을 결정할 수
+                        있는 에디트렌더러 입니다.
+                    </p>
+                    <p>사용자 정의 에디트렌더러 작성에는 기본 이상의 자바스크립트, CSS, HTML 스킬이 필요합니다.</p>
+                    <p>
+                        심화된 개발자의 심화된 에디터 작성을 위해 제공하는 기능으로 사용자 정의 에디트렌더러는
+                        사용자(개발자)가 직접 개발하는 영역입니다.
+                    </p>
+                    <p>
+                        이에 대한 기술지원은 제공하지 않으니 참고하여 해당 기능 개발/이용하시길 바랍니다. 전적으로
+                        개발자 영역입니다.
+                    </p>
+                    <p>
+                        사용자 에디트렌더러 작성은 <strong>AUIGrid.EditRendererBase 클래스를 확장(extend)</strong>하여
+                        작성합니다.
+                    </p>
+                    <p>
+                        (사용자 렌더러와 에디트렌더러는 각각 AUIGrid.RendererBase 와 AUIGrid.EditRendererBase 클래스를
+                        확장하니 혼동하지 않도록 주의하십시오.)
+                    </p>
+                    <p class="desc_my_strong">사용자 정의 에디트렌더러 사용의 장점</p>
+                    <ul class="desc_my_ul">
+                        <li>
+                            AUIGrid 에서 제공하는 에디트렌더러의 한계를 넘어 원하는 형태의 셀 수정 방식을 개발자가 직접
+                            결정, 개발 할 수 있습니다.
+                        </li>
+                    </ul>
+                    <p class="desc_my_strong">사용자 정의 에디트렌더러 사용의 단점</p>
+                    <ul class="desc_my_ul">
+                        <li>
+                            editingOnKeyDown (키보드 입력으로 바로 편집할 수 있는지 여부) 속성 사용에 제한이 있습니다.
+                            키보드 F2, 스페이스바 키만 에디팅 진입을 하게 됩니다.
+                        </li>
+                    </ul>
+                    <p>다음은 실제로 작성한 사용자 에디트렌더러 예제입니다.</p>
+                    <div class="src_cover" style="max-height: 800px">
+                        <pre>
 /* eslint-disable */
 /*
  * AUIGrid 사용자 정의 에디트 렌더러
@@ -235,12 +265,12 @@ window.AUIGrid.SpectrumEditor = window.AUIGrid.Class({
 }).extend(window.AUIGrid.EditRendererBase);
 		
 		</pre>
-		</div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

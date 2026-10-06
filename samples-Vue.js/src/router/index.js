@@ -38,15 +38,16 @@ const routes = [
 		name: 'Showcase06',
 		component: () => import('../showcases/ShowCase06.vue')
 	},
+	{ path: '/Showcase07', name: 'Showcase07', component: () => import('../showcases/ShowCase07.vue') },
 	{
-		path: '/Showcase07',
-		name: 'Showcase07',
-		component: () => import('../showcases/ShowCase07.vue')
+		path: '/Showcase08',
+		name: 'Showcase08',
+		component: () => import('../showcases/ShowCase08.vue')
 	},
 
 	// 새 밴드형 쇼케이스는 기존 wrapper와 앱 레이아웃을 사용합니다.
-        { path:'/Showcase08', name:'Showcase08', component:() => import('../showcases/ShowCase08.vue') },
         { path:'/Showcase09', name:'Showcase09', component:() => import('../showcases/ShowCase09.vue') },
+        { path:'/Showcase10', name:'Showcase10', component:() => import('../showcases/ShowCase10.vue') },
 
         // 샘플들
 	{

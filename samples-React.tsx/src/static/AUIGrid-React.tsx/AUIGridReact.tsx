@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.tsx for React.js + Typescript v1.6.20261001
- * Based on AUIGrid v3.0.18.0
+ * AUIGridReact.tsx for React.js + Typescript v1.6.20261006
+ * Based on AUIGrid v3.0.19.0
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
@@ -188,6 +188,8 @@ class AUIGrid extends React.Component<IProps, IState> {
 	appendData(items: any) {
 		$ag.appendData.call($ag, this.state.pid, arguments[0]);
 	}
+	// 그리드 간 셀 드래그도 출발지의 bind로 연결하며 pidToDrop은 목적 그리드 ID 그대로 전달합니다.
+	// 콜백을 감싸지 않아 false 반환과 event.isMoveMode 변경을 그대로 전달합니다.
 	bind(name: string | string[], func: (event: any) => any) {
 		$ag.bind.call($ag, this.state.pid, arguments[0], arguments[1]);
 	}
@@ -267,15 +269,18 @@ class AUIGrid extends React.Component<IProps, IState> {
 	exportToObject(keyValueMode?: boolean): any {
 		return $ag.exportToObject.call($ag, this.state.pid, arguments[0]);
 	}
+	// bodyLayoutMode는 화면을 바꾸지 않고 PDF 파일에만 적용합니다. (v3.0.19)
 	exportToPdf(props?: any) {
 		$ag.exportToPdf.call($ag, this.state.pid, arguments[0]);
 	}
 	exportToTxt(props?: any) {
 		$ag.exportToTxt.call($ag, this.state.pid, arguments[0]);
 	}
+	// v3.0.19: 옵션의 bodyLayoutMode는 Excel에만 적용하며 기존 두 인자 호출도 유지합니다.
 	exportToXlsx(exportWithStyle?: any, props?: any) {
 		$ag.exportToXlsx.call($ag, this.state.pid, arguments[0], arguments[1]);
 	}
+	// 각 시트의 props에 bodyLayoutMode를 독립적으로 지정할 수 있습니다.
 	exportToXlsxMulti(subGridIds: string[], props: any[]) {
 		$ag.exportToXlsxMulti.call($ag, this.state.pid, arguments[0], arguments[1]);
 	}
@@ -357,6 +362,11 @@ class AUIGrid extends React.Component<IProps, IState> {
 	getEditedRowItems(): any[] {
 		return $ag.getEditedRowItems.call($ag, this.state.pid);
 	}
+	// 접힌 그룹의 자손까지 포함한 필터 결과 건수를 조회합니다.
+	getFilteredRowCount(): number {
+		return $ag.getFilteredRowCount.call($ag, this.state.pid);
+	}
+
 	getFilterCache() {
 		return $ag.getFilterCache.call($ag, this.state.pid);
 	}
@@ -929,6 +939,7 @@ export const agUtils: {
 	readonly version: string;
 	readonly releaseDate: string;
 	isCreated: () => boolean;
+	getPluginRuntime: (apiVersion: 1) => IGrid.PluginRuntimeV1;
 	formatDate: (date: string | Date, formatString: string) => string;
 	formatNumber: (number: number, formatString: string, rounding?: 'round' | 'ceil' | 'floor' | 'rounding') => string;
 	getActiveGrid: () => string | null;
@@ -939,6 +950,8 @@ export const agUtils: {
 	releaseDate: $ag.releaseDate,
 	version: $ag.version,
 	isCreated: $ag.isCreated,
+	// Grid ID 없이 엔진의 진입점을 그대로 전달합니다. 제공 보류 엔진의 DISABLED 오류도 유지합니다.
+	getPluginRuntime: $ag.getPluginRuntime,
 	formatDate: $ag.formatDate,
 	formatNumber: $ag.formatNumber,
 	getActiveGrid: $ag.getActiveGrid,

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href=".././static/prism.css">
+<link rel="stylesheet" href=".././static/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href=".././static/typography.css">
+<link rel="stylesheet" href=".././static/code-examples.css">
+<meta charset="utf-8">
+<meta content="text/javascript" http-equiv="Content-Script-Type">
+<meta content="text/css" http-equiv="Content-Style-Type">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="no-cache" http-equiv="Pragma">
+<meta content="-1" http-equiv="Expires">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
+<meta content="AUIGrid API Documentation" property="og:title">
+<meta content="http://www.auisoft.net/documentation/auigrid" property="og:url">
+<meta content="AUIGrid API Documentation" property="og:description">
+<meta content="AUIGrid API Documentation" name="keywords">
+
+<script src="../static/doc.js?v=250612" type="text/javascript"></script>
+<!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
+<script src="../static/prism.js" data-manual></script>
+<script src="../static/code-examples.js"></script>
+<title>	AUIGrid Documentation</title>
+
+<link rel="icon" href="../static/favicon.ico" sizes="any">
+<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
+<meta name="theme-color" content="#222729">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../static/docs-brand.css">
+</head>
+<body class="demo-typography docs-site">
+<header class="docs-header"><div class="docs-header-inner">
+    <a id="logo-bar" class="docs-brand" href="https://www.auisoft.net/" aria-label="AUISoft 홈페이지">
+      <img src="../static/favicon.svg" width="40" height="40" alt="">
+      <span>AUISoft<small>에이유아이소프트</small></span>
+    </a>
+    <span id="title" class="docs-context">AUIGrid 3.0.19 Documentation</span>
+    <nav class="docs-navigation" aria-label="주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="../index.html">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav>
+    <details class="docs-mobile-navigation"><summary>메뉴</summary><nav aria-label="모바일 주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="../index.html">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav></details>
+  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">PercentageRenderer</span></nav>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
+<!-- API 문서도 소개 문서와 같은 h1을 사용하고 검색은 제목 아래에 배치합니다. -->
+<h1>PercentageRenderer</h1>
+<div id="searchbox" class="searchbox">
+<span class="keyword"><input placeholder="검색어 입력" maxlength="255" class="box_window" name="i_query" id="i_query" type="text"></span>
+</div>
+<div id="desc_top">
+<p><p>숫자 비율을 막대와 백분율로 표시하고, Excel 내보내기에서도 같은 백분율 서식을 유지하기 위한 렌더러입니다. 0은 0%, 1은 100%이며, 0.815에 precision: 1을 지정하면 81.5%로 표시합니다.</p>
+<p>칼럼의 renderer 속성에 type: "PercentageRenderer"로 지정합니다. 백분율 입력은 <a href="./PercentageEditRenderer.html">PercentageEditRenderer</a>를 함께 설정합니다.</p>
+<p>숫자와 숫자로 변환 가능한 문자열을 표시합니다. null, undefined, 빈 문자열, 음수 및 유효하지 않은 값은 빈 셀로 표시합니다. 숫자 0은 0%로 표시하며 일반 행, 그룹핑 브랜치와 소계에 같은 규칙을 적용합니다. 구조용 그룹 제목은 유지합니다.</p>
+<p>1 초과 값은 막대만 100% 폭으로 제한하고 실제 백분율을 표시합니다. 막대 길이와 styleRange는 반올림 전 비율을 사용하며 1 초과 값에는 1 구간을 적용합니다. 원본 데이터는 변경하지 않습니다.</p>
+<p><strong>칼럼의 labelFunction이나 formatString으로 출력 텍스트를 변경할 수 없습니다.</strong> 원본 비율에 100을 곱하고 %를 붙인 백분율 형식으로 출력하며 prefix와 postfix도 적용하지 않습니다. 소수 자릿수는 precision으로 지정합니다. showBar, showLabel, offset과 style 및 styleRange로 표시 여부, 간격과 색상 등을 설정할 수 있습니다.</p>
+<p><strong>Excel 내보내기</strong></p>
+<ul>
+<li>원본 비율을 숫자로 저장하고 precision에 맞는 백분율 서식을 적용합니다. showBar가 true이면 0~1 범위의 데이터 막대를 추가합니다. 1 초과 값도 실제 백분율을 유지합니다.</li>
+<li>막대와 라벨을 함께 표시하면 기본 오른쪽 정렬입니다. useExportStyle: true와 exportStyle의 칼럼 클래스별 textAlign으로 변경할 수 있으며 화면 정렬은 유지됩니다.</li>
+<li>막대 색상은 내보내기 시점의 style과 styleRange를 반영합니다. Excel에서 값을 수정하면 막대 길이는 변하지만 구간 색상은 다시 판정하지 않습니다.</li>
+<li>xlsxTextConversion: true이면 백분율 문자열로 저장하고 막대를 제외합니다. exportWithStyle: false이면 백분율 서식을 제외하고 showBar가 true일 때 기본 색상의 막대를 사용합니다.</li>
+</ul>
+<p>칼럼의 style이 "my-column"일 때 Excel의 백분율 값을 가운데 정렬하는 예제입니다.</p>
+<pre><code class="language-javascript">AUIGrid.exportToXlsx(myGridID, {
+    useExportStyle: true,
+    exportStyle: { "my-column": { textAlign: "center" } }
+});</code></pre>
+<p><strong>PDF 내보내기</strong></p>
+<p>showBar, showLabel, precision 및 offset과 테마, style 및 styleRange의 막대 배경, 채움과 라벨 색상을 반영합니다. 막대와 라벨을 함께 표시하면 라벨은 오른쪽에 배치하고, 라벨만 표시하면 칼럼 정렬을 따릅니다. showBar와 showLabel이 모두 false이면 라벨을 표시합니다.</p>
+<p>Excel과 PDF도 빈 값 및 그룹 집계에 같은 표시 규칙을 적용합니다. 복사와 CSV 내보내기에는 실제 백분율 텍스트를 사용합니다.</p>
+<p><a href="../../samples/renderer_percentage.html?rpercentage&amp;theme=default" target="_blank">관련 데모 보기</a></p></p>
+<a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
+<div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">var columnLayout = [{
+    dataField: "progress",
+    headerText: "진행률",
+    width: 200,
+    dataType: "numeric",
+    renderer: {
+        type: "PercentageRenderer",
+        precision: 1,
+        showBar: true,
+        showLabel: true,
+        offset: 20,
+        styleRange: [
+            { "0.3": "progress-low" },
+            { "0.5": "progress-medium" },
+            { "1": "progress-complete" }
+        ]
+    }
+}];
+// { progress: 1.25 }는 가득 찬 막대와 125.0%로 표시합니다.</code></pre>
+<pre><code class="language-css">.progress-low .aui-grid-percentage-bar { background: #bd5639; }
+.progress-medium .aui-grid-percentage-bar { background: #a77a20; }
+.progress-complete .aui-grid-percentage-bar { background: #18825d; }</code></pre></div>
+</div>
+</div>
+<div class="summarySection">
+<table id="summaryTableStyle" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>Name</th><th>Description</th>
+</tr>
+<tr id="height">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">height</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.19<br>
+<p>렌더러 표시 영역의 높이를 픽셀 단위로 지정합니다. 생략하면 셀 높이에 맞춰 막대와 라벨을 세로 가운데에 배치합니다.</p>
+기본값(default) : <code>NaN</code></td>
+</tr>
+<tr id="offset">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">offset</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.19<br>
+<p>막대 영역과 오른쪽 백분율 텍스트 영역 사이의 간격을 픽셀 단위로 지정합니다. 0 이상의 유한한 숫자를 사용하며 잘못된 값은 기본값 20을 사용합니다. showBar와 showLabel이 모두 true일 때만 적용됩니다. showLabel이 false이면 막대가 남은 폭을 사용합니다.</p>
+기본값(default) : <code>20</code></td>
+</tr>
+<tr id="precision">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">precision</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.19<br>
+<p>백분율의 소수 자릿수를 0~6의 정수로 지정합니다. 예를 들어 0.815에 1을 지정하면 81.5%로 표시합니다.</p><p>소수인 설정값은 버림하고 범위 밖 설정값은 0~6으로 제한합니다. 숫자가 아니거나 유한하지 않으면 0을 사용합니다.</p>
+기본값(default) : <code>0</code></td>
+</tr>
+<tr id="showBar">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showBar</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.19<br>
+<p>막대 그래프를 표시할지 지정합니다. 기본값은 true입니다.</p><p>false이면 막대와 간격을 제외하고 백분율 텍스트만 표시합니다. 이때 showLabel은 설정값과 관계없이 true로 동작합니다. 텍스트는 칼럼의 style 및 styleFunction에 지정된 정렬, 색상과 글꼴 굵기를 따르며 별도 정렬이 없으면 기본 가운데 정렬을 사용합니다. 렌더러의 style과 styleRange로 지정한 라벨 스타일도 적용됩니다.</p><p>Excel 내보내기에서도 false이면 데이터 막대를 제외하고 숫자 값과 백분율 서식은 유지합니다.</p><pre><code class="language-javascript">var columnLayout = [{
+    dataField: "progress",
+    headerText: "진행률",
+    style: "my-column",
+    renderer: { type: "PercentageRenderer", showBar: false, showLabel: true }
+}];</code></pre><pre><code class="language-css">.my-column { text-align: right; }</code></pre>
+기본값(default) : <code>true</code></td>
+</tr>
+<tr id="showLabel">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showLabel</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.19<br>
+<p>백분율 텍스트를 표시할지 지정합니다. 막대가 있으면 오른쪽에 표시합니다. showBar가 false이면 이 속성을 false로 지정해도 텍스트를 표시하며 칼럼의 정렬을 따릅니다.</p><p>표시 여부를 정하는 Boolean 속성으로, 텍스트 자체는 원본 비율과 precision으로 생성합니다. 칼럼의 labelFunction이나 formatString으로 라벨을 임의의 텍스트나 서식으로 변경할 수 없습니다. 소수 자릿수는 precision으로 지정합니다. null과 undefined는 이 속성과 관계없이 표시하지 않습니다. 막대를 표시하면서 false로 설정하면 PDF에서도 라벨을 숨깁니다. 복사, Excel 및 CSV 내보내기에는 백분율을 기록합니다.</p>
+기본값(default) : <code>true</code></td>
+</tr>
+<tr id="style">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">style</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>String &nbsp; <span class="label">Version: </span>3.0.19<br>
+<p>렌더러 전체에 적용할 CSS 클래스 이름을 지정합니다. 구간 클래스와 함께 적용됩니다.</p><p><code>.aui-grid-percentage-track</code>은 막대 배경, <code>.aui-grid-percentage-bar</code>는 채워진 막대, <code>.aui-grid-percentage-label</code>은 백분율 텍스트입니다.</p><pre><code class="language-css">.progress-low .aui-grid-percentage-bar { background: #c75138; }
+.progress-low .aui-grid-percentage-label { color: #a33d27; }</code></pre>
+기본값(default) : <code>null</code></td>
+</tr>
+<tr id="styleRange">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">styleRange</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Array &nbsp; <span class="label">Version: </span>3.0.19<br>
+<p>구간의 상한 비율을 키, CSS 클래스 이름을 값으로 지정합니다. 각 항목에는 하나의 상한만 넣고 0~1의 상한을 오름차순으로 나열합니다.</p><p>첫 구간은 0부터 해당 상한까지, 다음 구간은 이전 상한 초과부터 현재 상한까지입니다. 상한값 자체는 앞 구간에 포함됩니다. 1을 초과하는 데이터는 스타일 판정 시 1로 처리합니다. 마지막 상한을 넘거나 해당 구간의 클래스가 빈 문자열이면 기본 스타일을 사용합니다.</p><p>상한이 숫자가 아니거나 0~1을 벗어난 항목, 이전의 유효한 상한 이하인 항목, 여러 상한을 가진 항목과 클래스 값이 문자열이 아닌 항목은 무시합니다.</p><pre><code class="language-javascript">styleRange: [
+    { "0.3": "progress-low" },     // 0~30%
+    { "0.5": "progress-medium" },  // 30% 초과~50%
+    { "1": "progress-complete" }  // 50% 초과 (100% 초과 포함)
+]</code></pre>
+기본값(default) : <code>null</code></td>
+</tr>
+</table>
+</div>
+<div class="MainContent">
+<p></p>
+
+</div>
+<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
+</html>
+<!--Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved-->

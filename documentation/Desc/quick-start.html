@@ -9,27 +9,49 @@
   <meta content="IE=edge" http-equiv="X-UA-Compatible">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="-1">
-  <meta content="width=1200" name="viewport">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
   <meta content="AUIGrid API Documentation" property="og:title">
   <meta content="https://www.auisoft.net/documentation/auigrid" property="og:url">
   <meta content="AUIGrid API Documentation" property="og:description">
   <meta content="AUIGrid API Documentation" name="keywords">
   <title> AUIGrid Documentation</title>
-  <link href="../static/aui.ico" rel="shortcut icon" />
-  <link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen">
+  
+  <link rel="stylesheet" href="../static/prism.css">
+<link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen">
+<link rel="stylesheet" href="../static/typography.css">
+<link rel="stylesheet" href="../static/code-examples.css">
   <!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
-  <link rel="stylesheet" href="../static/prism.css"/>
-  <script type="text/javascript"src="../static/prism.js"></script>
+  <script src="../static/prism.js" data-manual></script>
+<script src="../static/code-examples.js"></script>
+
+<link rel="icon" href="../static/favicon.ico" sizes="any">
+<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
+<meta name="theme-color" content="#222729">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../static/docs-brand.css">
 </head>
 
-<body>
-  <div class="header">
-    <div id="logo-bar">
-      <a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
-    </div>
-    <span id="title">AUIGrid 3.0.18 Documentation</span>
-  </div>
+<body class="demo-typography docs-site">
+  <header class="docs-header"><div class="docs-header-inner">
+    <a id="logo-bar" class="docs-brand" href="https://www.auisoft.net/" aria-label="AUISoft 홈페이지">
+      <img src="../static/favicon.svg" width="40" height="40" alt="">
+      <span>AUISoft<small>에이유아이소프트</small></span>
+    </a>
+    <span id="title" class="docs-context">AUIGrid 3.0.19 Documentation</span>
+    <nav class="docs-navigation" aria-label="주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="../index.html">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav>
+    <details class="docs-mobile-navigation"><summary>메뉴</summary><nav aria-label="모바일 주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="../index.html">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav></details>
+  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">3. 간단하게 그리드 생성해 보기(Quick Start)</span></nav>
   <div class="MainContent">
 
     <h1>3. 간단하게 그리드 생성해 보기(Quick Start)</h1>
@@ -38,6 +60,10 @@
       이 문서는 AUIGrid를 처음 사용하는 개발자를 위한 가장 간단하면서도 완성된 형태의 사용 예제입니다.
       HTML 구조 작성부터, 그리드 출력, JSON 데이터 로딩까지 순차적으로 작성합니다.
     </p>
+
+    <p><strong>처음 시작한다면:</strong> <a href="noncommercial.html">비상업용 CDN 시작 안내</a>의 HTML 예제로
+      라이브러리를 직접 배치하지 않고 로컬에서 그리드를 실행해 볼 수 있습니다.
+      아래 설명은 제품 파일을 프로젝트에 배치하여 사용하는 흐름입니다.</p>
 
     <h2>3.1 기본 HTML 구조</h2>
     <pre><code class="language-html">&lt;!DOCTYPE html&gt;
@@ -171,6 +197,6 @@
     </div>
 
   </div>
-</body>
+<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
 
 </html>

@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react';
 import AUIGrid from '../static/AUIGrid-React.js/AUIGridReact';
 import axios from 'axios';
 
-const PUBLIC_URL = process.env.PUBLIC_URL;
+// 배포 하위 경로에서도 public의 데이터와 이미지에 접근하도록 끝 슬래시를 정리합니다.
+const PUBLIC_URL = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const columnLayoutMaster = [
 	{ dataField: 'id', headerText: 'ID', width: 160 },

@@ -1,78 +1,45 @@
 <script setup lang="ts">
-	import { ref, onMounted, onUnmounted, VueElement } from 'vue';
-	import { RouterLink, RouterView } from 'vue-router';
-
-	interface IMenuItem {
-		path: string;
-		name: string;
-		text: string;
-	}
-
-	const isNavOpen = ref<boolean>(window.innerWidth >= 1300 ? true : false);
-
-	const handleKnobClick = () => {
-		isNavOpen.value = !isNavOpen.value;
-	};
-
-	const handleLinkClick = () => {
-		if (window.innerWidth < 1300) {
-			isNavOpen.value = false;
-		}
-	};
-
-	const handleResize = () => {
-		//console.log('window 리사이징');
-		if (window.innerWidth >= 1300) {
-			isNavOpen.value = true;
-		} else {
-			isNavOpen.value = false;
-		}
-	};
-
-	onMounted(() => {
-		window.addEventListener('resize', handleResize);
-	});
-
-	onUnmounted(() => {
-		window.removeEventListener('resize', handleResize);
-	});
-
-	// 쇼케이스 메뉴 리스트
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
+import SourceDialog from './views/SourceDialog.vue';
+interface IMenuItem { path: string; name: string; text: string; }
+// 쇼케이스 메뉴 리스트
 	const mainMenuList: IMenuItem[] = [
 		{
 			path: '/Showcase01',
 			name: 'Showcase01',
-			text: '학생 출석 CRUD 그리드'
+			text: '산업 장비 자원 운영표'
 		},
 		{
 			path: '/Showcase02',
 			name: 'Showcase02',
-			text: '프로젝트 일정 트리 그리드'
+			text: '자율주행 로봇 BOM 원가'
 		},
 		{
 			path: '/Showcase03',
 			name: 'Showcase03',
-			text: '채널 마케팅 예산'
+			text: '재생에너지 월별 리포트'
 		},
 		{
 			path: '/Showcase04',
 			name: 'Showcase04',
-			text: '실시간 주식 종목'
+			text: '실시간 서비스 모니터링'
 		},
 		{
 			path: '/Showcase05',
 			name: 'Showcase05',
-			text: '국가 별 핸드폰 판매 통계'
+			text: 'AI 모델 벤치마크 비교'
 		},
-		{ path: '/Showcase06', name: 'Showcase06', text: '손익 계산 내역' },
+		{ path: '/Showcase06', name: 'Showcase06', text: '설계 변경 전후 대조표' },
+		{ path: '/Showcase07', name: 'Showcase07', text: '구매 요청 및 결재 현황' },
 		{
-			path: '/Showcase07',
-			name: 'Showcase07',
+			path: '/Showcase08',
+			name: 'Showcase08',
 			text: '일별 목표치 달성률 그리드'
 		},
-		// WebDemo 9번과 10번을 프레임워크 쇼케이스 8번과 9번으로 연결합니다.
-		{ path:'/Showcase08', name:'Showcase08', text:'반응형 밴드형 워크스페이스' },
-		{ path:'/Showcase09', name:'Showcase09', text:'자재 발주 및 입고 검수' }
+		// WebDemo와 동일한 순번으로 쇼케이스를 연결합니다.
+		{ path:'/Showcase09', name:'Showcase09', text:'반응형 밴드형 워크스페이스' },
+		{ path:'/Showcase10', name:'Showcase10', text:'자재 발주 및 입고 검수' }
 	];
 	// 일반 샘플 메뉴 리스트
 	const subMenuList: IMenuItem[] = [
@@ -119,67 +86,75 @@
 			text: 'CustomEditRenderer 작성 - 샘플 1 textarea'
 		}
 	];
+
+// 메뉴는 원래 순서를 유지하고 현재 경로에서 제목/원문 연결만 찾습니다.
+const route = useRoute();
+const isNavOpen = ref(false);
+const sourceOpen = ref(false);
+const query = ref('');
+const keyword = computed(() => query.value.trim().toLocaleLowerCase());
+const matches = (item: IMenuItem) => item.text.toLocaleLowerCase().includes(keyword.value) || item.name.toLocaleLowerCase().includes(keyword.value);
+const currentMenu = computed(() => [...mainMenuList, ...subMenuList].find(item => item.path.toLowerCase() === route.path.toLowerCase()));
+const isHome = computed(() => route.path === '/');
+const category = computed(() => isHome.value ? 'HOME' : (currentMenu.value && mainMenuList.includes(currentMenu.value)) ? '쇼케이스' : '샘플');
+const pageTitle = computed(() => isHome.value ? 'AUIGrid 데모 라이브러리' : currentMenu.value?.text || 'AUIGrid 데모');
+const resultCount = computed(() => [...mainMenuList, ...subMenuList].filter(matches).length);
+const closeNavigation = () => { isNavOpen.value = false; };
+const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') closeNavigation(); };
+// 페이지 이동과 화면 크기 변경 뒤 이전 메뉴/소스 창이 남지 않도록 정리합니다.
+watch(() => route.path, () => {
+    closeNavigation();
+    sourceOpen.value = false;
+    window.scrollTo(0, 0);
+});
+onMounted(() => { window.addEventListener('resize', closeNavigation); window.addEventListener('keydown', closeOnEscape); });
+onUnmounted(() => { window.removeEventListener('resize', closeNavigation); window.removeEventListener('keydown', closeOnEscape); });
 </script>
 
 <template>
-	<div>
-		<div class="header">
-			<div class="logo-bar">
-				<button class="knob-btn btn" @click="handleKnobClick">
-					<span class="knob-bar"></span>
-					<span class="knob-bar"></span>
-					<span class="knob-bar"></span>
-				</button>
-				<img id="logo" src="@/assets/auisoft.png" alt="AUISoft" />
-				<span class="title">AUIGrid 3.0 DEMO for Vue.js + Typescript</span>
-			</div>
-			<div class="header-buttons">
-				<a href="https://www.auisoft.net/dcenter.html" class="btn btn-primary"> DOWNLOAD FREE TRIAL </a>
-				<a href="https://www.auisoft.net/price.html" class="btn btn-primary"> PRICING &amp; LICENSE </a>
-			</div>
-		</div>
-		<div class="nav" v-bind:style="isNavOpen ? 'transform: translateX(0px)' : 'translateX(-300px)'">
-			<h3 class="force-text-center">AUIGrid for Vue3 + TS</h3>
-			<ul class="nav-menu">
-				<li>
-					<RouterLink to="/" @click="handleLinkClick" active-class="nav-item-active"><span class="nav-item" style="font-weight: 500">HOME</span></RouterLink>
-				</li>
-				<li :key="item.name" v-for="(item, index) in mainMenuList">
-					<RouterLink :to="item.path" @click="handleLinkClick" active-class="nav-item-active"
-						><span class="nav-item">{{ Number(item.name.replace('Showcase', '')) }}. {{ item.text }}</span></RouterLink
-					>
-				</li>
-			</ul>
-			<hr class="divider-root" />
-			<ul class="nav-menu">
-				<li :key="item.name" v-for="(item, index) in subMenuList">
-					<RouterLink :to="item.path" @click="handleLinkClick" active-class="nav-item-active"
-						><span class="nav-item">{{ index + 1 }}. {{ item.text }}</span></RouterLink
-					>
-				</li>
-			</ul>
-			<div class="nav-border"></div>
-		</div>
-		<div class="container">
-			<div class="view-content">
-				<RouterView v-slot="{ Component }">
+    <div class="sample-shell" :class="{ 'sample-nav-open': isNavOpen }">
+        <a class="sample-skip" href="#sample-main">본문으로 이동</a>
+        <header class="sample-header">
+            <div class="sample-logo-bar">
+                <button type="button" class="sample-menu-toggle" aria-label="데모 메뉴" aria-controls="sample-nav" :aria-expanded="isNavOpen" @click="isNavOpen = !isNavOpen"><span class="sample-menu-icon"></span></button>
+                <RouterLink class="sample-brand" to="/" aria-label="AUIGrid HOME"><span class="sample-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sample-brand-text"><strong>AUIGrid</strong><span>JavaScript 데이터 그리드</span></span></RouterLink>
+                <span class="sample-header-label">Vue + TypeScript 데모</span>
+            </div>
+            <nav class="sample-header-links" aria-label="제품 안내"><a href="https://www.auisoft.net/documentation/auigrid/">문서</a><a href="https://www.auisoft.net/price.html">라이선스</a><a href="https://www.auisoft.net/dcenter.html" class="btn sample-trial">평가판 다운로드</a></nav>
+        </header>
+        <button v-if="isNavOpen" type="button" class="sample-nav-backdrop" aria-label="데모 메뉴 닫기" @click="isNavOpen = false"></button>
+        <nav id="sample-nav" class="sample-nav" aria-label="데모 목록">
+            <div class="sample-nav-top"><div class="sample-nav-heading">전체 데모 <span>{{ mainMenuList.length + subMenuList.length }}</span></div><label class="sample-search"><span aria-hidden="true">⌕</span><input type="search" aria-label="데모 검색" placeholder="데모 검색" v-model="query" /></label></div>
+            <div class="sample-nav-scroll">
+                <RouterLink to="/" @click="isNavOpen = false">HOME</RouterLink>
+                <strong v-if="mainMenuList.some(matches)" class="sample-nav-group">쇼케이스</strong>
+                <ul><li v-for="item in mainMenuList" :key="item.name" v-show="matches(item)"><RouterLink :to="item.path" @click="isNavOpen = false">{{ Number(item.name.replace('Showcase', '')) }}. {{ item.text }}</RouterLink></li></ul>
+                <strong v-if="subMenuList.some(matches)" class="sample-nav-group">샘플</strong>
+                <ul><li v-for="(item, index) in subMenuList" :key="item.name" v-show="matches(item)"><RouterLink :to="item.path" @click="isNavOpen = false">{{ index + 1 }}. {{ item.text }}</RouterLink></li></ul>
+                <p v-if="keyword" class="sample-nav-empty" role="status">{{ resultCount ? `${resultCount}개 데모 검색됨` : '검색 결과가 없습니다.' }}</p>
+            </div>
+        </nav>
+        <main id="sample-main" class="sample-main" tabindex="-1">
+            <div class="sample-page-heading"><div><div class="sample-breadcrumb"><RouterLink to="/">데모</RouterLink><span aria-hidden="true">/</span><span>{{ category }}</span></div><h1>{{ pageTitle }}</h1></div><button v-if="!isHome && currentMenu" type="button" class="sample-source-open" @click="sourceOpen = true"><span aria-hidden="true">&lt;/&gt;</span> 소스 보기</button></div>
+            <div v-if="!isHome" class="sample-preview-toolbar"><span class="sample-preview-label"><i aria-hidden="true"></i>실행 화면</span><span class="sample-framework-label">Vue + TypeScript</span></div>
+            <div class="view-content sample-view" :class="{ 'sample-view--home': isHome }">
+<RouterView v-slot="{ Component }">
 					<template v-if="Component">
 						<Transition mode="out-in">
 							<KeepAlive>
 								<Suspense>
-									<!-- main content -->
+									<!-- 기존 캐시 및 비동기 컴포넌트 생명주기를 유지합니다. -->
 									<component :is="Component" :key="$route.fullPath"></component>
-									<!-- loading state -->
+									<!-- 비동기 화면 준비 상태 -->
 									<template #fallback> Loading... </template>
 								</Suspense>
 							</KeepAlive>
 						</Transition>
 					</template>
 				</RouterView>
-			</div>
-		</div>
-		<div class="footer">
-			<span>Copyright © AUISoft Co., Ltd.</span>
-		</div>
-	</div>
+            </div>
+        </main>
+        <footer class="sample-footer"><span>Copyright © AUISoft Co., Ltd.</span><a href="#sample-main">맨 위로</a></footer>
+        <SourceDialog v-if="sourceOpen && currentMenu" :path="currentMenu.path" :title="currentMenu.text" @close="sourceOpen = false" />
+    </div>
 </template>

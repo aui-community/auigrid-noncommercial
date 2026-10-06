@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -28,53 +36,67 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<style>
-	pre {
-		font-size: 12px;
-		font-family: 'Malgun Gothic', '맑은 고딕', AppleSDGothicNeo-Light, sans-serif;
-		font-size: 14px;
-		line-height: 1.267em;
-	}
+        <style>
+            pre {
+                font-size: 12px;
+                font-family: "Malgun Gothic", "맑은 고딕", AppleSDGothicNeo-Light, sans-serif;
+                font-size: 14px;
+                line-height: 1.267em;
+            }
 
-	.desc_my_strong {
-		font-weight: bold;
-		padding-top: 10px;
-	}
+            .desc_my_strong {
+                font-weight: bold;
+                padding-top: 10px;
+            }
 
-	.desc_my_ul {
-		list-style: disc;
-		list-style-position: inside;
-		line-height: 1.5em;
-	}
-</style>
-<script>
-	function init() { };
-</script>
-</head>
-<body>
+            .desc_my_ul {
+                list-style: disc;
+                list-style-position: inside;
+                line-height: 1.5em;
+            }
+        </style>
+        <script>
+            function init() {}
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>사용자 정의 렌더러(CustomRenderer)는 그리드에서 제공되는 칼럼 렌더러가 아닌 사용자(개발자)가 직접 출력하고자 하는 칼럼 렌더러를 작성하는 렌더러입니다.</p>
-		<p>사용자 렌더러 작성에는 기본 이상의 자바스크립트, CSS, HTML 스킬이 필요합니다.</p>
-		<p>심화된 개발자의 심화된 렌더링을 위해 제공하는 기능으로 사용자 정의 렌더러는 사용자(개발자)가 직접 개발하는 영역입니다.</p>
-		<p>이에 대한 기술지원은 제공하지 않으니 참고하여 해당 기능 개발/이용하시길 바랍니다. 전적으로 개발자 영역입니다.</p>
-		<p>사용자 렌더러 작성은 AUIGrid.RendererBase 클래스를 확장(extend)하여 작성합니다.</p>
-		<p>(사용자 렌더러와 에디트렌더러는 각각 AUIGrid.RendererBase 와 AUIGrid.EditRendererBase 클래스를 확장하니 혼동하지 않도록 주의하십시오.)</p>
-		<p class="desc_my_strong">사용자 정의 렌더러 사용의 장점</p>
-		<ul class="desc_my_ul">
-			<li>AUIGrid 에서 제공하는 렌더러의 한계를 넘어 원하는 형태로 그리드 출력이 가능합니다.</li>
-			<li>셀 또는 칼럼에 원하는 이벤트, 스타일 등 모든 행위를 사용자가 직접 컨트롤 할 수 있습니다.</li>
-			<li>순수 JS 또는 jQuery 와 연동하여 더 풍부한 정보 출력이 가능합니다.</li>
-		</ul>
-		<p class="desc_my_strong">사용자 정의 렌더러 사용의 단점</p>
-		<ul class="desc_my_ul">
-			<li>그리드에 출력된 형태 그대로 "엑셀로 저장" 을 할 수 없습니다.</li>
-			<li>그룹핑, 정렬, 필터링 기능 사용에 제한이 있습니다.</li>
-		</ul>
-		<p>다음은 실제로 작성한 사용자 렌더러 예제입니다.</p>
-		<div class="src_cover" style="max-height:800px;">
-			<pre>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        사용자 정의 렌더러(CustomRenderer)는 그리드에서 제공되는 칼럼 렌더러가 아닌 사용자(개발자)가
+                        직접 출력하고자 하는 칼럼 렌더러를 작성하는 렌더러입니다.
+                    </p>
+                    <p>사용자 렌더러 작성에는 기본 이상의 자바스크립트, CSS, HTML 스킬이 필요합니다.</p>
+                    <p>
+                        심화된 개발자의 심화된 렌더링을 위해 제공하는 기능으로 사용자 정의 렌더러는 사용자(개발자)가
+                        직접 개발하는 영역입니다.
+                    </p>
+                    <p>
+                        이에 대한 기술지원은 제공하지 않으니 참고하여 해당 기능 개발/이용하시길 바랍니다. 전적으로
+                        개발자 영역입니다.
+                    </p>
+                    <p>사용자 렌더러 작성은 AUIGrid.RendererBase 클래스를 확장(extend)하여 작성합니다.</p>
+                    <p>
+                        (사용자 렌더러와 에디트렌더러는 각각 AUIGrid.RendererBase 와 AUIGrid.EditRendererBase 클래스를
+                        확장하니 혼동하지 않도록 주의하십시오.)
+                    </p>
+                    <p class="desc_my_strong">사용자 정의 렌더러 사용의 장점</p>
+                    <ul class="desc_my_ul">
+                        <li>AUIGrid 에서 제공하는 렌더러의 한계를 넘어 원하는 형태로 그리드 출력이 가능합니다.</li>
+                        <li>
+                            셀 또는 칼럼에 원하는 이벤트, 스타일 등 모든 행위를 사용자가 직접 컨트롤 할 수 있습니다.
+                        </li>
+                        <li>순수 JS 또는 jQuery 와 연동하여 더 풍부한 정보 출력이 가능합니다.</li>
+                    </ul>
+                    <p class="desc_my_strong">사용자 정의 렌더러 사용의 단점</p>
+                    <ul class="desc_my_ul">
+                        <li>그리드에 출력된 형태 그대로 "엑셀로 저장" 을 할 수 없습니다.</li>
+                        <li>그룹핑, 정렬, 필터링 기능 사용에 제한이 있습니다.</li>
+                    </ul>
+                    <p>다음은 실제로 작성한 사용자 렌더러 예제입니다.</p>
+                    <div class="src_cover" style="max-height: 800px">
+                        <pre>
 /*
  * AUIGrid 사용자 정의 렌더러
  */
@@ -258,12 +280,12 @@ window.AUIGrid.MyStockRenderer = window.AUIGrid.Class({
 	}
 }).extend(window.AUIGrid.RendererBase);
 		</pre>
-		</div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

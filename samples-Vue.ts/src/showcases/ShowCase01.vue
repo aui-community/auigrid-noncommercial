@@ -1,240 +1,117 @@
 <script setup lang="ts">
-	import { ref, onMounted, onBeforeUnmount } from 'vue';
-	import * as IGrid from 'aui-grid';
-	import AUIGrid from '@/static/AUIGrid-Vue/AUIGridT.vue';
-	import axios from 'axios';
-	import 'file-saver';
-	import '@/static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
-	import './Showcase01.css';
+import { ref, shallowRef, onMounted, onBeforeUnmount, onActivated, onDeactivated, nextTick } from 'vue';
+import AUIGrid from '@/static/AUIGrid-Vue/AUIGridT.vue';
+import 'file-saver';
+import '../static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
+import { createDemo, initialView } from './showcase1Model';
+import './showcase-workspaces.css';
 
-	type AUIGrid = InstanceType<typeof AUIGrid>;
+// public 자원은 Vite 배포 경로를 기준으로 읽습니다.
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-	const myGrid = ref<AUIGrid | null>(null);
-
-	const myExpFunction = (_rowIndex: number, _columnIndex: number, item: any, dataField: string): number => {
-		let count = 0;
-
-		if (dataField === 'ceu') {
-			for (const field in item) {
-				const value: string = item[field];
-				if (value === 'E' || value === 'U') count++;
-			}
-			return count;
-		}
-
-		const opMap: Record<string, string> = { ct: 'T', ce: 'E', cu: 'U', cp: 'P' };
-		const opValue = opMap[dataField] ?? '';
-		for (const field in item) {
-			if (item[field] === opValue) count++;
-		}
-		return count;
-	};
-
-	const cellStyleFunction = (_rowIndex: number, _columnIndex: number, value: any): string | null => {
-		const styleMap: Record<string, string> = {
-			N: 'mycustom-n',
-			T: 'mycustom-t',
-			U: 'mycustom-u',
-			E: 'mycustom-e',
-			P: 'mycustom-p'
-		};
-		return styleMap[value] ?? null;
-	};
-
-	const columnLayout: IGrid.Column[] = (() => {
-		const days = ['일', '월', '화', '수', '목', '금', '토'];
-		const layout: IGrid.Column[] = [
-			{
-				dataField: 'name',
-				headerText: '학생이름',
-				filter: { showIcon: true, useExMenu: true }
-			},
-			{
-				headerText: '합 계',
-				children: [
-					{ dataField: 'ct', expFunction: myExpFunction, editable: false, headerText: 'T', width: 40, headerStyle: 'mycustom-t', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '지각' } },
-					{ dataField: 'ce', expFunction: myExpFunction, editable: false, headerText: 'E', width: 40, headerStyle: 'mycustom-e', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '사정 상 결석' } },
-					{ dataField: 'cu', expFunction: myExpFunction, editable: false, headerText: 'U', width: 40, headerStyle: 'mycustom-u', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '무단 결석' } },
-					{ dataField: 'cp', expFunction: myExpFunction, editable: false, headerText: 'P', width: 40, headerStyle: 'mycustom-p', dataType: 'numeric', headerTooltip: { show: true, tooltipHtml: '출석' } },
-					{ dataField: 'ceu', expFunction: myExpFunction, editable: false, headerText: '결석 일수', width: 100, dataType: 'numeric', renderer: { type: IGrid.RendererKind.BarRenderer, max: 10, style: 'showcase1-custmom-bar' } }
-				]
-			}
-		];
-
-		for (let i = 1; i <= 31; i++) {
-			layout.push({
-				headerText: days[i % 7],
-				children: [{ dataField: 'd' + i, headerText: String(i), width: 40, styleFunction: cellStyleFunction }]
-			});
-		}
-		return layout;
-	})();
-
-	const gridProps: IGrid.Props = {
-		editable: true,
-		width: '100%',
-		height: 480,
-		selectionMode: 'multipleCells'
-	};
-
-	// 데이터 요청과 그리드 반영. 종료된 컴포넌트에는 응답을 적용하지 않습니다.
-	async function loadGridData(grid: AUIGrid, signal: AbortSignal) {
-		grid.showAjaxLoader();
-		try {
-			const { data } = await axios.get('./data/student_present.json', { signal });
-			if (!signal.aborted) grid.setGridData(data);
-		} catch (error) {
-			if (!signal.aborted) console.error('데이터 로딩 오류:', error);
-		} finally {
-			if (!signal.aborted) grid.removeAjaxLoader();
-		}
-	}
-
-	// 편집 이벤트 안에서 재진입하지 않도록 기존 16ms 지연을 유지합니다.
-	let disposed = false;
-	const pendingEdits = new Set<ReturnType<typeof setTimeout>>();
-	const scheduleEdit = (callback: () => void) => {
-		if (disposed) return;
-		const timer = setTimeout(() => {
-			pendingEdits.delete(timer);
-			callback();
-		}, 16);
-		pendingEdits.add(timer);
-	};
-	const cancelPendingEdits = () => {
-		disposed = true;
-		pendingEdits.forEach(clearTimeout);
-		pendingEdits.clear();
-	};
-
-	// Vue template에서 이름 있는 이벤트 핸들러를 연결합니다.
-	const handleCellClick = (event: IGrid.CellClickEvent) => {
-		console.log(event.type, event.value);
-	};
-	const handleHeaderClick = (event: IGrid.HeaderClickEvent) => {
-		console.log(event.type, event.headerText);
-	};
-	const handleAddRowFinish = () => {
-		const grid = myGrid.value as AUIGrid;
-		const selected = grid.getSelectedIndex();
-		if (selected.length <= 0) return;
-		const rowIndex = selected[0];
-		const colIndex = grid.getColumnIndexByDataField('name');
-		grid.setSelectionByIndex(rowIndex, colIndex);
-		scheduleEdit(() => grid.openInputer());
-	};
-	const handleCellEditEndBefore = (event: IGrid.CellEditEndEvent) => {
-		if (event.dataField === 'name') {
-			console.log('oldValue :', event.oldValue, ', new Value :', event.value);
-			return event.value;
-		}
-		if (!event.value) return event.oldValue;
-		const value = event.value.toUpperCase();
-		const validValues = ['T', 'E', 'U', 'P', 'N'];
-		if (!validValues.includes(value)) {
-			console.log('T, E, U, P, N 입력이 아님으로 에디팅 취소시킴');
-			return event.oldValue;
-		}
-		console.log('oldValue :', event.oldValue, ', new Value :', value, '(대문자로 변경됨)');
-		return value;
-	};
-	const handleCellEditCancel = (event: IGrid.CellEditCancelEvent) => {
-		const grid = myGrid.value as AUIGrid;
-		if (event.dataField === 'name' && event.item.name === '') {
-			scheduleEdit(() => grid.removeRow(event.rowIndex));
-		}
-	};
-
-	// KeepAlive의 비활성화 동안에는 유지하고, 실제 unmount에서만 정리합니다.
-	const controller = new AbortController();
-	onMounted(() => {
-		const grid = myGrid.value as AUIGrid;
-		loadGridData(grid, controller.signal);
-	});
-	onBeforeUnmount(() => {
-		controller.abort();
-		cancelPendingEdits();
-	});
-
-	const addRow = () => {
-		const grid = myGrid.value as AUIGrid;
-		grid.forceEditingComplete(null);
-
-		const holidays = [6, 7, 13, 14];
-		const item: any = { name: '' };
-		for (let i = 1; i <= 31; i++) {
-			item['d' + i] = holidays.includes(i) ? 'N' : 'P';
-		}
-		grid.addRow(item, 'last');
-	};
-
-	const removeRow = () => {
-		(myGrid.value as AUIGrid).removeRow('selectedIndex');
-	};
-
-	const restoreSoftRow = () => {
-		(myGrid.value as AUIGrid).restoreSoftRows('selectedIndex');
-	};
-
-	const removeSoftRows = () => {
-		const grid = myGrid.value as AUIGrid;
-		const removedRows = grid.getRemovedItems(true);
-		if (removedRows.length <= 0) {
-			alert('삭제 처리되어 마크된 행이 없습니다.');
-			return;
-		}
-		if (window.confirm('다시 복구 할 수 없습니다. 삭제 하시겠습니까?')) {
-			grid.removeSoftRows();
-		}
-	};
-
-	const exportClick = () => {
-		(myGrid.value as AUIGrid).exportToXlsx({
-			progressBar: true,
-			fileName: '쇼케이스-01'
-		});
-	};
-
-	const exportPdfClick = () => {
-		(myGrid.value as AUIGrid).exportToPdf({
-			fontPath: './fonts/nyjgothic-medium.ttf',
-			fileName: '쇼케이스-01'
-		});
-	};
+const myGrid = ref<InstanceType<typeof AUIGrid> | null>(null);
+const view = shallowRef(initialView);
+// 화면은 Vue 상태로 갱신하고 칼럼 및 데이터 처리는 별도 모델에 모읍니다.
+const demo = createDemo((value) => {
+    view.value = value;
+}, baseUrl);
+onMounted(() => demo.attach(myGrid.value!));
+// KeepAlive에서도 숨겨진 화면의 갱신을 멈추고 복귀한 그리드 크기를 다시 계산합니다.
+onDeactivated(() => demo.pause());
+onActivated(() => nextTick(() => demo.resume()));
+onBeforeUnmount(() => demo.detach());
 </script>
 <template>
-	<div>
-		<div class="desc">
-			<div>
-				<button class="btn" @click="exportClick">엑셀(xlsx)로 저장</button>
-				<button class="btn" @click="exportPdfClick">PDF로 저장</button>
-			</div>
-			<p>학생 출석 레코드를 표현 할 때 각각의 셀에 스타일을 적용시킨 것입니다.</p>
-			<div>
-				<span class="legend mycustom-t">T</span>
-				<span>지각</span>
-				<span class="legend mycustom-e">E</span>
-				<span>유고</span>
-				<span class="legend mycustom-u">U</span>
-				<span>무단</span>
-				<span class="legend mycustom-p">P</span>
-				<span>출석</span>
-				<span class="legend mycustom-n">N</span>
-				<span>휴교</span>
-			</div>
-			<p>날짜의 값(T, E, U, P, N) 수정 시 동적으로 합계가 변경됩니다.</p>
-			<div>
-				<div>
-					<button class="btn" @click="addRow">학생 추가</button>
-					<button class="btn" @click="removeRow">선택 삭제</button>
-					<button class="btn" @click="restoreSoftRow">삭제 취소</button>
-					<button class="btn" @click="removeSoftRows">삭제 처리된 행들 완전 삭제</button>
-				</div>
-			</div>
-			<p>(삭제 시 softRemoveRowMode = true 설정으로 바로 그리드에서 제거하지 않음.)</p>
-		</div>
-		<AUIGrid ref="myGrid" :columnLayout="columnLayout" :gridProps="gridProps"
-			@cellClick="handleCellClick" @headerClick="handleHeaderClick" @addRowFinish="handleAddRowFinish"
-			@cellEditEndBefore="handleCellEditEndBefore" @cellEditCancel="handleCellEditCancel" />
-	</div>
+    <div class="workspace-demo resource-planner">
+        <div class="workspace-heading">
+            <div>
+                <h2>산업 장비 자원 운영표</h2>
+                <p>600개 장비의 날짜별 가동, 예약과 점검 일정을 한눈에 관리하세요.</p>
+            </div>
+            <strong class="resource-month">2026년 10월</strong>
+        </div>
+        <div class="workspace-toolbar">
+            <div class="workspace-controls">
+                <label
+                    >거점<select
+                        id="resource-site"
+                        :value="view.site"
+                        @change="demo.setControl('site', ($event.target as HTMLSelectElement).value)"
+                    >
+                        <option>전체</option>
+                        <option>수도권 센터</option>
+                        <option>중부 센터</option>
+                        <option>남부 센터</option>
+                        <option>동부 센터</option>
+                        <option>서부 센터</option>
+                    </select></label
+                ><label
+                    >자원 종류<select
+                        id="resource-type"
+                        :value="view.category"
+                        @change="demo.setControl('category', ($event.target as HTMLSelectElement).value)"
+                    >
+                        <option>전체</option>
+                        <option>자율이동 로봇</option>
+                        <option>무인 운반차</option>
+                        <option>전동 지게차</option>
+                        <option>3D 프린터</option>
+                        <option>정밀 측정기</option>
+                        <option>비전 검사기</option>
+                    </select></label
+                ><input
+                    type="search"
+                    id="resource-search"
+                    class="workspace-search"
+                    placeholder="자원명 또는 번호 검색"
+                    aria-label="자원 검색"
+                    :value="view.query"
+                    @input="demo.setControl('query', ($event.target as HTMLInputElement).value)"
+                />
+            </div>
+            <span id="resource-count">{{ view.count }}</span>
+        </div>
+        <div class="resource-legend" aria-label="운영 상태 범례">
+            <span class="resource-active">가동</span><span class="resource-reserved">예약</span
+            ><span class="resource-maintenance">점검</span><span class="resource-idle">유휴</span
+            ><small>날짜를 더블클릭해 상태를 변경하세요. 집계는 자동 계산됩니다.</small>
+        </div>
+        <div class="workspace-toolbar">
+            <div class="workspace-controls">
+                <select
+                    id="resource-state"
+                    aria-label="범위에 적용할 상태"
+                    :value="view.state"
+                    @change="demo.setControl('state', ($event.target as HTMLSelectElement).value)"
+                >
+                    <option>가동</option>
+                    <option>예약</option>
+                    <option>점검</option>
+                    <option>유휴</option></select
+                ><button type="button" class="btn" @click="demo.applyState()">선택 날짜에 적용</button
+                ><button
+                    type="button"
+                    class="btn"
+                    id="resource-undo"
+                    :disabled="view.undoDisabled"
+                    @click="demo.undoResource()"
+                >
+                    실행 취소
+                </button>
+            </div>
+            <div class="workspace-controls">
+                <button type="button" class="btn" @click="demo.addResource()">자원 추가</button
+                ><button type="button" class="btn" @click="demo.removeResource()">선택 삭제</button
+                ><button type="button" class="btn" @click="demo.exportReport('xlsx')">Excel 내보내기</button
+                ><button type="button" class="btn" @click="demo.exportReport('pdf')">PDF 내보내기</button>
+            </div>
+        </div>
+        <div class="showcase-grid">
+            <AUIGrid ref="myGrid" name="showcase1" :columnLayout="demo.columnLayout" :gridProps="demo.gridProps" />
+        </div>
+        <div class="workspace-note">
+            <p id="resource-message" role="status">{{ view.message }}</p>
+            <p>가상 자원 데이터 / 가동률 = 가동 일수 ÷ 31일</p>
+        </div>
+    </div>
 </template>

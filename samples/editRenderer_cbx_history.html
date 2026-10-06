@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,146 +37,177 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.my-color {
-		color: #00aa00;
-	}
-</style>
+        <style>
+            /* 커스텀 칼럼 스타일 정의 */
+            .my-color {
+                color: #00aa00;
+            }
+        </style>
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 랜덤 데이터 생성하여 그리드에 데이터 삽입
-		AUIGrid.setGridData(myGridID, genRandomData());
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 랜덤 데이터 생성하여 그리드에 데이터 삽입
+                AUIGrid.setGridData(myGridID, genRandomData());
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "position",
-			headerText: "직급",
-			width: 200,
-			editRenderer: {
-				type: "ComboBoxRenderer",
-				autoCompleteMode: true, // 자동완성 모드 설정
-				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-				historyMode: true, // 히스토리 모드 사용
-				list: [] // 현재 칼럼에 있는 값만을 리스트로 사용하기 위해 list 는 빈 배열.
-			}
-		}, {
-			dataField: "name",
-			headerText: "이름",
-			width: 200,
-			editRenderer: {
-				type: "ComboBoxRenderer",
-				autoCompleteMode: true, // 자동완성 모드 설정
-				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-				historyMode: true, // 히스토리 모드 사용
-				list: [] // 현재 칼럼에 있는 값만을 리스트로 사용하기 위해 list 는 빈 배열.
-			}
-		}, {
-			dataField: "memo",
-			headerText: "기타",
-			editRenderer: {
-				type: "ComboBoxRenderer",
-				autoCompleteMode: true, // 자동완성 모드 설정
-				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-				historyMode: true, // 히스토리 모드 사용
-				list: ["추후 연락 바람", "이상 없음", "긴급 사항 발생"] // 기본적으로 출력시킬 list 정의
-			}
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "position",
+                        headerText: "직급",
+                        width: 200,
+                        editRenderer: {
+                            type: "ComboBoxRenderer",
+                            autoCompleteMode: true, // 자동완성 모드 설정
+                            showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+                            historyMode: true, // 히스토리 모드 사용
+                            list: [] // 현재 칼럼에 있는 값만을 리스트로 사용하기 위해 list 는 빈 배열.
+                        }
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "이름",
+                        width: 200,
+                        editRenderer: {
+                            type: "ComboBoxRenderer",
+                            autoCompleteMode: true, // 자동완성 모드 설정
+                            showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+                            historyMode: true, // 히스토리 모드 사용
+                            list: [] // 현재 칼럼에 있는 값만을 리스트로 사용하기 위해 list 는 빈 배열.
+                        }
+                    },
+                    {
+                        dataField: "memo",
+                        headerText: "기타",
+                        editRenderer: {
+                            type: "ComboBoxRenderer",
+                            autoCompleteMode: true, // 자동완성 모드 설정
+                            showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+                            historyMode: true, // 히스토리 모드 사용
+                            list: ["추후 연락 바람", "이상 없음", "긴급 사항 발생"] // 기본적으로 출력시킬 list 정의
+                        }
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			rowIdField: "index",            // 각 행의 고유 ID 필드
-			editable: true,                 // 편집 가능 여부
-			showRowCheckColumn: true,       // 체크박스 열 표시
-			showStateColumn: true,          // 상태 열 표시
-			rowCheckToRadio: true,          // 체크박스 대신 라디오 버튼 출력
-			enableSorting: true,            // 정렬 기능 활성화
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    rowIdField: "index", // 각 행의 고유 ID 필드
+                    editable: true, // 편집 가능 여부
+                    showRowCheckColumn: true, // 체크박스 열 표시
+                    showStateColumn: true, // 상태 열 표시
+                    rowCheckToRadio: true, // 체크박스 대신 라디오 버튼 출력
+                    enableSorting: true // 정렬 기능 활성화
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
-			const logEle = document.getElementById("elapse");
-			logEle.textContent = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-		});
-	}
+                // 에디팅 정상 종료 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+                    const logEle = document.getElementById("elapse");
+                    logEle.textContent = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+                });
+            }
 
-	//체크된 아이템 얻기
-	function getCheckedRowItems() {
-		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-		if (checkedItems.length <= 0) {
-			alert("체크된 항목 없음!!");
-			return;
-		}
-		let str = "";
-		for (let i = 0, len = checkedItems.length; i < len; i++) {
-			const rowItem = checkedItems[i];
-			str += Object.entries(rowItem.item)
-				.map(([key, value]) => `${key} : ${value}`)
-				.join(", ");
-		}
-		alert(str);
-	}
+            //체크된 아이템 얻기
+            function getCheckedRowItems() {
+                const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+                if (checkedItems.length <= 0) {
+                    alert("체크된 항목 없음!!");
+                    return;
+                }
+                let str = "";
+                for (let i = 0, len = checkedItems.length; i < len; i++) {
+                    const rowItem = checkedItems[i];
+                    str += Object.entries(rowItem.item)
+                        .map(([key, value]) => `${key} : ${value}`)
+                        .join(", ");
+                }
+                alert(str);
+            }
 
-	// 그리드에 삽입할 데이터 생성
-	function genRandomData() {
-		const data = [];
-		const posList = ["회장", "사장", "부사장", "상무", "전무", "이사", "부장", "차장", "과장", "대리", "사원", "인턴"];
-		const names = ["홍길동", "Yamaha", "Steve", "Anna", "Natasha", "Han", "Soo"];
-		let i;
-		for (i = 0; i < names.length; i++) {
-			data.push({
-				index: i,
-				position: posList[i],
-				name: names[i],
-				memo: ""
-			});
-		}
-		for (i = names.length + 1; i < 22; i++) {
-			data.push({
-				index: i,
-				position: "",
-				name: "",
-				memo: ""
-			});
-		}
-		//console.log(JSON.stringify(data));
-		return data;
-	}
-</script>
-</head>
-<body>
+            // 그리드에 삽입할 데이터 생성
+            function genRandomData() {
+                const data = [];
+                const posList = [
+                    "회장",
+                    "사장",
+                    "부사장",
+                    "상무",
+                    "전무",
+                    "이사",
+                    "부장",
+                    "차장",
+                    "과장",
+                    "대리",
+                    "사원",
+                    "인턴"
+                ];
+                const names = ["홍길동", "Yamaha", "Steve", "Anna", "Natasha", "Han", "Soo"];
+                let i;
+                for (i = 0; i < names.length; i++) {
+                    data.push({
+                        index: i,
+                        position: posList[i],
+                        name: names[i],
+                        memo: ""
+                    });
+                }
+                for (i = names.length + 1; i < 22; i++) {
+                    data.push({
+                        index: i,
+                        position: "",
+                        name: "",
+                        memo: ""
+                    });
+                }
+                //console.log(JSON.stringify(data));
+                return data;
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>콤보박스에 자동완성(autoComplete) 기능 및 히스토리(history) 기능을 설정한 모습입니다.</p>
-		<p>히스토리 모드는 사용자가 입력한 칼럼의 값을 콤보박스 리스트에 추가 시켜 리스트로 출력시킵니다.</p>
-		<p>예를 들어 현재 "직급" 칼럼에 "회장", "부회장", "상무" 등이 출력되고 있습니다. 여기서 사용자가 콤보박스의 리스트를 선택하지 않고 다른 값을 직접 입력하면 그 값이 리스트로 추가됩니다.</p>
-		<p>즉, "직급" 칼럼에서 "임시" 라고 사용자가 입력하면 다음부터는 "임시" 값도 리스트로 출력시킵니다.</p>
-		<p>자동완성 기능을 동시에 설정했기 때문에 "ㅇ" 을 입력하면 "임시" 값이 필터링되어 리스트로 출력됩니다.</p>
-		<p>히스토리 모드는 기본 list 속성(또는 listFunction) 과 같이 사용 가능합니다. 그러나 list 속성을 key-value 로 갖는 Object 배열을 설정한 경우는 무시됩니다.(사용자가 입력한 값에는 keyField 에 해당되는 값이 없기 때문임)</p>
-		<span onclick="getCheckedRowItems()" class="btn">체크 항목 얻기</span>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>콤보박스에 자동완성(autoComplete) 기능 및 히스토리(history) 기능을 설정한 모습입니다.</p>
+                    <p>
+                        히스토리 모드는 사용자가 입력한 칼럼의 값을 콤보박스 리스트에 추가 시켜 리스트로 출력시킵니다.
+                    </p>
+                    <p>
+                        예를 들어 현재 "직급" 칼럼에 "회장", "부회장", "상무" 등이 출력되고 있습니다. 여기서 사용자가
+                        콤보박스의 리스트를 선택하지 않고 다른 값을 직접 입력하면 그 값이 리스트로 추가됩니다.
+                    </p>
+                    <p>
+                        즉, "직급" 칼럼에서 "임시" 라고 사용자가 입력하면 다음부터는 "임시" 값도 리스트로 출력시킵니다.
+                    </p>
+                    <p>
+                        자동완성 기능을 동시에 설정했기 때문에 "ㅇ" 을 입력하면 "임시" 값이 필터링되어 리스트로
+                        출력됩니다.
+                    </p>
+                    <p>
+                        히스토리 모드는 기본 list 속성(또는 listFunction) 과 같이 사용 가능합니다. 그러나 list 속성을
+                        key-value 로 갖는 Object 배열을 설정한 경우는 무시됩니다.(사용자가 입력한 값에는 keyField 에
+                        해당되는 값이 없기 때문임)
+                    </p>
+                    <span onclick="getCheckedRowItems()" class="btn">체크 항목 얻기</span>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

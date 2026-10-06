@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,81 +37,90 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_500.json");
+            }
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_500.json");
-	}
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "name",
+                        headerText: "Name",
+                        width: 160
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        width: 160
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        width: 160
+                    },
+                    {
+                        dataField: "quantity",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        width: 120
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        width: 160
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date",
+                        width: 160
+                    }
+                ];
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "Name",
-			width: 160
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			width: 160
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			width: 160
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			width: 120
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			width: 160
-		}, {
-			dataField: "date",
-			headerText: "Date",
-			width: 160
-		}];
+                // 그리드 속성 설정
+                const gridProps = {
+                    // 페이징 사용
+                    usePaging: true,
+                    // 페이징을 간단한 유형으로 나오도록 설정
+                    pagingMode: "simple",
+                    // 한 화면에 출력되는 행 개수 30개로 지정
+                    pageRowCount: 30,
+                    // 페이지 행 개수 select UI 출력 여부 (기본값 : false)
+                    showPageRowSelect: true
+                };
 
-		// 그리드 속성 설정
-		const gridProps = {
-			// 페이징 사용		
-			usePaging: true,
-			// 페이징을 간단한 유형으로 나오도록 설정
-			pagingMode: "simple",
-			// 한 화면에 출력되는 행 개수 30개로 지정
-			pageRowCount: 30,
-			// 페이지 행 개수 select UI 출력 여부 (기본값 : false)
-			showPageRowSelect: true
-		};
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
-</script>
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<p>페이징을 이전 버턴, 현재 페이지/총 페이지수, 다음 버턴으로 구성된 심플 모드로 출력한 모습입니다.(pagingMode="simple")</p>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:520px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        페이징을 이전 버턴, 현재 페이지/총 페이지수, 다음 버턴으로 구성된 심플 모드로 출력한
+                        모습입니다.(pagingMode="simple")
+                    </p>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 520px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

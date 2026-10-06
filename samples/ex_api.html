@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,104 +37,113 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
 
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_kor_500.json");
-	}
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_kor_500.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "Name",
-			width: 200
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			width: 200
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			width: 200
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			width: 120
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric"
-		}, {
-			dataField: "date",
-			headerText: "Date"
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "name",
+                        headerText: "Name",
+                        width: 200
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        width: 200
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        width: 200
+                    },
+                    {
+                        dataField: "quantity",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        width: 120
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric"
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date"
+                    }
+                ];
 
-		// 그리드 속성
-		const gridProps = {
-			editable: true
-		};
+                // 그리드 속성
+                const gridProps = {
+                    editable: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
 
-	// 메소드 실행
-	function runExAPI(code) {
-		switch (code) {
-			case 0:
-				AUIGrid.showAjaxLoader(myGridID);
-				break;
-			case 1:
-				AUIGrid.removeAjaxLoader(myGridID);
-				break;
-			case 2:
-				AUIGrid.showToastMessage(myGridID, 7, 1, "셀에 메세지를 표시합니다.");
-				break;
-			case 3:
-				AUIGrid.removeToastMessage(myGridID);
-				break;
-			case 4:
-				AUIGrid.showInfoMessage(myGridID, `<div style="text-align:center; line-height:400px;">원하는 메세지를 출력합니다.</div>`);
-				break;
-			case 5:
-				AUIGrid.removeInfoMessage(myGridID);
-				break;
-		}
-	}
-</script>
+            // 메소드 실행
+            function runExAPI(code) {
+                switch (code) {
+                    case 0:
+                        AUIGrid.showAjaxLoader(myGridID);
+                        break;
+                    case 1:
+                        AUIGrid.removeAjaxLoader(myGridID);
+                        break;
+                    case 2:
+                        AUIGrid.showToastMessage(myGridID, 7, 1, "셀에 메세지를 표시합니다.");
+                        break;
+                    case 3:
+                        AUIGrid.removeToastMessage(myGridID);
+                        break;
+                    case 4:
+                        AUIGrid.showInfoMessage(
+                            myGridID,
+                            `<div style="text-align:center; line-height:400px;">원하는 메세지를 출력합니다.</div>`
+                        );
+                        break;
+                    case 5:
+                        AUIGrid.removeInfoMessage(myGridID);
+                        break;
+                }
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<p>
-			<span class="btn" onclick="runExAPI(0)">프리로더 보이기</span>
-			<span class="btn" onclick="runExAPI(1)">프리로더 제거하기</span>
-			<span class="btn" onclick="runExAPI(2)">특정 셀에 메세지 표시하기</span>
-			<span class="btn" onclick="runExAPI(3)">특정 셀에 메세지 제거하기</span>
-			<span class="btn" onclick="runExAPI(4)">그리드 전체에 메세지 표시하기</span>
-			<span class="btn" onclick="runExAPI(5)">그리드 전체에 메세지 제거하기</span>
-		</p>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:400px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        <span class="btn" onclick="runExAPI(0)">프리로더 보이기</span>
+                        <span class="btn" onclick="runExAPI(1)">프리로더 제거하기</span>
+                        <span class="btn" onclick="runExAPI(2)">특정 셀에 메세지 표시하기</span>
+                        <span class="btn" onclick="runExAPI(3)">특정 셀에 메세지 제거하기</span>
+                        <span class="btn" onclick="runExAPI(4)">그리드 전체에 메세지 표시하기</span>
+                        <span class="btn" onclick="runExAPI(5)">그리드 전체에 메세지 제거하기</span>
+                    </p>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 400px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

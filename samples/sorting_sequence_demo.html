@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,114 +37,126 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_500.json");
+            }
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_500.json");
-	}
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 120
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Name",
+                        width: 140
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        width: 120
+                    },
+                    {
+                        dataField: "flag",
+                        headerText: "Flag IMG",
+                        editable: false,
+                        prefix: "./assets/",
+                        renderer: {
+                            type: "ImageRenderer",
+                            imgHeight: 24,
+                            altField: "country"
+                        },
+                        width: 100
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        width: 120
+                    },
+                    {
+                        dataField: "color",
+                        headerText: "Color",
+                        width: 100
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        style: "my-column",
+                        width: 120
+                    },
+                    {
+                        dataField: "quantity",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        style: "my-column",
+                        width: 100
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date"
+                    }
+                ];
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "id",
-			headerText: "ID",
-			width: 120
-		}, {
-			dataField: "name",
-			headerText: "Name",
-			width: 140
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			width: 120
-		}, {
-			dataField: "flag",
-			headerText: "Flag IMG",
-			editable: false,
-			prefix: "./assets/",
-			renderer: {
-				type: "ImageRenderer",
-				imgHeight: 24,
-				altField: "country"
-			},
-			width: 100
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			width: 120
-		}, {
-			dataField: "color",
-			headerText: "Color",
-			width: 100
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			style: "my-column",
-			width: 120
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			style: "my-column",
-			width: 100
-		}, {
-			dataField: "date",
-			headerText: "Date"
-		}];
+                // 그리드 속성 설정
+                const gridProps = {
+                    // 정렬 순서 : 첫 정렬을 내림차순부터, 오름차순, 원복의 순서 설정.
+                    sortingSequence: [0, -1, 1]
+                };
 
-		// 그리드 속성 설정
-		const gridProps = {
-			// 정렬 순서 : 첫 정렬을 내림차순부터, 오름차순, 원복의 순서 설정.
-			sortingSequence: [0, -1, 1]
-		};
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 정렬 이벤트 바인딩
+                AUIGrid.bind(myGridID, "sorting", function (event) {
+                    const sortingFields = event.sortingFields;
+                    let sortingStr = "";
+                    if (sortingFields.length > 0) {
+                        const parts = [];
+                        for (const field of sortingFields) {
+                            let sortLabel = "";
+                            if (field.sortType === 1) {
+                                sortLabel = "오름차순";
+                            } else {
+                                sortLabel = "내림차순";
+                            }
+                            parts.push(`${field.dataField} : ${sortLabel}`);
+                        }
+                        sortingStr = parts.join(", ");
+                    } else {
+                        sortingStr = "정렬 필드 없음";
+                    }
+                    document.getElementById("sorting_info").textContent =
+                        "이벤트명 : " + event.type + ", 정렬 필드들 : " + sortingStr;
+                });
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-		// 정렬 이벤트 바인딩
-		AUIGrid.bind(myGridID, "sorting", function (event) {
-			const sortingFields = event.sortingFields;
-			let sortingStr = "";
-			if (sortingFields.length > 0) {
-				const parts = [];
-				for (const field of sortingFields) {
-					let sortLabel = "";
-					if (field.sortType === 1) {
-						sortLabel = "오름차순";
-					} else {
-						sortLabel = "내림차순";
-					}
-					parts.push(`${field.dataField} : ${sortLabel}`);
-				}
-				sortingStr = parts.join(", ");
-			} else {
-				sortingStr = "정렬 필드 없음";
-			}
-			document.getElementById("sorting_info").textContent = "이벤트명 : " + event.type + ", 정렬 필드들 : " + sortingStr;
-		});
-	}
-</script>
-
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<p>헤더를 클릭해서 정렬을 할 때 오름차순, 내림차순, 원복의 순서가 기본값(default)입니다.</p>
-		<p>즉, 최초 정렬은 오름차순입니다. 그러나 <strong>해당 데모는 최초 정렬을 내림차순으로 설정한 모습</strong>입니다.</p>
-		<p>sortingSequence 속성을 설정함으로써 순서를 변경하거나 항목에서 제외 시킬 수 있습니다.</p>
-		<p>예로 작성하면 다음과 같습니다.</p>
-		<div class="src_cover">
-			<pre>
+            <div id="main">
+                <div class="desc">
+                    <p>헤더를 클릭해서 정렬을 할 때 오름차순, 내림차순, 원복의 순서가 기본값(default)입니다.</p>
+                    <p>
+                        즉, 최초 정렬은 오름차순입니다. 그러나
+                        <strong>해당 데모는 최초 정렬을 내림차순으로 설정한 모습</strong>입니다.
+                    </p>
+                    <p>sortingSequence 속성을 설정함으로써 순서를 변경하거나 항목에서 제외 시킬 수 있습니다.</p>
+                    <p>예로 작성하면 다음과 같습니다.</p>
+                    <div class="src_cover">
+                        <pre>
 // 정렬 순서 : 첫 정렬을 내림차순부터, 오름차순, 원복의 순서 설정.
 sortingSequence = [0, -1, 1];
 
@@ -146,16 +166,16 @@ sortingSequence = [1, -1];
 // 정렬 순서 : 내림차순만 사용. 내림 차순 이후 원복의 순서 설정. 즉, 오름차순은 사용하지 않음.
 sortingSequence = [0, -1];
 </pre>
-		</div>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="sorting_info"></p>
-	</div>
-</div>
+                    </div>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="sorting_info"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

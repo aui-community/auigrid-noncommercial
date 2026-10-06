@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,185 +37,219 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 기존 사용자 칼럼 스타일처럼 상위 셀과 숫자 정렬만 구별합니다. */
-	.my-team { background: #edf3ff; color: #315da8; }
-	.my-right { text-align: right; }
-</style>
-<script>
-    let myGridID;
-    function init() {
-        createAUIGrid();
-        // 정적 JSON을 읽어 그리드에 표시합니다.
-        requestGridData("./data/band_body_support.json");
-    }
-    // 기존 정렬, 필터, 컨텍스트 메뉴를 밴드형 바디와 함께 활성화합니다.
-    function createAUIGrid() {
-        // children으로 상위 칼럼과 하위 칼럼의 계층을 작성합니다.
-        const columnLayout = [
-            {
-                dataField: "id",
-                headerText: "ID",
-                width: 70,
-                editable: false,
-            }, {
-                dataField: "team",
-                headerText: "소속",
-                bodyCell: true,
-                style: "my-team",
-                tooltip: { show: true, tooltipField: "note" },
-                filter: { showIcon: true },
-                children: [
+        <style>
+            /* 기존 사용자 칼럼 스타일처럼 상위 셀과 숫자 정렬만 구별합니다. */
+            .my-team {
+                background: #edf3ff;
+                color: #315da8;
+            }
+            .my-right {
+                text-align: right;
+            }
+        </style>
+        <script>
+            let myGridID;
+            function init() {
+                createAUIGrid();
+                // 정적 JSON을 읽어 그리드에 표시합니다.
+                requestGridData("./data/band_body_support.json");
+            }
+            // 기존 정렬, 필터, 컨텍스트 메뉴를 밴드형 바디와 함께 활성화합니다.
+            function createAUIGrid() {
+                // children으로 상위 칼럼과 하위 칼럼의 계층을 작성합니다.
+                const columnLayout = [
                     {
-                        dataField: "name",
-                        headerText: "이름",
-                        width: 130,
-                        filter: { showIcon: true },
-                        tooltip: { show: true, tooltipField: "note" },
-                        // 이름은 입력, 붙여넣기, 값 지우기 모두 같은 기존 검증 규칙을 사용합니다.
-                        editRenderer: { type: "InputEditRenderer", validator: function (oldValue, value) {
-                                return { validate: String(value).trim().length > 0, message: "이름을 입력하십시오." };
-                            } }
-                    }, {
-                        dataField: "position",
-                        headerText: "직급",
-                        bodyCell: true,
-                        filter: { showIcon: true },
-                        editRenderer: { type: "DropDownListRenderer", list: ["사원", "대리", "과장", "책임"] },
-                        children: [
-                            {
-                                dataField: "age",
-                                headerText: "나이",
-                                width: 70,
-                                dataType: "numeric",
-                                filter: { showIcon: true },
-                                editRenderer: {
-                                    type: "InputEditRenderer",
-                                    onlyNumeric: true,
-                                    validator: function (oldValue, value) {
-                                        return { validate: value === "" || (Number(value) >= 0 && Number(value) <= 120), message: "나이는 0~120 또는 빈 값으로 입력하십시오." };
-                                    }
-                                }
-                            }, {
-                                dataField: "birth",
-                                headerText: "생년월일",
-                                width: 120,
-                                dataType: "date",
-                                dateInputFormat: "yyyy-mm-dd",
-                                formatString: "yyyy/mm/dd",
-                                filter: { showIcon: true, type: "date" },
-                                editRenderer: {
-                                    type: "CalendarRenderer",
-                                    defaultFormat: "yyyy-mm-dd",
-                                    onlyCalendar: true
-                                }
-                            }
-                        ]
-                    }
-                ]
-            }, {
-                dataField: "checked",
-                headerText: "확인",
-                bodyCell: true,
-                editable: false,
-                renderer: { type: "CheckBoxEditRenderer" },
-                children: [
-                    {
-                        dataField: "qty",
-                        headerText: "수량",
-                        width: 95,
-                        dataType: "numeric",
-                        editRenderer: { type: "InputEditRenderer", onlyNumeric: true }
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 70,
+                        editable: false
                     },
                     {
-                        dataField: "amount",
-                        headerText: "금액",
-                        width: 120,
-                        dataType: "numeric",
-                        formatString: "#,##0",
-                        style: "my-right"
+                        dataField: "team",
+                        headerText: "소속",
+                        bodyCell: true,
+                        style: "my-team",
+                        tooltip: { show: true, tooltipField: "note" },
+                        filter: { showIcon: true },
+                        children: [
+                            {
+                                dataField: "name",
+                                headerText: "이름",
+                                width: 130,
+                                filter: { showIcon: true },
+                                tooltip: { show: true, tooltipField: "note" },
+                                // 이름은 입력, 붙여넣기, 값 지우기 모두 같은 기존 검증 규칙을 사용합니다.
+                                editRenderer: {
+                                    type: "InputEditRenderer",
+                                    validator: function (oldValue, value) {
+                                        return {
+                                            validate: String(value).trim().length > 0,
+                                            message: "이름을 입력하십시오."
+                                        };
+                                    }
+                                }
+                            },
+                            {
+                                dataField: "position",
+                                headerText: "직급",
+                                bodyCell: true,
+                                filter: { showIcon: true },
+                                editRenderer: { type: "DropDownListRenderer", list: ["사원", "대리", "과장", "책임"] },
+                                children: [
+                                    {
+                                        dataField: "age",
+                                        headerText: "나이",
+                                        width: 70,
+                                        dataType: "numeric",
+                                        filter: { showIcon: true },
+                                        editRenderer: {
+                                            type: "InputEditRenderer",
+                                            onlyNumeric: true,
+                                            validator: function (oldValue, value) {
+                                                return {
+                                                    validate:
+                                                        value === "" || (Number(value) >= 0 && Number(value) <= 120),
+                                                    message: "나이는 0~120 또는 빈 값으로 입력하십시오."
+                                                };
+                                            }
+                                        }
+                                    },
+                                    {
+                                        dataField: "birth",
+                                        headerText: "생년월일",
+                                        width: 120,
+                                        dataType: "date",
+                                        dateInputFormat: "yyyy-mm-dd",
+                                        formatString: "yyyy/mm/dd",
+                                        filter: { showIcon: true, type: "date" },
+                                        editRenderer: {
+                                            type: "CalendarRenderer",
+                                            defaultFormat: "yyyy-mm-dd",
+                                            onlyCalendar: true
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        dataField: "checked",
+                        headerText: "확인",
+                        bodyCell: true,
+                        editable: false,
+                        renderer: { type: "CheckBoxEditRenderer" },
+                        children: [
+                            {
+                                dataField: "qty",
+                                headerText: "수량",
+                                width: 95,
+                                dataType: "numeric",
+                                editRenderer: { type: "InputEditRenderer", onlyNumeric: true }
+                            },
+                            {
+                                dataField: "amount",
+                                headerText: "금액",
+                                width: 120,
+                                dataType: "numeric",
+                                formatString: "#,##0",
+                                style: "my-right"
+                            }
+                        ]
+                    },
+                    {
+                        dataField: "status",
+                        headerText: "상태",
+                        width: 105,
+                        filter: { showIcon: true },
+                        editRenderer: {
+                            type: "ComboBoxRenderer",
+                            list: ["준비", "진행", "완료"],
+                            showEditorBtnOver: true
+                        }
+                    },
+                    {
+                        dataField: "button",
+                        headerText: "상세",
+                        width: 100,
+                        editable: false,
+                        renderer: {
+                            type: "ButtonRenderer",
+                            labelText: "상세 보기",
+                            onClick: function (event) {
+                                alert(event.item.id + " / " + event.item.name + " / " + event.item.team);
+                            }
+                        }
                     }
-                ]
-            }, {
-                dataField: "status",
-                headerText: "상태",
-                width: 105,
-                filter: { showIcon: true },
-                editRenderer: {
-                    type: "ComboBoxRenderer",
-                    list: ["준비", "진행", "완료"],
-                    showEditorBtnOver: true
-                }
-            }, {
-                dataField: "button",
-                headerText: "상세",
-                width: 100,
-                editable: false,
-                renderer: {
-                    type: "ButtonRenderer",
-                    labelText: "상세 보기",
-                    onClick: function (event) {
-                        alert(event.item.id + " / " + event.item.name + " / " + event.item.team);
-                    }
-                }
+                ];
+                columnLayout.push({
+                    dataField: "progress",
+                    headerText: "진행률",
+                    width: 110,
+                    dataType: "numeric",
+                    renderer: {
+                        type: "BarRenderer",
+                        min: 0,
+                        max: 100,
+                        height: 30
+                    },
+                    postfix: "%"
+                });
+                const gridProps = {
+                    bodyLayoutMode: "band",
+                    rowHeight: 120,
+                    editable: true,
+                    selectionMode: "multipleCells",
+                    wrapSelectionMove: true,
+                    enableSorting: true,
+                    enableFilter: true,
+                    useContextMenu: true,
+                    showTooltip: true
+                };
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 메뉴 콜백으로 셀 정보를 표시하고 기존 정렬과 필터를 해제합니다.
+                AUIGrid.bind(myGridID, "contextMenu", function () {
+                    return [
+                        {
+                            label: "셀 정보 보기",
+                            callback: function (event) {
+                                alert(event.dataField + " / " + event.value);
+                            }
+                        },
+                        {
+                            label: "정렬과 필터 해제",
+                            callback: function () {
+                                AUIGrid.clearSortingAll(myGridID);
+                                AUIGrid.clearFilterAll(myGridID);
+                            }
+                        }
+                    ];
+                });
             }
-        ];
-        columnLayout.push({
-            dataField: "progress",
-            headerText: "진행률",
-            width: 110,
-            dataType: "numeric",
-            renderer: {
-                type: "BarRenderer",
-                min: 0,
-                max: 100,
-                height: 30
-            },
-            postfix: "%"
-        });
-        const gridProps = {
-            bodyLayoutMode: "band",
-            rowHeight: 120,
-            editable: true,
-            selectionMode: "multipleCells",
-            wrapSelectionMove: true,
-            enableSorting: true,
-            enableFilter: true,
-            useContextMenu: true,
-            showTooltip: true,
-        };
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-        // 메뉴 콜백으로 셀 정보를 표시하고 기존 정렬과 필터를 해제합니다.
-        AUIGrid.bind(myGridID, "contextMenu", function () {
-            return [
-                { label: "셀 정보 보기", callback: function (event) {
-                        alert(event.dataField + " / " + event.value);
-                    } }, { label: "정렬과 필터 해제", callback: function () {
-                        AUIGrid.clearSortingAll(myGridID);
-                        AUIGrid.clearFilterAll(myGridID);
-                    } }
-            ];
-        });
-    }
-</script>
-</head>
-<body>
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p><strong>밴드형 바디의 정렬, 필터, 툴팁과 컨텍스트 메뉴</strong>를 일반 그리드와 같은 방법으로 설정합니다.</p>
-		<p>헤더 제목을 클릭하면 정렬하고, 필터 아이콘을 클릭하면 해당 칼럼의 값을 선택할 수 있습니다. 소속과 이름 셀에 마우스를 올리면 툴팁, 오른쪽 버튼을 클릭하면 컨텍스트 메뉴가 표시됩니다.</p>
-		<p>밴드형 바디에서는 다음 조합을 지원하지 않습니다.</p>
-		<ul>
-			<li>자동 행 높이와 줄바꿈: <code>wordWrap: false</code></li>
-			<li>셀 가로 및 세로 병합: <code>enableCellMerge: false</code></li>
-			<li>페이지를 넘는 연속 선택 범위</li>
-		</ul>
-	</div>
-	<div>
-		<div id="grid_wrap" style="width:100%;height:480px;margin:0 auto;"></div>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        <strong>밴드형 바디의 정렬, 필터, 툴팁과 컨텍스트 메뉴</strong>를 일반 그리드와 같은 방법으로
+                        설정합니다.
+                    </p>
+                    <p>
+                        헤더 제목을 클릭하면 정렬하고, 필터 아이콘을 클릭하면 해당 칼럼의 값을 선택할 수 있습니다.
+                        소속과 이름 셀에 마우스를 올리면 툴팁, 오른쪽 버튼을 클릭하면 컨텍스트 메뉴가 표시됩니다.
+                    </p>
+                    <p>밴드형 바디에서는 다음 조합을 지원하지 않습니다.</p>
+                    <ul>
+                        <li>자동 행 높이와 줄바꿈: <code>wordWrap: false</code></li>
+                        <li>셀 가로 및 세로 병합: <code>enableCellMerge: false</code></li>
+                        <li>페이지를 넘는 연속 선택 범위</li>
+                    </ul>
+                </div>
+                <div>
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

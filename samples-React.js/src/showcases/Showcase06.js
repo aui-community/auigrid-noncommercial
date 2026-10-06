@@ -1,94 +1,88 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AUIGrid from '../static/AUIGrid-React.js/AUIGridReact';
-import axios from 'axios';
-import ExportGridDataView from '../samples/ExportGridDataView';
-import './Showcase06.css';
+import FileSaver from 'file-saver';
+import '../static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
+import { createDemo, initialView } from './showcase6Model';
+import './showcase-workspaces.css';
+import './showcase-grid-features.css';
 
-const columnLayout = [
-	{
-		dataField: 'type0',
-		headerText: '구분',
-		cellMerge: true,
-		style: 'showcase6-my-column-strong',
-		filter: { showIcon: true }
-	},
-	{
-		dataField: 'type',
-		headerText: '유형',
-		width: 120
-	},
-	{
-		dataField: 'p131,p132,p133,p134,p135,p136,p137,p138,p139,p1310,p1311,p1312',
-		headerText: '월별 추이',
-		width: 120,
-		renderer: { type: 'SparkColumnRenderer' }
-	},
-	...['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map((m) => ({
-		dataField: `p13${m}`,
-		headerText: `'13 ${m}월`,
-		style: 'showcase6-my-column-text-right',
-		dataType: 'numeric',
-		formatString: '#,##0'
-	}))
-];
+// public 자원은 Vite 배포 경로를 기준으로 읽습니다.
+window.saveAs = FileSaver.saveAs;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const gridProps = {
-	width: '100%',
-	height: 480,
-	enableCellMerge: true,
-	enableFilter: true,
-	editable: true,
-	selectionMode: 'multipleCells',
-	showRowNumColumn: false,
-	showRowCheckColumn: false,
-	rowStyleFunction: (rowIndex, item) => {
-		if (item._mySum || item._mySum === 'true') return 'aui-grid-row-depth2-style';
-	}
-};
-
-// 데이터 요청과 그리드 반영. 종료된 컴포넌트에는 응답을 적용하지 않습니다.
-async function loadGridData(grid, signal) {
-	grid.showAjaxLoader();
-	try {
-		const { data } = await axios.get('./data/profit.json', { signal });
-		if (!signal.aborted) grid.setGridData(data);
-	} catch (error) {
-		if (!signal.aborted) console.error('데이터 로딩 오류:', error);
-	} finally {
-		if (!signal.aborted) grid.removeAjaxLoader();
-	}
+export default function Showcase06() {
+    const myGrid = useRef(null);
+    const [view, setView] = useState(initialView);
+    // 데이터와 칼럼 정의는 인스턴스별로 만들고 React가 조작 UI를 갱신합니다.
+    const [demo] = useState(() => createDemo(setView, baseUrl));
+    useEffect(() => {
+        demo.attach(myGrid.current);
+        // StrictMode의 재연결에서도 이벤트와 타이머가 중복되지 않게 정리합니다.
+        return () => demo.detach();
+    }, [demo]);
+    return (
+        <div className="workspace-demo grid-feature-showcase revision-showcase">
+            <div className="workspace-heading">
+                <div>
+                    <h2>설계 변경 전후 대조표</h2>
+                    <p>부품은 세로로 묶고, 바뀌지 않은 값은 가로로 합쳐 변경 지점만 선명하게 보여줍니다.</p>
+                </div>
+                <span className="feature-volume">75개 부품 / 300개 비교 항목</span>
+            </div>
+            <div className="workspace-toolbar">
+                <div className="workspace-controls">
+                    <input
+                        id="revision-search"
+                        className="workspace-search"
+                        type="search"
+                        placeholder="부품 번호 또는 이름 검색"
+                        aria-label="부품 검색"
+                        value={view.query}
+                        onChange={(event) => demo.setControl('query', event.target.value)}
+                    />
+                    <label>
+                        <input
+                            id="changes-only"
+                            type="checkbox"
+                            checked={view.changesOnly}
+                            onChange={(event) => demo.setControl('changesOnly', event.target.checked)}
+                        />{' '}
+                        변경 항목만
+                    </label>
+                    <label>
+                        <input
+                            id="merge-cells"
+                            type="checkbox"
+                            checked={view.merge}
+                            onChange={(event) => demo.setControl('merge', event.target.checked)}
+                        />{' '}
+                        셀 병합
+                    </label>
+                </div>
+                <div className="workspace-controls">
+                    <button type="button" className="btn" onClick={() => demo.exportReport('xlsx')}>
+                        Excel 내보내기
+                    </button>
+                    <button type="button" className="btn" onClick={() => demo.exportReport('pdf')}>
+                        PDF 내보내기
+                    </button>
+                </div>
+            </div>
+            <div className="comparison-caption">
+                <span>가로 및 세로 병합 / 조건부 서식 / 필터 / 체크박스</span>
+                <span className="revision-legend">
+                    <i className="revision-before-key"></i>변경 전<i className="revision-after-key"></i>변경 후
+                </span>
+            </div>
+            <div className="showcase-grid">
+                <AUIGrid ref={myGrid} name="showcase6" columnLayout={demo.columnLayout} gridProps={demo.gridProps} />
+            </div>
+            <div className="workspace-note">
+                <span id="revision-status" role="status">
+                    {view.status}
+                </span>
+                <span>가상의 설계 변경 자료입니다. 검토 체크는 현재 페이지에서만 유지됩니다.</span>
+            </div>
+        </div>
+    );
 }
-
-// 그리드 생성 뒤 이벤트를 연결합니다. 리스너 해제는 wrapper가 담당합니다.
-function bindGridEvents(grid) {
-	grid.bind(['cellClick', 'headerClick'], (event) => {
-		console.log(event.type);
-	});
-}
-
-const Showcase06 = () => {
-	const myGrid = useRef();
-
-	// 생성된 wrapper 참조에 초기화하고, effect가 종료되면 요청/작업을 정리합니다.
-	useEffect(() => {
-		const grid = myGrid.current;
-		const controller = new AbortController();
-		bindGridEvents(grid);
-		loadGridData(grid, controller.signal);
-		return () => {
-			controller.abort();
-		};
-	}, []);
-
-	return (
-		<div>
-			<div className="desc">
-				<ExportGridDataView myGrid={myGrid} xlsxProps={{ fileName: '쇼케이스-06' }} pdfProps={{ fileName: '쇼케이스-06' }} />
-				<p>손익을 크게 매출 수익, 원가, 경비로 보고 해당 내역을 출력한 모습입니다.</p>
-			</div>
-			<AUIGrid ref={myGrid} columnLayout={columnLayout} gridProps={gridProps} />
-		</div>
-	);
-};
-
-export default Showcase06;

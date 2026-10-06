@@ -1,151 +1,70 @@
-/* 공통 헤더, 메뉴, 테마 선택, 버튼과 푸터는 기존 쇼케이스 스타일을 그대로 사용합니다.
-이 페이지에서는 조작 영역, 미리보기 너비와 그리드 셀의 전용 스타일을 지정합니다. */
- .showcase8-controls {
-     display: flex;
-     align-items: center;
-     flex-wrap: wrap;
-     gap: 4px;
- }
+/* 쇼케이스 안에서만 스타일을 적용하여 공용 데모와 선택한 그리드 테마를 보존합니다. */
+	.showcase-calendar .calendar-heading { margin: 12px 0 24px; }
+	.showcase-calendar .calendar-heading h1 { margin: 0 0 10px; color: #1e293b; font-size: 26px; font-weight: 700; letter-spacing: -1px; }
+	.showcase-calendar .calendar-heading p { margin: 0; color: #64748b; font-size: 14px; line-height: 1.8; }
+	.showcase-calendar .calendar-card { border: 1px solid #dfe5ec; border-radius: 14px; background: #fff; padding: 24px; box-shadow: 0 4px 20px rgba(30, 41, 59, .04); }
+	.showcase-calendar .calendar-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+	.showcase-calendar .calendar-month { display: flex; gap: 10px; align-items: center; }
+	.showcase-calendar .calendar-date { margin: 0; min-width: 142px; text-align: center; font-size: 22px; font-weight: 700; color: #1e293b; }
+	/* 전역 버튼 규칙 대신 이 화면의 월 이동 버튼에만 크기와 상태를 지정합니다. */
+	.showcase-calendar.showcase-calendar .calendar-nav { appearance: none; margin: 0; padding: 0 12px; min-width: 36px; height: 36px; border: 1px solid #dfe5ec; border-radius: 8px; background: #fff; color: #475569; font: inherit; font-size: 14px; cursor: pointer; }
+	.showcase-calendar.showcase-calendar .calendar-nav:hover { background: #f1f5f9; border-color: #94a3b8; }
+	.showcase-calendar.showcase-calendar .calendar-nav:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+	.showcase-calendar .calendar-legend { display: flex; flex-wrap: wrap; gap: 14px; color: #64748b; font-size: 12px; }
+	.showcase-calendar .calendar-legend span { display: inline-flex; align-items: center; gap: 5px; }
+	.showcase-calendar .legend-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--goal-color); }
+	.showcase-calendar .calendar-grid { width: 100%; min-width: 0; }
 
- .showcase8-controls button[aria-pressed="true"] {
-     background-color: #ee5315;
-     border-color: #ee5315;
- }
+	/* 공용 btn 모양을 사용하고 내보내기 버튼의 배치만 지정합니다. */
+	.showcase-calendar .calendar-export { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+	.showcase-calendar .my-saturday-style { color: #2563eb; }
+	.showcase-calendar .my-sunday-style { color: #dc5262; }
 
- .showcase8-preview {
-     width: 100%;
-     margin: 0 auto;
- }
+	/* 기존 MyCalendarRenderer의 자식 구조를 유지하고 표시 방식만 이 화면에서 지정합니다. */
+	.showcase-calendar .aui-grid-renderer-custom {
+		--calendar-low: #df6474;
+		--calendar-middle: #b88026;
+		--calendar-high: #4b85ce;
+		--calendar-top: #299579;
+		--calendar-inset: 14px;
+		box-sizing: border-box;
+		text-align: left;
+	}
+	.showcase-calendar .my-child1 {
+		position: absolute; top: 12px; left: var(--calendar-inset);
+		min-width: 26px; height: 26px; line-height: 26px; text-align: center;
+		font-size: 13px; font-weight: 600;
+	}
+	.showcase-calendar .my-child1[data-today="true"] {
+		border-radius: 8px; background: #2563eb; color: #fff;
+	}
+	.showcase-calendar .my-child2 {
+		position: absolute; top: 14px; right: var(--calendar-inset);
+		width: 22px; height: 22px; line-height: 22px; text-align: center;
+		box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 50%;
+		background: transparent; color: inherit; font-size: 12px; cursor: pointer; opacity: .65;
+	}
+	.showcase-calendar .my-child2::before { content: "i"; }
+	.showcase-calendar .my-child2:hover { opacity: 1; background: #e8efff; color: #1d4ed8; }
+	.showcase-calendar .my-child2:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; opacity: 1; }
+	.showcase-calendar .my-chart-label {
+		position: absolute; top: 50px; left: var(--calendar-inset);
+		font-size: 23px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums;
+		color: var(--calendar-value-color);
+	}
+	.showcase-calendar .my-chart-base {
+		position: absolute; top: 88px; left: var(--calendar-inset); right: var(--calendar-inset);
+		height: 5px; background: rgba(148, 163, 184, .2); border-radius: 4px; overflow: hidden;
+	}
+	.showcase-calendar .my-chart { height: 100%; border-radius: inherit; }
 
- .showcase8-width {
-     display: flex;
-     align-items: center;
-     gap: 10px;
-     max-width: 640px;
-     margin: 10px 0;
- }
-
- .showcase8-width label,
- .showcase8-width output {
-     white-space: nowrap;
- }
-
- .showcase8-width input {
-     flex: 1;
-     min-width: 0;
-     height: 28px;
-     margin: 0;
-     accent-color: #ee5315;
- }
-
- .showcase8-width output {
-     min-width: 64px;
-     text-align: right;
-     font-variant-numeric: tabular-nums;
- }
-
- #aui-grid-wrap-showcase8 {
-     width: 100%;
-     height: 430px;
- }
-
- /* 셀 스타일은 Excel과 PDF에서도 읽을 수 있도록 단일 클래스로 정의합니다. */
- .sc-project-cell {
-     background: #f0f8f7;
-     text-align: left;
- }
-
- .sc-client-cell {
-     background: #f8fafc;
-     text-align: left;
-     color: #596f80;
- }
-
- .sc-project-label {
-     display: flex;
-     align-items: center;
-     gap: 9px;
-     padding: 0 9px;
-     min-width: 0;
- }
-
- .sc-project-icon {
-     width: 25px;
-     height: 25px;
-     flex: none;
-     border-radius: 7px;
-     background: #d4eee5;
-     color: #1a7667;
-     font-size: 11px;
-     display: grid;
-     place-items: center;
-     font-weight: 700;
- }
-
- .sc-project-label b {
-     display: block;
-     font-size: 12px;
-     color: #234b4f;
-     overflow: hidden;
-     text-overflow: ellipsis;
- }
-
- .sc-project-label small {
-     display: block;
-     font-size: 9px;
-     color: #809790;
-     margin-top: 3px;
-     letter-spacing: .6px;
- }
-
- .sc-project-label>span:last-child {
-     overflow: hidden;
- }
-
- .sc-status {
-     display: inline-block;
-     padding: 4px 8px;
-     border-radius: 20px;
-     font-size: 10px;
-     font-weight: 600;
-     background: #e2f4ed;
-     color: #128568;
- }
-
- .sc-status.review {
-     background: #fff1d9;
-     color: #b58123;
- }
-
- .sc-status.done {
-     background: #e8ebf7;
-     color: #676da4;
- }
-
- .sc-progress {
-     display: flex;
-     align-items: center;
-     gap: 6px;
-     padding: 0 7px;
- }
-
- .sc-progress-track {
-     height: 4px;
-     background: #e3eceb;
-     flex: 1;
-     overflow: hidden;
-     border-radius: 3px;
- }
-
- .sc-progress-track i {
-     display: block;
-     height: 100%;
-     background: #27b698;
-     border-radius: 3px;
- }
-
- .sc-progress span {
-     font-size: 10px;
-     min-width: 27px;
-     color: #607e80;
- }
+	@media (max-width: 700px) {
+		.showcase-calendar .calendar-card { padding: 14px 10px; border-radius: 10px; }
+		.showcase-calendar .calendar-heading h1 { font-size: 22px; }
+		.showcase-calendar .calendar-toolbar { gap: 16px; }
+		.showcase-calendar .calendar-month { gap: 5px; }
+		.showcase-calendar .calendar-date { min-width: 128px; font-size: 20px; }
+		.showcase-calendar .calendar-legend { gap: 10px; }
+		.showcase-calendar .aui-grid-renderer-custom { --calendar-inset: 7px; }
+		.showcase-calendar .my-chart-label { font-size: 20px; }
+	}

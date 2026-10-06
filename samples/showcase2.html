@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -28,304 +36,341 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+        <!-- 제품 테마는 유지하고 업무 화면의 조작 도구만 별도로 구성합니다. -->
+        <link href="./style/showcase-workspaces.css?v=20261006-3" rel="stylesheet" />
+        <script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <script src="../export_server_samples/FileSaver.min.js"></script>
+        <script>
+            let myGridID;
+            let selectedProduct = "P01";
+            const numberFormat = new Intl.NumberFormat("ko-KR");
+            const supplyStates = ["확보", "협의 중", "대체 검토"];
+            const modules = [
+                {
+                    name: "구동 모듈",
+                    parts: [
+                        ["구동 모터", 185000, 2],
+                        ["감속기", 96000, 2],
+                        ["구동 휠", 42000, 4],
+                        ["브레이크", 58000, 2]
+                    ]
+                },
+                {
+                    name: "전원 모듈",
+                    parts: [
+                        ["배터리 팩", 420000, 1],
+                        ["BMS 보드", 78000, 1],
+                        ["충전 커넥터", 28000, 2],
+                        ["전원 하네스", 19000, 3]
+                    ]
+                },
+                {
+                    name: "제어 모듈",
+                    parts: [
+                        ["산업용 컴퓨터", 680000, 1],
+                        ["모터 드라이버", 125000, 2],
+                        ["통신 모듈", 86000, 1],
+                        ["비상 정지 스위치", 17000, 2]
+                    ]
+                },
+                {
+                    name: "센서 모듈",
+                    parts: [
+                        ["2D LiDAR", 540000, 1],
+                        ["깊이 카메라", 210000, 2],
+                        ["초음파 센서", 22000, 4],
+                        ["범퍼 센서", 35000, 2]
+                    ]
+                }
+            ];
+            // 제품 20개, 조립체 80개, 실제 부품 행 320개를 포함하는 420행의 BOM을 생성합니다.
+            function createProducts() {
+                return Array.from({ length: 20 }, (_, productIndex) => {
+                    const id = "P" + String(productIndex + 1).padStart(2, "0");
+                    return {
+                        id,
+                        productId: id,
+                        nodeType: "product",
+                        name:
+                            "AMR-" +
+                            (100 + productIndex * 10) +
+                            " / " +
+                            ["물류 이송형", "협동 작업형", "클린룸 운반형", "중량 운반형"][productIndex % 4],
+                        quantity: 1,
+                        children: modules.map((module, moduleIndex) => ({
+                            id: id + "-M" + moduleIndex,
+                            productId: id,
+                            nodeType: "assembly",
+                            name: module.name,
+                            quantity: moduleIndex === 3 && productIndex % 3 === 0 ? 2 : 1,
+                            children: module.parts.map(([name, price, quantity], partIndex) => ({
+                                id: id + "-M" + moduleIndex + "-C" + partIndex,
+                                productId: id,
+                                nodeType: "part",
+                                name,
+                                quantity,
+                                unitCost: Math.round((price * (1 + productIndex * 0.012)) / 100) * 100,
+                                supplier: ["에이원 모션", "이음 파워", "노바 컨트롤", "루트 센서"][
+                                    (moduleIndex + partIndex) % 4
+                                ],
+                                leadDays: 5 + ((productIndex + partIndex * 3 + moduleIndex * 2) % 18),
+                                supply: supplyStates[
+                                    (productIndex + moduleIndex + partIndex) % 9 === 0
+                                        ? 2
+                                        : (productIndex + partIndex) % 5 === 0
+                                          ? 1
+                                          : 0
+                                ]
+                            }))
+                        }))
+                    };
+                });
+            }
+            // 부품의 금액을 먼저 구한 뒤, 조립체의 투입 수량을 곱해 제품 원가를 위로 합산합니다.
+            function rollup(node, updates = []) {
+                if (node.children) {
+                    node.children.forEach((child) => rollup(child, updates));
+                    node.unitCost = node.children.reduce((sum, child) => sum + child.total, 0);
+                    node.leadDays = Math.max(...node.children.map((child) => child.leadDays));
+                    node.supply =
+                        supplyStates[Math.max(...node.children.map((child) => supplyStates.indexOf(child.supply)))];
+                }
+                node.total = node.quantity * node.unitCost;
+                updates.push({
+                    id: node.id,
+                    unitCost: node.unitCost,
+                    total: node.total,
+                    leadDays: node.leadDays,
+                    supply: node.supply
+                });
+                return node;
+            }
+            function init() {
+                const numberColumn = (field, title, width) => ({
+                    dataField: field,
+                    headerText: title,
+                    width,
+                    minWidth: field === "quantity" ? 70 : 110,
+                    dataType: "numeric",
+                    formatString: "#,##0",
+                    style: "workspace-number",
+                    styleFunction: (row, col, value, header, item) =>
+                        field !== "total" &&
+                        (field === "quantity" ? item.nodeType !== "product" : item.nodeType === "part")
+                            ? "bom-edit"
+                            : "workspace-number",
+                    editable: field !== "total",
+                    editRenderer: {
+                        type: "InputEditRenderer",
+                        onlyNumeric: true,
+                        allowPoint: false,
+                        validator: validateCost
+                    }
+                });
+                myGridID = AUIGrid.create(
+                    "#grid_wrap",
+                    [
+                        {
+                            dataField: "name",
+                            headerText: "제품 / 조립체 / 부품",
+                            width: "31%",
+                            minWidth: 290,
+                            style: "workspace-left",
+                            editable: false
+                        },
+                        {
+                            headerText: "조달 정보",
+                            children: [
+                                {
+                                    dataField: "supplier",
+                                    headerText: "공급사",
+                                    width: "14%",
+                                    minWidth: 115,
+                                    editable: false
+                                },
+                                {
+                                    dataField: "leadDays",
+                                    headerText: "납기(일)",
+                                    width: "8%",
+                                    minWidth: 75,
+                                    dataType: "numeric",
+                                    editable: false
+                                },
+                                {
+                                    dataField: "supply",
+                                    headerText: "수급 상태",
+                                    width: "11%",
+                                    minWidth: 100,
+                                    editable: false,
+                                    styleFunction: (row, col, value) =>
+                                        value === "대체 검토"
+                                            ? "bom-review"
+                                            : value === "협의 중"
+                                              ? "bom-negotiate"
+                                              : ""
+                                }
+                            ]
+                        },
+                        {
+                            headerText: "원가 시뮬레이션 (원)",
+                            children: [
+                                numberColumn("quantity", "투입 수량", "8%"),
+                                numberColumn("unitCost", "단가", "13%"),
+                                numberColumn("total", "금액", "15%")
+                            ]
+                        }
+                    ],
+                    {
+                        rowIdField: "id",
+                        rowIdTrustMode: true,
+                        editable: true,
+                        rowHeight: 29,
+                        headerHeight: 28,
+                        showRowNumColumn: true,
+                        showStateColumn: false,
+                        selectionMode: "singleRow",
+                        displayTreeOpen: true,
+                        treeColumnIndex: 0,
+                        rowStyleFunction: (row, item) =>
+                            item.nodeType === "product"
+                                ? "bom-product-row"
+                                : item.nodeType === "assembly"
+                                  ? "bom-assembly-row"
+                                  : ""
+                    }
+                );
+                // 집계 단가와 제품 수량은 읽기 전용이며 실제 편집 대상만 입력기를 엽니다.
+                AUIGrid.bind(myGridID, "cellEditBegin", (event) =>
+                    event.dataField === "quantity"
+                        ? event.item.nodeType !== "product"
+                        : event.dataField === "unitCost" && event.item.nodeType === "part"
+                );
+                AUIGrid.bind(myGridID, "cellEditEnd", () =>
+                    queueMicrotask(() => {
+                        if (myGridID) recalculate();
+                    })
+                );
+                AUIGrid.bind(myGridID, "selectionChange", (event) => {
+                    selectedProduct = event.primeCell.item.productId;
+                    updateProductSummary();
+                });
+                AUIGrid.bind(myGridID, "treeOpenChange", () =>
+                    queueMicrotask(() => {
+                        if (myGridID) updateProductSummary();
+                    })
+                );
+                // 붙여넣기 경로에서도 읽기 전용 집계 필드를 원래 값으로 유지합니다.
+                AUIGrid.bind(myGridID, "cellEditEndBefore", (event) => {
+                    const editable =
+                        event.dataField === "quantity"
+                            ? event.item.nodeType !== "product"
+                            : event.dataField === "unitCost" && event.item.nodeType === "part";
+                    return editable ? event.value : event.oldValue;
+                });
+                resetCosts();
+            }
+            function validateCost(old, value, item, field) {
+                const count = Number(value),
+                    minimum = field === "quantity" ? 1 : 0,
+                    maximum = field === "quantity" ? 999 : 100000000;
+                return {
+                    validate:
+                        String(value).trim() !== "" && Number.isInteger(count) && count >= minimum && count <= maximum,
+                    message:
+                        field === "quantity"
+                            ? "투입 수량은 1~999 사이의 정수입니다."
+                            : "단가는 0~100,000,000원 사이의 정수입니다."
+                };
+            }
+            function recalculate() {
+                const updates = [];
+                AUIGrid.getTreeGridData(myGridID).forEach((node) => rollup(node, updates));
+                // 트리의 접힘, 정렬 및 선택 상태를 보존하고 계산 필드만 ID로 갱신합니다.
+                AUIGrid.refreshRows(myGridID, updates);
+                updateProductSummary();
+            }
+            function updateProductSummary() {
+                const product = AUIGrid.getTreeGridData(myGridID).find((item) => item.id === selectedProduct);
+                if (!product) return;
+                document.getElementById("bom-product").textContent = product.name;
+                document.getElementById("bom-cost").textContent = numberFormat.format(product.total) + "원";
+                document.getElementById("bom-lead").textContent =
+                    "최장 부품 납기 " + product.leadDays + "일 / " + product.supply;
+                document.getElementById("bom-visible").textContent =
+                    "표시 " + AUIGrid.getRowCount(myGridID) + "행 / 전체 420행";
+            }
+            function showDepth(value) {
+                if (value === "all") AUIGrid.expandAll(myGridID);
+                else AUIGrid.showItemsOnDepth(myGridID, Number(value));
+                updateProductSummary();
+            }
+            function resetCosts() {
+                AUIGrid.forceEditingComplete(myGridID, null);
+                const data = createProducts();
+                data.forEach((node) => rollup(node));
+                AUIGrid.setGridData(myGridID, data);
+                selectedProduct = "P01";
+                document.getElementById("bom-depth").value = "all";
+                AUIGrid.expandAll(myGridID);
+                AUIGrid.setSelectionByIndex(myGridID, 0, 0);
+                updateProductSummary();
+            }
+            function exportReport(format) {
+                AUIGrid.forceEditingComplete(myGridID, null);
+                recalculate();
+                const props = { fileName: "자율주행로봇_BOM_원가" };
+                if (format === "pdf")
+                    AUIGrid.exportToPdf(myGridID, { ...props, fontPath: "../pdfkit/nyjgothic-medium.ttf" });
+                else AUIGrid.exportToXlsx(myGridID, props);
+            }
+            function disposeDemo(event) {
+                if (event.persisted) return;
+                AUIGrid.destroy(myGridID);
+                myGridID = null;
+                window.removeEventListener("pagehide", disposeDemo);
+            }
+            window.addEventListener("pagehide", disposeDemo);
+        </script>
+    </head>
+<body class="demo-typography">
 
-<!-- PDF 내보내기 필수 JS 추가-->
-<script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
-
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
-
-<style>
-	/* 커스텀 스타일 */
-	.left {
-		text-align: left;
-	}
-
-	.c-red {
-		color: #CC3D3D;
-		font-weight: bold;
-	}
-
-	/* 셀력션 행 대표 백그라운드 스타일 재정의 */
-	.aui-grid-selection-row-bg {
-		background: #D9E5FF !important;
-		color: #000 !important;
-	}
-
-	/* 셀력션 행 대표 셀 이외의 백그라운드 스타일 재정의 */
-	.aui-grid-selection-row-others-bg {
-		background: #D9E5FF !important;
-		color: #000 !important;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
-
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		loadGridData();
-	}
-
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = createColumnLayout();
-
-		// 그리드 속성 설정
-		const gridProps = createGridProps();
-
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
-
-	let isExpanded = true;
-	function expand() {
-		if (!isExpanded) {
-			AUIGrid.expandAll(myGridID);
-			isExpanded = true;
-			return;
-		}
-		// 모두 닫기
-		AUIGrid.collapseAll(myGridID);
-		isExpanded = false;
-	}
-
-	// 트리 depth 별 오픈하기
-	function showItemsOnDepth(event) {
-		const depthSelect = document.getElementById("depthSelect");
-		const depth = depthSelect.value;
-		// 해당 depth 까지 오픈함
-		AUIGrid.showItemsOnDepth(myGridID, Number(depth));
-	}
-
-	// 엑셀 내보내기(Export);
-	function exportClick() {
-		// 내보내기 실행
-		AUIGrid.exportToXlsx(myGridID);
-	}
-
-	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
-	function exportPdfClick() {
-		// 내보내기 실행
-		AUIGrid.exportToPdf(myGridID, {
-			fontPath: "../pdfkit/nyjgothic-medium.ttf"
-		});
-	}
-
-	// 칼럼 레이아웃을 정의합니다.
-	function createColumnLayout() {
-		const columnLayout = [{
-			dataField: "id",
-			headerText: "ID",
-			width: 50
-		}, {
-			dataField: "name",
-			headerText: "Task Name",
-			filter: {
-				showIcon: true
-			},
-			headerTooltip: {
-				show: true,
-				tooltipHtml: '<div style="width:180px;"><p>Just an incredibly simple <span style="color:#F29661;">AUIGrid</span></p><p>Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. </p></div>'
-			},
-			style: "left",
-			width: 400
-		}, {
-			dataField: "charge",
-			headerText: "Charge",
-			filter: {
-				showIcon: true
-			},
-			headerTooltip: {
-				show: true,
-				tooltipHtml: '<div style="width:120px;"><p>Things I Can Do</p><p> Integer eu ante ornare amet commetus vestibulum blandit integer in curae ac faucibus integer non. Adipiscing cubilia elementum integer lorem ipsum dolor sit amet.</p></div>'
-			},
-			style: "left",
-			width: 120,
-			renderer: {
-				type: "IconRenderer",
-				iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-				iconHeight: 20,
-				iconFunction: function (rowIndex, columnIndex, value, item) {
-					if (value && value.substr(0, 1) === "A")
-						return "./assets/office_female.png";
-					return "./assets/office_man.png";
-				}
-			},
-			editRenderer: {
-				type: "ComboBoxRenderer",
-				showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-				historyMode: true, // 콤보 리스트 외에 사용자가 다른 값을 입력하면 해당 값이 기존 list 에 추가되어 출력됨
-				listAlign: "left"
-			}
-		}, {
-			dataField: "complete",
-			headerText: "Complete(%)",
-			width: 100,
-			renderer: {
-				type: "BarRenderer",
-				min: 0,
-				max: 100
-			},
-			editRenderer: {
-				type: "NumberStepRenderer",
-				min: 0,
-				max: 100,
-				step: 1
-			},
-			styleFunction: function (rowIndex, columnIndex, value, headerText, dataField, item) {
-				if (value === 100) return "c-red";
-			}
-		}, {
-			dataField: "start",
-			headerText: "Start Date",
-			formatString: "mm/dd/yyyy",
-			dataType: "date",
-			width: 120,
-			renderer: {
-				type: "IconRenderer",
-				iconWidth: 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-				iconHeight: 16,
-				iconPosition: "aisleRight",
-				iconTableRef: { // icon 값 참조할 테이블 레퍼런스
-					"default": "./assets/calendar-icon.png" // default
-				},
-				onClick: function (event) {
-					// 달력 아이콘 클릭하면 실제로 달력을 띄움.
-					// 즉, 수정으로 진입함.
-					AUIGrid.openInputer(event.pid);
-				}
-			},
-			editRenderer: {
-				type: "CalendarRenderer",
-				showEditorBtn: false, // 기본 에디터버턴 사용 안함.
-				onlyCalendar: true, // 달력으로만 수정 가능
-				titles: ["S", "M", "T", "W", "T", "F", "S"],
-				monthTitleString: "mmm",
-				formatMonthString: "mmm yyyy",
-				formatYearString: "yyyy",
-				showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
-				showTodayBtn: true, // 오늘 날짜 선택 버턴 출력
-				todayText: "Today" // 오늘 날짜 버턴 텍스트
-			}
-		}, {
-			dataField: "end",
-			headerText: "End Date",
-			formatString: "mm/dd/yyyy",
-			dataType: "date",
-			width: 120,
-			renderer: {
-				type: "IconRenderer",
-				iconWidth: 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-				iconHeight: 16,
-				iconPosition: "aisleRight",
-				iconTableRef: { // icon 값 참조할 테이블 레퍼런스
-					"default": "./assets/calendar-icon.png" // default
-				},
-				onClick: function (event) {
-					// 달력 아이콘 클릭하면 실제로 달력을 띄움.
-					// 즉, 수정으로 진입함.
-					AUIGrid.openInputer(event.pid);
-				}
-
-			},
-			editRenderer: {
-				type: "CalendarRenderer",
-				showEditorBtn: false, // 기본 에디터버턴 사용 안함.
-				onlyCalendar: true, // 달력으로만 수정 가능
-				titles: ["S", "M", "T", "W", "T", "F", "S"],
-				monthTitleString: "mmm",
-				formatMonthString: "mmm yyyy",
-				formatYearString: "yyyy",
-				showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
-				showTodayBtn: true, // 오늘 날짜 선택 버턴 출력
-				todayText: "Today" // 오늘 날짜 버턴 텍스트
-			}
-		}, {
-			dataField: "issue",
-			headerText: "Issues",
-			style: "left"
-		}];
-		return columnLayout;
-	}
-
-	// 그리드 속성을 정의합니다.
-	function createGridProps() {
-		const gridProps = {
-			// 마우스 선택(클릭) 적용 모드
-			selectionMode: "singleRow",
-			// 마우스 오버 적용 모드
-			hoverMode: "singleRow",
-			editable: true,
-			enableFilter: true,
-			showStateColumn: true,
-			// 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
-			treeColumnIndex: 1,
-			// 최초 보여질 때 모두 열린 상태로 출력 여부
-			displayTreeOpen: true,
-			// 체크박스 사용 안함
-			showRowCheckColumn: false,
-			showRowNumColumn: false
-		};
-		return gridProps;
-	}
-
-	// 데이터 요청과 그리드 반영. 페이지 종료 후 응답을 적용하지 않습니다.
-	const controller = new AbortController();
-	async function loadGridData() {
-		AUIGrid.showAjaxLoader(myGridID);
-		try {
-			const response = await fetch("./data/schedule_tree.json", { signal: controller.signal });
-			if (!response.ok) throw new Error("데이터 요청 실패");
-			const data = await response.json();
-			if (!controller.signal.aborted) AUIGrid.setGridData(myGridID, data);
-		} catch (error) {
-			if (!controller.signal.aborted) console.error("데이터 로딩 오류:", error);
-		} finally {
-			if (!controller.signal.aborted) AUIGrid.removeAjaxLoader(myGridID);
-		}
-	}
-
-	// 뒤로 가기 캐시에 보관되는 페이지는 유지하고, 실제 종료에서만 정리합니다.
-	function disposeDemo(event) {
-		if (event.persisted) return;
-		controller.abort();
-		AUIGrid.destroy(myGridID);
-		myGridID = null;
-		window.removeEventListener("pagehide", disposeDemo);
-	}
-	window.addEventListener("pagehide", disposeDemo);
-</script>
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<span class="btn" style="float:right;" onclick="exportClick()">엑셀(xlsx)로 저장</span>
-		<span class="btn" style="float:right;" onclick="exportPdfClick()">PDF로 저장</span>
-		<p style="clear:both;">프로젝트 일정 관리 테이블을 출력한 모습입니다. ( 계층구조 데이터 표현 )</p>
-		<ul class="nav_u">
-			<li><span onclick="expand()" class="btn">모두 열기/ 닫기</span></li>
-			<li><select id="depthSelect" onchange="showItemsOnDepth()">
-					<option value="default" selected="selected" disabled="disabled">-- 특정 계층까지만 보이기 -- </option>
-					<option value="1">계층 1 Depth 만 보이기</option>
-					<option value="2">계층 2 Depth 까지 보이기</option>
-					<option value="3">계층 3 Depth 까지 보이기</option>
-				</select></li>
-		</ul>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-	</div>
-</div>
-
+            <div id="main" class="workspace-demo bom-workspace">
+                <div class="workspace-heading">
+                    <div>
+                        <h2>자율주행 로봇 BOM 원가 시뮬레이터</h2>
+                        <p>제품 20개, 조립체 80개, 부품 320개. 부품 단가와 투입 수량을 바꾸며 원가를 검토하세요.</p>
+                    </div>
+                </div>
+                <div class="bom-summary">
+                    <div>
+                        <span>선택 제품 / 1대 기준</span>
+                        <h3 id="bom-product"></h3>
+                        <small id="bom-lead"></small>
+                    </div>
+                    <div class="bom-total"><span>자재 원가</span><strong id="bom-cost"></strong></div>
+                </div>
+                <div class="workspace-toolbar">
+                    <div class="workspace-controls">
+                        <label
+                            >구성 보기<select id="bom-depth" onchange="showDepth(this.value)">
+                                <option value="all">부품까지</option>
+                                <option value="2">조립체까지</option>
+                                <option value="1">제품만</option>
+                            </select></label
+                        ><span id="bom-visible"></span
+                        ><button type="button" class="btn" onclick="resetCosts()">입력 초기화</button>
+                    </div>
+                    <div class="workspace-controls">
+                        <button type="button" class="btn" onclick="exportReport('xlsx')">Excel 내보내기</button
+                        ><button type="button" class="btn" onclick="exportReport('pdf')">PDF 내보내기</button>
+                    </div>
+                </div>
+                <div id="grid_wrap"></div>
+                <div class="workspace-note">
+                    <p>파란 수량과 단가를 더블클릭하거나 F2로 편집하세요. 상위 금액은 자동 합산됩니다.</p>
+                    <p>가상 BOM / 부품 비용만 반영, 가공비 및 세금 제외</p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

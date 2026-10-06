@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,193 +37,225 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID, myGridID2;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID, myGridID2;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 상단 그리드 생성
-		createAUIGrid(columnLayout);
-		// 하단 그리드 생성
-		createAUIGridSub(columnLayout);
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/nutrition.json", myGridID);
-		requestGridData("./data/nutrition.json", myGridID2);
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 상단 그리드 생성
+                createAUIGrid(columnLayout);
+                // 하단 그리드 생성
+                createAUIGridSub(columnLayout);
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/nutrition.json", myGridID);
+                requestGridData("./data/nutrition.json", myGridID2);
+            }
 
-	// 그리드 칼럼 레이아웃 설정
-	const columnLayout = [{
-		dataField: "gubun1",
-		headerText: "구분1",
-		width: 160,
-		cellMerge: true // 구분1 칼럼 셀 세로 병합 실행
-	}, {
-		dataField: "gubun2",
-		headerText: "구분2",
-		width: 140
-	}, {
-		headerText: "2008년",
-		children: [{
-			dataField: "avg08",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev08",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2009년",
-		children: [{
-			dataField: "avg09",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev09",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2010년",
-		children: [{
-			dataField: "avg10",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev10",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2011년",
-		children: [{
-			dataField: "avg11",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev11",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}, {
-		headerText: "2012년",
-		children: [{
-			dataField: "avg12",
-			headerText: "평균(g)",
-			width: 100
-		}, {
-			dataField: "sdev12",
-			headerText: "표준편차",
-			width: 100
-		}]
-	}];
+            // 그리드 칼럼 레이아웃 설정
+            const columnLayout = [
+                {
+                    dataField: "gubun1",
+                    headerText: "구분1",
+                    width: 160,
+                    cellMerge: true // 구분1 칼럼 셀 세로 병합 실행
+                },
+                {
+                    dataField: "gubun2",
+                    headerText: "구분2",
+                    width: 140
+                },
+                {
+                    headerText: "2008년",
+                    children: [
+                        {
+                            dataField: "avg08",
+                            headerText: "평균(g)",
+                            width: 100
+                        },
+                        {
+                            dataField: "sdev08",
+                            headerText: "표준편차",
+                            width: 100
+                        }
+                    ]
+                },
+                {
+                    headerText: "2009년",
+                    children: [
+                        {
+                            dataField: "avg09",
+                            headerText: "평균(g)",
+                            width: 100
+                        },
+                        {
+                            dataField: "sdev09",
+                            headerText: "표준편차",
+                            width: 100
+                        }
+                    ]
+                },
+                {
+                    headerText: "2010년",
+                    children: [
+                        {
+                            dataField: "avg10",
+                            headerText: "평균(g)",
+                            width: 100
+                        },
+                        {
+                            dataField: "sdev10",
+                            headerText: "표준편차",
+                            width: 100
+                        }
+                    ]
+                },
+                {
+                    headerText: "2011년",
+                    children: [
+                        {
+                            dataField: "avg11",
+                            headerText: "평균(g)",
+                            width: 100
+                        },
+                        {
+                            dataField: "sdev11",
+                            headerText: "표준편차",
+                            width: 100
+                        }
+                    ]
+                },
+                {
+                    headerText: "2012년",
+                    children: [
+                        {
+                            dataField: "avg12",
+                            headerText: "평균(g)",
+                            width: 100
+                        },
+                        {
+                            dataField: "sdev12",
+                            headerText: "표준편차",
+                            width: 100
+                        }
+                    ]
+                }
+            ];
 
-	// ---------------------------- 상단 그리드 입니다. --------------------
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
-		// 그리드 속성 설정정
-		const gridProps = {
-			// 셀 병합 실행
-			enableCellMerge: true,
-			// 수정 가능 여부
-			editable: true,
-			// 마우스 클릭(선택) 시 적용 모드
-			selectionMode: "multipleCells",
-			// 마우스 오버 적용 모드
-			hoverMode: "singleRow",
-			showStateColumn: true,
-			// 셀 병합 정책
-			// "default"(기본값) : null 을 셀 병합에서 제외하여 병합을 실행하지 않습니다.
-			// "withNull" : null 도 하나의 값으로 간주하여 다수의 null 을 병합된 하나의 공백으로 출력 시킵니다.
-			// "valueWithNull" : null 이 상단의 값과 함께 병합되어 출력 시킵니다.
-			cellMergePolicy: "withNull",
-			// 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
-			rowSelectionWithMerge: true
-		};
+            // ---------------------------- 상단 그리드 입니다. --------------------
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid(columnLayout) {
+                // 그리드 속성 설정정
+                const gridProps = {
+                    // 셀 병합 실행
+                    enableCellMerge: true,
+                    // 수정 가능 여부
+                    editable: true,
+                    // 마우스 클릭(선택) 시 적용 모드
+                    selectionMode: "multipleCells",
+                    // 마우스 오버 적용 모드
+                    hoverMode: "singleRow",
+                    showStateColumn: true,
+                    // 셀 병합 정책
+                    // "default"(기본값) : null 을 셀 병합에서 제외하여 병합을 실행하지 않습니다.
+                    // "withNull" : null 도 하나의 값으로 간주하여 다수의 null 을 병합된 하나의 공백으로 출력 시킵니다.
+                    // "valueWithNull" : null 이 상단의 값과 함께 병합되어 출력 시킵니다.
+                    cellMergePolicy: "withNull",
+                    // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
+                    rowSelectionWithMerge: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
 
-	//---------------------------- 하단 그리드 입니다. --------------------
-	//AUIGrid 하단 그리드를 생성합니다.
-	function createAUIGridSub(columnLayout) {
-		const gridProps = {
-			// 셀 병합 실행
-			enableCellMerge: true,
-			// 수정 가능 여부
-			editable: true,
-			// enableCellMerge 할 때 실제로 rowspan 적용 시킬지 여부
-			// 만약 false 설정하면 실제 병합은 하지 않고(rowspan 적용 시키지 않고) 최상단에 값만 출력 시킵니다.
-			cellMergeRowSpan: false,
-			// 마우스 클릭(선택) 시 적용 모드
-			selectionMode: "multipleCells",
-			// 마우스 오버 적용 모드
-			hoverMode: "singleRow",
-			// 셀 병합 정책
-			// "default"(기본값) : null 을 셀 병합에서 제외하여 병합을 실행하지 않습니다.
-			// "withNull" : null 도 하나의 값으로 간주하여 다수의 null 을 병합된 하나의 공백으로 출력 시킵니다.
-			// "valueWithNull" : null 이 상단의 값과 함께 병합되어 출력 시킵니다.
-			cellMergePolicy: "withNull",
-			// 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
-			rowSelectionWithMerge: true
-		};
+            //---------------------------- 하단 그리드 입니다. --------------------
+            //AUIGrid 하단 그리드를 생성합니다.
+            function createAUIGridSub(columnLayout) {
+                const gridProps = {
+                    // 셀 병합 실행
+                    enableCellMerge: true,
+                    // 수정 가능 여부
+                    editable: true,
+                    // enableCellMerge 할 때 실제로 rowspan 적용 시킬지 여부
+                    // 만약 false 설정하면 실제 병합은 하지 않고(rowspan 적용 시키지 않고) 최상단에 값만 출력 시킵니다.
+                    cellMergeRowSpan: false,
+                    // 마우스 클릭(선택) 시 적용 모드
+                    selectionMode: "multipleCells",
+                    // 마우스 오버 적용 모드
+                    hoverMode: "singleRow",
+                    // 셀 병합 정책
+                    // "default"(기본값) : null 을 셀 병합에서 제외하여 병합을 실행하지 않습니다.
+                    // "withNull" : null 도 하나의 값으로 간주하여 다수의 null 을 병합된 하나의 공백으로 출력 시킵니다.
+                    // "valueWithNull" : null 이 상단의 값과 함께 병합되어 출력 시킵니다.
+                    cellMergePolicy: "withNull",
+                    // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
+                    rowSelectionWithMerge: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridProps);
-	};
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridProps);
+            }
 
-	let isMerged = true; // 최초에는 merged 상태
-	function setCellMerge() {
-		isMerged = !isMerged;
-		AUIGrid.setCellMerge(myGridID, isMerged);
-		AUIGrid.setCellMerge(myGridID2, isMerged);
-	};
-    // 셀은 개별적으로 선택하고 편집하며, 텍스트의 표시 위치만 바꿉니다.
-    function changeMergeLabelPosition(position) {
-        AUIGrid.setProp(myGridID2, { cellMergeLabelPosition: position });
-        AUIGrid.refresh(myGridID2);
-    }
-</script>
+            let isMerged = true; // 최초에는 merged 상태
+            function setCellMerge() {
+                isMerged = !isMerged;
+                AUIGrid.setCellMerge(myGridID, isMerged);
+                AUIGrid.setCellMerge(myGridID2, isMerged);
+            }
+            // 셀은 개별적으로 선택하고 편집하며, 텍스트의 표시 위치만 바꿉니다.
+            function changeMergeLabelPosition(position) {
+                AUIGrid.setProp(myGridID2, { cellMergeLabelPosition: position });
+                AUIGrid.refresh(myGridID2);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-</head>
-<body>
+            <div id="main">
+                <div class="desc">
+                    <p>셀 세로 병합은 칼럼에서 값이 같다면 병합하여 출력을 시킵니다.</p>
+                    <p>
+                        셀 세로 병합을 위해서는 그리드 속성 enableCellMerge = true 설정 후 칼럼 레이아웃에서 원하는
+                        칼럼에 cellMerge : true 를 설정합니다.
+                    </p>
+                    <p>
+                        여기서 cellMergeRowSpan = false 를 설정하면 실제 병합은 하지 않고(rowspan 적용 시키지 않고)
+                        최상단에 값만 출력 시킵니다.
+                    </p>
+                    <ul class="nav_u">
+                        <li>
+                            <span onclick="setCellMerge()" class="btn">병합 해제/설정</span
+                            ><span>setCellMerge(true/false) 함수로 사용자가 기호에 따라 해제/설정이 가능합니다.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h1 style="margin-left: 30px">■ cellMergeRowSpan = true 설정 (기본값)</h1>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 280px; margin: 0 auto"></div>
+                </div>
 
-<div id="main">
-	<div class="desc">
-		<p>셀 세로 병합은 칼럼에서 값이 같다면 병합하여 출력을 시킵니다.</p>
-		<p>셀 세로 병합을 위해서는 그리드 속성 enableCellMerge = true 설정 후 칼럼 레이아웃에서 원하는 칼럼에 cellMerge : true 를 설정합니다.</p>
-		<p>여기서 cellMergeRowSpan = false 를 설정하면 실제 병합은 하지 않고(rowspan 적용 시키지 않고) 최상단에 값만 출력 시킵니다.</p>
-		<ul class="nav_u">
-			<li><span onclick="setCellMerge()" class="btn">병합 해제/설정</span><span>setCellMerge(true/false) 함수로 사용자가 기호에 따라 해제/설정이 가능합니다.</span></li>
-		</ul>
-	</div>
-	<div>
-		<h1 style="margin-left:30px;">■ cellMergeRowSpan = true 설정 (기본값)</h1>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:280px; margin:0 auto;"></div>
-	</div>
+                <div style="margin-top: 10px">
+                    <h1 style="margin-left: 30px">■ cellMergeRowSpan = false 설정</h1>
+                    <p style="margin-left: 30px">
+                        텍스트 위치:
+                        <select onchange="changeMergeLabelPosition(this.value)">
+                            <option value="top">첫 행 (기본값)</option>
+                            <option value="center">보이는 병합 구간의 중앙</option>
+                        </select>
+                    </p>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap2" style="width: 100%; height: 280px; margin: 0 auto"></div>
+                </div>
 
-	<div style="margin-top:10px;">
-		<h1 style="margin-left:30px;">■ cellMergeRowSpan = false 설정</h1>
-        <p style="margin-left:30px;">텍스트 위치:
-            <select onchange="changeMergeLabelPosition(this.value)">
-                <option value="top">첫 행 (기본값)</option>
-                <option value="center">보이는 병합 구간의 중앙</option>
-            </select>
-        </p>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap2" style="width:100%;height:280px; margin:0 auto;"></div>
-	</div>
-
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-		<div><span style="float:right;"> 식품군별 1일 섭취량 추이 , 통계청 </span></div>
-	</div>
-</div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                    <div><span style="float: right"> 식품군별 1일 섭취량 추이 , 통계청 </span></div>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

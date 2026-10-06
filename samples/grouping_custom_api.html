@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,176 +37,192 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	.my-align-right {
-		text-align: right;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <style>
+            .my-align-right {
+                text-align: right;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/country_phone_1000.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/country_phone_1000.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "orderId",
-			headerText: "Order ID"
-		}, {
-			dataField: "country",
-			headerText: "Country"
-		}, {
-			dataField: "name",
-			headerText: "Name"
-		}, {
-			dataField: "phone",
-			headerText: "Phone"
-		}, {
-			dataField: "product",
-			headerText: "Product"
-		}, {
-			dataField: "color",
-			headerText: "Color"
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			style: "my-custom-right"
-		}, {
-			dataField: "date",
-			headerText: "Date"
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "orderId",
+                        headerText: "Order ID"
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country"
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Name"
+                    },
+                    {
+                        dataField: "phone",
+                        headerText: "Phone"
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product"
+                    },
+                    {
+                        dataField: "color",
+                        headerText: "Color"
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        style: "my-custom-right"
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date"
+                    }
+                ];
 
-		// 그리드 푸터 설정
-		const footerLayout = [{
-			labelText: "∑",
-			positionField: "#base"
-		}, {
-			dataField: "price",
-			positionField: "price",
-			operation: "SUM",
-			formatString: "#,##0",
-			style: "aui-grid-my-footer-sum-total"
-		}, {
-			dataField: "price",
-			positionField: "date",
-			operation: "COUNT",
-			style: "my-custom-right"
-		}];
+                // 그리드 푸터 설정
+                const footerLayout = [
+                    {
+                        labelText: "∑",
+                        positionField: "#base"
+                    },
+                    {
+                        dataField: "price",
+                        positionField: "price",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "aui-grid-my-footer-sum-total"
+                    },
+                    {
+                        dataField: "price",
+                        positionField: "date",
+                        operation: "COUNT",
+                        style: "my-custom-right"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			editable: true,
-			// 푸터 사용 여부
-			showFooter: true,
-			// 그룹핑 패널 사용 안함
-			useGroupingPanel: false,
-			// 차례로 country, product, name 순으로 그룹핑을 합니다.
-			// 즉, 각 나라별, 각 제품을 구매한 사용자로 그룹핑
-			groupingFields: ["country", "product", "name"],
-			// 그룹핑 후 합계필드를 출력하도록 설정합니다.
-			groupingSummary: {
-				// 합계 필드는 price 1개에 대하여 실시 합니다.
-				dataFields: ["price"],
-				// "country", "product", "name"  순으로 그룹핑을 했을 때 해당 항목 아래에 출력되는 텍스트 지정
-				labelTexts: ["전체 합계", "부분 합계", "소계"]
-			},
-			// 최초 보여질 때 모두 열린 상태로 출력 여부
-			displayTreeOpen: true,
-			// 그룹핑 후 셀 병함 실행
-			enableCellMerge: true,
-			// 브랜치에 해당되는 행을 출력 여부
-			showBranchOnGrouping: false,
-			// 그리드 ROW 스타일 함수 정의
-			rowStyleFunction: function (rowIndex, item) {
-				if (item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
-					// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
-					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
-					switch (item._$depth) {  // 계층형의 depth 비교 연산
-						case 2:
-							return "aui-grid-row-depth1-style";
-						case 3:
-							return "aui-grid-row-depth2-style";
-						case 4:
-							return "aui-grid-row-depth3-style";
-						default:
-							return "aui-grid-row-depth-default-style";
-					}
-				}
-			} // end of rowStyleFunction
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    editable: true,
+                    // 푸터 사용 여부
+                    showFooter: true,
+                    // 그룹핑 패널 사용 안함
+                    useGroupingPanel: false,
+                    // 차례로 country, product, name 순으로 그룹핑을 합니다.
+                    // 즉, 각 나라별, 각 제품을 구매한 사용자로 그룹핑
+                    groupingFields: ["country", "product", "name"],
+                    // 그룹핑 후 합계필드를 출력하도록 설정합니다.
+                    groupingSummary: {
+                        // 합계 필드는 price 1개에 대하여 실시 합니다.
+                        dataFields: ["price"],
+                        // "country", "product", "name"  순으로 그룹핑을 했을 때 해당 항목 아래에 출력되는 텍스트 지정
+                        labelTexts: ["전체 합계", "부분 합계", "소계"]
+                    },
+                    // 최초 보여질 때 모두 열린 상태로 출력 여부
+                    displayTreeOpen: true,
+                    // 그룹핑 후 셀 병함 실행
+                    enableCellMerge: true,
+                    // 브랜치에 해당되는 행을 출력 여부
+                    showBranchOnGrouping: false,
+                    // 그리드 ROW 스타일 함수 정의
+                    rowStyleFunction: function (rowIndex, item) {
+                        if (item._$isGroupSumField) {
+                            // 그룹핑으로 만들어진 합계 필드인지 여부
+                            // 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
+                            // 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
+                            switch (
+                                item._$depth // 계층형의 depth 비교 연산
+                            ) {
+                                case 2:
+                                    return "aui-grid-row-depth1-style";
+                                case 3:
+                                    return "aui-grid-row-depth2-style";
+                                case 4:
+                                    return "aui-grid-row-depth3-style";
+                                default:
+                                    return "aui-grid-row-depth-default-style";
+                            }
+                        }
+                    } // end of rowStyleFunction
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 푸터 레이아웃 세팅
-		AUIGrid.setFooter(myGridID, footerLayout);
+                // 푸터 레이아웃 세팅
+                AUIGrid.setFooter(myGridID, footerLayout);
 
-		// 그룹핑  이벤트
-		AUIGrid.bind(myGridID, "grouping", function (event) {
-			document.getElementById("event_info").textContent = "이벤트명: " + event.type + ", 현재 그룹핑 필드들 : " + event.groupingFields.join(", ");
-		});
-	}
+                // 그룹핑  이벤트
+                AUIGrid.bind(myGridID, "grouping", function (event) {
+                    document.getElementById("event_info").textContent =
+                        "이벤트명: " + event.type + ", 현재 그룹핑 필드들 : " + event.groupingFields.join(", ");
+                });
+            }
 
-	// 특정 필드로 그룹핑을 실행합니다.
-	function setGroupBy(type) {
-		switch (type) {
-			case 0: // Country 로 그룹핑
-				AUIGrid.setGroupBy(myGridID, ["country"], {
-					dataFields: ["price"],
-					labelTexts: ["가격 합계"]
-				});
-				break;
-			case 1: // Product 로 그룹핑
-				AUIGrid.setGroupBy(myGridID, ["product"]);
-				break;
-			case 2: // Country, Product 순으로 그룹핑
-				AUIGrid.setGroupBy(myGridID, ["country", "product"]);
-				break;
-			case 3: // Country, Name, Product 순으로 그룹핑
-				AUIGrid.setGroupBy(myGridID, ["country", "name", "product"]);
-				break;
-			case -1: // 그룹핑 초기화
-				AUIGrid.setGroupBy(myGridID, []);
-				break;
-		}
-	}
+            // 특정 필드로 그룹핑을 실행합니다.
+            function setGroupBy(type) {
+                switch (type) {
+                    case 0: // Country 로 그룹핑
+                        AUIGrid.setGroupBy(myGridID, ["country"], {
+                            dataFields: ["price"],
+                            labelTexts: ["가격 합계"]
+                        });
+                        break;
+                    case 1: // Product 로 그룹핑
+                        AUIGrid.setGroupBy(myGridID, ["product"]);
+                        break;
+                    case 2: // Country, Product 순으로 그룹핑
+                        AUIGrid.setGroupBy(myGridID, ["country", "product"]);
+                        break;
+                    case 3: // Country, Name, Product 순으로 그룹핑
+                        AUIGrid.setGroupBy(myGridID, ["country", "name", "product"]);
+                        break;
+                    case -1: // 그룹핑 초기화
+                        AUIGrid.setGroupBy(myGridID, []);
+                        break;
+                }
+            }
 
-	// 그룹핑 패널 토글
-	function toggleGroupingPanel() {
-		const isVisible = AUIGrid.getProp(myGridID, "useGroupingPanel");
-		AUIGrid.setProp(myGridID, "useGroupingPanel", !isVisible);
-		AUIGrid.refresh(myGridID); // 리프레시
-	}
-</script>
+            // 그룹핑 패널 토글
+            function toggleGroupingPanel() {
+                const isVisible = AUIGrid.getProp(myGridID, "useGroupingPanel");
+                AUIGrid.setProp(myGridID, "useGroupingPanel", !isVisible);
+                AUIGrid.refresh(myGridID); // 리프레시
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<p>그룹핑 패널을 사용하지 않고, 사용자에게 강제적으로 그룹핑한 데이터를 보여줄 수 있습니다.</p>
-		<p>setGroupBy 메소드를 이용하여 외부에서 그룹핑을 할 수 있도록 제공합니다.</p>
-		<p><span class="btn" onclick="toggleGroupingPanel()">그룹핑 패널 표시 / 제거</span></p>
-		<ul class="nav_u">
-			<li><span onclick="setGroupBy(0)" class="btn">Country 그룹핑</span></li>
-			<li><span onclick="setGroupBy(1)" class="btn">Product 그룹핑</span></li>
-			<li><span onclick="setGroupBy(2)" class="btn">Country, Product 그룹핑</span></li>
-		</ul>
-		<ul class="nav_u">
-			<li><span onclick="setGroupBy(3)" class="btn">Country, Name, Product 그룹핑</span></li>
-			<li><span onclick="setGroupBy(-1)" class="btn">그룹핑 초기화</span></li>
-		</ul>
-		<div class="src_cover">
-			<pre>
+            <div id="main">
+                <div class="desc">
+                    <p>그룹핑 패널을 사용하지 않고, 사용자에게 강제적으로 그룹핑한 데이터를 보여줄 수 있습니다.</p>
+                    <p>setGroupBy 메소드를 이용하여 외부에서 그룹핑을 할 수 있도록 제공합니다.</p>
+                    <p><span class="btn" onclick="toggleGroupingPanel()">그룹핑 패널 표시 / 제거</span></p>
+                    <ul class="nav_u">
+                        <li><span onclick="setGroupBy(0)" class="btn">Country 그룹핑</span></li>
+                        <li><span onclick="setGroupBy(1)" class="btn">Product 그룹핑</span></li>
+                        <li><span onclick="setGroupBy(2)" class="btn">Country, Product 그룹핑</span></li>
+                    </ul>
+                    <ul class="nav_u">
+                        <li><span onclick="setGroupBy(3)" class="btn">Country, Name, Product 그룹핑</span></li>
+                        <li><span onclick="setGroupBy(-1)" class="btn">그룹핑 초기화</span></li>
+                    </ul>
+                    <div class="src_cover">
+                        <pre>
 // Country, Product 순으로 그룹핑
 AUIGrid.setGroupBy(myGridID, ["country", "product"] );
 
@@ -208,17 +232,17 @@ AUIGrid.setGroupBy(myGridID, [ "country", "name", "product"] );
 // 그룹핑 초기화
 AUIGrid.setGroupBy(myGridID, [] );
 </pre>
-		</div>
-	</div>
+                    </div>
+                </div>
 
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:380px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="event_info"></p>
-	</div>
-</div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 380px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="event_info"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

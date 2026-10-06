@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,213 +37,255 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<!-- PDF 내보내기 필수 JS 추가-->
-<script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <!-- PDF 내보내기 필수 JS 추가-->
+        <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+        <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+        <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style>
-	/* 커스텀 summary total  스타일 */
-	.aui-grid-my-footer-sum-total {
-		font-weight: bold;
-		color: #4374D9;
-		background-color: #ccccee;
-		text-align: right;
-	}
+        <style>
+            /* 커스텀 summary total  스타일 */
+            .aui-grid-my-footer-sum-total {
+                font-weight: bold;
+                color: #4374d9;
+                background-color: #ccccee;
+                text-align: right;
+            }
 
-	.aui-grid-my-footer-sum-total2 {
-		text-align: right;
-	}
+            .aui-grid-my-footer-sum-total2 {
+                text-align: right;
+            }
 
-	.my-column {
-		text-align: right;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            .my-column {
+                text-align: right;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
 
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/country_phone_500.json");
-	}
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/country_phone_500.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "orderId",
-			headerText: "Order ID",
-			width: 140
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			width: 140
-		}, {
-			dataField: "name",
-			headerText: "Name",
-			width: 140
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			width: 140
-		}, {
-			dataField: "color",
-			headerText: "Color",
-			width: 140
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			formatString: "#,##0",
-			style: "my-column",
-			filter: {
-				showIcon: true,
-				useExMenu: true
-			},
-			width: 140
-		}, {
-			dataField: "phone",
-			headerText: "Phone",
-			width: 140
-		}, {
-			dataField: "date",
-			headerText: "Date",
-			dataType: "date",
-			formatString: "yyyy년 mm월 dd일"
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "orderId",
+                        headerText: "Order ID",
+                        width: 140
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        width: 140
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Name",
+                        width: 140
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        width: 140
+                    },
+                    {
+                        dataField: "color",
+                        headerText: "Color",
+                        width: 140
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        style: "my-column",
+                        filter: {
+                            showIcon: true,
+                            useExMenu: true
+                        },
+                        width: 140
+                    },
+                    {
+                        dataField: "phone",
+                        headerText: "Phone",
+                        width: 140
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date",
+                        dataType: "date",
+                        formatString: "yyyy년 mm월 dd일"
+                    }
+                ];
 
-		// 그리드 푸터 설정
-		const footerLayout = [{
-			labelText: "∑",
-			positionField: "#base"
-		}, {
-			dataField: "price",
-			positionField: "price",
-			operation: "SUM",
-			formatString: "#,##0",
-			style: "aui-grid-my-footer-sum-total"
-		}, {
-			dataField: "price",
-			positionField: "date",
-			operation: "COUNT",
-			formatString: "#,##0",
-			style: "aui-grid-my-footer-sum-total2"
-		}, {
-			labelText: "Count=>",
-			positionField: "phone",
-			style: "aui-grid-my-footer-sum-total2"
-		}];
+                // 그리드 푸터 설정
+                const footerLayout = [
+                    {
+                        labelText: "∑",
+                        positionField: "#base"
+                    },
+                    {
+                        dataField: "price",
+                        positionField: "price",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "aui-grid-my-footer-sum-total"
+                    },
+                    {
+                        dataField: "price",
+                        positionField: "date",
+                        operation: "COUNT",
+                        formatString: "#,##0",
+                        style: "aui-grid-my-footer-sum-total2"
+                    },
+                    {
+                        labelText: "Count=>",
+                        positionField: "phone",
+                        style: "aui-grid-my-footer-sum-total2"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			editable: true,
-			enableFilter: true,
-			showFooter: true,
-			showBranchOnGrouping: false,
-			// 최초 보여질 때 모두 열린 상태로 출력 여부
-			displayTreeOpen: true,
-			// 그룹핑 후 셀 병함 실행
-			enableCellMerge: true,
-			// 그룹핑 후 합계필드 병합 여부
-			enableSummaryMerge: true,
-			// 그룹핑 패널 사용
-			useGroupingPanel: true,
-			// 차례로 country, product  순으로 그룹핑을 합니다.
-			// 즉, 각 나라별, 각 제품 그룹핑
-			groupingFields: ["country", "product"],
-			// 그룹핑 후 합계필드를 출력하도록 설정합니다.
-			groupingSummary: {
-				// 합계 필드는 price 1개에 대하여 실시 합니다.
-				dataFields: ["price"]
-			},
-			// 그리드 ROW 스타일 함수 정의
-			rowStyleFunction: function (rowIndex, item) {
-				if (item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
-					// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
-					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
-					switch (item._$depth) {  // 계층형의 depth 비교 연산
-						case 2:
-							return "aui-grid-row-depth1-style";
-						case 3:
-							return "aui-grid-row-depth2-style";
-						case 4:
-							return "aui-grid-row-depth3-style";
-						default:
-							return "aui-grid-row-depth-default-style";
-					}
-				}
-			}
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    editable: true,
+                    enableFilter: true,
+                    showFooter: true,
+                    showBranchOnGrouping: false,
+                    // 최초 보여질 때 모두 열린 상태로 출력 여부
+                    displayTreeOpen: true,
+                    // 그룹핑 후 셀 병함 실행
+                    enableCellMerge: true,
+                    // 그룹핑 후 합계필드 병합 여부
+                    enableSummaryMerge: true,
+                    // 그룹핑 패널 사용
+                    useGroupingPanel: true,
+                    // 차례로 country, product  순으로 그룹핑을 합니다.
+                    // 즉, 각 나라별, 각 제품 그룹핑
+                    groupingFields: ["country", "product"],
+                    // 그룹핑 후 합계필드를 출력하도록 설정합니다.
+                    groupingSummary: {
+                        // 합계 필드는 price 1개에 대하여 실시 합니다.
+                        dataFields: ["price"]
+                    },
+                    // 그리드 ROW 스타일 함수 정의
+                    rowStyleFunction: function (rowIndex, item) {
+                        if (item._$isGroupSumField) {
+                            // 그룹핑으로 만들어진 합계 필드인지 여부
+                            // 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
+                            // 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
+                            switch (
+                                item._$depth // 계층형의 depth 비교 연산
+                            ) {
+                                case 2:
+                                    return "aui-grid-row-depth1-style";
+                                case 3:
+                                    return "aui-grid-row-depth2-style";
+                                case 4:
+                                    return "aui-grid-row-depth3-style";
+                                default:
+                                    return "aui-grid-row-depth-default-style";
+                            }
+                        }
+                    }
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 푸터 레이아웃 세팅
-		AUIGrid.setFooter(myGridID, footerLayout);
-	}
+                // 푸터 레이아웃 세팅
+                AUIGrid.setFooter(myGridID, footerLayout);
+            }
 
-	// 엑셀 내보내기(Export);
-	function exportTo(type) {
-		// 내보내기는 기본 로컬 다운로딩 입니다.
-		// 따라서 FileSaver.min.js 파일을 추가하십시오.
-		// FileSaver.min.js 은 export_server_samples 폴더에 포함되어 있스니다.
-		// 내보내기 실행
-		switch (type) {
-			case "xlsx":
-				const chkbox = document.getElementById("chkbox");
-				AUIGrid.exportToXlsx(myGridID, {
-					// 스타일 상태 유지 여부(기본값:true)
-					exportWithStyle: chkbox.checked
-				});
-				break;
-			case "csv":
-				AUIGrid.exportToCsv(myGridID);
-				break;
-			case "txt":
-				AUIGrid.exportToTxt(myGridID);
-				break;
-			case "xml":
-				AUIGrid.exportToXml(myGridID);
-				break;
-			case "json":
-				AUIGrid.exportToJson(myGridID);
-				break;
-			case "pdf":
-				// AUIGrid.pdfkit.js 파일을 추가하십시오.
-				AUIGrid.exportToPdf(myGridID, {
-					// 폰트 경로 지정 (반드시 지정해야 함)
-					fontPath: "../pdfkit/nyjgothic-medium.ttf"
-				})
-				break;
-			case "object": // array-object 는 자바스크립트 객체임
-				const data = AUIGrid.exportToObject(myGridID);
-				console.log(data);
-				alert(data);
-				break;
-		}
-	}
-</script>
-</head>
-<body>
+            // 엑셀 내보내기(Export);
+            function exportTo(type) {
+                // 내보내기는 기본 로컬 다운로딩 입니다.
+                // 따라서 FileSaver.min.js 파일을 추가하십시오.
+                // FileSaver.min.js 은 export_server_samples 폴더에 포함되어 있스니다.
+                // 내보내기 실행
+                switch (type) {
+                    case "xlsx":
+                        const chkbox = document.getElementById("chkbox");
+                        AUIGrid.exportToXlsx(myGridID, {
+                            // 스타일 상태 유지 여부(기본값:true)
+                            exportWithStyle: chkbox.checked
+                        });
+                        break;
+                    case "csv":
+                        AUIGrid.exportToCsv(myGridID);
+                        break;
+                    case "txt":
+                        AUIGrid.exportToTxt(myGridID);
+                        break;
+                    case "xml":
+                        AUIGrid.exportToXml(myGridID);
+                        break;
+                    case "json":
+                        AUIGrid.exportToJson(myGridID);
+                        break;
+                    case "pdf":
+                        // AUIGrid.pdfkit.js 파일을 추가하십시오.
+                        AUIGrid.exportToPdf(myGridID, {
+                            // 폰트 경로 지정 (반드시 지정해야 함)
+                            fontPath: "../pdfkit/nyjgothic-medium.ttf"
+                        });
+                        break;
+                    case "object": // array-object 는 자바스크립트 객체임
+                        const data = AUIGrid.exportToObject(myGridID);
+                        console.log(data);
+                        alert(data);
+                        break;
+                }
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>내보내기(Export)는 다음과 같이 7가지 형식을 제공하며, 그리드가 자체적으로 엑셀(xlsx), PDF, CSV 등의 데이터를 작성하여 다운로드 가능토록 합니다.</p>
-		<p>내보내기는 기본적으로 현재 보이는 그리드의 데이터를 내보냅니다. 따라서 칼럼 헤더를 드래깅하여 그룹핑을 자유자재로 변환하였을 때 보이는 모습이 내보내기 됩니다.</p>
-		<p>테마가 변경되어 그리드의 모습이 변했을 때 변한 모습으로 엑셀(xlsx), PDF는 내보내기 됩니다.(테마 변경 후 Export 확인)
-		<p>엑셀(xlsx), PDF를 제외한 다른 형식은 스타일 정보를 갖지 않고 순수 데이터 값만 내보내기(Export) 됩니다.</p>
-		<p style="margin-left:20px;"><input type="checkbox" id="chkbox" checked="checked" style="vertical-align:middle;">
-			<label for="chkbox">xlsx 스타일 유지 - 해제 시 엑셀에 스타일 정보(컬러, 폰트 등)가 담기지 않습니다. 그리드의 데이터가 수 만건 인 경우 스타일 정보가 있으면 퍼포먼스 면에서 불리하니 데이터 양이 많은 경우 false 를 권합니다.)</label>
-		</p>
-		<p><strong>로컬에서 바로 다운로드 설정하는 방법 (<a href="https://github.com/eligrey/FileSaver.js/" target="_blank">FileSaver.js</a>이용, MIT 라이센스)</strong></p>
-		<div class="src_cover">
-			<pre><xmp><!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        내보내기(Export)는 다음과 같이 7가지 형식을 제공하며, 그리드가 자체적으로 엑셀(xlsx), PDF, CSV
+                        등의 데이터를 작성하여 다운로드 가능토록 합니다.
+                    </p>
+                    <p>
+                        내보내기는 기본적으로 현재 보이는 그리드의 데이터를 내보냅니다. 따라서 칼럼 헤더를 드래깅하여
+                        그룹핑을 자유자재로 변환하였을 때 보이는 모습이 내보내기 됩니다.
+                    </p>
+                    <p>
+                        테마가 변경되어 그리드의 모습이 변했을 때 변한 모습으로 엑셀(xlsx), PDF는 내보내기 됩니다.(테마
+                        변경 후 Export 확인)
+                    </p>
+                    <p>
+                        엑셀(xlsx), PDF를 제외한 다른 형식은 스타일 정보를 갖지 않고 순수 데이터 값만 내보내기(Export)
+                        됩니다.
+                    </p>
+                    <p style="margin-left: 20px">
+                        <input type="checkbox" id="chkbox" checked="checked" style="vertical-align: middle" />
+                        <label for="chkbox"
+                            >xlsx 스타일 유지 - 해제 시 엑셀에 스타일 정보(컬러, 폰트 등)가 담기지 않습니다. 그리드의
+                            데이터가 수 만건 인 경우 스타일 정보가 있으면 퍼포먼스 면에서 불리하니 데이터 양이 많은 경우
+                            false 를 권합니다.)</label
+                        >
+                    </p>
+                    <p>
+                        <strong
+                            >로컬에서 바로 다운로드 설정하는 방법 (<a
+                                href="https://github.com/eligrey/FileSaver.js/"
+                                target="_blank"
+                                >FileSaver.js</a
+                            >이용, MIT 라이센스)</strong
+                        >
+                    </p>
+                    <div class="src_cover">
+                        <pre><xmp><!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
 <!-- 정품 및 평가판 압축 해제 후, export_server_samples 폴더(또는 pdfkit 폴더) 안에 있음 -->
 <!--FileSaver.js - © Eli Grey (MIT License) https://github.com/eligrey/FileSaver.js -->
 <script type="text/javascript" src="./external_js/FileSaver.min.js"></script>
@@ -244,26 +294,29 @@ function exportToLocal() {
 	// 로컬에서 바로 내보내기 실행 (로컬 자원만으로 엑셀 서식 작성 후 바로 다운로딩 처리합니다.)
 	AUIGrid.exportToXlsx(myGridID);
 }</xmp></pre>
-		</div>
-		<p>참고 : FileSaver.js 없이 엑셀 Blob을 서버로 전송해서 다운로딩 처리도 가능합니다. (DRM 이나 엑셀에 추가 작업이 필요한 경우는 서버로 보내야 합니다.)</p>
-		<ul class="nav_u">
-			<li><button class="btn" onclick="exportTo('xlsx')">엑셀(xlsx)</button></li>
-			<li><button class="btn" onclick="exportTo('pdf')">PDF</button></li>
-			<li><button class="btn" onclick="exportTo('csv')">CSV</button></li>
-			<li><button class="btn" onclick="exportTo('txt')">TXT</button></li>
-			<li><button class="btn" onclick="exportTo('xml')">XML</button></li>
-			<li><button class="btn" onclick="exportTo('json')">JSON</button></li>
-			<li><button class="btn" onclick="exportTo('object')">JS Array-Object</button></li>
-		</ul>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                    <p>
+                        참고 : FileSaver.js 없이 엑셀 Blob을 서버로 전송해서 다운로딩 처리도 가능합니다. (DRM 이나
+                        엑셀에 추가 작업이 필요한 경우는 서버로 보내야 합니다.)
+                    </p>
+                    <ul class="nav_u">
+                        <li><button class="btn" onclick="exportTo('xlsx')">엑셀(xlsx)</button></li>
+                        <li><button class="btn" onclick="exportTo('pdf')">PDF</button></li>
+                        <li><button class="btn" onclick="exportTo('csv')">CSV</button></li>
+                        <li><button class="btn" onclick="exportTo('txt')">TXT</button></li>
+                        <li><button class="btn" onclick="exportTo('xml')">XML</button></li>
+                        <li><button class="btn" onclick="exportTo('json')">JSON</button></li>
+                        <li><button class="btn" onclick="exportTo('object')">JS Array-Object</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

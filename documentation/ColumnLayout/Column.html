@@ -2,40 +2,61 @@
 <html lang="ko">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href=".././static/prism.css">
 <link rel="stylesheet" href=".././static/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href=".././static/typography.css">
+<link rel="stylesheet" href=".././static/code-examples.css">
 <meta charset="utf-8">
 <meta content="text/javascript" http-equiv="Content-Script-Type">
 <meta content="text/css" http-equiv="Content-Style-Type">
 <meta content="IE=edge" http-equiv="X-UA-Compatible">
 <meta content="no-cache" http-equiv="Pragma">
 <meta content="-1" http-equiv="Expires">
-<meta content="width=1200" name="viewport">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
 <meta content="AUIGrid API Documentation" property="og:title">
 <meta content="http://www.auisoft.net/documentation/auigrid" property="og:url">
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
-<link rel="shortcut icon" href="../static/aui.ico">
+
 <script src="../static/doc.js?v=250612" type="text/javascript"></script>
 <!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
-<link href="../static/prism.css" rel="stylesheet">
-<script src="../static/prism.js" type="text/javascript"></script>
+<script src="../static/prism.js" data-manual></script>
+<script src="../static/code-examples.js"></script>
 <title>	AUIGrid Documentation</title>
+
+<link rel="icon" href="../static/favicon.ico" sizes="any">
+<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
+<meta name="theme-color" content="#222729">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../static/docs-brand.css">
 </head>
-<body>
-<div class="header">
-<div id="logo-bar">
-<a href="../index.html"><img src="../images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
-</div>
-<span id="title">AUIGrid 3.0.18 Documentation</span>
-</div>
-<div class="classDescContent">
+<body class="demo-typography docs-site">
+<header class="docs-header"><div class="docs-header-inner">
+    <a id="logo-bar" class="docs-brand" href="https://www.auisoft.net/" aria-label="AUISoft 홈페이지">
+      <img src="../static/favicon.svg" width="40" height="40" alt="">
+      <span>AUISoft<small>에이유아이소프트</small></span>
+    </a>
+    <span id="title" class="docs-context">AUIGrid 3.0.19 Documentation</span>
+    <nav class="docs-navigation" aria-label="주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="../index.html">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav>
+    <details class="docs-mobile-navigation"><summary>메뉴</summary><nav aria-label="모바일 주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="../index.html">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav></details>
+  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">Column</span></nav>
+<div class="MainContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
-<div style="margin-top:12px;margin-bottom:18px;">
-<span class="className">Column</span>
+<!-- API 문서도 소개 문서와 같은 h1을 사용하고 검색은 제목 아래에 배치합니다. -->
+<h1>Column</h1>
 <div id="searchbox" class="searchbox">
 <span class="keyword"><input placeholder="검색어 입력" maxlength="255" class="box_window" name="i_query" id="i_query" type="text"></span>
-</div>
 </div>
 <div id="desc_top">
 <p><p>칼럼 레이아웃은 행 데이터의 어느 필드를 어떤 형태로 표시할지 정의합니다. 각 칼럼의 객체에 데이터 필드, 헤더, 표시 및 편집 방식 등의 속성을 설정합니다.</p>
@@ -217,6 +238,7 @@ const columnLayout = [{
  ...
  </code></pre>
 <p>참고 : 그룹형으로 헤더를 작성한 경우 헤더 병합은 최하단 헤더만 가능합니다.(즉, 마지막 계층(depth) 헤더만 가능)</p>
+<p>헤더를 드래그하면 병합된 칼럼 전체가 함께 이동합니다. 다른 칼럼을 병합 내부로 드롭할 수 없으며, 과거 방식은 <a href="../DataGrid/Properties.html#useLegacyColSpanMoving">useLegacyColSpanMoving</a>으로 설정합니다.</p>
 기본값(default) : <code>NaN</code></td>
 </tr>
 <tr id="dataField">
@@ -257,7 +279,7 @@ const columnLayout = [{
 <p>또한 시간까지 포함된 다음 값이 "20180501 103059" 2018년 5월 1일 10시 30분 59초에 해당된다면 "yyyymmdd HHMMss" 를 설정하십시오.</p> 
 <p>지정 가능한 문자는 다음과  같습니다.</p>
 		<ul style="list-style: square;list-style-position: inside;">
-			<li>yy : 연(Year) 2자리로 표현(예:15)</li>
+			<li>yy : 연(Year) 2자리로 해석합니다. 00~68은 2000~2068년, 69~99는 1969~1999년입니다(예:15는 2015년). 다른 세기의 연도는 yyyy로 입력하십시오.</li>
 			<li>yyyy : 연(Year) 4자리로 표현(예:2015)</li>
 			<li>m : 월(Month) 1자리로 표현</li>
 			<li>mm :	월(Month) 2자리로 표현</li>
@@ -284,6 +306,16 @@ const columnLayout = [{
 <p>addColumn 또는 addTreeColumn으로 열을 추가할 때 해당 데이터 필드에 채울 값을 지정합니다.</p>
 <p>생략하면 데이터 필드를 채우지 않습니다. null은 명시적인 데이터 값입니다.</p>
 기본값(default) : <code>undefined</code></td>
+</tr>
+<tr id="disableCellDrag">
+<td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">disableCellDrag</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean &nbsp; <span class="label">Version: </span>3.0.19<br>
+<p>이 칼럼을 포함한 셀 선택 범위에서 드래그를 시작하지 못하게 합니다. 그리드의 enableDragCells가 true일 때 적용하며 다중 선택에도 적용됩니다.</p>
+<p>목적지 편집을 막으려면 칼럼의 editable을 false로 설정하십시오.</p>
+기본값(default) : <code>false</code></td>
 </tr>
 <tr id="disableGrouping">
 <td class="summaryTableSignatureCol">
@@ -401,6 +433,7 @@ const columnLayout = [{
   }
  </code></pre>
 <ul>
+<li> expandAll (v3.0.19) : 날짜, 트리 및 그룹 계층 필터 메뉴를 열 때 전체를 펼칠지 지정합니다.(기본값: false) false이면 최상위 항목만 표시합니다. 검색 결과는 기존처럼 펼쳐 표시하며 전체 펼치기 및 전체 접기로 조절할 수 있습니다. 체크 선택과 필터 조건은 바뀌지 않습니다. 트리 및 그룹 계층 메뉴는 그리드의 useTreeFilterMenu: true 설정이 필요합니다. 일반 값 및 숫자 필터에는 적용하지 않습니다.</li>
 <li> displayFormatValues : 포매팅한 텍스트로 필터 메뉴를 작성할지 여부를 나타냅니다. 포매팅 텍스트와 값이 1:1 매핑된 경우만 정상 작동합니다.(기본값 : false)</li>
 <li> enable : 해당 칼럼의 필터링 사용 여부를 지정합니다.(기본값 : true)</li>
 <li> enableCustomMenu : 해당 칼럼의 필터링 메뉴를 기본으로 제공되는 메뉴가 아닌 사용자가 직접 작성한 메뉴를 사용할지 여부를 나타냅니다.(기본값:false)</li>
@@ -884,8 +917,8 @@ const columnLayout = [{
 </div>
 <div class="MainContent">
 <p></p>
-<center class="copyright">Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</center>
+
 </div>
-</body>
+<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
 </html>
 <!--Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved-->

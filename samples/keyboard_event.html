@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,113 +37,135 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.my-column {
-		text-align: right;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <style>
+            /* 커스텀 칼럼 스타일 정의 */
+            .my-column {
+                text-align: right;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_500.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_500.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "Name",
-			width: 120
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			width: 120
-		}, {
-			dataField: "flag",
-			headerText: "Flag IMG",
-			width: 120
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			width: 120
-		}, {
-			dataField: "color",
-			headerText: "Color",
-			width: 120
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			style: "my-column",
-			width: 120
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			width: 120
-		}, {
-			dataField: "date",
-			headerText: "Date",
-			width: 120
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "name",
+                        headerText: "Name",
+                        width: 120
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        width: 120
+                    },
+                    {
+                        dataField: "flag",
+                        headerText: "Flag IMG",
+                        width: 120
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        width: 120
+                    },
+                    {
+                        dataField: "color",
+                        headerText: "Color",
+                        width: 120
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        style: "my-column",
+                        width: 120
+                    },
+                    {
+                        dataField: "quantity",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        width: 120
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date",
+                        width: 120
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			editable: false,
-			selectionMode: "multipleCells",
-			noDataMessage: "출력할 데이터가 없습니다."
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    editable: false,
+                    selectionMode: "multipleCells",
+                    noDataMessage: "출력할 데이터가 없습니다."
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// ready 이벤트 바인딩
-		AUIGrid.bind(myGridID, "ready", function (event) {
-			AUIGrid.setSelectionByIndex(myGridID, 0, 0); // 첫번째 셀 선택되도록 지정
-		});
+                // ready 이벤트 바인딩
+                AUIGrid.bind(myGridID, "ready", function (event) {
+                    AUIGrid.setSelectionByIndex(myGridID, 0, 0); // 첫번째 셀 선택되도록 지정
+                });
 
-		// keyDown 이벤트 바인딩
-		AUIGrid.bind(myGridID, "keyDown", function (event) {
-			const keyCode = event.keyCode;
+                // keyDown 이벤트 바인딩
+                AUIGrid.bind(myGridID, "keyDown", function (event) {
+                    const keyCode = event.keyCode;
 
-			// 정보 출력
-			document.getElementById("keyInfo").textContent = `keyCode : ${keyCode}`;
+                    // 정보 출력
+                    document.getElementById("keyInfo").textContent = `keyCode : ${keyCode}`;
 
-			if (keyCode === 116) { // F5 키
-				return false; // F5 키 리프레쉬 기본 행위 안함
-			}
+                    if (keyCode === 116) {
+                        // F5 키
+                        return false; // F5 키 리프레쉬 기본 행위 안함
+                    }
 
-			if (keyCode === 13) { // 엔터 키
-				const selectedItems = AUIGrid.getSelectedItems(event.pid);
-				alert("엔터 키 누름 : " + selectedItems[0].value);
-				return false; // 엔터 키의 기본 행위 안함.
-			}
-			return true; // 기본 행위 유지
-		});
-	}
-</script>
-</head>
-<body>
+                    if (keyCode === 13) {
+                        // 엔터 키
+                        const selectedItems = AUIGrid.getSelectedItems(event.pid);
+                        alert("엔터 키 누름 : " + selectedItems[0].value);
+                        return false; // 엔터 키의 기본 행위 안함.
+                    }
+                    return true; // 기본 행위 유지
+                });
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>키보드의 키다운(keyDown) 이벤트를 바인딩해서 제어 할 수 있습니다.</p>
-		<p>편집 가능 상태일 때 키보드를 누르면 바로 편집 가능 상태로 진입을 합니다. 이 때 나오는 Input 상태에서 키보드 이벤트는 발생하지 않습니다.</p>
-		<p>즉, Inptuer 상태 전 그리드 자체 키보드 이벤트에만 반응합니다.</p>
-		<p>사용자가 누르는 keyCode 를 보고 기본 행위를 안하고 개발자가 원하는 행위를 할 수 있습니다.</p>
-		<p>데모는 엔터키를 누른 경우 기본행위를 안하고 alert 을 찍도록 했습니다. ((Enter 의 기본 행위는 다음 행 또는 열 이동임)</p>
-		<p>이 이벤트를 활용하여 사용자가 원하는 단축키를 새로 작성할 수 있습니다. 예를 들면 F5 리프레쉬 막기, 편집 가능 그리드에서 Insert 키는 행 추가이나 다른 행위를 하도록 정의 하거나 Insert 키를 사용 못하게 정의 할 수 있습니다.</p>
-		<p>정보 - <span id="keyInfo" style="color:red;">keyCode : 없음</span></p>
-		<div class="src_cover">
-			<pre>// keyDown 이벤트 바인딩
+            <div id="main">
+                <div class="desc">
+                    <p>키보드의 키다운(keyDown) 이벤트를 바인딩해서 제어 할 수 있습니다.</p>
+                    <p>
+                        편집 가능 상태일 때 키보드를 누르면 바로 편집 가능 상태로 진입을 합니다. 이 때 나오는 Input
+                        상태에서 키보드 이벤트는 발생하지 않습니다.
+                    </p>
+                    <p>즉, Inptuer 상태 전 그리드 자체 키보드 이벤트에만 반응합니다.</p>
+                    <p>사용자가 누르는 keyCode 를 보고 기본 행위를 안하고 개발자가 원하는 행위를 할 수 있습니다.</p>
+                    <p>
+                        데모는 엔터키를 누른 경우 기본행위를 안하고 alert 을 찍도록 했습니다. ((Enter 의 기본 행위는
+                        다음 행 또는 열 이동임)
+                    </p>
+                    <p>
+                        이 이벤트를 활용하여 사용자가 원하는 단축키를 새로 작성할 수 있습니다. 예를 들면 F5 리프레쉬
+                        막기, 편집 가능 그리드에서 Insert 키는 행 추가이나 다른 행위를 하도록 정의 하거나 Insert 키를
+                        사용 못하게 정의 할 수 있습니다.
+                    </p>
+                    <p>정보 - <span id="keyInfo" style="color: red">keyCode : 없음</span></p>
+                    <div class="src_cover">
+                        <pre>
+// keyDown 이벤트 바인딩
 AUIGrid.bind(myGridID, "keyDown",	function(event) {
 	const keyCode = event.keyCode;
 	// 정보 출력
@@ -153,16 +183,16 @@ AUIGrid.bind(myGridID, "keyDown",	function(event) {
 	return true; // 기본 행위 유지
 });
 </pre>
-		</div>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:260px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 260px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

@@ -1,0 +1,728 @@
+[
+	{
+		"id": "PR-0001",
+		"title": "디자인팀 노트북 교체",
+		"requester": "김서연",
+		"team": "디자인팀",
+		"description": "휴대용 노트북 3대와 확장 도크",
+		"amount": 5400000,
+		"stage": 2,
+		"rejected": false,
+		"daysLeft": 2,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			},
+			{
+				"name": "비교견적.xlsx",
+				"size": "296 KB"
+			}
+		],
+		"tone": 0
+	},
+	{
+		"id": "PR-0002",
+		"title": "회의실 화상 장비 도입",
+		"requester": "박민준",
+		"team": "경영지원팀",
+		"description": "회의실 카메라와 스피커폰 세트",
+		"amount": 1280000,
+		"stage": 1,
+		"rejected": false,
+		"daysLeft": 5,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 1
+	},
+	{
+		"id": "PR-0003",
+		"title": "물류센터 바코드 스캐너",
+		"requester": "이도윤",
+		"team": "물류운영팀",
+		"description": "입출고용 무선 바코드 스캐너 8대",
+		"amount": 2640000,
+		"stage": 1,
+		"rejected": true,
+		"daysLeft": -3,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			}
+		],
+		"tone": 2
+	},
+	{
+		"id": "PR-0004",
+		"title": "고객지원팀 모니터 구매",
+		"requester": "최지우",
+		"team": "고객지원팀",
+		"description": "27인치 업무용 모니터 6대",
+		"amount": 1920000,
+		"stage": 4,
+		"rejected": false,
+		"daysLeft": -1,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 3
+	},
+	{
+		"id": "PR-0005",
+		"title": "개발 서버 메모리 증설",
+		"requester": "정하준",
+		"team": "플랫폼개발팀",
+		"description": "검증 서버용 메모리 64GB 4개",
+		"amount": 3680000,
+		"stage": 3,
+		"rejected": false,
+		"daysLeft": 0,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 0
+	},
+	{
+		"id": "PR-0006",
+		"title": "쇼룸 전시 소모품",
+		"requester": "한수빈",
+		"team": "브랜드팀",
+		"description": "전시용 안내물과 소모품",
+		"amount": 480000,
+		"stage": 0,
+		"rejected": false,
+		"daysLeft": 9,
+		"files": [],
+		"tone": 1
+	},
+	{
+		"id": "PR-0007",
+		"title": "사내 교육용 태블릿",
+		"requester": "오예린",
+		"team": "인재개발팀",
+		"description": "교육용 태블릿 10대",
+		"amount": 7200000,
+		"stage": 2,
+		"rejected": true,
+		"daysLeft": 4,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			},
+			{
+				"name": "비교견적.xlsx",
+				"size": "296 KB"
+			}
+		],
+		"tone": 2
+	},
+	{
+		"id": "PR-0008",
+		"title": "현장 안전 장비 보충",
+		"requester": "강현우",
+		"team": "시설관리팀",
+		"description": "안전모와 보호 장갑 20세트",
+		"amount": 860000,
+		"stage": 4,
+		"rejected": false,
+		"daysLeft": 3,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			}
+		],
+		"tone": 3
+	},
+	{
+		"id": "PR-0009",
+		"title": "디자인 소프트웨어 갱신",
+		"requester": "윤지안",
+		"team": "디자인팀",
+		"description": "디자인 도구 연간 이용권 5개",
+		"amount": 4500000,
+		"stage": 1,
+		"rejected": false,
+		"daysLeft": -2,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 0
+	},
+	{
+		"id": "PR-0010",
+		"title": "신규 입사자 업무 장비",
+		"requester": "임서준",
+		"team": "경영지원팀",
+		"description": "키보드와 마우스, 헤드셋 8세트",
+		"amount": 960000,
+		"stage": 2,
+		"rejected": false,
+		"daysLeft": 7,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 1
+	},
+	{
+		"id": "PR-0011",
+		"title": "테스트 단말 추가 구매",
+		"requester": "김다은",
+		"team": "품질검증팀",
+		"description": "모바일 테스트 단말 4대",
+		"amount": 3100000,
+		"stage": 3,
+		"rejected": false,
+		"daysLeft": 1,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			}
+		],
+		"tone": 2
+	},
+	{
+		"id": "PR-0012",
+		"title": "사무실 공기청정기 교체",
+		"requester": "이유찬",
+		"team": "시설관리팀",
+		"description": "공용 공간용 공기청정기 2대",
+		"amount": 1480000,
+		"stage": 4,
+		"rejected": false,
+		"daysLeft": 6,
+		"files": [],
+		"tone": 3
+	},
+	{
+		"id": "PR-0013",
+		"title": "디자인팀 노트북 교체",
+		"requester": "김서연",
+		"team": "디자인팀",
+		"description": "휴대용 노트북 3대와 확장 도크",
+		"amount": 5500000,
+		"stage": 2,
+		"rejected": false,
+		"daysLeft": 2,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			},
+			{
+				"name": "비교견적.xlsx",
+				"size": "296 KB"
+			}
+		],
+		"tone": 0
+	},
+	{
+		"id": "PR-0014",
+		"title": "회의실 화상 장비 도입",
+		"requester": "박민준",
+		"team": "경영지원팀",
+		"description": "회의실 카메라와 스피커폰 세트",
+		"amount": 1380000,
+		"stage": 1,
+		"rejected": false,
+		"daysLeft": 5,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 1
+	},
+	{
+		"id": "PR-0015",
+		"title": "물류센터 바코드 스캐너",
+		"requester": "이도윤",
+		"team": "물류운영팀",
+		"description": "입출고용 무선 바코드 스캐너 8대",
+		"amount": 2740000,
+		"stage": 1,
+		"rejected": true,
+		"daysLeft": -3,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			}
+		],
+		"tone": 2
+	},
+	{
+		"id": "PR-0016",
+		"title": "고객지원팀 모니터 구매",
+		"requester": "최지우",
+		"team": "고객지원팀",
+		"description": "27인치 업무용 모니터 6대",
+		"amount": 2020000,
+		"stage": 4,
+		"rejected": false,
+		"daysLeft": -1,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 3
+	},
+	{
+		"id": "PR-0017",
+		"title": "개발 서버 메모리 증설",
+		"requester": "정하준",
+		"team": "플랫폼개발팀",
+		"description": "검증 서버용 메모리 64GB 4개",
+		"amount": 3780000,
+		"stage": 3,
+		"rejected": false,
+		"daysLeft": 0,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 0
+	},
+	{
+		"id": "PR-0018",
+		"title": "쇼룸 전시 소모품",
+		"requester": "한수빈",
+		"team": "브랜드팀",
+		"description": "전시용 안내물과 소모품",
+		"amount": 580000,
+		"stage": 0,
+		"rejected": false,
+		"daysLeft": 9,
+		"files": [],
+		"tone": 1
+	},
+	{
+		"id": "PR-0019",
+		"title": "사내 교육용 태블릿",
+		"requester": "오예린",
+		"team": "인재개발팀",
+		"description": "교육용 태블릿 10대",
+		"amount": 7300000,
+		"stage": 2,
+		"rejected": true,
+		"daysLeft": 4,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			},
+			{
+				"name": "비교견적.xlsx",
+				"size": "296 KB"
+			}
+		],
+		"tone": 2
+	},
+	{
+		"id": "PR-0020",
+		"title": "현장 안전 장비 보충",
+		"requester": "강현우",
+		"team": "시설관리팀",
+		"description": "안전모와 보호 장갑 20세트",
+		"amount": 960000,
+		"stage": 4,
+		"rejected": false,
+		"daysLeft": 3,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			}
+		],
+		"tone": 3
+	},
+	{
+		"id": "PR-0021",
+		"title": "디자인 소프트웨어 갱신",
+		"requester": "윤지안",
+		"team": "디자인팀",
+		"description": "디자인 도구 연간 이용권 5개",
+		"amount": 4600000,
+		"stage": 1,
+		"rejected": false,
+		"daysLeft": -2,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 0
+	},
+	{
+		"id": "PR-0022",
+		"title": "신규 입사자 업무 장비",
+		"requester": "임서준",
+		"team": "경영지원팀",
+		"description": "키보드와 마우스, 헤드셋 8세트",
+		"amount": 1060000,
+		"stage": 2,
+		"rejected": false,
+		"daysLeft": 7,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 1
+	},
+	{
+		"id": "PR-0023",
+		"title": "테스트 단말 추가 구매",
+		"requester": "김다은",
+		"team": "품질검증팀",
+		"description": "모바일 테스트 단말 4대",
+		"amount": 3200000,
+		"stage": 3,
+		"rejected": false,
+		"daysLeft": 1,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			}
+		],
+		"tone": 2
+	},
+	{
+		"id": "PR-0024",
+		"title": "사무실 공기청정기 교체",
+		"requester": "이유찬",
+		"team": "시설관리팀",
+		"description": "공용 공간용 공기청정기 2대",
+		"amount": 1580000,
+		"stage": 4,
+		"rejected": false,
+		"daysLeft": 6,
+		"files": [],
+		"tone": 3
+	},
+	{
+		"id": "PR-0025",
+		"title": "디자인팀 노트북 교체",
+		"requester": "김서연",
+		"team": "디자인팀",
+		"description": "휴대용 노트북 3대와 확장 도크",
+		"amount": 5600000,
+		"stage": 2,
+		"rejected": false,
+		"daysLeft": 2,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			},
+			{
+				"name": "비교견적.xlsx",
+				"size": "296 KB"
+			}
+		],
+		"tone": 0
+	},
+	{
+		"id": "PR-0026",
+		"title": "회의실 화상 장비 도입",
+		"requester": "박민준",
+		"team": "경영지원팀",
+		"description": "회의실 카메라와 스피커폰 세트",
+		"amount": 1480000,
+		"stage": 1,
+		"rejected": false,
+		"daysLeft": 5,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 1
+	},
+	{
+		"id": "PR-0027",
+		"title": "물류센터 바코드 스캐너",
+		"requester": "이도윤",
+		"team": "물류운영팀",
+		"description": "입출고용 무선 바코드 스캐너 8대",
+		"amount": 2840000,
+		"stage": 1,
+		"rejected": true,
+		"daysLeft": -3,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			}
+		],
+		"tone": 2
+	},
+	{
+		"id": "PR-0028",
+		"title": "고객지원팀 모니터 구매",
+		"requester": "최지우",
+		"team": "고객지원팀",
+		"description": "27인치 업무용 모니터 6대",
+		"amount": 2120000,
+		"stage": 4,
+		"rejected": false,
+		"daysLeft": -1,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 3
+	},
+	{
+		"id": "PR-0029",
+		"title": "개발 서버 메모리 증설",
+		"requester": "정하준",
+		"team": "플랫폼개발팀",
+		"description": "검증 서버용 메모리 64GB 4개",
+		"amount": 3880000,
+		"stage": 3,
+		"rejected": false,
+		"daysLeft": 0,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 0
+	},
+	{
+		"id": "PR-0030",
+		"title": "쇼룸 전시 소모품",
+		"requester": "한수빈",
+		"team": "브랜드팀",
+		"description": "전시용 안내물과 소모품",
+		"amount": 680000,
+		"stage": 0,
+		"rejected": false,
+		"daysLeft": 9,
+		"files": [],
+		"tone": 1
+	},
+	{
+		"id": "PR-0031",
+		"title": "사내 교육용 태블릿",
+		"requester": "오예린",
+		"team": "인재개발팀",
+		"description": "교육용 태블릿 10대",
+		"amount": 7400000,
+		"stage": 2,
+		"rejected": true,
+		"daysLeft": 4,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			},
+			{
+				"name": "비교견적.xlsx",
+				"size": "296 KB"
+			}
+		],
+		"tone": 2
+	},
+	{
+		"id": "PR-0032",
+		"title": "현장 안전 장비 보충",
+		"requester": "강현우",
+		"team": "시설관리팀",
+		"description": "안전모와 보호 장갑 20세트",
+		"amount": 1060000,
+		"stage": 4,
+		"rejected": false,
+		"daysLeft": 3,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			}
+		],
+		"tone": 3
+	},
+	{
+		"id": "PR-0033",
+		"title": "디자인 소프트웨어 갱신",
+		"requester": "윤지안",
+		"team": "디자인팀",
+		"description": "디자인 도구 연간 이용권 5개",
+		"amount": 4700000,
+		"stage": 1,
+		"rejected": false,
+		"daysLeft": -2,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 0
+	},
+	{
+		"id": "PR-0034",
+		"title": "신규 입사자 업무 장비",
+		"requester": "임서준",
+		"team": "경영지원팀",
+		"description": "키보드와 마우스, 헤드셋 8세트",
+		"amount": 1160000,
+		"stage": 2,
+		"rejected": false,
+		"daysLeft": 7,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			},
+			{
+				"name": "구매사양서.pdf",
+				"size": "210 KB"
+			}
+		],
+		"tone": 1
+	},
+	{
+		"id": "PR-0035",
+		"title": "테스트 단말 추가 구매",
+		"requester": "김다은",
+		"team": "품질검증팀",
+		"description": "모바일 테스트 단말 4대",
+		"amount": 3300000,
+		"stage": 3,
+		"rejected": false,
+		"daysLeft": 1,
+		"files": [
+			{
+				"name": "견적서.pdf",
+				"size": "124 KB"
+			}
+		],
+		"tone": 2
+	},
+	{
+		"id": "PR-0036",
+		"title": "사무실 공기청정기 교체",
+		"requester": "이유찬",
+		"team": "시설관리팀",
+		"description": "공용 공간용 공기청정기 2대",
+		"amount": 1680000,
+		"stage": 4,
+		"rejected": false,
+		"daysLeft": 6,
+		"files": [],
+		"tone": 3
+	}
+]

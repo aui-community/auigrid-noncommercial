@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,322 +37,343 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	.my-right-style {
-		text-align: right;
-	}
+        <style>
+            .my-right-style {
+                text-align: right;
+            }
 
-	.my-strong-style {
-		font-weight: bold;
-	}
+            .my-strong-style {
+                font-weight: bold;
+            }
 
-	.my-custom-style1 {
-		text-align: right;
-		background: rgba(206, 251, 201, 0.2);
-		font-weight: bold;
-	}
+            .my-custom-style1 {
+                text-align: right;
+                background: rgba(206, 251, 201, 0.2);
+                font-weight: bold;
+            }
 
-	.my-custom-style2 {
-		text-align: right;
-		background: rgba(206, 251, 201, 0.2);
-		font-weight: bold;
-	}
+            .my-custom-style2 {
+                text-align: right;
+                background: rgba(206, 251, 201, 0.2);
+                font-weight: bold;
+            }
 
-	.my-custom-style3 {
-		text-align: right;
-		color: #4641D9;
-		font-weight: bold;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            .my-custom-style3 {
+                text-align: right;
+                color: #4641d9;
+                font-weight: bold;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// AUIGrid 에 데이터 삽입합니다.
-		createRandomData(100);
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // AUIGrid 에 데이터 삽입합니다.
+                createRandomData(100);
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [];
 
-		columnLayout[0] = { // 연도 칼럼 생성
-			editable: false,
-			headerText: "연도",
-			dataField: "year",
-			postfix: "년",
-			style: "my-strong-style",
-			width: 140
-		}
+                columnLayout[0] = {
+                    // 연도 칼럼 생성
+                    editable: false,
+                    headerText: "연도",
+                    dataField: "year",
+                    postfix: "년",
+                    style: "my-strong-style",
+                    width: 140
+                };
 
-		for (let i = 1; i <= 4; i++) { // 1~4분기 칼럼 생성
-			columnLayout.push({
-				headerText: i + "분기",
-				dataField: "col" + i,
-				dataType: "numeric",
-				formatString: "#,##0",
-				headerStyle: "my-right-style",
-				style: "my-right-style",
-				width: 120
-			});
-		}
+                for (let i = 1; i <= 4; i++) {
+                    // 1~4분기 칼럼 생성
+                    columnLayout.push({
+                        headerText: i + "분기",
+                        dataField: "col" + i,
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        headerStyle: "my-right-style",
+                        style: "my-right-style",
+                        width: 120
+                    });
+                }
 
-		//-- 상반기 칼럼 생성
-		columnLayout.push({
-			headerText: "상반기",
-			dataField: "myField1", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
-			headerStyle: "my-right-style",
-			style: "my-custom-style1",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120,
-			expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				// 1~2 분기 합을 계산하여 반환
-				// expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-				return (item.col1 + item.col2);
-			},
-			headerTooltip: {
-				show: true,
-				tooltipHtml: "직접 수정 불가.<br/>1~2분기 수정 시 자동반영됨"
-			}
-		});
+                //-- 상반기 칼럼 생성
+                columnLayout.push({
+                    headerText: "상반기",
+                    dataField: "myField1", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
+                    headerStyle: "my-right-style",
+                    style: "my-custom-style1",
+                    dataType: "numeric",
+                    formatString: "#,##0",
+                    width: 120,
+                    expFunction: function (rowIndex, columnIndex, item, dataField) {
+                        // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+                        // 1~2 분기 합을 계산하여 반환
+                        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+                        return item.col1 + item.col2;
+                    },
+                    headerTooltip: {
+                        show: true,
+                        tooltipHtml: "직접 수정 불가.<br/>1~2분기 수정 시 자동반영됨"
+                    }
+                });
 
-		//-- 하반기 칼럼 생성
-		columnLayout.push({
-			headerText: "하반기",
-			dataField: "myField2", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
-			headerStyle: "my-right-style",
-			style: "my-custom-style1",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120,
-			expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				// 3~4 분기 합을 계산하여 반환
-				// expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-				return (item.col3 + item.col4);
-			},
-			headerTooltip: {
-				show: true,
-				tooltipHtml: "직접 수정 불가.<br/>3~4분기 수정 시 자동반영됨"
-			}
-		});
+                //-- 하반기 칼럼 생성
+                columnLayout.push({
+                    headerText: "하반기",
+                    dataField: "myField2", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
+                    headerStyle: "my-right-style",
+                    style: "my-custom-style1",
+                    dataType: "numeric",
+                    formatString: "#,##0",
+                    width: 120,
+                    expFunction: function (rowIndex, columnIndex, item, dataField) {
+                        // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+                        // 3~4 분기 합을 계산하여 반환
+                        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+                        return item.col3 + item.col4;
+                    },
+                    headerTooltip: {
+                        show: true,
+                        tooltipHtml: "직접 수정 불가.<br/>3~4분기 수정 시 자동반영됨"
+                    }
+                });
 
-		//-- 연도별 매출 칼럼 생성
-		columnLayout.push({
-			headerText: "연도별 매출",
-			dataField: "myField3",  // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
-			headerStyle: "myField3",
-			style: "my-custom-style3",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 120,
-			expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				// 1~4 분기 합을 계산하여 반환
-				// expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-				return (item.col1 + item.col2 + item.col3 + item.col4);
-			},
-			headerTooltip: {
-				show: true,
-				tooltipHtml: "직접 수정 불가.<br/>1~4분기 수정 시 자동반영됨"
-			}
-		});
+                //-- 연도별 매출 칼럼 생성
+                columnLayout.push({
+                    headerText: "연도별 매출",
+                    dataField: "myField3", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
+                    headerStyle: "myField3",
+                    style: "my-custom-style3",
+                    dataType: "numeric",
+                    formatString: "#,##0",
+                    width: 120,
+                    expFunction: function (rowIndex, columnIndex, item, dataField) {
+                        // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+                        // 1~4 분기 합을 계산하여 반환
+                        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+                        return item.col1 + item.col2 + item.col3 + item.col4;
+                    },
+                    headerTooltip: {
+                        show: true,
+                        tooltipHtml: "직접 수정 불가.<br/>1~4분기 수정 시 자동반영됨"
+                    }
+                });
 
-		//-- 최대 매출 분기
-		columnLayout.push({
-			headerText: "최대 매출 분기",
-			dataField: "myField4",  // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
-			style: "my-strong-style",
-			expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				// expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-				const max = Math.max(item.col1, item.col2, item.col3, item.col4);
-				if (max === item.col1) return 1;
-				else if (max === item.col2) return 2;
-				else if (max === item.col3) return 3;
-				else return 4;
-			},
-			labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-				let str = ""; // value 파라메터는 expFunction 에서 만든 그 값임.
-				if (value === 1) str = "1분기";
-				else if (value === 2) str = "2분기";
-				else if (value === 3) str = "3분기";
-				else str = "4분기";
-				return str;
-			},
-			headerTooltip: {
-				show: true,
-				tooltipHtml: "직접 수정 불가.<br/>1~4분기 수정 시 자동반영됨"
-			}
-		});
+                //-- 최대 매출 분기
+                columnLayout.push({
+                    headerText: "최대 매출 분기",
+                    dataField: "myField4", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
+                    style: "my-strong-style",
+                    expFunction: function (rowIndex, columnIndex, item, dataField) {
+                        // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+                        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+                        const max = Math.max(item.col1, item.col2, item.col3, item.col4);
+                        if (max === item.col1) return 1;
+                        else if (max === item.col2) return 2;
+                        else if (max === item.col3) return 3;
+                        else return 4;
+                    },
+                    labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+                        let str = ""; // value 파라메터는 expFunction 에서 만든 그 값임.
+                        if (value === 1) str = "1분기";
+                        else if (value === 2) str = "2분기";
+                        else if (value === 3) str = "3분기";
+                        else str = "4분기";
+                        return str;
+                    },
+                    headerTooltip: {
+                        show: true,
+                        tooltipHtml: "직접 수정 불가.<br/>1~4분기 수정 시 자동반영됨"
+                    }
+                });
 
-		// 그리드 푸터 설정
-		const footerLayout = [{
-			labelText: "총 합계",
-			positionField: "year"
-		}, {
-			dataField: "col1",
-			positionField: "col1",
-			operation: "SUM",
-			formatString: "#,##0",
-			style: "my-right-style"
-		}, {
-			dataField: "col2",
-			positionField: "col2",
-			operation: "SUM",
-			formatString: "#,##0",
-			style: "my-right-style"
-		}, {
-			dataField: "col3",
-			positionField: "col3",
-			operation: "SUM",
-			formatString: "#,##0",
-			style: "my-right-style"
-		}, {
-			dataField: "col4",
-			positionField: "col4",
-			operation: "SUM",
-			formatString: "#,##0",
-			style: "my-right-style"
-		}, {
-			dataField: "myField1",
-			positionField: "myField1",
-			operation: "SUM",
-			formatString: "#,##0",
-			style: "my-right-style"
-		}, {
-			dataField: "myField2",
-			positionField: "myField2",
-			operation: "SUM",
-			formatString: "#,##0",
-			style: "my-right-style"
-		}, {
-			dataField: "myField3",
-			positionField: "myField3",
-			operation: "SUM",
-			formatString: "#,##0",
-			style: "my-right-style"
-		}];
+                // 그리드 푸터 설정
+                const footerLayout = [
+                    {
+                        labelText: "총 합계",
+                        positionField: "year"
+                    },
+                    {
+                        dataField: "col1",
+                        positionField: "col1",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "my-right-style"
+                    },
+                    {
+                        dataField: "col2",
+                        positionField: "col2",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "my-right-style"
+                    },
+                    {
+                        dataField: "col3",
+                        positionField: "col3",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "my-right-style"
+                    },
+                    {
+                        dataField: "col4",
+                        positionField: "col4",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "my-right-style"
+                    },
+                    {
+                        dataField: "myField1",
+                        positionField: "myField1",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "my-right-style"
+                    },
+                    {
+                        dataField: "myField2",
+                        positionField: "myField2",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "my-right-style"
+                    },
+                    {
+                        dataField: "myField3",
+                        positionField: "myField3",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "my-right-style"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			showRowCheckColumn: false,
-			showStateColumn: true,
-			selectionMode: "multipleCells",
-			showFooter: true,
-			editable: true,
-			enableFilter: true,
-			// 행 고유 id 에 속하는 필드명(DB의 primary key 와 일치 시키면 유용합니다.)
-			rowIdField: "id",
-			// 고정 칼럼, 행에 있는 셀도 수정 가능 여부(기본값:false)
-			editableOnFixedCell: true,
-			// 행 선택모드에서 옆으로 칼럼 변경할 시 selectionChange 이벤트 발생 시킬지 여부(기본값 : false)
-			triggerSelectionChangeOnCell: true,
-			// 엔터키는 에디팅 완료만 함. 아래로 행을 내리지 않음
-			onlyEnterKeyEditEnd: true,
-			// selectionChange 이벤트 발생 시 간소화된 정보만 받을지 여부
-			// 이 속성은 선택한 셀이 많을 때 false 설정하면 퍼포먼스에 영향을 미칩니다.
-			// selectionChange 이벤트 바인딩 한 경우 true 설정을 권합니다.
-			simplifySelectionEvent: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    showRowCheckColumn: false,
+                    showStateColumn: true,
+                    selectionMode: "multipleCells",
+                    showFooter: true,
+                    editable: true,
+                    enableFilter: true,
+                    // 행 고유 id 에 속하는 필드명(DB의 primary key 와 일치 시키면 유용합니다.)
+                    rowIdField: "id",
+                    // 고정 칼럼, 행에 있는 셀도 수정 가능 여부(기본값:false)
+                    editableOnFixedCell: true,
+                    // 행 선택모드에서 옆으로 칼럼 변경할 시 selectionChange 이벤트 발생 시킬지 여부(기본값 : false)
+                    triggerSelectionChangeOnCell: true,
+                    // 엔터키는 에디팅 완료만 함. 아래로 행을 내리지 않음
+                    onlyEnterKeyEditEnd: true,
+                    // selectionChange 이벤트 발생 시 간소화된 정보만 받을지 여부
+                    // 이 속성은 선택한 셀이 많을 때 false 설정하면 퍼포먼스에 영향을 미칩니다.
+                    // selectionChange 이벤트 바인딩 한 경우 true 설정을 권합니다.
+                    simplifySelectionEvent: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 푸터 레이아웃 세팅
-		AUIGrid.setFooter(myGridID, footerLayout);
+                // 푸터 레이아웃 세팅
+                AUIGrid.setFooter(myGridID, footerLayout);
 
-		// 선택 변경 이벤트 바인딩
-		AUIGrid.bind(myGridID, "selectionChange", function (event) {
-			// 선택 대표 셀 정보 
-			const primeCell = event.primeCell;
-			// 하단에 행인덱스, 헤더 텍스트, 수정 가능여부 출력함.
-			document.getElementById("selectionDesc").textContent = `현재 셀 : ( ${primeCell.rowIndex}, ${primeCell.headerText} ) : value : ${primeCell.value}`;
-		});
+                // 선택 변경 이벤트 바인딩
+                AUIGrid.bind(myGridID, "selectionChange", function (event) {
+                    // 선택 대표 셀 정보
+                    const primeCell = event.primeCell;
+                    // 하단에 행인덱스, 헤더 텍스트, 수정 가능여부 출력함.
+                    document.getElementById("selectionDesc").textContent =
+                        `현재 셀 : ( ${primeCell.rowIndex}, ${primeCell.headerText} ) : value : ${primeCell.value}`;
+                });
 
-		// 에디팅 시작 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
-			const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginDesc").textContent = msg;
-		});
+                // 에디팅 시작 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+                    const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginDesc").textContent = msg;
+                });
 
-		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
-			const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginEnd").textContent = msg;
-		});
+                // 에디팅 정상 종료 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+                    const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginEnd").textContent = msg;
+                });
 
-		// 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
-			const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginEnd").textContent = msg;
-		});
-	}
+                // 에디팅 취소 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+                    const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginEnd").textContent = msg;
+                });
+            }
 
-	// 주어진 개수만큼 랜덤 데이터 생성하여 그리드에 삽입
-	function createRandomData(count) {
-		const data = [];
-		const maxYear = 2015;
-		for (let i = 1; i <= count; i++) {
-			let row = {};
-			row.id = "PK" + i; // rowIdField 로 지정할 중복되지 않는 고유값(primary key)
-			row.year = 2015 - i;
-			for (let j = 1; j <= 4; j++) { // 1~4분기 개별 데이터 생성
-				row["col" + j] = Math.round(Math.random() * 10000); // 모든 데이터를 랜덤 데이터로 생성
-			}
-			data.push(row);
-		}
-		// 데이터 삽입
-		AUIGrid.setGridData(myGridID, data);
-	}
+            // 주어진 개수만큼 랜덤 데이터 생성하여 그리드에 삽입
+            function createRandomData(count) {
+                const data = [];
+                const maxYear = 2015;
+                for (let i = 1; i <= count; i++) {
+                    let row = {};
+                    row.id = "PK" + i; // rowIdField 로 지정할 중복되지 않는 고유값(primary key)
+                    row.year = 2015 - i;
+                    for (let j = 1; j <= 4; j++) {
+                        // 1~4분기 개별 데이터 생성
+                        row["col" + j] = Math.round(Math.random() * 10000); // 모든 데이터를 랜덤 데이터로 생성
+                    }
+                    data.push(row);
+                }
+                // 데이터 삽입
+                AUIGrid.setGridData(myGridID, data);
+            }
 
-	// 수정 아이템들 확인하기
-	function checkItems() {
-		// 수정된 행의 진짜 수정된 칼럼들 배열)
-		const editedCells = AUIGrid.getEditedRowColumnItems(myGridID);
-		let str = "";
-		if (editedCells.length > 0) {
-			for (let i = 0, len = editedCells.length; i < len; i++) {
-				let row = editedCells[i];
-				for (let name in row) {
-					str += name + " : " + row[name] + ", ";
-				}
-				str += "\r\n";
-			}
-		}
-		if (str === "")
-			str = "변경 사항 없음";
+            // 수정 아이템들 확인하기
+            function checkItems() {
+                // 수정된 행의 진짜 수정된 칼럼들 배열)
+                const editedCells = AUIGrid.getEditedRowColumnItems(myGridID);
+                let str = "";
+                if (editedCells.length > 0) {
+                    for (let i = 0, len = editedCells.length; i < len; i++) {
+                        let row = editedCells[i];
+                        for (let name in row) {
+                            str += name + " : " + row[name] + ", ";
+                        }
+                        str += "\r\n";
+                    }
+                }
+                if (str === "") str = "변경 사항 없음";
 
-		alert(str);
-	}
+                alert(str);
+            }
 
-	function myCustomFilter() {
-		// 사용자 필터링 설정...myField4 에서 4분기이면 true 반환.
-		AUIGrid.setFilter(myGridID, "myField4", function (dataField, value, item) {
-			return value === 4 ? true : false;
-		});
-	}
+            function myCustomFilter() {
+                // 사용자 필터링 설정...myField4 에서 4분기이면 true 반환.
+                AUIGrid.setFilter(myGridID, "myField4", function (dataField, value, item) {
+                    return value === 4 ? true : false;
+                });
+            }
 
-	function clearFilter() {
-		AUIGrid.clearFilterAll(myGridID);
-	}
-</script>
+            function clearFilter() {
+                AUIGrid.clearFilterAll(myGridID);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<p>실제 서버에서 넘겨 받은 데이터는 연도, 1분기, 2분기, 3분기, 4분기 데이터 뿐입니다.</p>
-		<p>기본적인 칼럼을 생성하여 실제 넘겨 받은 데이터를 출력하고, 이 데이터를 기반으로 그리드가 수식을 사용하여 만든 데이터를 출력한 모습니다.</p>
-		<p>즉, "상반기, 하반기, 연도별 매출, 최대 매출 분기" 칼럼은 그리드가 기본 데이터를 가공 계산하여 출력한 모습입니다.</p>
-		<p>1~4분기 셀을 편집하면 연관된 칼럼의 데이터와 푸터가 변경되는 것을 볼 수 있습니다.</p>
-		<p>의존적 칼럼(합계 칼럼) 작성은 다음처럼 작성 가능합니다.</p>
-		<div class="src_cover">
-			<pre>
+            <div id="main">
+                <div class="desc">
+                    <p>실제 서버에서 넘겨 받은 데이터는 연도, 1분기, 2분기, 3분기, 4분기 데이터 뿐입니다.</p>
+                    <p>
+                        기본적인 칼럼을 생성하여 실제 넘겨 받은 데이터를 출력하고, 이 데이터를 기반으로 그리드가 수식을
+                        사용하여 만든 데이터를 출력한 모습니다.
+                    </p>
+                    <p>
+                        즉, "상반기, 하반기, 연도별 매출, 최대 매출 분기" 칼럼은 그리드가 기본 데이터를 가공 계산하여
+                        출력한 모습입니다.
+                    </p>
+                    <p>1~4분기 셀을 편집하면 연관된 칼럼의 데이터와 푸터가 변경되는 것을 볼 수 있습니다.</p>
+                    <p>의존적 칼럼(합계 칼럼) 작성은 다음처럼 작성 가능합니다.</p>
+                    <div class="src_cover">
+                        <pre>
 headerText : "상반기",
 dataField : "myField1", // 중복되지 않게 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
 expFunction : function(  rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
@@ -353,22 +382,23 @@ expFunction : function(  rowIndex, columnIndex, item, dataField ) { // 여기서
 	return Number(item.col1 + item.col2); 
 }
 </pre>
-		</div>
-		<p><span onclick="checkItems()" class="btn">수정한 셀 확인하기</span>
-			<span onclick="myCustomFilter()" class="btn">최대 분기 매출이 4분기인 연도만 보기(필터링)</span>
-			<span onclick="clearFilter()" class="btn">필터링 해제</span>
-		</p>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:350px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="selectionDesc"></p>
-		<p id="editBeginDesc"></p>
-		<p id="editBeginEnd"></p>
-	</div>
-</div>
+                    </div>
+                    <p>
+                        <span onclick="checkItems()" class="btn">수정한 셀 확인하기</span>
+                        <span onclick="myCustomFilter()" class="btn">최대 분기 매출이 4분기인 연도만 보기(필터링)</span>
+                        <span onclick="clearFilter()" class="btn">필터링 해제</span>
+                    </p>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 350px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="selectionDesc"></p>
+                    <p id="editBeginDesc"></p>
+                    <p id="editBeginEnd"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

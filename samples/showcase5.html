@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -28,334 +36,248 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+        <!-- 공용 화면은 유지하고 비교표와 변경 대조표의 셀 표현만 별도로 정의합니다. -->
+        <link href="./style/showcase-workspaces.css?v=20261006-3" rel="stylesheet" />
+        <link href="./style/showcase-grid-features.css?v=20261006-2" rel="stylesheet" />
+        <script src="../export_server_samples/FileSaver.min.js"></script>
+        <script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <script>
+            let myGridID;
+            let compact = window.innerWidth <= 700;
+            const models = [
+                { field: "aster", name: "ASTER 32B", family: "균형형" },
+                { field: "orbit", name: "ORBIT 70B", family: "고성능" },
+                { field: "pico", name: "PICO 8B", family: "경량형" },
+                { field: "nova", name: "NOVA 14B", family: "효율형" }
+            ];
+            let visibleModels = models.map((model) => model.field);
+            // 서로 다른 단위를 갖는 지표를 행에 배치합니다. 모델과 수치는 실제 제품과 무관한 가상 자료입니다.
+            const benchmarkRows = [
+                ["품질", "한국어 이해", "문맥 및 의도 파악", "점", 1, "high", 92.4, 95.1, 83.2, 88.7],
+                ["품질", "복합 추론", "여러 단계의 문제 해결", "점", 1, "high", 86.8, 93.6, 74.5, 84.2],
+                ["품질", "코드 생성", "테스트 통과 기준", "점", 1, "high", 88.2, 94.3, 80.1, 87.5],
+                ["품질", "문서 검색 답변", "제공한 근거와의 일치", "점", 1, "high", 94.2, 93.8, 86.3, 91.7],
+                ["품질", "구조화 출력", "JSON 스키마 준수", "%", 1, "high", 99.2, 99.6, 96.8, 99.2],
+                ["품질", "지시 준수", "요청한 형식과 제약 준수", "점", 1, "high", 91.5, 94.7, 85.1, 90.8],
+                ["응답 성능", "첫 토큰 지연", "응답 시작까지 대기", "ms", 0, "low", 320, 580, 140, 210],
+                ["응답 성능", "출력 속도", "초당 생성 토큰", "tok/s", 0, "high", 78, 42, 146, 112],
+                ["응답 성능", "전체 응답 시간", "500 토큰 출력 기준", "초", 1, "low", 6.7, 12.5, 3.6, 4.7],
+                ["응답 성능", "동시 처리", "동일 장비의 동시 요청", "건", 0, "high", 24, 12, 64, 40],
+                ["운영 비용", "입력 단가", "100만 토큰당 비용", "원", 0, "low", 850, 2100, 180, 420],
+                ["운영 비용", "출력 단가", "100만 토큰당 비용", "원", 0, "low", 1700, 4200, 360, 840],
+                ["운영 비용", "월 예상 비용", "동일한 요청량 기준", "만원", 0, "low", 184, 462, 42, 91],
+                ["배포 환경", "GPU 메모리", "추론 서버 필요 용량", "GB", 0, "low", 48, 96, 16, 24],
+                ["배포 환경", "컨텍스트 길이", "한 번에 처리할 토큰", "K", 0, "high", 128, 128, 32, 64],
+                ["배포 환경", "최대 출력", "요청당 최대 출력 토큰", "K", 0, "high", 16, 16, 8, 16],
+                ["배포 환경", "모델 로딩", "추론 준비 시간", "초", 0, "low", 24, 51, 8, 14],
+                ["배포 환경", "추가 학습", "학습 소요 시간", "시간", 1, "low", 3.8, null, 1.1, 2.2]
+            ].map(([category, metric, hint, unit, precision, direction, ...values], index) => ({
+                id: "METRIC-" + index,
+                category,
+                metric,
+                hint,
+                unit,
+                precision,
+                direction,
+                ...Object.fromEntries(models.map((model, i) => [model.field, values[i]]))
+            }));
+            function escapeText(value) {
+                return String(value).replace(
+                    /[&<>"']/g,
+                    (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]
+                );
+            }
+            function formatMetric(value, item) {
+                return value == null
+                    ? "미측정"
+                    : value.toLocaleString("ko-KR", {
+                          minimumFractionDigits: item.precision,
+                          maximumFractionDigits: item.precision
+                      });
+            }
+            // 현재 보이는 모델끼리만 비교하며 미측정은 제외하고 동점은 함께 강조합니다.
+            function isBest(value, item) {
+                if (value == null) return false;
+                const values = visibleModels.map((field) => item[field]).filter((number) => number != null);
+                return value === (item.direction === "high" ? Math.max(...values) : Math.min(...values));
+            }
+            // 평가 지표의 보조 설명은 화면 템플릿과 파일 출력에서 같은 문구를 사용합니다.
+            function metricDescription(item) {
+                return item.hint + " / " + (item.direction === "high" ? "높을수록 좋음" : "낮을수록 좋음");
+            }
+            // 화면에 보이는 수치, 단위와 최고값 표시만 텍스트로 내보냅니다.
+            // 숨겨진 모델을 제외한 비교 기준은 화면과 동일하게 isBest를 사용합니다.
+            function modelAlias(value, item) {
+                return (
+                    formatMetric(value, item) +
+                    (value == null ? "" : " " + item.unit) +
+                    (isBest(value, item) ? "  최고" : "")
+                );
+            }
+            function modelColumn(model) {
+                return {
+                    dataField: model.field,
+                    headerText: model.name,
+                    minWidth: 160,
+                    headerStyle: "benchmark-model-header",
+                    style: "benchmark-score",
+                    styleFunction: (row, col, value, header, item) =>
+                        isBest(value, item) ? "benchmark-best" : "benchmark-score",
+                    renderer: {
+                        type: "TemplateRenderer",
+                        aliasFunction: (row, col, value, header, item) => modelAlias(value, item)
+                    },
+                    labelFunction: (row, col, value, header, item) => {
+                        const best = isBest(value, item);
+                        return (
+                            '<div class="benchmark-value"><strong>' +
+                            formatMetric(value, item) +
+                            (value == null ? "" : "<span>" + escapeText(item.unit) + "</span>") +
+                            "</strong><small>" +
+                            (best ? "최고" : value == null ? "—" : "비교") +
+                            "</small></div>"
+                        );
+                    }
+                };
+            }
+            function init() {
+                const columns = [
+                    {
+                        dataField: "category",
+                        headerText: "평가 영역",
+                        width: 94,
+                        cellMerge: true,
+                        style: "benchmark-category"
+                    },
+                    {
+                        dataField: "metric",
+                        headerText: "평가 지표",
+                        width: 210,
+                        style: "benchmark-metric",
+                        renderer: {
+                            type: "TemplateRenderer",
+                            // HTML의 두 줄 구성을 개행으로 옮겨 Excel과 PDF에도 지표 설명을 함께 기록합니다.
+                            aliasFunction: (row, col, value, header, item) => value + "\n" + metricDescription(item)
+                        },
+                        labelFunction: (row, col, value, header, item) =>
+                            '<div class="benchmark-metric-text"><strong>' +
+                            escapeText(value) +
+                            "</strong><small>" +
+                            escapeText(metricDescription(item)) +
+                            "</small></div>"
+                    },
+                    ...models.map((model) => ({
+                        headerText: model.family,
+                        headerStyle: "benchmark-family-header",
+                        children: [modelColumn(model)]
+                    }))
+                ];
+                myGridID = AUIGrid.create("#grid_wrap", columns, {
+                    rowIdField: "id",
+                    rowIdTrustMode: true,
+                    rowHeight: 54,
+                    headerHeights: [28, 42],
+                    showRowNumColumn: false,
+                    showStateColumn: false,
+                    enableCellMerge: true,
+                    enableSorting: false,
+                    fixedColumnCount: compact ? 0 : 2,
+                    selectionMode: "multipleCells"
+                });
+                AUIGrid.setGridData(myGridID, benchmarkRows);
+            }
+            function changeModels(input) {
+                const checked = Array.from(document.querySelectorAll("[data-model]:checked"));
+                if (checked.length < 2) {
+                    input.checked = true;
+                    document.getElementById("benchmark-status").textContent = "비교할 모델을 2개 이상 선택하세요.";
+                    return;
+                }
+                visibleModels = checked.map((element) => element.dataset.model);
+                models.forEach((model) => {
+                    if (visibleModels.includes(model.field)) AUIGrid.showColumnByDataField(myGridID, model.field);
+                    else AUIGrid.hideColumnByDataField(myGridID, model.field);
+                });
+                AUIGrid.refresh(myGridID);
+                document.getElementById("benchmark-status").textContent =
+                    "18개 지표 / " + visibleModels.length + "개 모델 비교";
+            }
+            function resizeComparison() {
+                const next = window.innerWidth <= 700;
+                if (!myGridID || compact === next) return;
+                compact = next;
+                AUIGrid.setFixedColumnCount(myGridID, compact ? 0 : 2);
+            }
+            function exportReport(format) {
+                const props = {
+                    fileName: "AI_모델_벤치마크",
+                    headers: [{ text: "AI 모델 벤치마크 비교 (가상 데이터)", height: 28 }]
+                };
+                if (format === "pdf")
+                    // 지표 이름과 보조 설명 두 줄이 잘리지 않도록 화면의 행 높이를 적용합니다.
+                    AUIGrid.exportToPdf(myGridID, {
+                        ...props,
+                        rowHeight: AUIGrid.getProp(myGridID, "rowHeight"),
+                        fontPath: "../pdfkit/nyjgothic-medium.ttf"
+                    });
+                else AUIGrid.exportToXlsx(myGridID, props);
+            }
+            // 페이지를 떠나면 제품 인스턴스와 이 데모가 등록한 이벤트를 정리합니다.
+            function disposeDemo(event) {
+                if (event.persisted) return;
+                AUIGrid.destroy(myGridID);
+                myGridID = null;
+                window.removeEventListener("resize", resizeComparison);
+                window.removeEventListener("pagehide", disposeDemo);
+            }
+            window.addEventListener("resize", resizeComparison);
+            window.addEventListener("pagehide", disposeDemo);
+        </script>
+    </head>
+<body class="demo-typography">
 
-<!-- PDF 내보내기 필수 JS 추가-->
-<script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
-
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
-
-<style>
-	.aui-grid-my-right-style {
-		text-align: right;
-	}
-
-	/* 푸터 커스텀 summary total  스타일 */
-	.aui-grid-my-custom-sum-total {
-		font-weight: bold;
-		color: #4374D9;
-		text-align: right;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
-
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		loadGridData();
-	}
-
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = createColumnLayout();
-
-		// 그리드 푸터 설정
-		const footerLayout = createFooterLayout();
-
-		const gridProps = createGridProps();
-
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-		// 푸터 레이아웃 설정
-		AUIGrid.setFooter(myGridID, footerLayout);
-	}
-
-	// 엑셀 내보내기(Export);
-	function exportClick() {
-		// 엑셀 내보내기 속성
-		const exportProps = {
-			// 헤더 내용
-			headers: [{
-				text: "", height: 20 // 첫행 빈줄
-			}, {
-				text: "국가별 핸드폰 판매 통계", height: 40, style: { fontSize: 20, textAlign: "center", color: "#ff0000", fontWeight: "bold", underline: true, background: "#DAD9FF" }
-			}, {
-				text: "", height: 5, style: { background: "#555555" } // 빈줄 색깔 경계 만듬
-			}],
-			// 푸터 내용
-			footers: [{
-				text: "", height: 5, style: { background: "#555555" } // 빈줄 색깔 경계 만듬
-			}, {
-				text: "Copyright 2019 AUISoft", height: 24, style: { textAlign: "right", fontWeight: "bold", color: "#ffffff", background: "#222222" }
-			}]
-		};
-		// 내보내기 실행
-		AUIGrid.exportToXlsx(myGridID, exportProps);
-	};
-
-	// PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
-	function exportPdfClick() {
-		// PDF 내보내기 속성
-		const exportProps = {
-			// 폰트 지정 (필수)
-			fontPath: "../pdfkit/nyjgothic-medium.ttf",
-			// 헤더 내용
-			headers: [{
-				text: "", height: 20 // 첫행 빈줄
-			}, {
-				text: "국가별 핸드폰 판매 통계", height: 40, style: { fontSize: 20, textAlign: "center", color: "#0275BA", underline: true, background: "#DAD9FF" }
-			}, {
-				text: "", height: 5, style: { background: "#555555" } // 빈줄 색깔 경계 만듬
-			}],
-			// 푸터 내용
-			footers: [{
-				text: "", height: 5, style: { background: "#555555" } // 빈줄 색깔 경계 만듬
-			}, {
-				text: "Copyright 2019 AUISoft", height: 24, style: { textAlign: "right", color: "#ffffff", background: "#222222" }
-			}]
-		};
-		// 내보내기 실행
-		AUIGrid.exportToPdf(myGridID, exportProps);
-	};
-
-	// 칼럼 레이아웃을 정의합니다.
-	function createColumnLayout() {
-		const columnLayout = [{
-			dataField: "country",
-			headerText: "Country",
-			width: 150,
-			filter: {
-				showIcon: true,
-				useExMenu: true
-			}
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			width: 150,
-			filter: {
-				showIcon: true,
-				useExMenu: true
-			}
-		}, {
-			dataField: "m1",
-			headerText: "1월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m2",
-			headerText: "2월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m3",
-			headerText: "3월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m4",
-			headerText: "4월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m5",
-			headerText: "5월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m6",
-			headerText: "6월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m7",
-			headerText: "7월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m8",
-			headerText: "8월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m9",
-			headerText: "9월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m10",
-			headerText: "10월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m11",
-			headerText: "11월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}, {
-			dataField: "m12",
-			headerText: "12월",
-			dataType: "numeric",
-			formatString: "#,##0",
-			width: 100,
-			disableGrouping: true,
-			style: "aui-grid-my-right-style"
-		}];
-		return columnLayout;
-	}
-
-	// 그리드 속성을 정의합니다.
-	function createGridProps() {
-		const gridProps = {
-			useContextMenu: true,
-			showBranchOnGrouping: false,
-			enableFilter: true,
-			showFooter: true,
-			editable: true,
-			// singleRow 선택모드
-			selectionMode: "singleRow",
-			hoverMode: "singleRow",
-			// 그룹핑 패널 사용
-			useGroupingPanel: true,
-			// 차례로 country, product 순으로 그룹핑을 합니다.
-			// 즉, 각 나라별, 각 제품을 구매한 사용자로 그룹핑
-			groupingFields: ["country", "product"],
-			// 그룹핑 후 합계필드를 출력하도록 설정합니다.
-			groupingSummary: {
-				// 합계 필드는 1월 ~ 12월에 대하여 실시 합니다.
-				dataFields: ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11", "m12"]
-			},
-			// 최초 보여질 때 모두 열린 상태로 출력 여부
-			displayTreeOpen: true,
-			// 그룹핑 후 셀 병함 실행
-			enableCellMerge: true,
-			// enableCellMerge 할 때 실제로 rowspan 적용 시킬지 여부
-			// 만약 false 설정하면 실제 병합은 하지 않고 데이터 값만 같은 데이터 출력 시키지 않음. (기본값 : true)
-			cellMergeRowSpan: false,
-			// 그리드 ROW 스타일 함수 정의
-			rowStyleFunction: function (rowIndex, item) {
-				if (item._$isGroupSumField) {
-					// 그룹핑으로 만들어진 합계 필드인지 여부
-					// 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
-					// 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
-					switch (item._$depth) { // 계층형의 depth 비교 연산
-						case 2:
-							return "aui-grid-row-depth1-style";
-						case 3:
-							return "aui-grid-row-depth2-style";
-						case 4:
-							return "aui-grid-row-depth3-style";
-						default:
-							return "aui-grid-row-depth-default-style";
-					}
-				}
-			}
-		};
-		return gridProps;
-	}
-
-	// 푸터 레이아웃을 정의합니다.
-	function createFooterLayout() {
-		const footerLayout = [{
-			labelText: "∑",
-			positionField: "#base"
-		}];
-
-		for (let i = 1; i <= 12; i++) {
-			footerLayout.push({
-				dataField: "m" + i,
-				positionField: "m" + i,
-				operation: "SUM",
-				formatString: "#,##0",
-				style: "aui-grid-my-custom-sum-total"
-			});
-		}
-		return footerLayout;
-	}
-
-	// 데이터 요청과 그리드 반영. 페이지 종료 후 응답을 적용하지 않습니다.
-	const controller = new AbortController();
-	async function loadGridData() {
-		AUIGrid.showAjaxLoader(myGridID);
-		try {
-			const response = await fetch("./data/country_phone_month_500.json", { signal: controller.signal });
-			if (!response.ok) throw new Error("데이터 요청 실패");
-			const data = await response.json();
-			if (!controller.signal.aborted) AUIGrid.setGridData(myGridID, data);
-		} catch (error) {
-			if (!controller.signal.aborted) console.error("데이터 로딩 오류:", error);
-		} finally {
-			if (!controller.signal.aborted) AUIGrid.removeAjaxLoader(myGridID);
-		}
-	}
-
-	// 뒤로 가기 캐시에 보관되는 페이지는 유지하고, 실제 종료에서만 정리합니다.
-	function disposeDemo(event) {
-		if (event.persisted) return;
-		controller.abort();
-		AUIGrid.destroy(myGridID);
-		myGridID = null;
-		window.removeEventListener("pagehide", disposeDemo);
-	}
-	window.addEventListener("pagehide", disposeDemo);
-</script>
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<span class="btn" style="float:right;" onclick="exportClick()">엑셀(xlsx)로 저장</span>
-		<span class="btn" style="float:right;" onclick="exportPdfClick()">PDF로 저장</span>
-		<p style="clear:both;">각각의 나라에 따라 각 제품별로 판매량을 보기 위해 그룹핑을 하여 가격에 대하여 합계를 계산한 자료입니다.</p>
-		<p>일반 데이터를 받아 그리드가 그룹핑을 하고, 각 나라, 제품에 대하여 그리드에서 직접 합계를 계산합니다.</p>
-		<p>필터링 또는 데이터 값 수정 시 동적으로 그룹핑 합계 및 푸터 값이 변경됩니다.</p>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:580px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+            <div id="main" class="workspace-demo grid-feature-showcase benchmark-showcase">
+                <div class="workspace-heading">
+                    <div>
+                        <h2>AI 모델 벤치마크 비교</h2>
+                        <p>지표는 세로로, 모델은 가로로. 같은 항목의 수치를 한 줄에서 비교하세요.</p>
+                    </div>
+                    <span class="feature-volume">18개 지표 × 4개 모델</span>
+                </div>
+                <div class="workspace-toolbar">
+                    <div class="workspace-controls" aria-label="비교 모델 선택">
+                        <label
+                            ><input type="checkbox" data-model="aster" checked onchange="changeModels(this)" /> ASTER
+                            32B</label
+                        >
+                        <label
+                            ><input type="checkbox" data-model="orbit" checked onchange="changeModels(this)" /> ORBIT
+                            70B</label
+                        >
+                        <label
+                            ><input type="checkbox" data-model="pico" checked onchange="changeModels(this)" /> PICO
+                            8B</label
+                        >
+                        <label
+                            ><input type="checkbox" data-model="nova" checked onchange="changeModels(this)" /> NOVA
+                            14B</label
+                        >
+                    </div>
+                    <div class="workspace-controls">
+                        <button type="button" class="btn" onclick="exportReport('xlsx')">Excel 내보내기</button>
+                        <button type="button" class="btn" onclick="exportReport('pdf')">PDF 내보내기</button>
+                    </div>
+                </div>
+                <div class="comparison-caption">
+                    <span>셀 템플릿 / 세로 병합 / 고정 칼럼 / 칼럼 표시 전환</span
+                    ><span class="benchmark-key">최고값 강조 (동점 포함)</span>
+                </div>
+                <div id="grid_wrap"></div>
+                <div class="workspace-note">
+                    <span id="benchmark-status" role="status">18개 지표 / 4개 모델 비교</span
+                    ><span>모델과 측정값은 기능 설명을 위한 가상 데이터입니다.</span>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

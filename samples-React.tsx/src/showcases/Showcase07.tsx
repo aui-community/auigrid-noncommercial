@@ -1,94 +1,203 @@
 import { useEffect, useRef, useState } from 'react';
-import * as IGrid from 'aui-grid';
 import AUIGrid from '../static/AUIGrid-React.tsx/AUIGridReact';
-import MyCalendarRenderer from '../renderers/MyCalendarRenderer';
+import FileSaver from 'file-saver';
+import '../static/AUIGrid.pdfkit/AUIGrid.pdfkit';
+import { createPurchaseDemo, filters, gridProps, initialView, Layout, Status } from './purchaseDemo';
 import './Showcase07.css';
+import './showcase-options.css';
 
-type CalendarWeek = ({ date: number; value: number } | null)[];
+window.saveAs = FileSaver.saveAs;
+// 배포 하위 경로에서도 public의 데이터와 이미지에 접근하도록 끝 슬래시를 정리합니다.
+var baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-// 표시 월의 주별 데이터를 생성합니다. 앞쪽 빈 셀과 마지막 주의 길이를 유지합니다.
-function genGridData(inputDate: Date): CalendarWeek[] {
-	const year = inputDate.getFullYear();
-	const month = inputDate.getMonth();
-	const startWeekday = new Date(year, month, 1).getDay();
-	const totalDays = new Date(year, month + 1, 0).getDate();
-	const weeks: CalendarWeek[] = [];
-	let week: CalendarWeek = [];
-	for (let i = 0; i < startWeekday; i++) week.push(null);
-	for (let day = 1; day <= totalDays; day++) {
-		week.push({ date: day, value: Math.floor(Math.random() * 100) });
-		if (week.length === 7) {
-			weeks.push(week);
-			week = [];
-		}
-	}
-	if (week.length > 0) weeks.push(week);
-	return weeks;
+// WebDemo와 같은 설명, 선택 메뉴, 그리드 및 하단 정보 순서로 표시합니다.
+export default function Showcase07() {
+    var myGrid = useRef<AUIGrid>(null);
+    var dialog = useRef<HTMLDialogElement>(null);
+    var [view, setView] = useState(initialView);
+    var [demo] = useState(function () {
+        return createPurchaseDemo(setView, baseUrl);
+    });
+    useEffect(
+        function () {
+            demo.attach(myGrid.current!);
+            return function () {
+                demo.detach();
+            };
+        },
+        [demo]
+    );
+    // 대화상자는 셀 밖에 두고 React 상태와 네이티브 닫기 동작을 함께 정리합니다.
+    useEffect(
+        function () {
+            if (view.dialog && !dialog.current?.open) dialog.current?.showModal();
+            else if (!view.dialog && dialog.current?.open) dialog.current.close();
+        },
+        [view.dialog]
+    );
+    function actOnDialog(action: string) {
+        dialog.current?.close();
+        demo.actOnDialog(action);
+    }
+    // 첨부파일을 누르는 시점에도 현재 열려 있는 요청을 확인합니다.
+    function openFile(value: number) {
+        var detail = view.dialog;
+        if (detail) demo.handleAction({ id: detail.id, action: 'file', value: value });
+    }
+    var detail = view.dialog;
+    return (
+        <div className="showcase7-demo">
+            <div className="desc">
+                <p>
+                    밴드형 바디 레이아웃과 사용자 정의 렌더러(CustomRenderer)로 요청자, 결재 단계, 첨부파일과 납기
+                    상태를 표시합니다.
+                </p>
+                <p>헤더를 눌러 정렬하고 필터 아이콘으로 검색할 수 있습니다.</p>
+                <div className="demo-options">
+                    <div className="demo-option-row demo-option-row--split">
+                        <div className="demo-option-group">
+                            <label>
+                                <span className="demo-option-label">진행 상태</span>
+                                <select
+                                    id="showcase7-status"
+                                    value={view.status}
+                                    onChange={(event) => demo.setStatus(event.target.value as Status)}
+                                >
+                                    {filters.map((filter) => (
+                                        <option key={filter.value} value={filter.value}>
+                                            {filter.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                            <label>
+                                <span className="demo-option-label">셀 배치</span>
+                                <select
+                                    id="showcase7-layout"
+                                    value={view.mode}
+                                    onChange={(event) => demo.setLayout(event.target.value as Layout)}
+                                >
+                                    <option value="band">밴드형</option>
+                                    <option value="flatAll">일반형</option>
+                                </select>
+                            </label>
+                            <button type="button" className="btn" onClick={demo.clearGridView}>
+                                정렬 및 필터 해제
+                            </button>
+                        </div>
+                        <div className="demo-option-group" role="group" aria-label="내보내기">
+                            <button type="button" className="btn" disabled={!view.count} onClick={demo.exportExcel}>
+                                엑셀(xlsx)로 저장
+                            </button>
+                            <button type="button" className="btn" disabled={!view.count} onClick={demo.exportPdf}>
+                                PDF로 저장
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <AUIGrid ref={myGrid} name="showcase7" gridProps={gridProps} columnLayout={demo.columns} />
+            </div>
+            <div className="desc_bottom">
+                <div className="purchase-summary">
+                    <div className="purchase-legend" aria-label="결재 단계 안내">
+                        <span>
+                            <span className="purchase-legend-marker" data-state="done" aria-hidden="true">
+                                ✓
+                            </span>
+                            완료
+                        </span>
+                        <span>
+                            <span className="purchase-legend-marker" data-state="current" aria-hidden="true"></span>현재
+                            단계
+                        </span>
+                        <span>
+                            <span className="purchase-legend-marker" data-state="rejected" aria-hidden="true">
+                                !
+                            </span>
+                            반려
+                        </span>
+                        <span>
+                            <span className="purchase-legend-marker" aria-hidden="true"></span>대기
+                        </span>
+                    </div>
+                    <span className="purchase-layout-note">일반형과 밴드형에 같은 렌더러를 사용합니다.</span>
+                </div>
+                <p aria-live="polite">
+                    {
+                        filters.find(function (filter) {
+                            return filter.value === view.status;
+                        })?.label
+                    }{' '}
+                    {view.count}건 / {view.total}건
+                </p>
+            </div>
+            <dialog
+                ref={dialog}
+                className="request-dialog"
+                aria-label={detail?.title || '구매 요청 상세'}
+                onCancel={demo.closeDialog}
+                onClose={demo.closeDialog}
+            >
+                {detail && (
+                    <>
+                        <p>
+                            <strong>{detail.title}</strong>
+                        </p>
+                        <div>
+                            {detail.files.map(function (file, value) {
+                                return (
+                                    <button
+                                        type="button"
+                                        key={file.name}
+                                        className="btn"
+                                        onClick={function () {
+                                            openFile(value);
+                                        }}
+                                    >
+                                        {file.name}
+                                    </button>
+                                );
+                            })}
+                            {detail.facts.map(function ([name, value]) {
+                                return (
+                                    <p key={name}>
+                                        {name} : {value}
+                                    </p>
+                                );
+                            })}
+                        </div>
+                        <p style={{ textAlign: 'right' }}>
+                            <button
+                                type="button"
+                                className="btn"
+                                hidden={!detail.editable}
+                                disabled={detail.completed || detail.rejected}
+                                onClick={function () {
+                                    actOnDialog('reject');
+                                }}
+                            >
+                                반려 처리
+                            </button>{' '}
+                            <button
+                                type="button"
+                                className="btn"
+                                hidden={!detail.editable}
+                                disabled={detail.completed}
+                                onClick={function () {
+                                    actOnDialog('advance');
+                                }}
+                            >
+                                {detail.advanceLabel}
+                            </button>{' '}
+                            <button type="button" className="btn" onClick={demo.closeDialog}>
+                                닫기
+                            </button>
+                        </p>
+                    </>
+                )}
+            </dialog>
+        </div>
+    );
 }
-
-const calendarRenderer = {
-	type: IGrid.RendererKind.CustomRenderer,
-	jsClass: MyCalendarRenderer
-};
-
-const columnLayout: IGrid.Column[] = [
-	{ dataField: '0', headerText: '일', style: 'my-sunday-style', headerStyle: 'my-sunday-style', renderer: calendarRenderer },
-	{ dataField: '1', headerText: '월', renderer: calendarRenderer },
-	{ dataField: '2', headerText: '화', renderer: calendarRenderer },
-	{ dataField: '3', headerText: '수', renderer: calendarRenderer },
-	{ dataField: '4', headerText: '목', renderer: calendarRenderer },
-	{ dataField: '5', headerText: '금', renderer: calendarRenderer },
-	{ dataField: '6', headerText: '토', style: 'my-saturday-style', headerStyle: 'my-saturday-style', renderer: calendarRenderer }
-];
-
-const gridProps: IGrid.Props = {
-	width: '100%',
-	height: 480,
-	selectionMode: 'none',
-	enableSorting: false,
-	showRowNumColumn: false,
-	enableColumnResize: false,
-	rowHeight: 80
-};
-
-// 생성한 달력 데이터를 그리드에 반영합니다.
-function loadGridData(grid: AUIGrid, date: Date) {
-	grid.setGridData(genGridData(date));
-}
-
-const Showcase07 = () => {
-	const myGrid = useRef<AUIGrid>(null);
-	const [originDate, setOriginDate] = useState<Date>(new Date());
-
-	useEffect(() => {
-		const grid = myGrid.current;
-		if (grid) loadGridData(grid, originDate);
-	}, [originDate]);
-
-	// React 상태 변경을 effect가 감지하여 그리드 데이터에 반영합니다.
-	const changeData = (direction: number) => {
-		setOriginDate((previous) => {
-			const date = new Date(previous);
-			date.setMonth(date.getMonth() + direction);
-			return date;
-		});
-	};
-
-	return (
-		<div>
-			<div className="desc">
-				<p>달력에 개별 날짜마다 목표치 달성률을 표시한 데모입니다.</p>
-				<p>그리드에 출력되는 셀은 사용자 정의 렌더러(CustomRenderer)를 사용하였습니다.</p>
-				<p>이와 같이 사용자가 원하는 셀 형식을 자바스크립트로 작성할 수 있습니다.</p>
-				<div className="force-text-center">
-					<button onClick={() => changeData(-1)}>이전 달</button>
-					<span style={{ margin: '2px 40px' }}>{originDate.getFullYear() + '년 ' + (originDate.getMonth() + 1) + '월'}</span>
-					<button onClick={() => changeData(1)}>다음 달</button>
-				</div>
-			</div>
-			<AUIGrid name="showcase7" ref={myGrid} columnLayout={columnLayout} gridProps={gridProps} />
-		</div>
-	);
-};
-
-export default Showcase07;

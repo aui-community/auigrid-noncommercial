@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,136 +37,146 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.my-column {
-		text-align: right;
-	}
+        <style>
+            /* 커스텀 칼럼 스타일 정의 */
+            .my-column {
+                text-align: right;
+            }
 
-	.custom-file-upload {
-		display: inline-block;
-		padding: 10px 20px;
-		cursor: pointer;
-		background-color: #374151;
-		color: white;
-		font-size: 14px;
-		font-family: 'Segoe UI', sans-serif;
-		border: none;
-		border-radius: 4px;
-		transition: background-color 0.3s ease;
-	}
+            .custom-file-upload {
+                display: inline-block;
+                padding: 10px 20px;
+                cursor: pointer;
+                background-color: #374151;
+                color: white;
+                font-size: 14px;
+                font-family: "Segoe UI", sans-serif;
+                border: none;
+                border-radius: 4px;
+                transition: background-color 0.3s ease;
+            }
 
-	.custom-file-upload:hover {
-		background-color: #1f2937;
-	}
+            .custom-file-upload:hover {
+                background-color: #1f2937;
+            }
 
-	/* 실제 input은 숨김 처리 */
-	#fileSelector {
-		display: none;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            /* 실제 input은 숨김 처리 */
+            #fileSelector {
+                display: none;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 그리드 최초에 빈 데이터 넣음.
-		AUIGrid.setGridData(myGridID, []);
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 그리드 최초에 빈 데이터 넣음.
+                AUIGrid.setGridData(myGridID, []);
 
-		// 파일 선택하기
-		document.getElementById("fileSelector").addEventListener("change", (event) => {
-			const file = event.target.files[0];
-			if (!file) return;
+                // 파일 선택하기
+                document.getElementById("fileSelector").addEventListener("change", (event) => {
+                    const file = event.target.files[0];
+                    if (!file) return;
 
-			const reader = new FileReader();
+                    const reader = new FileReader();
 
-			// EUC-KR 인코딩으로 읽기 (인코딩 형태에 따라 다르게 읽어야 함)
-			reader.readAsText(file, "EUC-KR");
-			//reader.readAsText(file, "UTF-8");
+                    // EUC-KR 인코딩으로 읽기 (인코딩 형태에 따라 다르게 읽어야 함)
+                    reader.readAsText(file, "EUC-KR");
+                    //reader.readAsText(file, "UTF-8");
 
-			reader.onload = (e) => {
-				const result = e.target.result;
-				if (typeof result !== "undefined") {
-					AUIGrid.setCsvGridData(myGridID, result, false);
-				} else {
-					alert("No data to import!");
-				}
-			};
+                    reader.onload = (e) => {
+                        const result = e.target.result;
+                        if (typeof result !== "undefined") {
+                            AUIGrid.setCsvGridData(myGridID, result, false);
+                        } else {
+                            alert("No data to import!");
+                        }
+                    };
 
-			reader.onerror = () => {
-				alert(`Unable to read ${file.name}`);
-			};
-		});
-	}
+                    reader.onerror = () => {
+                        alert(`Unable to read ${file.name}`);
+                    };
+                });
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "1",
-			headerText: "Name",
-			width: 120
-		}, {
-			dataField: "2",
-			headerText: "Country",
-			width: 120
-		}, {
-			dataField: "3",
-			headerText: "Flag IMG",
-			width: 120
-		}, {
-			dataField: "4",
-			headerText: "Product",
-			width: 120
-		}, {
-			dataField: "5",
-			headerText: "Color",
-			width: 120
-		}, {
-			dataField: "6",
-			headerText: "Price",
-			dataType: "numeric",
-			style: "my-column",
-			width: 120
-		}, {
-			dataField: "7",
-			headerText: "Quantity",
-			dataType: "numeric",
-			width: 120
-		}, {
-			dataField: "8",
-			headerText: "Date",
-			width: 120
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "1",
+                        headerText: "Name",
+                        width: 120
+                    },
+                    {
+                        dataField: "2",
+                        headerText: "Country",
+                        width: 120
+                    },
+                    {
+                        dataField: "3",
+                        headerText: "Flag IMG",
+                        width: 120
+                    },
+                    {
+                        dataField: "4",
+                        headerText: "Product",
+                        width: 120
+                    },
+                    {
+                        dataField: "5",
+                        headerText: "Color",
+                        width: 120
+                    },
+                    {
+                        dataField: "6",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        style: "my-column",
+                        width: 120
+                    },
+                    {
+                        dataField: "7",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        width: 120
+                    },
+                    {
+                        dataField: "8",
+                        headerText: "Date",
+                        width: 120
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			selectionMode: "multipleCells",
-			useContextMenu: true,
-			enableFilter: true,
-			// 상태 칼럼 사용
-			showStateColumn: true,
-			displayTreeOpen: true,
-			noDataMessage: "로컬 PC의 CSV 파일을 선택하십시오.",
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    selectionMode: "multipleCells",
+                    useContextMenu: true,
+                    enableFilter: true,
+                    // 상태 칼럼 사용
+                    showStateColumn: true,
+                    displayTreeOpen: true,
+                    noDataMessage: "로컬 PC의 CSV 파일을 선택하십시오."
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
-</script>
-</head>
-<body>
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>로컬의 CSV 또는 텍스트 파일을 읽어 그리드에 적용 시키는 데모입니다.</p>
-		<p>이것은 그리드의 일반적인 기능이 아닌 응용 데모로 고객 요청이 많아 직접 작성한 데모입니다.</p>
-		<p>서버는 요청한 파일의 내용을 읽어 응답으로 보낸 후 그리드에 적용시키도록 작성되었습니다.</p>
-		<div class="src_cover">
-			<pre>// 파일 선택하기
+            <div id="main">
+                <div class="desc">
+                    <p>로컬의 CSV 또는 텍스트 파일을 읽어 그리드에 적용 시키는 데모입니다.</p>
+                    <p>이것은 그리드의 일반적인 기능이 아닌 응용 데모로 고객 요청이 많아 직접 작성한 데모입니다.</p>
+                    <p>서버는 요청한 파일의 내용을 읽어 응답으로 보낸 후 그리드에 적용시키도록 작성되었습니다.</p>
+                    <div class="src_cover">
+                        <pre>
+// 파일 선택하기
 document.getElementById("fileSelector").addEventListener("change", (event) => {
 	const file = event.target.files[0];
 	if (!file) return;
@@ -182,21 +200,19 @@ document.getElementById("fileSelector").addEventListener("change", (event) => {
 		alert(`Unable to read ${file.name}`);
 	};
 });</pre>
-		</div>
-		<!-- 파일 읽기  -->
-		<label for="fileSelector" class="custom-file-upload">
-			📎 파일 선택하기
-		</label>
-		<input type="file" id="fileSelector" name="files" accept=".csv">
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                    <!-- 파일 읽기  -->
+                    <label for="fileSelector" class="custom-file-upload"> 📎 파일 선택하기 </label>
+                    <input type="file" id="fileSelector" name="files" accept=".csv" />
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

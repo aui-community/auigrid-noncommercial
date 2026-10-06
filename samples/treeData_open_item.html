@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,119 +37,127 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 스타일 */
-	.left {
-		text-align: left;
-	}
+        <style>
+            /* 커스텀 스타일 */
+            .left {
+                text-align: left;
+            }
 
-	.c-red {
-		color: #CC3D3D;
-		font-weight: bold;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            .c-red {
+                color: #cc3d3d;
+                font-weight: bold;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/schedule_tree.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/schedule_tree.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "id",
-			headerText: "ID",
-			width: 140
-		}, {
-			dataField: "name",
-			headerText: "Task Name",
-			style: "left",
-			width: 360
-		}, {
-			dataField: "charge",
-			headerText: "Charge",
-			style: "left",
-			width: 140
-		}, {
-			dataField: "complete",
-			headerText: "Complete(%)",
-			postfix: "%",
-			width: 120
-		}, {
-			dataField: "start",
-			headerText: "Start Date"
-		}, {
-			dataField: "end",
-			headerText: "End Date"
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 140
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Task Name",
+                        style: "left",
+                        width: 360
+                    },
+                    {
+                        dataField: "charge",
+                        headerText: "Charge",
+                        style: "left",
+                        width: 140
+                    },
+                    {
+                        dataField: "complete",
+                        headerText: "Complete(%)",
+                        postfix: "%",
+                        width: 120
+                    },
+                    {
+                        dataField: "start",
+                        headerText: "Start Date"
+                    },
+                    {
+                        dataField: "end",
+                        headerText: "End Date"
+                    }
+                ];
 
-		const gridProps = {
-			// 편집 가능 여부
-			editable: true,
-			// singleRow 선택모드
-			selectionMode: "singleRow",
-			hoverMode: "singleRow",
-			// 사용자가 정의한 데이터 필드 중 id 를 rowIdField 로 설정함
-			rowIdField: "id",
-			// 최초 보여질 때 모두 열린 상태로 출력 여부
-			displayTreeOpen: false,
-			showRowCheckColumn: false,
-			showRowNumColumn: false
-		};
+                const gridProps = {
+                    // 편집 가능 여부
+                    editable: true,
+                    // singleRow 선택모드
+                    selectionMode: "singleRow",
+                    hoverMode: "singleRow",
+                    // 사용자가 정의한 데이터 필드 중 id 를 rowIdField 로 설정함
+                    rowIdField: "id",
+                    // 최초 보여질 때 모두 열린 상태로 출력 여부
+                    displayTreeOpen: false,
+                    showRowCheckColumn: false,
+                    showRowNumColumn: false
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 그리드 ready 이벤트 바인딩
-		AUIGrid.bind(myGridID, "ready", auiGridCompleteHandler);
+                // 그리드 ready 이벤트 바인딩
+                AUIGrid.bind(myGridID, "ready", auiGridCompleteHandler);
 
-		// 트리 그리드 열기/닫기 상태 변경 이벤트 바인딩
-		AUIGrid.bind(myGridID, "treeOpenChange", auiGridTreeClickHandler);
-	}
+                // 트리 그리드 열기/닫기 상태 변경 이벤트 바인딩
+                AUIGrid.bind(myGridID, "treeOpenChange", auiGridTreeClickHandler);
+            }
 
-	// 그리드 ready 이벤트 핸들러
-	function auiGridCompleteHandler(event) {
-		//-- id 가 T30, T50 인 행 열기
-		AUIGrid.expandItemByRowId(myGridID, ["T30", "T50"], true);
-		// 만약 1개 단수라면 다음과 같이
-		//AUIGrid.expandItemByRowId(myGridID, "T30", true);
-		AUIGrid.selectRowsByRowId(myGridID, "T30"); // T30에 선택되도록 설정
-	}
+            // 그리드 ready 이벤트 핸들러
+            function auiGridCompleteHandler(event) {
+                //-- id 가 T30, T50 인 행 열기
+                AUIGrid.expandItemByRowId(myGridID, ["T30", "T50"], true);
+                // 만약 1개 단수라면 다음과 같이
+                //AUIGrid.expandItemByRowId(myGridID, "T30", true);
+                AUIGrid.selectRowsByRowId(myGridID, "T30"); // T30에 선택되도록 설정
+            }
 
-	// 트리 그리드 열기/닫기 아이콘 클릭 핸들러
-	function auiGridTreeClickHandler(event) {
-		const msg = `${event.type}, ${event.item.id}, 열/닫 상태 : ${event.isOpen}, rowIndex : ${event.rowIndex}`;
-		document.getElementById("info_msg").textContent = msg;
-	}
+            // 트리 그리드 열기/닫기 아이콘 클릭 핸들러
+            function auiGridTreeClickHandler(event) {
+                const msg = `${event.type}, ${event.item.id}, 열/닫 상태 : ${event.isOpen}, rowIndex : ${event.rowIndex}`;
+                document.getElementById("info_msg").textContent = msg;
+            }
 
-	let isExpanded = false;
-	function expand() {
-		if (!isExpanded) {
-			AUIGrid.expandAll(myGridID);
-			isExpanded = true;
-			return;
-		}
-		AUIGrid.collapseAll(myGridID);
-		isExpanded = false;
-	}
-</script>
-</head>
-<body>
+            let isExpanded = false;
+            function expand() {
+                if (!isExpanded) {
+                    AUIGrid.expandAll(myGridID);
+                    isExpanded = true;
+                    return;
+                }
+                AUIGrid.collapseAll(myGridID);
+                isExpanded = false;
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>계층형 그리드에서 초기 화면을 설정할 때 특정 행 아이템을 오픈한 상태로 출력한 모습니다.</p>
-		<p>ID 가 T30, T50 인 행을 열어 놓은 상태입니다.</p>
-		<p>다음과 같이 ready 이벤트를 바인딩하여 처리합니다.</p>
-		<div class="src_cover">
-			<pre>// 그리드 ready 이벤트 바인딩
+            <div id="main">
+                <div class="desc">
+                    <p>계층형 그리드에서 초기 화면을 설정할 때 특정 행 아이템을 오픈한 상태로 출력한 모습니다.</p>
+                    <p>ID 가 T30, T50 인 행을 열어 놓은 상태입니다.</p>
+                    <p>다음과 같이 ready 이벤트를 바인딩하여 처리합니다.</p>
+                    <div class="src_cover">
+                        <pre>
+// 그리드 ready 이벤트 바인딩
 AUIGrid.bind(myGridID, "ready", function(event){
 	// id 가 T30, T50 인 행 열기
 	AUIGrid.expandItemByRowId(myGridID, ["T30", "T50"], true);
@@ -150,19 +166,19 @@ AUIGrid.bind(myGridID, "ready", function(event){
 	AUIGrid.selectRowsByRowId(myGridID, "T30"); 
 });
 </pre>
-		</div>
-		<ul class="nav_u">
-			<li><button onclick="expand()" class="btn">모두 열기/ 닫기</button></li>
-		</ul>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:380px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="info_msg"></p>
-	</div>
-</div>
+                    </div>
+                    <ul class="nav_u">
+                        <li><button onclick="expand()" class="btn">모두 열기/ 닫기</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 380px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="info_msg"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

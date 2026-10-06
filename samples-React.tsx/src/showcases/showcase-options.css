@@ -1,0 +1,126 @@
+/* 밴드형 데모의 조작 영역: 설명과 설정을 구분하고 입력, 선택, 실행 버튼의 간격을 맞춥니다. */
+.desc .demo-options {
+    display: grid;
+    gap: 14px;
+    margin: 18px 0 4px;
+    padding: 16px;
+    border: 1px solid #dbe4eb;
+    border-radius: 8px;
+    background: #f8fafc;
+    min-width: 0;
+}
+.demo-option-row,
+.demo-option-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    min-width: 0;
+}
+.demo-option-row + .demo-option-row {
+    padding-top: 14px;
+    border-top: 1px solid #dbe4eb;
+}
+.demo-option-row--split {
+    justify-content: space-between;
+    gap: 12px 24px;
+}
+.demo-option-label {
+    font-weight: 600;
+    color: #263139;
+}
+.demo-options label {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 32px;
+}
+.demo-options label:has(input:disabled) {
+    color: #858e99;
+}
+.demo-options .demo-check {
+    gap: 8px;
+    white-space: nowrap;
+}
+.demo-options .demo-check input {
+    margin: 0;
+}
+.demo-options .demo-width-control {
+    display: grid;
+    grid-template-columns: auto minmax(80px, 1fr) 78px;
+    align-items: center;
+    gap: 16px;
+    width: min(100%, 720px);
+}
+.sample-view .demo-options input[type='range'] {
+    width: 100%;
+    min-width: 0;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    accent-color: #287ecb;
+    cursor: pointer;
+}
+.demo-width-control output {
+    text-align: center;
+    padding: 4px 8px;
+    border: 1px solid #dbe4eb;
+    border-radius: 4px;
+    background: #fff;
+    color: #263139;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.demo-segments {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    padding: 3px;
+    border: 1px solid #d7dce3;
+    border-radius: 6px;
+    background: #fff;
+    max-width: 100%;
+}
+.sample-view .demo-options .btn {
+    margin: 0;
+}
+.sample-view .demo-options .demo-segments .btn {
+    min-height: 30px;
+    padding: 4px 12px;
+    border-color: transparent;
+    border-radius: 4px;
+    background: transparent;
+}
+.sample-view .demo-options .demo-segments .btn:hover {
+    background: #f1f5f9;
+}
+.sample-view .demo-options .demo-segments .btn[aria-pressed='true'] {
+    background: #edf5fd;
+    border-color: #bfd8ee;
+    color: #1766a7 !important;
+}
+.desc .demo-option-note {
+    margin: 0;
+    color: #647483;
+}
+@media (max-width: 640px) {
+    .desc .demo-options {
+        padding: 12px;
+    }
+    .demo-options .demo-width-control {
+        grid-template-columns: minmax(0, 1fr) 78px;
+        gap: 8px 12px;
+    }
+    .demo-width-control label {
+        grid-column: 1 / -1;
+    }
+    .demo-option-group {
+        max-width: 100%;
+    }
+    .demo-options select {
+        min-width: 0;
+    }
+}

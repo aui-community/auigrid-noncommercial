@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,197 +37,205 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<!-- PDF 내보내기 필수 JS 추가-->
-<script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <!-- PDF 내보내기 필수 JS 추가-->
+        <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+        <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+        <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style>
-	/* 커스텀 summary total  스타일 */
-	.aui-grid-my-footer-sum-total {
-		font-weight: bold;
-		color: #4374D9;
-	}
+        <style>
+            /* 커스텀 summary total  스타일 */
+            .aui-grid-my-footer-sum-total {
+                font-weight: bold;
+                color: #4374d9;
+            }
 
-	.aui-grid-my-footer-sum-total2 {
-		text-align: right;
-	}
+            .aui-grid-my-footer-sum-total2 {
+                text-align: right;
+            }
 
-	/* 커스텀 칼럼 스타일 */
-	.my-column-style {
-		background: #eeeeee;
-		color: #005500;
-		font-weight: bold;
-		text-align: left;
-	}
+            /* 커스텀 칼럼 스타일 */
+            .my-column-style {
+                background: #eeeeee;
+                color: #005500;
+                font-weight: bold;
+                text-align: left;
+            }
 
-	/* 커스텀 칼럼 스타일 */
-	.my-column-style2 {
-		background: #FFEBFE;
-		color: #0000ff;
-		font-weight: bold;
-	}
+            /* 커스텀 칼럼 스타일 */
+            .my-column-style2 {
+                background: #ffebfe;
+                color: #0000ff;
+                font-weight: bold;
+            }
 
-	/* 커스텀 칼럼 스타일 */
-	.my-price-style {
-		text-align: right;
-	}
+            /* 커스텀 칼럼 스타일 */
+            .my-price-style {
+                text-align: right;
+            }
 
-	/* 커스텀 행 스타일 */
-	.my-row-style {
-		background: #9FC93C;
-		font-weight: bold;
-		color: #22741C;
-	}
+            /* 커스텀 행 스타일 */
+            .my-row-style {
+                background: #9fc93c;
+                font-weight: bold;
+                color: #22741c;
+            }
 
-	/* 커스텀 셀 스타일 */
-	.my-cell-style {
-		background: #FF007F;
-		font-weight: bold;
-		color: #fff;
-	}
-</style>
-<script>
-    // 이 예제: Country가 USA인 행과 Product가 Galaxy S25인 셀에 색을 입혔습니다. Excel과 PDF로 저장해 화면과 비교하세요.
-    // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
-    // AUIGrid 생성 후 반환 ID
-    let myGridID;
-    // 시작점
-    function init() {
-        // AUIGrid 그리드를 생성합니다.
-        createAUIGrid();
-        // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-        loadGridData();
-    }
-    // AUIGrid 를 생성합니다.
-    function createAUIGrid() {
-        // 그리드 칼럼 레이아웃 설정
-        const columnLayout = [
-            {
-                dataField: "orderId",
-                headerText: "Order ID",
-                width: 140
-            }, {
-                dataField: "country",
-                headerText: "Country",
-                style: "my-column-style2",
-            }, {
-                dataField: "name",
-                headerText: "Name"
-            }, {
-                dataField: "product",
-                headerText: "Product",
-                style: "my-column-style",
-                styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-                    if (value === "Galaxy S25")
-                        return "my-cell-style";
+            /* 커스텀 셀 스타일 */
+            .my-cell-style {
+                background: #ff007f;
+                font-weight: bold;
+                color: #fff;
+            }
+        </style>
+        <script>
+            // 이 예제: Country가 USA인 행과 Product가 Galaxy S25인 셀에 색을 입혔습니다. Excel과 PDF로 저장해 화면과 비교하세요.
+            // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                loadGridData();
+            }
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "orderId",
+                        headerText: "Order ID",
+                        width: 140
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        style: "my-column-style2"
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Name"
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        style: "my-column-style",
+                        styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+                            if (value === "Galaxy S25") return "my-cell-style";
+                        }
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        style: "my-price-style"
+                    },
+                    {
+                        dataField: "phone",
+                        headerText: "Phone"
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date"
+                    }
+                ];
+                // 그리드 푸터 설정
+                const footerLayout = [
+                    {
+                        labelText: "Price 합계=>",
+                        positionField: "product",
+                        style: "aui-grid-my-footer-sum-total2"
+                    },
+                    {
+                        dataField: "price",
+                        positionField: "price",
+                        operation: "SUM",
+                        formatString: "#,##0",
+                        style: "aui-grid-my-footer-sum-total"
+                    },
+                    {
+                        dataField: "price",
+                        positionField: "date",
+                        operation: "COUNT",
+                        style: "aui-grid-my-footer-sum-total2"
+                    },
+                    {
+                        labelText: "Count=>",
+                        positionField: "phone",
+                        style: "aui-grid-my-footer-sum-total2"
+                    }
+                ];
+                // 그리드 속성 설정
+                const gridProps = {
+                    showFooter: true,
+                    // singleRow 선택모드
+                    selectionMode: "multipleCells",
+                    // 그룹핑 패널 사용
+                    useGroupingPanel: true,
+                    // row Styling 함수
+                    rowStyleFunction: function (rowIndex, item) {
+                        if (item.country === "USA") {
+                            return "my-row-style";
+                        }
+                    }
+                };
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 푸터 레이아웃 세팅
+                AUIGrid.setFooter(myGridID, footerLayout);
+            }
+            // 엑셀 내보내기(Export);
+            function exportClick() {
+                // 내보내기 실행
+                AUIGrid.exportToXlsx(myGridID);
+            }
+            // PDF 내보내기(Export)
+            function exportPDFClick() {
+                // 내보내기 실행
+                AUIGrid.exportToPdf(myGridID, {
+                    fontPath: "../pdfkit/nyjgothic-medium.ttf"
+                });
+            }
+            // 여러 데모가 같은 JSON 자료를 사용합니다. 실제 서비스에서는 이 주소를 데이터 API로 바꾸세요.
+            // 응답을 받은 뒤 setGridData에 전달하는 과정까지 이 HTML에서 확인할 수 있습니다.
+            async function loadGridData() {
+                AUIGrid.showAjaxLoader(myGridID);
+                try {
+                    const response = await fetch("./data/country_phone_500.json");
+                    if (!response.ok) throw new Error("데이터를 불러오지 못했습니다.");
+                    const data = await response.json();
+                    AUIGrid.setGridData(myGridID, data);
+                } catch (error) {
+                    document.getElementById("elapse").textContent = error.message;
+                } finally {
+                    AUIGrid.removeAjaxLoader(myGridID);
                 }
-            }, {
-                dataField: "price",
-                headerText: "Price",
-                dataType: "numeric",
-                formatString: "#,##0",
-                style: "my-price-style"
-            }, {
-                dataField: "phone",
-                headerText: "Phone"
-            }, {
-                dataField: "date",
-                headerText: "Date"
             }
-        ];
-        // 그리드 푸터 설정
-        const footerLayout = [
-            {
-                labelText: "Price 합계=>",
-                positionField: "product",
-                style: "aui-grid-my-footer-sum-total2"
-            }, {
-                dataField: "price",
-                positionField: "price",
-                operation: "SUM",
-                formatString: "#,##0",
-                style: "aui-grid-my-footer-sum-total"
-            }, {
-                dataField: "price",
-                positionField: "date",
-                operation: "COUNT",
-                style: "aui-grid-my-footer-sum-total2"
-            }, {
-                labelText: "Count=>",
-                positionField: "phone",
-                style: "aui-grid-my-footer-sum-total2"
-            }
-        ];
-        // 그리드 속성 설정
-        const gridProps = {
-            showFooter: true,
-            // singleRow 선택모드
-            selectionMode: "multipleCells",
-            // 그룹핑 패널 사용
-            useGroupingPanel: true,
-            // row Styling 함수
-            rowStyleFunction: function (rowIndex, item) {
-                if (item.country === "USA") {
-                    return "my-row-style";
-                }
-            }
-        };
-        // 실제로 #grid_wrap 에 그리드 생성
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-        // 푸터 레이아웃 세팅
-        AUIGrid.setFooter(myGridID, footerLayout);
-    }
-    // 엑셀 내보내기(Export);
-    function exportClick() {
-        // 내보내기 실행
-        AUIGrid.exportToXlsx(myGridID);
-    }
-    // PDF 내보내기(Export)
-    function exportPDFClick() {
-        // 내보내기 실행
-        AUIGrid.exportToPdf(myGridID, {
-            fontPath: "../pdfkit/nyjgothic-medium.ttf"
-        });
-    }
-    // 여러 데모가 같은 JSON 자료를 사용합니다. 실제 서비스에서는 이 주소를 데이터 API로 바꾸세요.
-    // 응답을 받은 뒤 setGridData에 전달하는 과정까지 이 HTML에서 확인할 수 있습니다.
-    async function loadGridData() {
-        AUIGrid.showAjaxLoader(myGridID);
-        try {
-            const response = await fetch("./data/country_phone_500.json");
-            if (!response.ok)
-                throw new Error("데이터를 불러오지 못했습니다.");
-            const data = await response.json();
-            AUIGrid.setGridData(myGridID, data);
-        }
-        catch (error) {
-            document.getElementById("elapse").textContent = error.message;
-        }
-        finally {
-            AUIGrid.removeAjaxLoader(myGridID);
-        }
-    }
-</script>
-</head>
-<body>
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>Country가 USA인 행과 Product가 Galaxy S25인 셀에 색을 입혔습니다. Excel과 PDF로 저장해 화면과 비교하세요.</p>
-		<p>내보내기에 반영되는 스타일은 글자색, 배경색, 굵게, 기울임꼴, 밑줄입니다.</p>
-<button class="btn" onclick="exportClick()">엑셀(xlsx) 내보내기</button>
-<button class="btn" onclick="exportPDFClick()">PDF 내보내기</button>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        Country가 USA인 행과 Product가 Galaxy S25인 셀에 색을 입혔습니다. Excel과 PDF로 저장해 화면과
+                        비교하세요.
+                    </p>
+                    <p>내보내기에 반영되는 스타일은 글자색, 배경색, 굵게, 기울임꼴, 밑줄입니다.</p>
+                    <button class="btn" onclick="exportClick()">엑셀(xlsx) 내보내기</button>
+                    <button class="btn" onclick="exportPDFClick()">PDF 내보내기</button>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

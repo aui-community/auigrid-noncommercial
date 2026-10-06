@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,140 +37,161 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.my-column {
-		color: #D9418C;
-	}
+        <style>
+            /* 커스텀 칼럼 스타일 정의 */
+            .my-column {
+                color: #d9418c;
+            }
 
-	.my-header {
-		color: #D9418C;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            .my-header {
+                color: #d9418c;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid(columnLayout);
-		// 그리드 데이터 삽입
-		AUIGrid.setGridData(myGridID, getGridData());
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid(columnLayout);
+                // 그리드 데이터 삽입
+                AUIGrid.setGridData(myGridID, getGridData());
+            }
 
-	// 그리드 칼럼 레이아웃 설정
-	const columnLayout = [{
-		dataField: "f1",
-		headerText: "Field 1",
-		width: 100
-	}, {
-		headerText: "Header Group",
-		children: [{
-			dataField: "f2",
-			headerText: "Field 2",
-			width: 100
-		}, {
-			dataField: "f3",
-			headerText: "Field 3",
-			headerStyle: "my-header",
-			style: "my-column",
-			disableMoving: true, // 해당 칼럼은 드래깅 이동 불가.
-			width: 100
-		}, {
-			dataField: "f4",
-			headerText: "Field 4",
-			width: 100
-		}]
-	}, {
-		dataField: "f5",
-		headerText: "Field 5",
-		filter: {
-			showIcon: true
-		},
-		headerStyle: "my-header",
-		style: "my-column",
-		disableMoving: true, // 해당 칼럼은 드래깅 이동 불가.
-		width: 100
-	}, {
-		dataField: "f6",
-		headerText: "Field 6",
-		width: 100
-	}, {
-		dataField: "f7",
-		headerText: "Field 7",
-		width: 100
-	}, {
-		dataField: "f8",
-		headerText: "Field 8",
-		width: 100
-	}];
+            // 그리드 칼럼 레이아웃 설정
+            const columnLayout = [
+                {
+                    dataField: "f1",
+                    headerText: "Field 1",
+                    width: 100
+                },
+                {
+                    headerText: "Header Group",
+                    children: [
+                        {
+                            dataField: "f2",
+                            headerText: "Field 2",
+                            width: 100
+                        },
+                        {
+                            dataField: "f3",
+                            headerText: "Field 3",
+                            headerStyle: "my-header",
+                            style: "my-column",
+                            disableMoving: true, // 해당 칼럼은 드래깅 이동 불가.
+                            width: 100
+                        },
+                        {
+                            dataField: "f4",
+                            headerText: "Field 4",
+                            width: 100
+                        }
+                    ]
+                },
+                {
+                    dataField: "f5",
+                    headerText: "Field 5",
+                    filter: {
+                        showIcon: true
+                    },
+                    headerStyle: "my-header",
+                    style: "my-column",
+                    disableMoving: true, // 해당 칼럼은 드래깅 이동 불가.
+                    width: 100
+                },
+                {
+                    dataField: "f6",
+                    headerText: "Field 6",
+                    width: 100
+                },
+                {
+                    dataField: "f7",
+                    headerText: "Field 7",
+                    width: 100
+                },
+                {
+                    dataField: "f8",
+                    headerText: "Field 8",
+                    width: 100
+                }
+            ];
 
-	// 나머지 칼럼들 생성
-	for (let i = 9; i < 30; i++) {
-		columnLayout.push({
-			dataField: "f" + i,
-			headerText: "Field " + i,
-			width: 100
-		});
-	};
+            // 나머지 칼럼들 생성
+            for (let i = 9; i < 30; i++) {
+                columnLayout.push({
+                    dataField: "f" + i,
+                    headerText: "Field " + i,
+                    width: 100
+                });
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
-		// 그리드 속성 설정
-		const gridProps = {
-			// 칼럼 자리 옮기기 설정
-			enableMovingColumn: true,
-			editable: true,
-			enableSorting: false,
-			enableFilter: true,
-			useContextMenu: true
-		};
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid(columnLayout) {
+                // 그리드 속성 설정
+                const gridProps = {
+                    // 칼럼 자리 옮기기 설정
+                    enableMovingColumn: true,
+                    editable: true,
+                    enableSorting: false,
+                    enableFilter: true,
+                    useContextMenu: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// columnStateChange 이벤트 바인딩.
-		AUIGrid.bind(myGridID, "columnStateChange", function (event) {
-			const { type, dataField, property, old, current } = event;
-			const str = `eventType: ${type}, dataField: ${dataField}, prop: ${property}, old: ${old}, current: ${current}`;
-			document.getElementById("elapse").textContent = str;
-		});
-	}
+                // columnStateChange 이벤트 바인딩.
+                AUIGrid.bind(myGridID, "columnStateChange", function (event) {
+                    const { type, dataField, property, old, current } = event;
+                    const str = `eventType: ${type}, dataField: ${dataField}, prop: ${property}, old: ${old}, current: ${current}`;
+                    document.getElementById("elapse").textContent = str;
+                });
+            }
 
-	// 그리드 데이터 생성하여 반환
-	function getGridData() {
-		const data = Array.from({ length: 1000 }, (v, i) => {
-			const obj = {};
-			for (let j = 1; j < 30; j++) {
-				obj[`f${j}`] = `F (${i}, ${j})`;
-			}
-			return obj;
-		});
-		return data;
-	}
-</script>
-</head>
-<body>
+            // 그리드 데이터 생성하여 반환
+            function getGridData() {
+                const data = Array.from({ length: 1000 }, (v, i) => {
+                    const obj = {};
+                    for (let j = 1; j < 30; j++) {
+                        obj[`f${j}`] = `F (${i}, ${j})`;
+                    }
+                    return obj;
+                });
+                return data;
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>열(column)의 헤더를 드래깅하여 원하는 자리로 해당 칼럼을 옮길 수 있습니다.(enableMovingColumn=true 설정)</p>
-		<p>헤더를 그룹핑으로 지정한 경우, 해당 그룹의 자식 칼럼은 그룹핑 영역을 벗어 날 수 없습니다.</p>
-		<p>그룹 헤더를 옮기는 경우 해당 자식 헤더까지 모두 따라 움직입니다. </p>
-		<p>■ "Field 3", "Field 5" 칼럼은 드래깅으로 사용자가 이동 시킬 수 없습니다.(즉, 직접적인 이동 대상이 될 수 없음)</p>
-		<p>직접적인 이동 대상 불가 설정은 칼럼에 disableMoving : true 설정으로 가능합니다.</p>
-		<p><strong>드래깅으로 열(column) 헤더를 잡고 이동 할 때 최우측 또는 최좌측 갔을 경우, 가로 스크롤이 이동합니다.</strong></p>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        열(column)의 헤더를 드래깅하여 원하는 자리로 해당 칼럼을 옮길 수
+                        있습니다.(enableMovingColumn=true 설정)
+                    </p>
+                    <p>헤더를 그룹핑으로 지정한 경우, 해당 그룹의 자식 칼럼은 그룹핑 영역을 벗어 날 수 없습니다.</p>
+                    <p>그룹 헤더를 옮기는 경우 해당 자식 헤더까지 모두 따라 움직입니다.</p>
+                    <p>
+                        ■ "Field 3", "Field 5" 칼럼은 드래깅으로 사용자가 이동 시킬 수 없습니다.(즉, 직접적인 이동
+                        대상이 될 수 없음)
+                    </p>
+                    <p>직접적인 이동 대상 불가 설정은 칼럼에 disableMoving : true 설정으로 가능합니다.</p>
+                    <p>
+                        <strong
+                            >드래깅으로 열(column) 헤더를 잡고 이동 할 때 최우측 또는 최좌측 갔을 경우, 가로 스크롤이
+                            이동합니다.</strong
+                        >
+                    </p>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

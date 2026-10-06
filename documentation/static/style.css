@@ -265,6 +265,10 @@ ol li {
 .main_ul li {
 	margin-left: 40px;
 }
+/* 홈의 문서 제목 목록은 일반 본문 목록보다 큽니다. 공통 li의 14px 규칙보다 기존 18px를 우선합니다. */
+body.demo-typography .main_ul > li {
+	font-size: 18px !important;
+}
 .doc_menu_item {
 	width: 140px;
 	cursor: pointer;
@@ -285,6 +289,11 @@ ol li {
 	border-bottom: none;
 	color: #565e60;
 	cursor: default;
+}
+/* 제품 탭은 기존 1.2em 크기와 줄간격을 유지하고 글꼴 종류만 공통 규격을 따릅니다. */
+body.demo-typography .MainContent .doc_menu_item {
+	font-size: 1.2em;
+	line-height: 1.2;
 }
 .prop_table {
 	padding: 8px;
@@ -310,6 +319,18 @@ ol li {
 	background: #fff;
 	margin-left: 30px;
 }
+/* API 검색창도 본문과 같은 시작선을 사용하고 화면 폭 안에서 줄어듭니다. */
+.MainContent > .searchbox {
+	box-sizing: border-box;
+	width: min(550px, 100%);
+	margin: 0 0 12px;
+}
+.MainContent > .searchbox .keyword {
+	width: 100%;
+}
+.MainContent > .searchbox input {
+	width: calc(100% - 55px);
+}
 .searchbox .keyword {
 	display: block;
 	width: 500px;
@@ -332,6 +353,11 @@ ol li {
 	appearance: none;
 	-webkit-border-radius: 0;
 	border-radius: 0;
+}
+/* 검색어는 긴 API 이름을 읽기 쉽게 기존 입력 크기를 유지합니다. */
+body.demo-typography .searchbox input {
+	font-size: 18px !important;
+	line-height: 23px;
 }
 .search_span {
 	display: inline-block;

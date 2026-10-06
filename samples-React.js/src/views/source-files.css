@@ -1,0 +1,19 @@
+/* 경로가 긴 보조 파일도 모바일 대화상자 안에서 선택할 수 있게 합니다. */
+.sample-source-dialog .source-file-select {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 24px 16px;
+}
+.sample-source-dialog .source-file-select select {
+    min-width: 0;
+    max-width: 100%;
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #d7dce3;
+    border-radius: 4px;
+    font: inherit;
+    color: #303946;
+    background: #fff;
+}

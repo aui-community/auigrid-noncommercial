@@ -1,256 +1,120 @@
 <script setup lang="ts">
-	import { ref, onMounted, onBeforeUnmount } from 'vue';
-	import * as IGrid from 'aui-grid';
-	import AUIGrid from '@/static/AUIGrid-Vue/AUIGridT.vue';
-	import 'file-saver';
-	import '@/static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
-	import './Showcase04.css';
+import { ref, shallowRef, onMounted, onBeforeUnmount, onActivated, onDeactivated, nextTick } from 'vue';
+import AUIGrid from '@/static/AUIGrid-Vue/AUIGridT.vue';
+import 'file-saver';
+import '../static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
+import { createDemo, initialView } from './showcase4Model';
+import './showcase-workspaces.css';
 
-	const BASE_URL = import.meta.env.BASE_URL;
+import './Showcase04.css';
+// public 자원은 Vite 배포 경로를 기준으로 읽습니다.
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-	type AUIGrid = InstanceType<typeof AUIGrid>;
-
-	const myGrid = ref<AUIGrid | null>(null);
-
-	// eslint-disable-next-line
-	// prettier-ignore
-	const names = ['A 전자', 'B 상사', 'C 철강', 'D 회사', 'E 통신', 'F 공사', 'G 주식회사', 'H 인터넷', 'I 식품', 'J 제과', 'K 연구소', 'L 전자', 'M 화학', 'N 인터넷', 'O로 통신', 'P 주식회사', 'Q 코스메틱', 'R 청과', 'S 방송', 'T 자동차', 'UU 엔터'];
-
-	// eslint-disable-next-line
-	// prettier-ignore
-	const prices = [150000, 230000, 420000, 1200000, 320000, 100000, 240000, 320000, 520000, 820000, 300000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000];
-
-	const createRandomData = (): any[] =>
-		names.map((name, i) => ({
-			id: i + 1,
-			name,
-			price: prices[i],
-			open: prices[i],
-			high: prices[i],
-			low: prices[i],
-			gap: 0,
-			volume: 0
-		}));
-
-	const createRandomRows = (gaps: number[], volumes: number[]): any[] => {
-		const codeCount = names.length;
-		const randomCount = Math.floor(Math.random() * 10);
-		const codes: number[] = [];
-
-		for (let i = 0; i < randomCount; i++) {
-			codes.push(Math.ceil(Math.random() * codeCount));
-		}
-
-		return codes.map((code) => {
-			const isPlus = Math.random() > 0.5;
-			let gap = isPlus ? 3000 : -3000;
-			const index = code - 1;
-			const limitGap = prices[index] * 0.3;
-
-			gaps[index] += gap;
-			gap = gaps[index];
-
-			if (Math.abs(gap) > limitGap) {
-				gap = gap > 0 ? limitGap : -limitGap;
-			}
-
-			const price = prices[index] + gap;
-			volumes[index] += Math.floor(Math.random() * 10000);
-
-			return { id: code, price, gap, volume: volumes[index] };
-		});
-	};
-
-	const columnLayout: IGrid.Column[] = [
-		{
-			dataField: 'name',
-			headerText: '종목명'
-		},
-		{
-			dataField: 'price',
-			headerText: '현재가',
-			width: 120,
-			dataType: 'numeric',
-			style: 'my-right-style',
-			formatString: '#,##0'
-		},
-		{
-			dataField: 'gap',
-			headerText: '대비',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			style: 'my-right-style',
-			width: 120,
-			renderer: {
-				type: IGrid.RendererKind.IconRenderer,
-				iconPosition: 'aisle',
-				iconWidth: 7,
-				iconHeight: 6,
-				iconFunction: (_rowIndex, _columnIndex, _value, item) => {
-					if (item.gap < 0) return BASE_URL + '/assets/ico_down.gif';
-					if (item.gap > 0) return BASE_URL + '/assets/ico_up.gif';
-					return BASE_URL + '/assets/ico_flat.gif';
-				}
-			},
-			styleFunction: (_rowIndex, _columnIndex, _value, _headerText, item) => {
-				if (item.gap < 0) return 'my-custom-down';
-				if (item.gap > 0) return 'my-custom-up';
-				return 'my-custom-normal';
-			}
-		},
-		{
-			dataField: 'rate',
-			headerText: '등락율',
-			dataType: 'numeric',
-			formatString: '#,##0.00',
-			postfix: ' %',
-			style: 'my-right-style',
-			width: 120,
-			expFunction: (_rowIndex, _columnIndex, item) => {
-				const oldPrice = item.price - item.gap;
-				return Number(((item.gap / oldPrice) * 100).toFixed(2));
-			},
-			// eslint-disable-next-line
-			styleFunction: (_rowIndex, _columnIndex, _value, _headerText, item) => {
-				if (item.gap < 0) return 'my-custom-down';
-				if (item.gap > 0) return 'my-custom-up';
-				return 'my-custom-normal';
-			}
-		},
-		{
-			dataField: 'rateGraph',
-			headerText: '등락율 그래프',
-			width: 120,
-			expFunction: (_rowIndex, _columnIndex, item) => item.rate,
-			renderer: {
-				type: IGrid.RendererKind.BarRenderer,
-				showLabel: false,
-				min: -30,
-				max: 30,
-				offset: 30
-			}
-		},
-		{
-			dataField: 'volume',
-			headerText: '거래량',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			style: 'my-right-style',
-			width: 120
-		},
-		{
-			dataField: 'open',
-			headerText: '시가',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			style: 'my-right-style',
-			width: 120
-		},
-		{
-			dataField: 'high',
-			headerText: '고가',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			style: 'my-custom-up',
-			expFunction: (_rowIndex, _columnIndex, item) => Math.max(item.high, item.price),
-			width: 120
-		},
-		{
-			dataField: 'low',
-			headerText: '저가',
-			dataType: 'numeric',
-			formatString: '#,##0',
-			style: 'my-custom-down',
-			expFunction: (_rowIndex, _columnIndex, item) => Math.min(item.price, item.low),
-			width: 120
-		}
-	];
-
-	const gridProps = {
-		width: '100%',
-		height: 480,
-		rowIdField: 'id'
-	};
-
-	// 초기 데이터 삽입과 주기 갱신을 분리합니다.
-	function loadGridData(grid: AUIGrid) {
-		grid.setGridData(createRandomData());
-	}
-
-	function startUpdates(grid: AUIGrid) {
-		// 다른 mount 또는 다른 그리드와 누적 값을 공유하지 않습니다.
-		const gaps: number[] = Array(names.length).fill(0);
-		const volumes: number[] = Array(names.length).fill(0);
-		const timer = setInterval(() => {
-			grid.refreshRows(createRandomRows(gaps, volumes), 'my-refresh-row-flash-style', 200);
-		}, 300);
-		return () => clearInterval(timer);
-	}
-
-	let stopUpdates = () => {};
-	onMounted(() => {
-		const grid = myGrid.value as AUIGrid;
-		loadGridData(grid);
-		stopUpdates = startUpdates(grid);
-	});
-	// KeepAlive의 비활성화에서는 기존 갱신을 유지합니다.
-	onBeforeUnmount(() => stopUpdates());
-
-	const exportClick = () => {
-		(myGrid.value as AUIGrid).exportToXlsx({
-			progressBar: true,
-			fileName: '쇼케이스-02'
-		});
-	};
-
-	const exportPdfClick = () => {
-		(myGrid.value as AUIGrid).exportToPdf({
-			fontPath: './fonts/nyjgothic-medium.ttf',
-			fileName: '쇼케이스-02'
-		});
-	};
+const myGrid = ref<InstanceType<typeof AUIGrid> | null>(null);
+const view = shallowRef(initialView);
+// 화면은 Vue 상태로 갱신하고 칼럼 및 데이터 처리는 별도 모델에 모읍니다.
+const demo = createDemo((value) => {
+    view.value = value;
+}, baseUrl);
+onMounted(() => demo.attach(myGrid.value!));
+// KeepAlive에서도 숨겨진 화면의 갱신을 멈추고 복귀한 그리드 크기를 다시 계산합니다.
+onDeactivated(() => demo.pause());
+onActivated(() => nextTick(() => demo.resume()));
+onBeforeUnmount(() => demo.detach());
 </script>
 <template>
-	<div>
-		<div class="desc">
-			<p>실시간 주식 현황(나의 관심 종목)을 구현한 데모입니다.</p>
-			<p>주식은 가상의 주식으로 랜덤하게 로컬에서 0.3초 마다 거래가 이루어진 종목만 갱신하도록 설정한 모습입니다.</p>
-			<p>처음 데이터를 그리드에 삽입 한 후 그리드에 특정 행의 셀 값(현재가, 대비가, 거래량)만 갱신하는 모습입니다.</p>
-			<p>참고 : AUIGrid 가 서버와 통신하는 방법 및 속도까지 커버하지 않습니다. AUIGrid 는 단순히 출력해 주는 역할만 할 뿐입니다.</p>
-			<p>이 데모와 같이 빠른 속도로 주식 정보를 갱신하는 것은 일반 Ajax 통신으론 불가능합니다.</p>
-			<p>만약, 웹 상에서 주식 정보를 실시간으로 빠르게 갱신하고자 한다면 웹소켓(Web Socket)으로 구성하는 것이 최선일 것입니다.</p>
-		</div>
-		<AUIGrid ref="myGrid" name="showcase4" :columnLayout="columnLayout" :gridProps="gridProps" />
-	</div>
+    <div class="live-demo">
+        <div class="live-heading">
+            <div>
+                <h2>서비스 운영 현황</h2>
+                <p>가상 서비스의 운영 지표를 실시간으로 모니터링합니다.</p>
+            </div>
+            <span id="live-state" class="live-stream" role="status" :data-paused="view.paused">{{ view.state }}</span>
+        </div>
+        <dl class="live-summary" aria-label="서비스 운영 요약">
+            <div class="live-metric">
+                <dt>정상 서비스</dt>
+                <dd>
+                    <strong id="live-healthy" class="live-value">{{ view.healthy }}</strong
+                    ><span id="live-total" class="live-unit">{{ view.total }}</span
+                    ><span class="live-caption">현재 수신 상태 기준</span>
+                </dd>
+            </div>
+            <div class="live-metric">
+                <dt>처리 요청</dt>
+                <dd>
+                    <strong id="live-requests" class="live-value">{{ view.requests }}</strong
+                    ><span class="live-unit">/초</span><span class="live-caption">전체 서비스 합계</span>
+                </dd>
+            </div>
+            <div class="live-metric">
+                <dt>평균 응답 시간</dt>
+                <dd>
+                    <strong id="live-latency" class="live-value">{{ view.latency }}</strong
+                    ><span class="live-unit">ms</span><span class="live-caption">요청량 기준 가중 평균</span>
+                </dd>
+            </div>
+            <div id="live-attention-card" class="live-metric live-attention" :data-active="view.attentionActive">
+                <dt>확인 필요</dt>
+                <dd>
+                    <strong id="live-attention" class="live-value">{{ view.attention }}</strong
+                    ><span class="live-unit">개</span><span class="live-caption">주의 또는 응답 지연</span>
+                </dd>
+            </div>
+        </dl>
+        <div class="live-toolbar">
+            <div class="live-grid-title">
+                <h3>서비스별 상태</h3>
+                <span>요청 추이: 최근 12회 측정</span>
+            </div>
+            <div class="live-controls" role="group" aria-label="실시간 갱신 설정">
+                <label
+                    >트래픽<select
+                        id="live-traffic"
+                        :value="view.traffic"
+                        @change="demo.setControl('traffic', ($event.target as HTMLSelectElement).value)"
+                    >
+                        <option value="normal">평시</option>
+                        <option value="peak">증가</option>
+                    </select></label
+                >
+                <label
+                    >갱신 주기<select
+                        id="live-interval"
+                        :value="view.interval"
+                        @change="demo.setControl('interval', ($event.target as HTMLSelectElement).value)"
+                    >
+                        <option value="500">0.5초</option>
+                        <option value="1000">1초</option>
+                        <option value="2000">2초</option>
+                    </select></label
+                >
+                <button type="button" class="btn" id="live-toggle" @click="demo.toggleUpdates()">
+                    {{ view.toggle }}
+                </button>
+                <button
+                    type="button"
+                    class="btn"
+                    id="live-step"
+                    :disabled="view.stepDisabled"
+                    @click="demo.refreshRows()"
+                >
+                    한 번 갱신
+                </button>
+            </div>
+        </div>
+        <div class="showcase-grid">
+            <AUIGrid ref="myGrid" name="showcase4" :columnLayout="demo.columnLayout" :gridProps="demo.gridProps" />
+        </div>
+        <div class="live-footnote">
+            <p>
+                <span class="live-key" aria-hidden="true"></span><span id="live-updated">{{ view.updated }}</span> /
+                마지막 수신 <time id="live-last-update" :datetime="view.dateTime">{{ view.time }}</time>
+            </p>
+            <p>모의 데이터이며 외부 서버에 연결하지 않습니다.</p>
+        </div>
+        <div class="desc_bottom">
+            <p><code>refreshRows()</code>로 변경된 행만 갱신하며, 선택한 행과 현재 화면을 유지합니다.</p>
+        </div>
+    </div>
 </template>
-<style>
-	#aui-grid-wrap-showcase4 .my-right-style {
-		text-align: right;
-	}
-
-	#aui-grid-wrap-showcase4 .my-refresh-row-flash-style {
-		background: #dfdfdf;
-	}
-
-	#aui-grid-wrap-showcase4 .my-custom-down {
-		color: #0000ff;
-		text-align: right;
-	}
-	#aui-grid-wrap-showcase4 .my-custom-up {
-		color: #ff0000;
-		text-align: right;
-	}
-	#aui-grid-wrap-showcase4 .my-custom-normal {
-		color: inherit;
-		text-align: right;
-	}
-
-	#aui-grid-wrap-showcase4 .aui-grid-bar-renderer-negative {
-		background: #4641d9;
-		border: 1px solid #4641d9;
-	}
-	#aui-grid-wrap-showcase4 .aui-grid-bar-renderer-positive {
-		background: #df4d4d;
-		border: 1px solid #df4d4d;
-	}
-</style>

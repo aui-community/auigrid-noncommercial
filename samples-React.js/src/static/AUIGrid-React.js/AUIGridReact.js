@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.js for React.js v1.6.20261001
- * Based on AUIGrid v3.0.18.0
+ * AUIGridReact.js for React.js v1.6.20261006
+ * Based on AUIGrid v3.0.19.0
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
@@ -147,6 +147,8 @@ class AUIGrid extends React.Component {
 	appendData(items) {
 		$ag.appendData.call($ag, this.pid, arguments[0]);
 	}
+	// 그리드 간 셀 드래그도 출발지의 bind로 연결하며 pidToDrop은 목적 그리드 ID 그대로 전달합니다.
+	// 콜백을 감싸지 않아 false 반환과 event.isMoveMode 변경을 그대로 전달합니다.
 	bind(name, func) {
 		$ag.bind.call($ag, this.pid, arguments[0], arguments[1]);
 	}
@@ -225,15 +227,18 @@ class AUIGrid extends React.Component {
 	exportToObject(keyValueMode) {
 		return $ag.exportToObject.call($ag, this.pid, arguments[0]);
 	}
+	// bodyLayoutMode는 화면을 바꾸지 않고 PDF 파일에만 적용합니다. (v3.0.19)
 	exportToPdf(props) {
 		$ag.exportToPdf.call($ag, this.pid, arguments[0]);
 	}
 	exportToTxt(props) {
 		$ag.exportToTxt.call($ag, this.pid, arguments[0]);
 	}
+	// v3.0.19: 옵션의 bodyLayoutMode는 Excel에만 적용하며 기존 두 인자 호출도 유지합니다.
 	exportToXlsx(exportWithStyle, props) {
 		$ag.exportToXlsx.call($ag, this.pid, arguments[0], arguments[1]);
 	}
+	// 각 시트의 props에 bodyLayoutMode를 독립적으로 지정할 수 있습니다.
 	exportToXlsxMulti(subGridIds, props) {
 		$ag.exportToXlsxMulti.call($ag, this.pid, arguments[0], arguments[1]);
 	}
@@ -315,6 +320,11 @@ class AUIGrid extends React.Component {
 	getEditedRowItems() {
 		return $ag.getEditedRowItems.call($ag, this.pid);
 	}
+	// 접힌 그룹의 자손까지 포함한 필터 결과 건수를 조회합니다.
+	getFilteredRowCount() {
+		return $ag.getFilteredRowCount.call($ag, this.pid);
+	}
+
 	getFilterCache() {
 		return $ag.getFilterCache.call($ag, this.pid);
 	}
@@ -905,6 +915,8 @@ export default AUIGrid;
 
 export const agUtils = {
 	isCreated: $ag.isCreated,
+	// Grid ID 없이 엔진의 진입점을 그대로 전달합니다. 제공 보류 엔진의 DISABLED 오류도 유지합니다.
+	getPluginRuntime: $ag.getPluginRuntime,
 	formatDate: $ag.formatDate,
 	formatNumber: $ag.formatNumber,
 	getActiveGrid: $ag.getActiveGrid,

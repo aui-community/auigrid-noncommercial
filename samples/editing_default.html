@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,196 +37,247 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.my-color {
-		color: #00aa00;
-	}
+        <style>
+            /* 커스텀 칼럼 스타일 정의 */
+            .my-color {
+                color: #00aa00;
+            }
 
-	.my-right {
-		text-align: right;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            .my-right {
+                text-align: right;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_500.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_500.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "Name(수정불가 설정)",
-			width: 160,
-			style: "my-color",
-			headerStyle: "my-color",
-			editable: false // ID 편집 불가능 설정
-		}, {
-			dataField: "country",
-			headerText: "Country"
-		}, {
-			dataField: "product",
-			headerText: "Product"
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			editRenderer: {
-				type: "InputEditRenderer",
-				onlyNumeric: true, // 0~9만 입력가능
-			},
-			style: "my-right"
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			style: "my-right",
-			editRenderer: {
-				type: "InputEditRenderer",
-				onlyNumeric: true, // 0~9만 입력가능
-				autoThousandSeparator: true // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
-			}
-		}, {
-			dataField: "date",
-			headerText: "Date"
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "name",
+                        headerText: "Name(수정불가 설정)",
+                        width: 160,
+                        style: "my-color",
+                        headerStyle: "my-color",
+                        editable: false // ID 편집 불가능 설정
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country"
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product"
+                    },
+                    {
+                        dataField: "quantity",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        editRenderer: {
+                            type: "InputEditRenderer",
+                            onlyNumeric: true // 0~9만 입력가능
+                        },
+                        style: "my-right"
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        style: "my-right",
+                        editRenderer: {
+                            type: "InputEditRenderer",
+                            onlyNumeric: true, // 0~9만 입력가능
+                            autoThousandSeparator: true // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+                        }
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			editable: true,
-			selectionMode: "multipleCells",
-			// 행 고유 id 에 속하는 필드명 (필드의 값은 중복되지 않은 고유값이여야 함)
-			rowIdField: "id",
-			// 상태 칼럼 사용
-			showStateColumn: true,
-			//softRemoveRowMode 적용을 원래 데이터에만 적용 즉, 새 행인 경우 적용 안시킴
-			softRemovePolicy: "exceptNew",
-			// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-			wrapSelectionMove: true,
-			// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부 (기본값 : false)
-			skipReadonlyColumns: true,
-			// 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-			enterKeyColumnBase: true,
-			// selectionChange 이벤트 발생 시 간소화된 정보만 받을지 여부
-			// 이 속성은 선택한 셀이 많을 때 false 설정하면 퍼포먼스에 영향을 미칩니다.
-			// selectionChange 이벤트 바인딩 한 경우 true 설정을 권합니다.
-			simplifySelectionEvent: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    editable: true,
+                    selectionMode: "multipleCells",
+                    // 행 고유 id 에 속하는 필드명 (필드의 값은 중복되지 않은 고유값이여야 함)
+                    rowIdField: "id",
+                    // 상태 칼럼 사용
+                    showStateColumn: true,
+                    //softRemoveRowMode 적용을 원래 데이터에만 적용 즉, 새 행인 경우 적용 안시킴
+                    softRemovePolicy: "exceptNew",
+                    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                    wrapSelectionMove: true,
+                    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부 (기본값 : false)
+                    skipReadonlyColumns: true,
+                    // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
+                    enterKeyColumnBase: true,
+                    // selectionChange 이벤트 발생 시 간소화된 정보만 받을지 여부
+                    // 이 속성은 선택한 셀이 많을 때 false 설정하면 퍼포먼스에 영향을 미칩니다.
+                    // selectionChange 이벤트 바인딩 한 경우 true 설정을 권합니다.
+                    simplifySelectionEvent: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 선택 변경 이벤트 바인딩
-		AUIGrid.bind(myGridID, "selectionChange", function (event) {
-			// 선택 대표 셀 정보 
-			const cell = event.primeCell;
-			const msg = `현재 셀 : ( ${cell.rowIndex}, ${cell.headerText} ) : editable : ${cell.editable}, 행 고유값(rowId) : ${cell.rowIdValue}`;
-			document.getElementById("selectionDesc").textContent = msg;
-		});
+                // 선택 변경 이벤트 바인딩
+                AUIGrid.bind(myGridID, "selectionChange", function (event) {
+                    // 선택 대표 셀 정보
+                    const cell = event.primeCell;
+                    const msg = `현재 셀 : ( ${cell.rowIndex}, ${cell.headerText} ) : editable : ${cell.editable}, 행 고유값(rowId) : ${cell.rowIdValue}`;
+                    document.getElementById("selectionDesc").textContent = msg;
+                });
 
-		// 에디팅 시작 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
-			const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginDesc").textContent = msg;
-		});
+                // 에디팅 시작 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+                    const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginDesc").textContent = msg;
+                });
 
-		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
-			const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginEnd").textContent = msg;
-		});
+                // 에디팅 정상 종료 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+                    const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginEnd").textContent = msg;
+                });
 
-		// 에디팅 정상 종료 직전 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
-			// 여기서 반환하는 값이 곧 에디팅 완료 값입니다.
-			// 개발자가 입력한 값을 변경할 수 있습니다.
-			return event.value; // 원래 값으로 적용 시킴
-		});
+                // 에디팅 정상 종료 직전 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
+                    // 여기서 반환하는 값이 곧 에디팅 완료 값입니다.
+                    // 개발자가 입력한 값을 변경할 수 있습니다.
+                    return event.value; // 원래 값으로 적용 시킴
+                });
 
-		// 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
-			const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginEnd").textContent = msg;
-		});
-	}
+                // 에디팅 취소 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+                    const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginEnd").textContent = msg;
+                });
+            }
 
-	//keepEditing 토글
-	function toggleKeepEditing() {
-		const chkbox = document.getElementById("chkbox");
-		AUIGrid.setProp(myGridID, "keepEditing", chkbox.checked);
-	}
+            //keepEditing 토글
+            function toggleKeepEditing() {
+                const chkbox = document.getElementById("chkbox");
+                AUIGrid.setProp(myGridID, "keepEditing", chkbox.checked);
+            }
 
-	function toggleEditMode() {
-		const editBeginMode = AUIGrid.getProp(myGridID, "editBeginMode");
-		if (editBeginMode === "doubleClick") {
-			AUIGrid.setProp(myGridID, "editBeginMode", "click");
-			document.getElementById("status").textContent = "click";
-			return;
-		}
-		AUIGrid.setProp(myGridID, "editBeginMode", "doubleClick");
-		document.getElementById("status").textContent = "doubleClick";
-	}
+            function toggleEditMode() {
+                const editBeginMode = AUIGrid.getProp(myGridID, "editBeginMode");
+                if (editBeginMode === "doubleClick") {
+                    AUIGrid.setProp(myGridID, "editBeginMode", "click");
+                    document.getElementById("status").textContent = "click";
+                    return;
+                }
+                AUIGrid.setProp(myGridID, "editBeginMode", "doubleClick");
+                document.getElementById("status").textContent = "doubleClick";
+            }
 
-	//editingOnKeyDown 토글
-	function toggleEditingOnKeyDown() {
-		const downChkbox = document.getElementById("downChkbox");
-		AUIGrid.setProp(myGridID, "editingOnKeyDown", downChkbox.checked); //editingOnKeyDown 토글
-	}
+            //editingOnKeyDown 토글
+            function toggleEditingOnKeyDown() {
+                const downChkbox = document.getElementById("downChkbox");
+                AUIGrid.setProp(myGridID, "editingOnKeyDown", downChkbox.checked); //editingOnKeyDown 토글
+            }
 
-	//onlyEnterKeyEditEnd 토글
-	function toggleOnlyEnterKeyEditEnd() {
-		const enterChkbox = document.getElementById("enterChkbox");
-		AUIGrid.setProp(myGridID, "onlyEnterKeyEditEnd", enterChkbox.checked); //onlyEnterKeyEditEnd 토글
-	}
+            //onlyEnterKeyEditEnd 토글
+            function toggleOnlyEnterKeyEditEnd() {
+                const enterChkbox = document.getElementById("enterChkbox");
+                AUIGrid.setProp(myGridID, "onlyEnterKeyEditEnd", enterChkbox.checked); //onlyEnterKeyEditEnd 토글
+            }
 
-	//enterKeyColumnBase 토글
-	function toggleOnlyEnterKeyColumn() {
-		const enterColChkbox = document.getElementById("enterColChkbox");
-		AUIGrid.setProp(myGridID, "enterKeyColumnBase", enterColChkbox.checked); //enterKeyColumnBase 토글
-	}
-</script>
-</head>
-<body>
+            //enterKeyColumnBase 토글
+            function toggleOnlyEnterKeyColumn() {
+                const enterColChkbox = document.getElementById("enterColChkbox");
+                AUIGrid.setProp(myGridID, "enterKeyColumnBase", enterColChkbox.checked); //enterKeyColumnBase 토글
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>■편집 하기 : 키보드 바로 입력 또는 (더블) 클릭, ■편집 종료 : Enter 키 또는 Tab 키 또는 다른 셀 선택, ■편집 취소 : ESC 키</p>
-		<p>■키보드 화살표키 : 각 방향으로 이동, ■Enter : 아래로, ■Shift + Enter : 위로, ■Tab : 오른쪽으로, ■Shift + Tab : 왼쪽으로
-		<p>
-		<p>■Home : 최상단으로, ■End : 최하단으로, ■PgUp : 한 페이지 위로, ■PgDown : 한 페이지 아래로</p>
-		<p>■Insert : 행 추가, ■Ctrl+Insert : 하단에 행추가, ■Ctrl+Delete : 행 삭제</p>
-		<p style="padding-top:5px;"><input type="checkbox" id="downChkbox" checked="checked" onclick="toggleEditingOnKeyDown()" style="vertical-align:middle;">
-			<label for="downChkbox">editingOnKeyDown (키보드 입력으로 바로 편집할 수 있는지 여부) - 자세한 설명은 기본 그리드 편집2 데모 참고</label>
-		</p>
-		<p style="padding-top:5px;"><input type="checkbox" id="chkbox" onclick="toggleKeepEditing()" style="vertical-align:middle;">
-			<label for="chkbox">keepEditing (탭이나 엔터키로 완료할 때 다음 셀을 편집가능 상태로 만들지 여부(F2키, 더블클릭으로 진입한 상태에만 유효)</label>
-		</p>
-		<p style="padding-top:5px;"><input type="checkbox" id="enterColChkbox" checked="checked" onclick="toggleOnlyEnterKeyColumn()" style="vertical-align:middle;">
-			<label for="enterColChkbox">enterKeyColumnBase (엔터키가 다음 행이 아닌 다음 칼럼으로 이동함)</label>
-		</p>
-		<p style="padding-top:5px;"><input type="checkbox" id="enterChkbox" onclick="toggleOnlyEnterKeyEditEnd()" style="vertical-align:middle;">
-			<label for="enterChkbox">onlyEnterKeyEditEnd (엔터키가 편집 완료 역할만 할 뿐 다음 행으로 이동하지 않음, keepEditing, enterKeyColumnBase 속성 보다 우선 순위 높음)</label>
-		</p>
-		<span class="btn" onclick="toggleEditMode()">클릭/더블클릭 토글</span>Current editBeginMode : <span id="status"> doubleClick</span>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:410px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="selectionDesc"></p>
-		<p id="editBeginDesc"></p>
-		<p id="editBeginEnd"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        ■편집 하기 : 키보드 바로 입력 또는 (더블) 클릭, ■편집 종료 : Enter 키 또는 Tab 키 또는 다른 셀
+                        선택, ■편집 취소 : ESC 키
+                    </p>
+                    <p>
+                        ■키보드 화살표키 : 각 방향으로 이동, ■Enter : 아래로, ■Shift + Enter : 위로, ■Tab : 오른쪽으로,
+                        ■Shift + Tab : 왼쪽으로
+                    </p>
+                    <p></p>
+                    <p>■Home : 최상단으로, ■End : 최하단으로, ■PgUp : 한 페이지 위로, ■PgDown : 한 페이지 아래로</p>
+                    <p>■Insert : 행 추가, ■Ctrl+Insert : 하단에 행추가, ■Ctrl+Delete : 행 삭제</p>
+                    <p style="padding-top: 5px">
+                        <input
+                            type="checkbox"
+                            id="downChkbox"
+                            checked="checked"
+                            onclick="toggleEditingOnKeyDown()"
+                            style="vertical-align: middle"
+                        />
+                        <label for="downChkbox"
+                            >editingOnKeyDown (키보드 입력으로 바로 편집할 수 있는지 여부) - 자세한 설명은 기본 그리드
+                            편집2 데모 참고</label
+                        >
+                    </p>
+                    <p style="padding-top: 5px">
+                        <input
+                            type="checkbox"
+                            id="chkbox"
+                            onclick="toggleKeepEditing()"
+                            style="vertical-align: middle"
+                        />
+                        <label for="chkbox"
+                            >keepEditing (탭이나 엔터키로 완료할 때 다음 셀을 편집가능 상태로 만들지 여부(F2키,
+                            더블클릭으로 진입한 상태에만 유효)</label
+                        >
+                    </p>
+                    <p style="padding-top: 5px">
+                        <input
+                            type="checkbox"
+                            id="enterColChkbox"
+                            checked="checked"
+                            onclick="toggleOnlyEnterKeyColumn()"
+                            style="vertical-align: middle"
+                        />
+                        <label for="enterColChkbox"
+                            >enterKeyColumnBase (엔터키가 다음 행이 아닌 다음 칼럼으로 이동함)</label
+                        >
+                    </p>
+                    <p style="padding-top: 5px">
+                        <input
+                            type="checkbox"
+                            id="enterChkbox"
+                            onclick="toggleOnlyEnterKeyEditEnd()"
+                            style="vertical-align: middle"
+                        />
+                        <label for="enterChkbox"
+                            >onlyEnterKeyEditEnd (엔터키가 편집 완료 역할만 할 뿐 다음 행으로 이동하지 않음,
+                            keepEditing, enterKeyColumnBase 속성 보다 우선 순위 높음)</label
+                        >
+                    </p>
+                    <span class="btn" onclick="toggleEditMode()">클릭/더블클릭 토글</span>Current editBeginMode :
+                    <span id="status"> doubleClick</span>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 410px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="selectionDesc"></p>
+                    <p id="editBeginDesc"></p>
+                    <p id="editBeginEnd"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

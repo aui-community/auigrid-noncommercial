@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -28,158 +36,168 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<!-- PDF 내보내기 필수 JS 추가-->
-<script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <!-- PDF 내보내기 필수 JS 추가-->
+        <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+        <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+        <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<style>
-	/* 커스텀 바 렌더러 스타일 정의 */
-	.my-custom-bar {
-		border: 1px solid #E4E4E4;
-		background: #F361DC;
-		background: -webkit-linear-gradient(right, #FFB2D9, #F361DC);
-		background: -moz-linear-gradient(right, #FFB2D9, #F361DC);
-		background: -ms-linear-gradient(right, #FFB2D9, #F361DC);
-		background: -o-linear-gradient(right, #FFB2D9, #F361DC);
-		background: linear-gradient(to left, #FFB2D9, #F361DC);
-	}
-</style>
-<script>
-    // 이 예제: 값의 크기를 막대로 표시합니다. 양수와 음수가 함께 있으면 0을 기준으로 양쪽에 그립니다.
-    // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
-    // AUIGrid 생성 후 반환 ID
-    let myGridID;
-    // 시작점
-    function init() {
-        // AUIGrid 그리드를 생성합니다.
-        createAUIGrid();
-        // 랜덤 데이터 생성하여 그리드에 삽입
-        AUIGrid.setGridData(myGridID, genRandomData());
-    }
-    // AUIGrid 를 생성합니다.
-    function createAUIGrid() {
-        // 그리드 칼럼 레이아웃 설정
-        const columnLayout = [
-            {
-                dataField: "field0",
-                headerText: "기본 (0 ~ 100 범위)",
-                width: 200,
-                renderer: {
-                    type: "BarRenderer"
-                }
-            }, {
-                dataField: "field3",
-                headerText: "-100 ~ 100 범위",
-                width: 200,
-                renderer: {
-                    type: "BarRenderer",
-                    min: -100,
-                    max: 100,
-                    offset: 30
-                }
-            }, {
-                dataField: "field2",
-                headerText: "-100 ~ 0 범위",
-                width: 200,
-                renderer: {
-                    type: "BarRenderer",
-                    min: -100,
-                    max: 0
-                }
-            }, {
-                headerText: "",
-                width: 20
-            }, {
-                dataField: "field1",
-                headerText: "0 ~ 1000 범위",
-                width: 200,
-                renderer: {
-                    type: "BarRenderer",
-                    min: 0,
-                    max: 1000,
-                    style: "my-custom-bar"
-                }
+        <style>
+            /* 커스텀 바 렌더러 스타일 정의 */
+            .my-custom-bar {
+                border: 1px solid #e4e4e4;
+                background: #f361dc;
+                background: -webkit-linear-gradient(right, #ffb2d9, #f361dc);
+                background: -moz-linear-gradient(right, #ffb2d9, #f361dc);
+                background: -ms-linear-gradient(right, #ffb2d9, #f361dc);
+                background: -o-linear-gradient(right, #ffb2d9, #f361dc);
+                background: linear-gradient(to left, #ffb2d9, #f361dc);
             }
-        ];
-        // 그리드 속성 설정
-        const gridProps = {
-            selectionMode: "singleRow",
-            enableSorting: false
-        };
-        // 실제로 #grid_wrap 에 그리드 생성
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-    }
-    // 렌더러의 양수와 음수 표시를 비교할 수 있는 값을 만듭니다.
-    function genRandomData() {
-        const gridData = [];
-        for (let i = 0; i < 200; i++) {
-            const obj = {};
-            obj.field0 = Math.round(Math.random() * 100);
-            obj.field1 = Math.round(Math.random() * 1000);
-            obj.field2 = Math.round(Math.random() * -100);
-            obj.field3 = Math.round(Math.random() * 100 * (Math.random() > 0.5 ? -1 : 1));
-            gridData[i] = obj;
-        }
-        return gridData;
-    }
-    // 엑셀 내보내기(Export);
-    function exportClick() {
-        // 내보내기 실행
-        AUIGrid.exportToXlsx(myGridID);
-    }
-    // PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
-    function exportPdfClick() {
-        // 내보내기 실행
-        AUIGrid.exportToPdf(myGridID, {
-            fontPath: "../pdfkit/nyjgothic-medium.ttf"
-        });
-    }
-    // 렌더러 속성값 변경하기
-    function changeRendererProp() {
-        // 0번째 칼럼의 renderer 속성값 변경하기
-        AUIGrid.setRendererProp(myGridID, 0, {
-            "min": 0,
-            "max": 150,
-        });
-        // 헤더 텍스트 변경
-        AUIGrid.setColumnProp(myGridID, 0, {
-            "headerText": "0 ~ 150 범위"
-        });
-    }
-    let originalDemoRowHeight;
-    // 같은 데이터에서 행 높이와 렌더러 높이를 분리하고 기본 설정으로 되돌립니다.
-    function compareRendererHeight(compact) {
-        if (originalDemoRowHeight === undefined)
-            originalDemoRowHeight = AUIGrid.getProp(myGridID, 'rowHeight');
-        AUIGrid.setProp(myGridID, 'rowHeight', compact ? 90 : originalDemoRowHeight);
-        AUIGrid.refresh(myGridID);
-        for (const columnIndex of [0, 1, 2, 4])
-            AUIGrid.setRendererProp(myGridID, columnIndex, { height: compact ? 30 : NaN });
-    }
-</script>
-</head>
-<body>
+        </style>
+        <script>
+            // 이 예제: 값의 크기를 막대로 표시합니다. 양수와 음수가 함께 있으면 0을 기준으로 양쪽에 그립니다.
+            // init에서 그리드를 생성합니다. 칼럼 정의, 설정, 데이터 입력과 버튼 동작은 이 페이지에 있습니다.
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 랜덤 데이터 생성하여 그리드에 삽입
+                AUIGrid.setGridData(myGridID, genRandomData());
+            }
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "field0",
+                        headerText: "기본 (0 ~ 100 범위)",
+                        width: 200,
+                        renderer: {
+                            type: "BarRenderer"
+                        }
+                    },
+                    {
+                        dataField: "field3",
+                        headerText: "-100 ~ 100 범위",
+                        width: 200,
+                        renderer: {
+                            type: "BarRenderer",
+                            min: -100,
+                            max: 100,
+                            offset: 30
+                        }
+                    },
+                    {
+                        dataField: "field2",
+                        headerText: "-100 ~ 0 범위",
+                        width: 200,
+                        renderer: {
+                            type: "BarRenderer",
+                            min: -100,
+                            max: 0
+                        }
+                    },
+                    {
+                        headerText: "",
+                        width: 20
+                    },
+                    {
+                        dataField: "field1",
+                        headerText: "0 ~ 1000 범위",
+                        width: 200,
+                        renderer: {
+                            type: "BarRenderer",
+                            min: 0,
+                            max: 1000,
+                            style: "my-custom-bar"
+                        }
+                    }
+                ];
+                // 그리드 속성 설정
+                const gridProps = {
+                    selectionMode: "singleRow",
+                    enableSorting: false
+                };
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
+            // 렌더러의 양수와 음수 표시를 비교할 수 있는 값을 만듭니다.
+            function genRandomData() {
+                const gridData = [];
+                for (let i = 0; i < 200; i++) {
+                    const obj = {};
+                    obj.field0 = Math.round(Math.random() * 100);
+                    obj.field1 = Math.round(Math.random() * 1000);
+                    obj.field2 = Math.round(Math.random() * -100);
+                    obj.field3 = Math.round(Math.random() * 100 * (Math.random() > 0.5 ? -1 : 1));
+                    gridData[i] = obj;
+                }
+                return gridData;
+            }
+            // 엑셀 내보내기(Export);
+            function exportClick() {
+                // 내보내기 실행
+                AUIGrid.exportToXlsx(myGridID);
+            }
+            // PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
+            function exportPdfClick() {
+                // 내보내기 실행
+                AUIGrid.exportToPdf(myGridID, {
+                    fontPath: "../pdfkit/nyjgothic-medium.ttf"
+                });
+            }
+            // 렌더러 속성값 변경하기
+            function changeRendererProp() {
+                // 0번째 칼럼의 renderer 속성값 변경하기
+                AUIGrid.setRendererProp(myGridID, 0, {
+                    "min": 0,
+                    "max": 150
+                });
+                // 헤더 텍스트 변경
+                AUIGrid.setColumnProp(myGridID, 0, {
+                    "headerText": "0 ~ 150 범위"
+                });
+            }
+            let originalDemoRowHeight;
+            // 같은 데이터에서 행 높이와 렌더러 높이를 분리하고 기본 설정으로 되돌립니다.
+            function compareRendererHeight(compact) {
+                if (originalDemoRowHeight === undefined) originalDemoRowHeight = AUIGrid.getProp(myGridID, "rowHeight");
+                AUIGrid.setProp(myGridID, "rowHeight", compact ? 90 : originalDemoRowHeight);
+                AUIGrid.refresh(myGridID);
+                for (const columnIndex of [0, 1, 2, 4])
+                    AUIGrid.setRendererProp(myGridID, columnIndex, { height: compact ? 30 : NaN });
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>값의 크기를 막대로 표시합니다. 양수와 음수가 함께 있으면 0을 기준으로 양쪽에 그립니다.</p>
-		<p>렌더러의 <code>height</code>를 바꾸어 행 높이와 별도로 막대 높이를 조절해 보세요.</p>
-        <p><button class="btn" id="renderer-height-compact" onclick="compareRendererHeight(true)">90px 행에 렌더러 30px</button>
-            <button class="btn" id="renderer-height-reset" onclick="compareRendererHeight(false)">기본 높이 복원</button>
-            <a href="javascript:changeLocation('./renderer_height.html?renderer_height')">5종 렌더러와 자동 줄바꿈 비교</a></p>
-        <p class="btn" onclick="changeRendererProp();">renderer 속성값 변경하기</p>
-<span class="btn" onclick="exportPdfClick()">PDF로 저장</span>
-<span class="btn" onclick="exportClick()">엑셀(xlsx)로 저장</span>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>값의 크기를 막대로 표시합니다. 양수와 음수가 함께 있으면 0을 기준으로 양쪽에 그립니다.</p>
+                    <p>렌더러의 <code>height</code>를 바꾸어 행 높이와 별도로 막대 높이를 조절해 보세요.</p>
+                    <p>
+                        <button class="btn" id="renderer-height-compact" onclick="compareRendererHeight(true)">
+                            90px 행에 렌더러 30px
+                        </button>
+                        <button class="btn" id="renderer-height-reset" onclick="compareRendererHeight(false)">
+                            기본 높이 복원
+                        </button>
+                        <a href="javascript:changeLocation('./renderer_height.html?renderer_height')"
+                            >5종 렌더러와 자동 줄바꿈 비교</a
+                        >
+                    </p>
+                    <p class="btn" onclick="changeRendererProp()">renderer 속성값 변경하기</p>
+                    <span class="btn" onclick="exportPdfClick()">PDF로 저장</span>
+                    <span class="btn" onclick="exportClick()">엑셀(xlsx)로 저장</span>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom"></div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

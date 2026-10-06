@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,192 +37,211 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.aui-grid-user-custom-left {
-		text-align: left;
-	}
+        <style>
+            /* 커스텀 칼럼 스타일 정의 */
+            .aui-grid-user-custom-left {
+                text-align: left;
+            }
 
-	#formWindow {
-		font-size: 13px;
-		display: inline-block;
-		width: 200px;
-		height: 480px;
-		border: 1px solid #ccc;
-		margin-left: 20px;
-		padding: 20px;
-		box-sizing: border-box;
-	}
+            #formWindow {
+                font-size: 13px;
+                display: inline-block;
+                width: 200px;
+                height: 480px;
+                border: 1px solid #ccc;
+                margin-left: 20px;
+                padding: 20px;
+                box-sizing: border-box;
+            }
 
-	#formWindow label,
-	input {
-		display: block;
-	}
+            #formWindow label,
+            input {
+                display: block;
+            }
 
-	#formWindow input.text {
-		margin-bottom: 10px;
-		width: 95%;
-		padding: 0.1em;
-	}
+            #formWindow input.text {
+                margin-bottom: 10px;
+                width: 95%;
+                padding: 0.1em;
+            }
 
-	#formWindow fieldset {
-		padding: 0;
-		border: 0;
-		margin-top: 10px;
-	}
-</style>
+            #formWindow fieldset {
+                padding: 0;
+                border: 0;
+                margin-top: 10px;
+            }
+        </style>
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_100.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_100.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "id",
-			headerText: "ID",
-			width: 80
-		}, {
-			dataField: "name",
-			headerText: "Name",
-			width: 140
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			width: 120
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			width: 120
-		}, {
-			dataField: "color",
-			headerText: "Color"
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric"
-		}, {
-			dataField: "date",
-			headerText: "Date"
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 80
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Name",
+                        width: 140
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        width: 120
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        width: 120
+                    },
+                    {
+                        dataField: "color",
+                        headerText: "Color"
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric"
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			showRowCheckColumn: false
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    showRowCheckColumn: false
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 선택 체인지 이벤트 바인딩
-		AUIGrid.bind(myGridID, "selectionChange", function (event) {
-			const primeCell = event.primeCell; // 선택 대표 셀
-			const item = primeCell.item; // 행 정보
-			setFieldToFormWindow(primeCell, item);
-		});
+                // 선택 체인지 이벤트 바인딩
+                AUIGrid.bind(myGridID, "selectionChange", function (event) {
+                    const primeCell = event.primeCell; // 선택 대표 셀
+                    const item = primeCell.item; // 행 정보
+                    setFieldToFormWindow(primeCell, item);
+                });
 
-		// 업데이트 로우 이벤트
-		AUIGrid.bind(myGridID, "updateRow", function (event) {
-			const rowItems = event.items;
-			const dataFields = event.dataFields;
-			const values = event.values;
+                // 업데이트 로우 이벤트
+                AUIGrid.bind(myGridID, "updateRow", function (event) {
+                    const rowItems = event.items;
+                    const dataFields = event.dataFields;
+                    const values = event.values;
 
-			if (values.length <= 0 || dataFields.length != values.length)
-				return;
+                    if (values.length <= 0 || dataFields.length != values.length) return;
 
-			let str = "변경된 필드들\r\n";
-			for (let i = 0, len = values.length; i < len; i++) {
-				str += dataFields[i] + " : " + values[i] + ", ";
-			}
-			alert(str);
-		});
-	}
+                    let str = "변경된 필드들\r\n";
+                    for (let i = 0, len = values.length; i < len; i++) {
+                        str += dataFields[i] + " : " + values[i] + ", ";
+                    }
+                    alert(str);
+                });
+            }
 
-	// 수정 적용하기
-	function forceUpdatingRow() {
-		const form = document.querySelector("#myForm");
-		const formData = new FormData(form);
+            // 수정 적용하기
+            function forceUpdatingRow() {
+                const form = document.querySelector("#myForm");
+                const formData = new FormData(form);
 
-		// 업데이트할 필드와 값 설정
-		const item = {
-			name: formData.get("name"),
-			country: formData.get("country"),
-			color: formData.get("color"),
-			product: formData.get("product"),
-			price: Number(formData.get("price")),
-			date: formData.get("date"),
-		};
+                // 업데이트할 필드와 값 설정
+                const item = {
+                    name: formData.get("name"),
+                    country: formData.get("country"),
+                    color: formData.get("color"),
+                    product: formData.get("product"),
+                    price: Number(formData.get("price")),
+                    date: formData.get("date")
+                };
 
-		// 현재 선택행에 수정 적용
-		// 지정한 item 을 현재행(selectedIndex)에 업데이트함.
-		AUIGrid.updateRow(myGridID, item, "selectedIndex");
-	}
+                // 현재 선택행에 수정 적용
+                // 지정한 item 을 현재행(selectedIndex)에 업데이트함.
+                AUIGrid.updateRow(myGridID, item, "selectedIndex");
+            }
 
-	// 셀 셀렉션 변경 시 아이템의 정보를 Form 필드에 세팅함
-	function setFieldToFormWindow(primeCell, item) {
-		document.querySelector("#id").textContent = item.id;
-		document.querySelector("#cellIdx").textContent = primeCell.rowIndex + ", " + primeCell.columnIndex;
-		document.querySelector("#headerTxt").textContent = primeCell.headerText;
-		document.querySelector("#dataField").textContent = primeCell.dataField;
-		document.querySelector("#name").value = item.name;
-		document.querySelector("#country").value = item.country;
-		document.querySelector("#color").value = item.color;
-		document.querySelector("#product").value = item.product;
-		document.querySelector("#price").value = item.price;
-		document.querySelector("#date").value = item.date;
-	}
-</script>
+            // 셀 셀렉션 변경 시 아이템의 정보를 Form 필드에 세팅함
+            function setFieldToFormWindow(primeCell, item) {
+                document.querySelector("#id").textContent = item.id;
+                document.querySelector("#cellIdx").textContent = primeCell.rowIndex + ", " + primeCell.columnIndex;
+                document.querySelector("#headerTxt").textContent = primeCell.headerText;
+                document.querySelector("#dataField").textContent = primeCell.dataField;
+                document.querySelector("#name").value = item.name;
+                document.querySelector("#country").value = item.country;
+                document.querySelector("#color").value = item.color;
+                document.querySelector("#product").value = item.product;
+                document.querySelector("#price").value = item.price;
+                document.querySelector("#date").value = item.date;
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<p>그리드에서 행 아이템 선택 시 해당 아이템의 상세 정보를 Form 에 출력한 모습입니다.</p>
-		<p>특정 행 선택 시 해당 아이템의 모든 정보를 Form 에 출력합니다.</p>
-		<p>그리드 상에서 수정은 못하게 하고(editable=false) 외부에서 아이템을 수정하여 그리드에 적용 시킬 수 있습니다.</p>
-	</div>
-	<div style="width:100%;margin:0 auto;">
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:880px; height:480px;display:inline;float:left;"></div>
-		<!-- Form -->
-		<div id="formWindow">
-			<p><span>Client ID : </span><span id="id">#ID</span></p>
-			<p><span>Row, Column Index :</span><span id="cellIdx"></span></p>
-			<p><span>헤더 텍스트 : </span><span id="headerTxt"></span></p>
-			<p><span>dataField : </span><span id="dataField"></span></p>
-			<form id="myForm">
-				<fieldset>
-					<label for="name">Name</label>
-					<input type="text" name="name" id="name" class="text"></input>
-					<label for="country">Country</label>
-					<input type="text" name="country" id="country" class="text"></input>
-					<label for="color">Color</label>
-					<input type="text" name="color" id="color" class="text"></input>
-					<label for="product">Product</label>
-					<input type="text" name="product" id="product" class="text"></input>
-					<label for="price">Price</label>
-					<input type="text" name="price" id="price" class="text"></input>
-					<label for="date">Date</label>
-					<input type="text" name="date" id="date" class="text"></input>
-				</fieldset>
-			</form>
-			<span class="btn" onclick="forceUpdatingRow()">수정 적용하기</span>
-		</div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>그리드에서 행 아이템 선택 시 해당 아이템의 상세 정보를 Form 에 출력한 모습입니다.</p>
+                    <p>특정 행 선택 시 해당 아이템의 모든 정보를 Form 에 출력합니다.</p>
+                    <p>
+                        그리드 상에서 수정은 못하게 하고(editable=false) 외부에서 아이템을 수정하여 그리드에 적용 시킬
+                        수 있습니다.
+                    </p>
+                </div>
+                <div style="width: 100%; margin: 0 auto">
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 880px; height: 480px; display: inline; float: left"></div>
+                    <!-- Form -->
+                    <div id="formWindow">
+                        <p><span>Client ID : </span><span id="id">#ID</span></p>
+                        <p><span>Row, Column Index :</span><span id="cellIdx"></span></p>
+                        <p><span>헤더 텍스트 : </span><span id="headerTxt"></span></p>
+                        <p><span>dataField : </span><span id="dataField"></span></p>
+                        <form id="myForm">
+                            <fieldset>
+                                <label for="name">Name</label>
+                                <input type="text" name="name" id="name" class="text" /></input>
+                                <label for="country">Country</label>
+                                <input
+                                    type="text"
+                                    name="country"
+                                    id="country"
+                                    class="text"
+                                /></input>
+                                <label for="color">Color</label>
+                                <input type="text" name="color" id="color" class="text" /></input>
+                                <label for="product">Product</label>
+                                <input
+                                    type="text"
+                                    name="product"
+                                    id="product"
+                                    class="text"
+                                /></input>
+                                <label for="price">Price</label>
+                                <input type="text" name="price" id="price" class="text" /></input>
+                                <label for="date">Date</label>
+                                <input type="text" name="date" id="date" class="text" /></input>
+                            </fieldset>
+                        </form>
+                        <span class="btn" onclick="forceUpdatingRow()">수정 적용하기</span>
+                    </div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 
 <div id="footer">
      <div class="copyright">

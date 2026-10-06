@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -28,184 +36,209 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+        <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+        <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<script>
-	//시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
+        <script>
+            //시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
 
-		// 그리드 데이터 삽입
-		AUIGrid.setGridData(myGridID, gridData);
-	};
+                // 그리드 데이터 삽입
+                AUIGrid.setGridData(myGridID, gridData);
+            }
 
+            //AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                //칼럼 레이아웃
+                const columnLayout = [
+                    {
+                        dataField: "col1",
+                        headerText: "COL 1",
+                        cellMerge: true, // 셀 세로 병합
+                        cellColMerge: true, // 셀 가로 병합 실행
+                        cellColSpan: 4, // 셀 가로 병합 대상은 4개로 설정
+                        width: 100
+                    },
+                    {
+                        dataField: "col2",
+                        headerText: "COL 2",
+                        cellMerge: true, // 셀 세로 병합
+                        width: 120
+                    },
+                    {
+                        dataField: "col3",
+                        headerText: "COL 3",
+                        cellMerge: true, // 셀 세로 병합
+                        width: 120
+                    },
+                    {
+                        dataField: "col4",
+                        headerText: "COL 4",
+                        width: 120
+                    }
+                ];
 
-	//AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		//칼럼 레이아웃
-		const columnLayout = [{
-			dataField: "col1",
-			headerText: "COL 1",
-			cellMerge: true, // 셀 세로 병합
-			cellColMerge: true, // 셀 가로 병합 실행
-			cellColSpan: 4, // 셀 가로 병합 대상은 4개로 설정
-			width: 100
-		}, {
-			dataField: "col2",
-			headerText: "COL 2",
-			cellMerge: true, // 셀 세로 병합
-			width: 120
-		}, {
-			dataField: "col3",
-			headerText: "COL 3",
-			cellMerge: true, // 셀 세로 병합
-			width: 120
-		}, {
-			dataField: "col4",
-			headerText: "COL 4",
-			width: 120
-		}];
+                // 그리드 속성 설정
+                const gridPros = {
+                    editable: true,
+                    selectionMode: "multipleCells",
+                    enableColumnResize: false,
+                    enableCellMerge: true
+                };
 
-		// 그리드 속성 설정
-		const gridPros = {
-			editable: true,
-			selectionMode: 'multipleCells',
-			enableColumnResize: false,
-			enableCellMerge: true
-		};
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+            }
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
-	}
-	
-	let isMerged = true; // 최초에는 merged 상태
+            let isMerged = true; // 최초에는 merged 상태
 
-	function setCellMerge() {
-		isMerged = !isMerged;
-		AUIGrid.setCellMerge(myGridID, isMerged);
-	}
-	
-	// 엑셀 내보내기(Export);
-	function exportToXlsx() {
-		// 내보내기 실행
-		AUIGrid.exportToXlsx(myGridID);
-	}
+            function setCellMerge() {
+                isMerged = !isMerged;
+                AUIGrid.setCellMerge(myGridID, isMerged);
+            }
 
-	//그리드 데이터
-	const gridData = [{
-		col1: "값 1",
-		col2: "값 1",
-		col3: "값 1",
-		col4: "값 1",
-	}, {
-		col1: "값 2",
-		col2: "값 2",
-		col3: "값 2",
-		col4: "값 2",
-	}, {
-		col1: "값 3",
-		col2: "값 3",
-		col3: "값 3",
-		col4: "값 3",
-	}, {
-		col1: "값 4",
-		col2: "값 4",
-		col3: "값 4",
-		col4: "값 4",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 5",
-		col4: "값 5",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 6",
-		col4: "값 6",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 6",
-		col4: "값 7",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 6",
-		col4: "값 8",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 6",
-		col4: "값 9",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 10",
-		col4: "값 10",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 10",
-		col4: "값 11",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 10",
-		col4: "값 12",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 10",
-		col4: "값 13",
-	}, {
-		col1: "값 4",
-		col2: "값 5",
-		col3: "값 10",
-		col4: "값 14",
-	}, {
-		col1: "값 4",
-		col2: "값 15",
-		col3: "값 15",
-		col4: "값 15",
-		col5: "값 15",
-	}, {
-		col1: "값 4",
-		col2: "값 15",
-		col3: "값 15",
-		col4: "값 16",
-		col5: "값 16",
-	}, {
-		col1: "값 4",
-		col2: "값 15",
-		col3: "값 15",
-		col4: "값 17",
-		col5: "값 17",
-	}, {
-		col1: "값 4",
-		col2: "값 15",
-		col3: "값 15",
-		col4: "값 18",
-	}, {
-		col1: "값 4",
-		col2: "값 15",
-		col3: "값 15",
-		col4: "값 19",
-	}];
-	
-	
-</script>
-</head>
-<body>
+            // 엑셀 내보내기(Export);
+            function exportToXlsx() {
+                // 내보내기 실행
+                AUIGrid.exportToXlsx(myGridID);
+            }
 
-<div id="main">
-	<div class="desc">
-		<p>가로 병합과 세로 병합을 같이 사용하여 혼합된 병합으로 출력은 불가능합니다. 가로, 세로 병합 중 한가지만 가능합니다.</p>
-		<p>다음은 가로 병합, 세로 병합을 같이 설정한 경우의 예를 보여주는 데모입니다.</p>
-	</div>
-	<div class="src_cover">
-		<pre>
+            //그리드 데이터
+            const gridData = [
+                {
+                    col1: "값 1",
+                    col2: "값 1",
+                    col3: "값 1",
+                    col4: "값 1"
+                },
+                {
+                    col1: "값 2",
+                    col2: "값 2",
+                    col3: "값 2",
+                    col4: "값 2"
+                },
+                {
+                    col1: "값 3",
+                    col2: "값 3",
+                    col3: "값 3",
+                    col4: "값 3"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 4",
+                    col3: "값 4",
+                    col4: "값 4"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 5",
+                    col4: "값 5"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 6",
+                    col4: "값 6"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 6",
+                    col4: "값 7"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 6",
+                    col4: "값 8"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 6",
+                    col4: "값 9"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 10",
+                    col4: "값 10"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 10",
+                    col4: "값 11"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 10",
+                    col4: "값 12"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 10",
+                    col4: "값 13"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 5",
+                    col3: "값 10",
+                    col4: "값 14"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 15",
+                    col3: "값 15",
+                    col4: "값 15",
+                    col5: "값 15"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 15",
+                    col3: "값 15",
+                    col4: "값 16",
+                    col5: "값 16"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 15",
+                    col3: "값 15",
+                    col4: "값 17",
+                    col5: "값 17"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 15",
+                    col3: "값 15",
+                    col4: "값 18"
+                },
+                {
+                    col1: "값 4",
+                    col2: "값 15",
+                    col3: "값 15",
+                    col4: "값 19"
+                }
+            ];
+        </script>
+    </head>
+<body class="demo-typography">
+
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        가로 병합과 세로 병합을 같이 사용하여 혼합된 병합으로 출력은 불가능합니다. 가로, 세로 병합 중
+                        한가지만 가능합니다.
+                    </p>
+                    <p>다음은 가로 병합, 세로 병합을 같이 설정한 경우의 예를 보여주는 데모입니다.</p>
+                </div>
+                <div class="src_cover">
+                    <pre>
 const columnLayout = [{
 	dataField: "col1",
 	headerText: "COL 1",
@@ -229,16 +262,19 @@ const columnLayout = [{
 	width: 120
 }];
 </pre>
-	</div>
-	<p><button onclick="setCellMerge()" class="btn">병합 해제/설정</button> <button class="btn" onclick="exportToXlsx();">엑셀 내보내기</button></p>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                </div>
+                <p>
+                    <button onclick="setCellMerge()" class="btn">병합 해제/설정</button>
+                    <button class="btn" onclick="exportToXlsx()">엑셀 내보내기</button>
+                </p>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

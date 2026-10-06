@@ -1,0 +1,25 @@
+@charset "UTF-8";
+/* 공통 Prism 원본과 제품 스타일을 보존하고 데모 코드 및 소스 작업 창을 구성합니다. */
+/* 본문 핵심 코드는 복사 도구와 예약 여백을 빼고 표시하며 소스 보기 창의 복사는 유지합니다. */
+.demo-code-frame:not(:where(.demo-source-dialog *)) > .demo-code-tools { display: none; }
+.demo-code-frame:not(:where(.demo-source-dialog *)) > pre { padding: 16px; }
+.demo-workspace-dialog { width: min(1180px, calc(100vw - 48px)); max-width: none; height: min(900px, calc(100dvh - 48px)); max-height: none; margin: auto; padding: 0; border: 1px solid #dce1e8; border-radius: 12px; background: #fff; color: #23292b; box-shadow: 0 24px 100px #14223940; box-sizing: border-box; }
+.demo-workspace-dialog[open] { display: flex; flex-direction: column; }
+.demo-workspace-dialog::backdrop { background: rgb(23 32 46 / 50%); backdrop-filter: blur(3px); }
+.demo-workspace-dialog .demo-source-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 20px 24px 12px; }
+.demo-source-eyebrow { color: var(--demo-accent-strong, #206bab); font-size: 11px; letter-spacing: 1.5px; font-weight: 600; }
+body.demo-typography .demo-workspace-dialog h2 { margin: 2px 0 0; }
+.demo-source-files { display: flex; overflow-x: auto; flex-shrink: 0; background: #f5f6f8; padding: 0 16px; gap: 3px; border-top: 1px solid #e4e7eb; }
+.demo-source-filename { color: var(--demo-accent-strong, #206bab); background: #fff; box-shadow: inset 0 2px var(--demo-accent, #287fca); padding: 10px 12px; white-space: nowrap; }
+.demo-workspace-dialog .demo-source-status { margin: 0; padding: 0 24px; }
+.demo-source-status:not(:empty) { padding: 16px 24px; }
+.demo-source-code { flex: 1; min-height: 0; overflow: auto; background: #2d2d2d; }
+.demo-source-code .demo-code-frame { display: flex; flex-direction: column; margin: 0; border: 0; border-radius: 0; min-height: 100%; }
+.demo-source-code .demo-code-tools { order: -1; position: sticky; top: 0; right: 0; z-index: 2; justify-content: flex-end; background: #2d2d2d; padding: 8px 16px 0; }
+.demo-workspace-dialog .demo-source-code pre { max-height: none; margin: 0; border-radius: 0; min-height: 0; padding: 18px 24px 30px; overflow: visible; width: max-content; min-width: 100%; box-sizing: border-box; }
+.demo-source-footer { padding: 12px 24px; display: flex; align-items: center; justify-content: flex-end; gap: 16px; border-top: 1px solid #e4e7eb; color: #758091; }
+@media (max-width: 640px) { .demo-workspace-dialog { width: 100vw; height: 100dvh; border: 0; border-radius: 0; }.demo-workspace-dialog .demo-source-heading { padding: 16px; }.demo-source-files { padding: 0 4px; }.demo-source-footer { padding: 8px 16px; } }
+/* 독립 실행 데모에서는 전체 탐색 틀을 강제하지 않고 소스 도구만 연결합니다. */
+.demo-standalone-source { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 0; margin-bottom: 12px; border-bottom: 1px solid #e4e7eb; }
+.demo-standalone-source a { color: #596372; text-decoration: none; }
+.demo-standalone-source button, .demo-workspace-dialog .btn { border: 1px solid #d7dce3; border-radius: 5px; background: #fff; color: #303946; padding: 6px 12px; cursor: pointer; }

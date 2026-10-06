@@ -1,56 +1,274 @@
-/* CustomRenderer 스타일....AUIGrid.MyClientRenderer.js 에서 사용할 사용자가 정의해야 할 스타일입니다.*/
-#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-child1 {
-	position: absolute;
-	display: block;
-	left: 4px;
-	top: 4px;
-	font-size: 13px;
-	background: #eee;
-	border: 1px solid #ddd;
-	width: 20px;
-	height: 20px;
-	border-radius: 10px;
-	font-weight: bold;
+/* WebDemo 7번과 같은 글꼴, 설명 및 컨트롤 배치를 적용합니다. */
+.showcase7-demo { font-family:Roboto,sans-serif,'Malgun Gothic','맑은 고딕',AppleSDGothicNeo-Light; font-size:14px; line-height:1.25em; text-align:left; }
+.showcase7-demo p,.showcase7-demo ul,.showcase7-demo li { margin:0; padding:0; }
+.showcase7-demo button,.showcase7-demo select { font-family:inherit; font-size:14px; line-height:1.25em; vertical-align:middle; }
+.showcase7-demo select { margin:0; padding:0; height:auto; }
+/* 샘플의 전역 button 서식을 셀 내부에서만 초기화한 뒤 아래 렌더러 스타일을 적용합니다. */
+.showcase7-demo .purchase-cell button { margin:0; padding:0; border:0; background:transparent; color:inherit !important; font-weight:normal; text-decoration:none; transition:none; }
+.showcase7-demo .purchase-cell button:hover { background:transparent; }
+
+.showcase7-demo .desc {
+	padding: 4px 0 10px 0;
+	font-size: 1em;
+	width: 100%;
+	margin: 0 auto;
 }
-#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-child2 {
-	position: absolute;
-	top: 4px;
-	right: 4px;
-	width: 20px;
-	height: 20px;
-	background: url(../assets/info-icon.png) 50% 50% no-repeat;
+
+.showcase7-demo .desc p {
+	margin: 5px 0;
+}
+
+.showcase7-demo .btn {
+	color: #fff !important;
+	background-color: #2a2d33;
+	border: 1px solid #2a2d33;
+	background-clip: padding-box;
+	display: inline-block;
+	padding: 0.65em 1.5em;
+	line-height: 0.933em;
+	transition-property: background-color, color;
+	transition-duration: 0.2s;
+	transition-timing-function: ease;
+	border-radius: 0px;
+	appearance: none;
+	-webkit-appearance: none;
+	font-size: 1em;
+	font-weight: bold;
+	text-align: center;
+	margin: 0.5em 0.5em;
 	cursor: pointer;
 }
-#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-chart-base {
-	/* 차트 베이스*/
-	position: absolute;
-	display: block;
-	top: 50px;
-	width: 90px;
-	height: 15px;
-	border: 1px solid #ccc;
-	left: 10px;
+
+.showcase7-demo .btn:hover {
+	background-color: #505156;
 }
-#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-chart {
-	/* 차트 */
-	display: block;
-	top: 22px;
-	width: 80px;
-	height: 15px;
+
+.showcase7-demo .desc_bottom {
+	padding-top: 5px;
+	font-size: 0.9em;
+	width: 100%;
+	margin: 0 auto;
 }
-#aui-grid-wrap-showcase7 .aui-grid-renderer-custom .my-chart-label {
-	/* 차트 텍스트 */
-	position: absolute;
+
+.showcase7-demo .desc_bottom p {
+	margin: 0;
+}
+
+.showcase7-demo .nav_u {
+	display: inline-block;
+}
+
+.showcase7-demo .nav_u li {
 	display: inline;
-	font-size: 18px;
-	color: #000;
-	top: 30px;
-	left: 45px;
+	white-space: nowrap;
+	text-align: right;
 }
-/* CustomRenderer 스타일 끝*/
-#aui-grid-wrap-showcase7 .my-saturday-style {
-	color: #0000ff;
-}
-#aui-grid-wrap-showcase7 .my-sunday-style {
-	color: #ff0000;
-}
+
+
+
+	/* 본문만 구매 요청 디자인으로 구성합니다. 헤더와 페이지 버튼은 공용 테마를 유지합니다. */
+	#aui-grid-wrap-showcase7 .aui-grid-row-background,
+	#aui-grid-wrap-showcase7 .aui-grid-alternative-row-background {
+		background: #fff;
+	}
+	#aui-grid-wrap-showcase7 .request-title-cell {
+		background: #f5f6f8;
+		color: #20252c;
+		font-size: 14px;
+		font-weight: 600;
+		text-align: left;
+		padding-left: 16px;
+	}
+	#aui-grid-wrap-showcase7 .request-id {
+		color: #596270;
+		font-size: 12px;
+		font-weight: 500;
+		margin-right: 12px;
+	}
+	#aui-grid-wrap-showcase7 .amount-cell {
+		color: #20252c;
+		font-size: 14px;
+		font-weight: 600;
+		text-align: right;
+		padding-right: 16px;
+	}
+	#aui-grid-wrap-showcase7 .requester-text-cell { text-align: left; }
+
+	/* 셀 내부 버튼에만 적용하여 상단 기능 버튼 및 다른 그리드와 분리합니다. */
+	#aui-grid-wrap-showcase7 .purchase-cell {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		text-align: left;
+		white-space: normal;
+		line-height: 1.5;
+		color: #20252c;
+	}
+	#aui-grid-wrap-showcase7 .purchase-cell * { box-sizing: border-box; }
+	#aui-grid-wrap-showcase7 .purchase-cell :where(button) {
+		appearance: none;
+		font-family: inherit;
+		font-weight: 400;
+		line-height: 1.5;
+		margin: 0;
+		text-transform: none;
+		cursor: pointer;
+	}
+	#aui-grid-wrap-showcase7 .purchase-cell button:disabled { cursor: default; }
+	#aui-grid-wrap-showcase7 .purchase-cell [hidden] { display: none !important; }
+	#aui-grid-wrap-showcase7 .purchase-cell button:focus-visible {
+		outline: 2px solid #ce4108;
+		outline-offset: 3px;
+	}
+
+	/* 기존 SVG 아바타는 그대로 두고 요청자 이름과 소속의 크기 및 간격을 맞춥니다. */
+	#aui-grid-wrap-showcase7 .requester-cell { padding: 0 16px; }
+	#aui-grid-wrap-showcase7 .requester-button {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: inherit !important;
+		text-align: left;
+	}
+	#aui-grid-wrap-showcase7 .requester-avatar {
+		width: 36px;
+		height: 36px;
+		flex-shrink: 0;
+		display: block;
+		object-fit: cover;
+		border: 1px solid #ddd;
+		border-radius: 2px;
+	}
+	#aui-grid-wrap-showcase7 .requester-text { overflow: hidden; }
+	#aui-grid-wrap-showcase7 .requester-name { display: block; font-size: 14px; font-weight: 600; white-space: nowrap; }
+	#aui-grid-wrap-showcase7 .requester-team { display: block; margin-top: 2px; color: #596270; font-size: 12px; white-space: nowrap; }
+	#aui-grid-wrap-showcase7 .requester-button:hover .requester-name { text-decoration: underline; }
+
+	/* 진행선과 상태 설명을 나란히 놓습니다. 최소 칼럼 폭으로 네 단계의 읽기 공간을 보장합니다. */
+	#aui-grid-wrap-showcase7 .approval-cell { gap: 16px; padding: 12px 16px; }
+	#aui-grid-wrap-showcase7 .approval-track { display: flex; align-items: flex-start; flex: 1; min-width: 0; }
+	#aui-grid-wrap-showcase7 .approval-step {
+		flex: 1;
+		min-width: 0;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 7px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: #697381 !important;
+		font-size: 12px;
+	}
+	#aui-grid-wrap-showcase7 .approval-step:not(:last-child)::after {
+		content: "";
+		position: absolute;
+		top: 13px;
+		left: calc(50% + 14px);
+		right: calc(-50% + 14px);
+		height: 2px;
+		background: #dce0e5;
+	}
+	#aui-grid-wrap-showcase7 .approval-step[data-state="done"]::after { background: #272b31; }
+	#aui-grid-wrap-showcase7 .approval-marker {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		border: 1px solid #c4cad2;
+		border-radius: 50%;
+		background: #fff;
+		color: #697381;
+		font-size: 13px;
+	}
+	#aui-grid-wrap-showcase7 .approval-step[data-state="done"] .approval-marker { background: #272b31; border-color: #272b31; color: #fff !important; font-weight: 700; }
+	#aui-grid-wrap-showcase7 .approval-step[data-state="current"] .approval-marker { background: #d94308; border-color: #d94308; color: #fff !important; font-weight: 700; }
+	#aui-grid-wrap-showcase7 .approval-step[data-state="rejected"] .approval-marker { background: #fff; border: 2px solid #d82028; color: #d82028 !important; font-weight: 700; }
+	#aui-grid-wrap-showcase7 .approval-step[data-state="done"] .approval-label { color: #20252c !important; }
+	#aui-grid-wrap-showcase7 .approval-step[data-state="current"] .approval-label { color: #20252c !important; font-weight: 700; }
+	#aui-grid-wrap-showcase7 .approval-step[data-state="rejected"] .approval-label { color: #d82028 !important; font-weight: 700; }
+	#aui-grid-wrap-showcase7 .approval-step:hover .approval-marker { outline: 2px solid #e2e5e9; outline-offset: 2px; }
+	#aui-grid-wrap-showcase7 .approval-caption {
+		flex: 0 0 36%;
+		min-width: 106px;
+		padding-left: 16px;
+		border-left: 1px solid #e3e6eb;
+		text-align: left;
+	}
+	#aui-grid-wrap-showcase7 .approval-status { position: relative; display: block; padding-left: 14px; color: #20252c; font-size: 13px; font-weight: 600; }
+	#aui-grid-wrap-showcase7 .approval-status::before { content: ""; position: absolute; left: 0; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: #d94308; }
+	#aui-grid-wrap-showcase7 .approval-progress { display: block; margin-top: 4px; padding-left: 14px; color: #697381; font-size: 12px; }
+	#aui-grid-wrap-showcase7 .approval-caption[data-state="rejected"] .approval-status { color: #d82028; }
+	#aui-grid-wrap-showcase7 .approval-caption[data-state="rejected"] .approval-status::before { background: #d82028; }
+	#aui-grid-wrap-showcase7 .approval-caption[data-state="done"] .approval-status::before { background: #272b31; }
+
+	/* 첨부파일은 문서 아이콘과 밑줄 링크로, 나머지 파일은 보조 문구로 구분합니다. */
+	#aui-grid-wrap-showcase7 .attachment-cell { flex-direction: column; align-items: flex-start; gap: 6px; padding: 12px 16px; }
+	#aui-grid-wrap-showcase7 .attachment-file {
+		max-width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: #20252c !important;
+		font-size: 14px;
+		text-align: left;
+		text-decoration: underline;
+		text-decoration-color: #c4cad2;
+		text-underline-offset: 4px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	#aui-grid-wrap-showcase7 .attachment-file::before {
+		content: "";
+		display: inline-block;
+		width: 12px;
+		height: 15px;
+		margin-right: 8px;
+		vertical-align: -2px;
+		background: center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 15'%3E%3Cpath d='M2 1h5l3 3v10H2zM7 1v4h3' fill='none' stroke='%23636b75' stroke-width='1.3'/%3E%3C/svg%3E");
+	}
+	#aui-grid-wrap-showcase7 .attachment-file:hover { color: #a73509 !important; }
+	#aui-grid-wrap-showcase7 .attachment-more { margin-left: 20px; padding: 0; border: 0; background: transparent; color: #697381 !important; font-size: 12px; }
+	#aui-grid-wrap-showcase7 .attachment-more:hover { text-decoration: underline; }
+	#aui-grid-wrap-showcase7 .muted { color: #697381; font-size: 12px; }
+
+	#aui-grid-wrap-showcase7 .due-cell { flex-direction: column; gap: 7px; padding: 8px; }
+	#aui-grid-wrap-showcase7 .due-date { color: #20252c; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+	#aui-grid-wrap-showcase7 .due-badge { padding: 2px 9px; border: 1px solid transparent; border-radius: 2px; background: #eceef1; color: #55606f; font-size: 12px; white-space: nowrap; }
+	#aui-grid-wrap-showcase7 .due-badge[data-kind="late"] { background: #d82028; color: #fff; font-weight: 700; }
+	#aui-grid-wrap-showcase7 .due-badge[data-kind="soon"] { background: #fff0e8; color: #b43b08; font-weight: 600; }
+	#aui-grid-wrap-showcase7 .due-badge[data-kind="done"] { background: #fff; color: #272b31; border-color: #737a83; }
+	#aui-grid-wrap-showcase7 .due-badge[data-kind="done"]::before { content: "✓"; margin-right: 5px; font-weight: 700; }
+
+	/* 실행 버튼과 상세 버튼을 같은 줄에 표시하고 완료된 요청은 상세만 표시합니다. */
+	#aui-grid-wrap-showcase7 .actions-cell { gap: 8px; padding: 8px; }
+	#aui-grid-wrap-showcase7 .approval-action,
+	#aui-grid-wrap-showcase7 .approval-detail { flex-shrink: 0; padding: 7px 10px; border-radius: 0; font-size: 12px; white-space: nowrap; }
+	#aui-grid-wrap-showcase7 .approval-action { min-width: 62px; border: 1px solid #272b31; background: #272b31; color: #fff !important; font-weight: 700; }
+	#aui-grid-wrap-showcase7 .approval-action:hover { background: #454a52; }
+	#aui-grid-wrap-showcase7 .approval-detail { min-width: 48px; border: 1px solid #c8cdd5; background: #fff; color: #20252c !important; }
+	#aui-grid-wrap-showcase7 .approval-detail:hover { background: #f5f6f8; border-color: #737a83; }
+
+	/* 색상만으로 상태를 구분하지 않도록 단계 기호의 의미를 함께 안내합니다. */
+	.showcase7-demo .purchase-summary { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; padding-top: 10px; color: #697381; font-size: 12px; }
+	.showcase7-demo .purchase-legend { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; }
+	.showcase7-demo .purchase-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+	.showcase7-demo .purchase-legend-marker { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; box-sizing: border-box; border: 1px solid #c4cad2; border-radius: 50%; background: #fff; font-size: 11px; font-weight: 700; }
+	.showcase7-demo .purchase-legend-marker[data-state="done"] { background: #272b31; border-color: #272b31; color: #fff; }
+	.showcase7-demo .purchase-legend-marker[data-state="current"] { background: #d94308; border-color: #d94308; }
+	.showcase7-demo .purchase-legend-marker[data-state="rejected"] { border: 2px solid #d82028; color: #d82028; }
+	.showcase7-demo .purchase-layout-note { margin-left: auto; }
+
+	/* 상세 창과 페이지 버튼은 기존 WebDemo 형식을 유지합니다. */
+	.showcase7-demo .request-dialog { width: 480px; max-width: 90vw; max-height: 80vh; padding: 20px; border: 1px solid #ccc; }
+	.showcase7-demo .request-dialog::backdrop { background: rgba(0,0,0,0.3); }
+	.showcase7-demo .request-dialog [hidden] { display: none !important; }

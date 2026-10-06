@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,231 +37,294 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<!-- 기존 내보내기 예제와 같은 PDF 및 파일 저장 도구를 사용합니다. -->
-<script src="../pdfkit/AUIGrid.pdfkit.js"></script>
-<script src="../export_server_samples/FileSaver.min.js"></script>
-<style>
-    .my-team {
-        background: #edf3ff;
-        color: #315da8;
-    }
+        <!-- 기존 내보내기 예제와 같은 PDF 및 파일 저장 도구를 사용합니다. -->
+        <script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <script src="../export_server_samples/FileSaver.min.js"></script>
+        <style>
+            .my-team {
+                background: #edf3ff;
+                color: #315da8;
+            }
 
-    .my-right {
-        text-align: right;
-    }
+            .my-right {
+                text-align: right;
+            }
+        </style>
+        <script>
+            let myGridID;
 
-    .body-cell-controls label {
-        margin-right: 16px;
-    }
-</style>
-<script>
-    let myGridID;
+            function init() {
+                createAUIGrid();
+                // 정적 JSON을 읽어 그리드에 표시합니다.
+                requestGridData("./data/band_body.json");
+            }
 
-    function init() {
-        createAUIGrid();
-        // 정적 JSON을 읽어 그리드에 표시합니다.
-        requestGridData("./data/band_body.json");
-    }
-
-    function createAUIGrid() {
-        // children으로 상위 칼럼과 하위 칼럼의 계층을 작성합니다.
-        const columnLayout = [
-            {
-                dataField: "id",
-                headerText: "ID",
-                width: 70,
-                editable: false
-            },
-            {
-                dataField: "team",
-                headerText: "소속",
-                bodyCell: true,
-                bodyCellHeight: 24,
-                style: "my-team",
-                children: [
+            function createAUIGrid() {
+                // children으로 상위 칼럼과 하위 칼럼의 계층을 작성합니다.
+                const columnLayout = [
                     {
-                        dataField: "name",
-                        headerText: "이름",
-                        width: 130,
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 70,
+                        editable: false
                     },
                     {
-                        dataField: "position",
-                        headerText: "직급",
+                        dataField: "team",
+                        headerText: "소속",
                         bodyCell: true,
-                        bodyCellHeight: 28,
+                        bodyCellHeight: 24,
+                        style: "my-team",
                         children: [
                             {
-                                dataField: "age",
-                                headerText: "나이",
-                                width: 70,
-                                dataType: "numeric",
+                                dataField: "name",
+                                headerText: "이름",
+                                width: 130
                             },
                             {
-                                dataField: "birth",
-                                headerText: "생년월일",
+                                dataField: "position",
+                                headerText: "직급",
+                                bodyCell: true,
+                                bodyCellHeight: 28,
+                                children: [
+                                    {
+                                        dataField: "age",
+                                        headerText: "나이",
+                                        width: 70,
+                                        dataType: "numeric"
+                                    },
+                                    {
+                                        dataField: "birth",
+                                        headerText: "생년월일",
+                                        width: 120,
+                                        dataType: "date",
+                                        dateInputFormat: "yyyy-mm-dd",
+                                        formatString: "yyyy/mm/dd"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        // 확인은 출력용 상위 셀입니다. 자식 수량과 금액은 아래쪽에 나란히 표시합니다.
+                        dataField: "checked",
+                        headerText: "확인",
+                        bodyCell: true,
+                        bodyCellHeight: "50%",
+                        editable: false,
+                        renderer: { type: "CheckBoxEditRenderer" },
+                        children: [
+                            {
+                                dataField: "qty",
+                                headerText: "수량",
+                                width: 95,
+                                dataType: "numeric"
+                            },
+                            {
+                                dataField: "amount",
+                                headerText: "금액",
                                 width: 120,
-                                dataType: "date",
-                                dateInputFormat: "yyyy-mm-dd",
-                                formatString: "yyyy/mm/dd"
+                                dataType: "numeric",
+                                formatString: "#,##0",
+                                style: "my-right"
                             }
                         ]
                     }
-                ]
-            },
-            {
-                // 확인은 출력용 상위 셀입니다. 자식 수량과 금액은 아래쪽에 나란히 표시합니다.
-                dataField: "checked",
-                headerText: "확인",
-                bodyCell: true,
-                bodyCellHeight: "50%",
-                editable: false,
-                renderer: { type: "CheckBoxEditRenderer" },
-                children: [
-                    {
-                        dataField: "qty",
-                        headerText: "수량",
-                        width: 95,
-                        dataType: "numeric"
-                    },
-                    {
-                        dataField: "amount",
-                        headerText: "금액",
-                        width: 120,
-                        dataType: "numeric",
-                        formatString: "#,##0",
-                        style: "my-right"
-                    }
-                ]
+                ];
+                const gridProps = {
+                    bodyLayoutMode: "band",
+                    rowHeight: 120,
+                    rowIdField: "id",
+                    editable: false,
+                    selectionMode: "multipleCells",
+                    showFooter: true,
+                    footerRowCount: 2,
+                    footerHeight: 28
+                };
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // Footer는 본문 셀 계층과 별개이며 기존 rowSpan/colSpan으로 2행 블록을 만듭니다.
+                AUIGrid.setFooter(myGridID, [
+                    [
+                        { positionField: "id", labelText: "합계" },
+                        {
+                            positionField: "name",
+                            labelText: "전체 현황",
+                            rowSpan: 2,
+                            colSpan: 3
+                        },
+                        {
+                            positionField: "qty",
+                            dataField: "qty",
+                            operation: "SUM",
+                            formatString: "#,##0"
+                        },
+                        {
+                            positionField: "amount",
+                            dataField: "amount",
+                            operation: "SUM",
+                            formatString: "#,##0"
+                        }
+                    ],
+                    [
+                        { positionField: "id", labelText: "평균" },
+                        {
+                            positionField: "qty",
+                            dataField: "qty",
+                            operation: "AVG",
+                            formatString: "#,##0.0"
+                        },
+                        {
+                            positionField: "amount",
+                            dataField: "amount",
+                            operation: "AVG",
+                            formatString: "#,##0.0"
+                        }
+                    ]
+                ]);
             }
-        ];
-        const gridProps = {
-            bodyLayoutMode: "band",
-            rowHeight: 120,
-            rowIdField: "id",
-            editable: false,
-            selectionMode: "multipleCells",
-            showFooter: true,
-            footerRowCount: 2,
-            footerHeight: 28,
-        };
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-        // Footer는 본문 셀 계층과 별개이며 기존 rowSpan/colSpan으로 2행 블록을 만듭니다.
-        AUIGrid.setFooter(myGridID, [[
-            { positionField: "id", labelText: "합계" },
-            {
-                positionField: "name",
-                labelText: "전체 현황",
-                rowSpan: 2,
-                colSpan: 3
-            },
-            {
-                positionField: "qty",
-                dataField: "qty",
-                operation: "SUM",
-                formatString: "#,##0"
-            },
-            {
-                positionField: "amount",
-                dataField: "amount",
-                operation: "SUM",
-                formatString: "#,##0"
+
+            // 헤더와 하위 칼럼은 유지하고 상위 바디 셀의 표시만 변경합니다.
+            function changeBodyCells() {
+                // 화면의 입력값을 먼저 읽고 칼럼 속성에 전달합니다.
+                const showTeam = document.getElementById("show_body_team").checked;
+                const showPosition = document.getElementById("show_body_position").checked;
+                const showChecked = document.getElementById("show_body_checked").checked;
+                // dataField로 상위 칼럼을 찾아 바디 셀의 표시 여부만 변경합니다.
+                AUIGrid.setColumnPropByDataField(myGridID, "team", {
+                    bodyCell: showTeam
+                });
+                AUIGrid.setColumnPropByDataField(myGridID, "position", {
+                    bodyCell: showPosition
+                });
+                AUIGrid.setColumnPropByDataField(myGridID, "checked", {
+                    bodyCell: showChecked
+                });
+                // 모든 속성을 변경한 뒤 한 번 갱신하여 새 셀 배치를 화면에 적용합니다.
+                AUIGrid.refresh(myGridID);
             }
-        ], [
-            { positionField: "id", labelText: "평균" },
-            {
-                positionField: "qty",
-                dataField: "qty",
-                operation: "AVG",
-                formatString: "#,##0.0"
-            },
-            {
-                positionField: "amount",
-                dataField: "amount",
-                operation: "AVG",
-                formatString: "#,##0.0"
+
+            // 재생성 없이 현재 그리드의 레이아웃 모드와 행 높이를 공식 갱신 경로로 전환합니다.
+            function changeBodyMode(mode) {
+                // 모드 변경은 대기 설정이므로 refresh()로 화면에 적용합니다. 데이터는 다시 넣지 않습니다.
+                AUIGrid.setProp(myGridID, {
+                    bodyLayoutMode: mode,
+                    rowHeight: mode === "band" ? 120 : 30
+                });
+                // 모든 속성을 변경한 뒤 한 번 갱신하여 새 셀 배치를 화면에 적용합니다.
+                AUIGrid.refresh(myGridID);
+
+                // 적용한 레이아웃을 버튼 상태에도 반영해 현재 선택을 구분합니다.
+                document.querySelectorAll("[data-body-mode]").forEach(function (button) {
+                    button.setAttribute("aria-pressed", button.dataset.bodyMode === mode);
+                });
+
+                // bodyCell은 Band에서만 사용합니다. 체크 상태를 보관하여 Band로 돌아올 때 다시 적용합니다.
+                document.querySelectorAll(".body-cell-controls input").forEach(function (input) {
+                    input.disabled = mode !== "band";
+                });
             }
-        ]]);
-    }
 
-    // 헤더와 하위 칼럼은 유지하고 상위 바디 셀의 표시만 변경합니다.
-    function changeBodyCells() {
-        // 화면의 입력값을 먼저 읽고 칼럼 속성에 전달합니다.
-        const showTeam = document.getElementById("show_body_team").checked;
-        const showPosition = document.getElementById("show_body_position").checked;
-        const showChecked = document.getElementById("show_body_checked").checked;
-        // dataField로 상위 칼럼을 찾아 바디 셀의 표시 여부만 변경합니다.
-        AUIGrid.setColumnPropByDataField(myGridID, "team", {
-            bodyCell: showTeam
-        });
-        AUIGrid.setColumnPropByDataField(myGridID, "position", {
-            bodyCell: showPosition
-        });
-        AUIGrid.setColumnPropByDataField(myGridID, "checked", {
-            bodyCell: showChecked
-        });
-        // 모든 속성을 변경한 뒤 한 번 갱신하여 새 셀 배치를 화면에 적용합니다.
-        AUIGrid.refresh(myGridID);
-    }
+            function exportXlsxClick() {
+                AUIGrid.exportToXlsx(myGridID, { fileName: "밴드형_바디", sheetName: "담당자 현황" });
+            }
 
-    // 재생성 없이 현재 그리드의 레이아웃 모드와 행 높이를 공식 갱신 경로로 전환합니다.
-    function changeBodyMode(mode) {
-        // 모드 변경은 대기 설정이므로 refresh()로 화면에 적용합니다. 데이터는 다시 넣지 않습니다.
-        AUIGrid.setProp(myGridID, {
-            bodyLayoutMode: mode,
-            rowHeight: mode === "band" ? 120 : 30
-        });
-        // 모든 속성을 변경한 뒤 한 번 갱신하여 새 셀 배치를 화면에 적용합니다.
-        AUIGrid.refresh(myGridID);
+            // 한글 글꼴을 지정하여 PDF 파일로 저장합니다.
+            function exportPdfClick() {
+                AUIGrid.exportToPdf(myGridID, {
+                    fileName: "밴드형_바디",
+                    fontPath: "../pdfkit/nyjgothic-medium.ttf",
+                    orientation: "landscape"
+                });
+            }
 
-        // bodyCell은 Band에서만 사용합니다. 체크 상태를 보관하여 Band로 돌아올 때 다시 적용합니다.
-        document.querySelectorAll(".body-cell-controls input").forEach(function (input) {
-            input.disabled = mode !== "band";
-        });
-    }
+            function exportCsvClick() {
+                AUIGrid.exportToCsv(myGridID, { fileName: "밴드형_바디" });
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-    function exportXlsxClick() {
-        AUIGrid.exportToXlsx(myGridID, { fileName: "밴드형_바디", sheetName: "담당자 현황" });
-    }
-
-    // 한글 글꼴을 지정하여 PDF 파일로 저장합니다.
-    function exportPdfClick() {
-        AUIGrid.exportToPdf(myGridID, {
-            fileName: "밴드형_바디",
-            fontPath: "../pdfkit/nyjgothic-medium.ttf",
-            orientation: "landscape"
-        });
-    }
-
-    function exportCsvClick() {
-        AUIGrid.exportToCsv(myGridID, { fileName: "밴드형_바디" });
-    }
-</script>
-</head>
-<body>
-
-<div id="main">
-    <div class="desc">
-        <p>밴드형 바디 레이앙웃에 대한 Excel과 PDF, CSV 내보내기에 대한 데모입니다.</p>
-        <p>밴드형에서는 상위 바디(branch) 셀을 숨길 수 있습니다.</p>
-        <p class="body-cell-controls"><strong>상위 바디(branch) 셀 표시: </strong>
-            <label><input type="checkbox" id="show_body_team" checked onchange="changeBodyCells()"> 소속</label>
-            <label><input type="checkbox" id="show_body_position" checked onchange="changeBodyCells()"> 직급</label>
-            <label><input type="checkbox" id="show_body_checked" checked onchange="changeBodyCells()"> 확인</label>
-        </p>
-        <p><button class="btn" onclick="changeBodyMode('flat')">기본(flat) 보기</button>
-            <button class="btn" onclick="changeBodyMode('band')">밴드형(band) 보기</button>
-            <button class="btn" onclick="changeBodyMode('flatAll')">전체 칼럼 펼쳐서(flatAll) 보기</button>
-        </p>
-        <p><button class="btn" onclick="exportXlsxClick()">Excel / XLSX 내보내기</button>
-            <button class="btn" onclick="exportPdfClick()">PDF 내보내기</button>
-            <button class="btn" onclick="exportCsvClick()">CSV 내보내기</button>
-        </p>
-        <p>CSV 내보내기는 높이와 그룹, 병합, 스타일 등의 정보 없이 컴마(,) 구분의 값만 내보내기 합니다.</p>
-    </div>
-    <div>
-        <div id="grid_wrap" style="width:100%;height:480px;margin:0 auto;"></div>
-    </div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>밴드형 바디 레이앙웃에 대한 Excel과 PDF, CSV 내보내기에 대한 데모입니다.</p>
+                    <p>밴드형에서는 상위 바디(branch) 셀을 숨길 수 있습니다.</p>
+                    <!-- 공통 조작 영역에서 설정과 실행 버튼을 용도별로 묶습니다. -->
+                    <div class="demo-options">
+                        <div class="demo-option-row">
+                            <span class="demo-option-label">레이아웃</span>
+                            <div class="demo-segments" role="group" aria-label="바디 레이아웃">
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    data-body-mode="flat"
+                                    aria-pressed="false"
+                                    onclick="changeBodyMode('flat')"
+                                >
+                                    기본(flat) 보기
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    data-body-mode="band"
+                                    aria-pressed="true"
+                                    onclick="changeBodyMode('band')"
+                                >
+                                    밴드형(band) 보기
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    data-body-mode="flatAll"
+                                    aria-pressed="false"
+                                    onclick="changeBodyMode('flatAll')"
+                                >
+                                    전체 칼럼 펼쳐서(flatAll) 보기
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            class="demo-option-row body-cell-controls"
+                            role="group"
+                            aria-label="상위 바디(branch) 셀 표시"
+                        >
+                            <span class="demo-option-label">상위 바디(branch) 셀 표시</span>
+                            <label class="demo-check"
+                                ><input
+                                    type="checkbox"
+                                    id="show_body_team"
+                                    checked
+                                    onchange="changeBodyCells()"
+                                />소속</label
+                            >
+                            <label class="demo-check"
+                                ><input
+                                    type="checkbox"
+                                    id="show_body_position"
+                                    checked
+                                    onchange="changeBodyCells()"
+                                />직급</label
+                            >
+                            <label class="demo-check"
+                                ><input
+                                    type="checkbox"
+                                    id="show_body_checked"
+                                    checked
+                                    onchange="changeBodyCells()"
+                                />확인</label
+                            >
+                        </div>
+                        <div class="demo-option-row">
+                            <span class="demo-option-label">내보내기</span>
+                            <button type="button" class="btn" onclick="exportXlsxClick()">Excel / XLSX 내보내기</button>
+                            <button type="button" class="btn" onclick="exportPdfClick()">PDF 내보내기</button>
+                            <button type="button" class="btn" onclick="exportCsvClick()">CSV 내보내기</button>
+                        </div>
+                    </div>
+                    <p>CSV 내보내기는 높이와 그룹, 병합, 스타일 등의 정보 없이 컴마(,) 구분의 값만 내보내기 합니다.</p>
+                </div>
+                <div>
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

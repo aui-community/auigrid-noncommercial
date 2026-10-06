@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,208 +37,223 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.my-column {
-		color: #D9418C;
-	}
+        <style>
+            /* 커스텀 칼럼 스타일 정의 */
+            .my-column {
+                color: #d9418c;
+            }
 
-	.my-colum-right {
-		text-align: right;
-	}
-</style>
+            .my-colum-right {
+                text-align: right;
+            }
+        </style>
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_kor_500.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_kor_500.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "Name",
-			filter: {
-				showIcon: true
-			},
-			width: 200
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			filter: {
-				showIcon: true
-			},
-			width: 200
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			filter: {
-				showIcon: true
-			},
-			width: 200
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			headerStyle: "my-column",
-			filter: {
-				showIcon: true
-			},
-			width: 120
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			headerStyle: "my-column",
-			style: "my-colum-right",
-			filter: {
-				showIcon: true,
-				type: "numeric"
-			}
-		}, {
-			dataField: "date",
-			headerText: "Date",
-			filter: {
-				showIcon: true
-			}
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "name",
+                        headerText: "Name",
+                        filter: {
+                            showIcon: true
+                        },
+                        width: 200
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        filter: {
+                            showIcon: true
+                        },
+                        width: 200
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        filter: {
+                            showIcon: true
+                        },
+                        width: 200
+                    },
+                    {
+                        dataField: "quantity",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        headerStyle: "my-column",
+                        filter: {
+                            showIcon: true
+                        },
+                        width: 120
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        headerStyle: "my-column",
+                        style: "my-colum-right",
+                        filter: {
+                            showIcon: true,
+                            type: "numeric"
+                        }
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date",
+                        filter: {
+                            showIcon: true
+                        }
+                    }
+                ];
 
-		// 그리드 푸터 설정
-		const footerLayout = [{
-			labelText: "∑",
-			positionField: "#base"
-		}, {
-			dataField: "price",
-			positionField: "price",
-			formatString: "#,##0",
-			operation: "SUM",
-			style: "my-colum-right"
-		}, {
-			dataField: "price",
-			positionField: "date",
-			formatString: "#,##0",
-			operation: "COUNT",
-			style: "my-colum-right"
-		}];
+                // 그리드 푸터 설정
+                const footerLayout = [
+                    {
+                        labelText: "∑",
+                        positionField: "#base"
+                    },
+                    {
+                        dataField: "price",
+                        positionField: "price",
+                        formatString: "#,##0",
+                        operation: "SUM",
+                        style: "my-colum-right"
+                    },
+                    {
+                        dataField: "price",
+                        positionField: "date",
+                        formatString: "#,##0",
+                        operation: "COUNT",
+                        style: "my-colum-right"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			selectionMode: "multipleCells",
-			showRowNumColumn: true,
-			showRowCheckColumn: false,
-			editable: true,
-			useContextMenu: true,
-			softRemoveRowMode: false,
-			enableMovingColumn: false,
-			enableFilter: true,
-			showFooter: true,
-			// 필터 레이어 기본 가로, 세로 지정(기본값 : 각각 260, 320)
-			filterLayerWidth: 280,
-			filterLayerHeight: 340
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    selectionMode: "multipleCells",
+                    showRowNumColumn: true,
+                    showRowCheckColumn: false,
+                    editable: true,
+                    useContextMenu: true,
+                    softRemoveRowMode: false,
+                    enableMovingColumn: false,
+                    enableFilter: true,
+                    showFooter: true,
+                    // 필터 레이어 기본 가로, 세로 지정(기본값 : 각각 260, 320)
+                    filterLayerWidth: 280,
+                    filterLayerHeight: 340
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 푸터 레이아웃 세팅
-		AUIGrid.setFooter(myGridID, footerLayout);
+                // 푸터 레이아웃 세팅
+                AUIGrid.setFooter(myGridID, footerLayout);
 
-		// 필터링 이벤트 바인딩
-		AUIGrid.bind(myGridID, "filtering", function (evt) {
-			const filterInfo = evt.filterCache;
-			let str = "filtering Event Info : ";
-			let length = 0;
-			for (let n in filterInfo) {
-				length++;
-				str += n + " : " + JSON.stringify(filterInfo[n]) + ", ";
-			}
-			if (length <= 0)
-				str = "필터링 되지 않음";
+                // 필터링 이벤트 바인딩
+                AUIGrid.bind(myGridID, "filtering", function (evt) {
+                    const filterInfo = evt.filterCache;
+                    let str = "filtering Event Info : ";
+                    let length = 0;
+                    for (let n in filterInfo) {
+                        length++;
+                        str += n + " : " + JSON.stringify(filterInfo[n]) + ", ";
+                    }
+                    if (length <= 0) str = "필터링 되지 않음";
 
-			document.getElementById("elapse").textContent = str;
-		});
-	}
+                    document.getElementById("elapse").textContent = str;
+                });
+            }
 
-	// 값에 따라 필터링을 지정합니다.
-	function setFilterByValues() {
-		// 참고 : 단순 값에 따른 필터링이 아닌 복잡한 형태(예: 정규식등) 로 필터링 하려면
-		// AUIGrid.setFiler() 메소드를 사용하십시오.
+            // 값에 따라 필터링을 지정합니다.
+            function setFilterByValues() {
+                // 참고 : 단순 값에 따른 필터링이 아닌 복잡한 형태(예: 정규식등) 로 필터링 하려면
+                // AUIGrid.setFiler() 메소드를 사용하십시오.
 
-		// 이름이 "Anna", "Emma" 인 행으로 필터링합니다.
-		AUIGrid.setFilterByValues(myGridID, "name", ["Anna", "Emma"]);
-	}
+                // 이름이 "Anna", "Emma" 인 행으로 필터링합니다.
+                AUIGrid.setFilterByValues(myGridID, "name", ["Anna", "Emma"]);
+            }
 
-	//값에 따라 필터링을 지정합니다.
-	function setFilterByValues2() {
-		// 참고 : 단순 값에 따른 필터링이 아닌 복잡한 형태(예: 정규식등) 로 필터링 하려면
-		// AUIGrid.setFiler() 메소드를 사용하십시오.
+            //값에 따라 필터링을 지정합니다.
+            function setFilterByValues2() {
+                // 참고 : 단순 값에 따른 필터링이 아닌 복잡한 형태(예: 정규식등) 로 필터링 하려면
+                // AUIGrid.setFiler() 메소드를 사용하십시오.
 
-		// 이름이 "Kim", "Anna" 인 행으로 필터링합니다.
-		AUIGrid.setFilterByValues(myGridID, "name", ["Kim", "Anna"]);
+                // 이름이 "Kim", "Anna" 인 행으로 필터링합니다.
+                AUIGrid.setFilterByValues(myGridID, "name", ["Kim", "Anna"]);
 
-		// 나라가 대한민국인 행으로 다시 필터링
-		AUIGrid.setFilterByValues(myGridID, "country", ["대한민국"]);
-	}
+                // 나라가 대한민국인 행으로 다시 필터링
+                AUIGrid.setFilterByValues(myGridID, "country", ["대한민국"]);
+            }
 
-	function openBtnClick() {
-		const dataField = document.getElementById("dataFieldSelect").value;
-		AUIGrid.openFilterLayer(myGridID, dataField);
+            function openBtnClick() {
+                const dataField = document.getElementById("dataFieldSelect").value;
+                AUIGrid.openFilterLayer(myGridID, dataField);
 
-		// 이름 칼럼의 필터 레이어(필터 메뉴)를 오픈합니다.
-		// AUIGrid.openFilterLayer(myGridID, "name");
-	}
+                // 이름 칼럼의 필터 레이어(필터 메뉴)를 오픈합니다.
+                // AUIGrid.openFilterLayer(myGridID, "name");
+            }
 
-	function closeBtnClick() {
-		// 필터 레이어(필터 메뉴)가 열린 경우 닫습니다.
-		AUIGrid.closeFilterLayer(myGridID);
-	}
-</script>
-</head>
-<body>
+            function closeBtnClick() {
+                // 필터 레이어(필터 메뉴)가 열린 경우 닫습니다.
+                AUIGrid.closeFilterLayer(myGridID);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>기본적으로 필터 메뉴는 그리드 헤더에 있는 필터 아이콘을 클릭함으로써 사용 할 수 있습니다.</p>
-		<p>그러나 때로는 외부 이벤트를 통해 필터 메뉴를 열거나 닫을 필요가 있습니다.</p>
-		<p>다음과 같이 openFilterLayer 메소드와 closeFilterLayer 메소드를 통해 필터 메뉴 열기/닫기가 가능합니다.</p>
-		<div class="src_cover">
-			<pre>
+            <div id="main">
+                <div class="desc">
+                    <p>기본적으로 필터 메뉴는 그리드 헤더에 있는 필터 아이콘을 클릭함으로써 사용 할 수 있습니다.</p>
+                    <p>그러나 때로는 외부 이벤트를 통해 필터 메뉴를 열거나 닫을 필요가 있습니다.</p>
+                    <p>
+                        다음과 같이 openFilterLayer 메소드와 closeFilterLayer 메소드를 통해 필터 메뉴 열기/닫기가
+                        가능합니다.
+                    </p>
+                    <div class="src_cover">
+                        <pre>
 // 이름 칼럼의 필터 레이어(필터 메뉴)를 오픈합니다.
 AUIGrid.openFilterLayer(myGridID, "name");
 
 // 필터 레이어(필터 메뉴)가 열린 경우 닫습니다.
 AUIGrid.closeFilterLayer(myGridID);
 </pre>
-		</div>
-		<p>
-			<label>오픈할 필터 메뉴 필드 선택 : <select id="dataFieldSelect" style="width:120px;"></label>
-			<option value="name">Name</option>
-			<option value="country">Country</option>
-			<option value="product">Product</option>
-			<option value="quantity">Quantity</option>
-			<option value="price">Price</option>
-			<option value="date">Date</option>
-			</select>
-			<input type="button" class="btn" onclick="openBtnClick()" value="필터 메뉴 열기">
-			<input type="button" class="btn" onclick="closeBtnClick()" value="필터 메뉴 닫기">
-		</p>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:400px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                    <p>
+                        <label>오픈할 필터 메뉴 필드 선택 :
+                        <select id="dataFieldSelect" style="width: 120px">
+                            </label>
+                            <option value="name">Name</option>
+                            <option value="country">Country</option>
+                            <option value="product">Product</option>
+                            <option value="quantity">Quantity</option>
+                            <option value="price">Price</option>
+                            <option value="date">Date</option>
+                        </select>
+                        <input type="button" class="btn" onclick="openBtnClick()" value="필터 메뉴 열기" />
+                        <input type="button" class="btn" onclick="closeBtnClick()" value="필터 메뉴 닫기" />
+                    </p>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 400px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

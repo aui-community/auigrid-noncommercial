@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,127 +37,525 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 스타일 */
-	.left {
-		text-align: left;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <style>
+            /* 커스텀 스타일 */
+            .left {
+                text-align: left;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 그리드에 데이터 삽입
-		AUIGrid.setGridData(myGridID, gridData);
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 그리드에 데이터 삽입
+                AUIGrid.setGridData(myGridID, gridData);
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "Name",
-			width: 120
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			width: 120
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			width: 120
-		}, {
-			dataField: "color",
-			headerText: "Color",
-			width: 120
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			style: "my-column",
-			width: 120
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			width: 120
-		}, {
-			dataField: "date",
-			headerText: "Date",
-			width: 120
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "name",
+                        headerText: "Name",
+                        width: 120
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        width: 120
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        width: 120
+                    },
+                    {
+                        dataField: "color",
+                        headerText: "Color",
+                        width: 120
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        style: "my-column",
+                        width: 120
+                    },
+                    {
+                        dataField: "quantity",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        width: 120
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date",
+                        width: 120
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			selectionMode: "multipleRows",
-			editable: true,
-			onlyEnterKeyEditEnd: true,
-			showStateColumn: true,
-			// Home, End 키가 칼럼 시작, 끝으로 이동함
-			isColumnOriented: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    selectionMode: "multipleRows",
+                    editable: true,
+                    onlyEnterKeyEditEnd: true,
+                    showStateColumn: true,
+                    // Home, End 키가 칼럼 시작, 끝으로 이동함
+                    isColumnOriented: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// ready 이벤트 바인딩
-		AUIGrid.bind(myGridID, "ready", function (event) {
-			// 두번째 행, 첫 셀에 선택되도록 지정
-			AUIGrid.setSelectionByIndex(myGridID, 1, 0);
-		});
-	}
+                // ready 이벤트 바인딩
+                AUIGrid.bind(myGridID, "ready", function (event) {
+                    // 두번째 행, 첫 셀에 선택되도록 지정
+                    AUIGrid.setSelectionByIndex(myGridID, 1, 0);
+                });
+            }
 
-	// depth 들여쓰기
-	function indentTreeDepth() {
-		AUIGrid.indentTreeDepth(myGridID);
-	}
+            // depth 들여쓰기
+            function indentTreeDepth() {
+                AUIGrid.indentTreeDepth(myGridID);
+            }
 
-	// depth 내어쓰기
-	function outdentTreeDepth() {
-		AUIGrid.outdentTreeDepth(myGridID);
-	}
+            // depth 내어쓰기
+            function outdentTreeDepth() {
+                AUIGrid.outdentTreeDepth(myGridID);
+            }
 
-	let isExpanded = true;
-	function expand() {
-		if (!isExpanded) {
-			AUIGrid.expandAll(myGridID);
-			isExpanded = true;
-			return;
-		}
-		AUIGrid.collapseAll(myGridID);
-		isExpanded = false;
-	}
+            let isExpanded = true;
+            function expand() {
+                if (!isExpanded) {
+                    AUIGrid.expandAll(myGridID);
+                    isExpanded = true;
+                    return;
+                }
+                AUIGrid.collapseAll(myGridID);
+                isExpanded = false;
+            }
 
-	// 그리드 데이터
-	const gridData = [{ "id": "#Cust-100", "id4tree": 0, "date": "2025-06-11", "name": "Anna", "country": "Japan", "flag": "japan.png", "product": "Galaxy Note21", "color": "Orange", "quantity": 7, "price": 405300 }, { "id": "#Cust-99", "id4tree": 1, "date": "2025-06-10", "name": "Anna", "country": "Japan", "flag": "japan.png", "product": "Galaxy Note21", "color": "Orange", "quantity": 7, "price": 179000 }, { "id": "#Cust-98", "id4tree": 2, "date": "2025-06-09", "name": "Emma", "country": "UK", "flag": "uk.png", "product": "IPhone 16", "color": "Pink", "quantity": 9, "price": 922300 }, { "id": "#Cust-97", "id4tree": 3, "date": "2025-06-08", "name": "Anna", "country": "France", "flag": "france.png", "product": "Galaxy S25", "color": "Violet", "quantity": 0, "price": 622100 }, { "id": "#Cust-96", "id4tree": 4, "date": "2025-06-07", "name": "Kim", "country": "UK", "flag": "uk.png", "product": "Galaxy S25", "color": "Pink", "quantity": 9, "price": 353900 }, { "id": "#Cust-95", "id4tree": 5, "date": "2025-06-06", "name": "Jennifer", "country": "France", "flag": "france.png", "product": "Galaxy S25 Ultra", "color": "Violet", "quantity": 0, "price": 793500 }, { "id": "#Cust-94", "id4tree": 6, "date": "2025-06-05", "name": "Kim", "country": "Ireland", "flag": "ireland.png", "product": "IPhone 16 Pro", "color": "Pink", "quantity": 12, "price": 194800 }, { "id": "#Cust-93", "id4tree": 7, "date": "2025-06-04", "name": "Anna", "country": "China", "flag": "china.png", "product": "Galaxy S25", "color": "Violet", "quantity": 10, "price": 954700 }, { "id": "#Cust-92", "id4tree": 8, "date": "2025-06-03", "name": "Steve", "country": "Italy", "flag": "italy.png", "product": "IPhone 16 Pro", "color": "Blue", "quantity": 15, "price": 409900 }, { "id": "#Cust-91", "id4tree": 9, "date": "2025-06-02", "name": "Emma", "country": "China", "flag": "china.png", "product": "Galaxy Note21", "color": "Green", "quantity": 10, "price": 961200 }, { "id": "#Cust-90", "id4tree": 10, "date": "2025-06-01", "name": "Anna", "country": "Singapore", "flag": "singapore.png", "product": "IPhone 16", "color": "Orange", "quantity": 20, "price": 183500 }, { "id": "#Cust-89", "id4tree": 11, "date": "2025-05-31", "name": "Lawrence", "country": "France", "flag": "france.png", "product": "Galaxy Note21", "color": "Orange", "quantity": 0, "price": 13000 }, { "id": "#Cust-88", "id4tree": 12, "date": "2025-05-30", "name": "Jennifer", "country": "Korea", "flag": "korea.png", "product": "IPhone 16", "color": "Green", "quantity": 1, "price": 666900 }, { "id": "#Cust-87", "id4tree": 13, "date": "2025-05-29", "name": "Kim", "country": "Japan", "flag": "japan.png", "product": "Galaxy S25 Ultra", "color": "Yellow", "quantity": 7, "price": 401000 }, { "id": "#Cust-86", "id4tree": 14, "date": "2025-05-28", "name": "Kim", "country": "UK", "flag": "uk.png", "product": "Galaxy Note21", "color": "Orange", "quantity": 9, "price": 732200 }, { "id": "#Cust-85", "id4tree": 15, "date": "2025-05-27", "name": "Kim", "country": "Singapore", "flag": "singapore.png", "product": "Galaxy S25 Ultra", "color": "Green", "quantity": 20, "price": 263700 }, { "id": "#Cust-84", "id4tree": 16, "date": "2025-05-26", "name": "Jennifer", "country": "Japan", "flag": "japan.png", "product": "Galaxy Note21", "color": "Green", "quantity": 7, "price": 719000 }, { "id": "#Cust-83", "id4tree": 17, "date": "2025-05-25", "name": "Steve", "country": "Singapore", "flag": "singapore.png", "product": "Galaxy S25 Ultra", "color": "Orange", "quantity": 20, "price": 330700 }, { "id": "#Cust-82", "id4tree": 18, "date": "2025-05-24", "name": "Lawrence", "country": "USA", "flag": "usa.png", "product": "IPhone 16", "color": "Green", "quantity": 3, "price": 186200 }, { "id": "#Cust-81", "id4tree": 19, "date": "2025-05-23", "name": "Kim", "country": "China", "flag": "china.png", "product": "IPhone 16 Pro", "color": "Yellow", "quantity": 10, "price": 676200 }, { "id": "#Cust-80", "id4tree": 20, "date": "2025-05-22", "name": "Jennifer", "country": "China", "flag": "china.png", "product": "IPhone 16 Pro", "color": "Pink", "quantity": 10, "price": 659800 }, { "id": "#Cust-79", "id4tree": 21, "date": "2025-05-21", "name": "Emma", "country": "UK", "flag": "uk.png", "product": "Galaxy S25 Ultra", "color": "Pink", "quantity": 9, "price": 469100 }, { "id": "#Cust-78", "id4tree": 22, "date": "2025-05-20", "name": "Steve", "country": "Singapore", "flag": "singapore.png", "product": "Galaxy S25", "color": "Gray", "quantity": 20, "price": 387500 }, { "id": "#Cust-77", "id4tree": 23, "date": "2025-05-19", "name": "Anna", "country": "Singapore", "flag": "singapore.png", "product": "Galaxy Note21", "color": "Violet", "quantity": 20, "price": 720000 }, { "id": "#Cust-76", "id4tree": 24, "date": "2025-05-18", "name": "Anna", "country": "UK", "flag": "uk.png", "product": "IPhone 16 Pro", "color": "Gray", "quantity": 9, "price": 83500 }, { "id": "#Cust-75", "id4tree": 25, "date": "2025-05-17", "name": "Steve", "country": "USA", "flag": "usa.png", "product": "IPhone 16", "color": "Orange", "quantity": 3, "price": 35800 }, { "id": "#Cust-74", "id4tree": 26, "date": "2025-05-16", "name": "Emma", "country": "Korea", "flag": "korea.png", "product": "Galaxy S25 Ultra", "color": "Yellow", "quantity": 1, "price": 680600 }, { "id": "#Cust-73", "id4tree": 27, "date": "2025-05-15", "name": "Lawrence", "country": "Korea", "flag": "korea.png", "product": "Galaxy S25", "color": "Pink", "quantity": 1, "price": 363800 }, { "id": "#Cust-72", "id4tree": 28, "date": "2025-05-14", "name": "Lawrence", "country": "China", "flag": "china.png", "product": "IPhone 16", "color": "Green", "quantity": 10, "price": 82900 }, { "id": "#Cust-71", "id4tree": 29, "date": "2025-05-13", "name": "Jennifer", "country": "Ireland", "flag": "ireland.png", "product": "Galaxy Note21", "color": "Pink", "quantity": 12, "price": 747900 }, { "id": "#Cust-70", "id4tree": 30, "date": "2025-05-12", "name": "Emma", "country": "Japan", "flag": "japan.png", "product": "IPhone 16", "color": "Orange", "quantity": 7, "price": 909300 }, { "id": "#Cust-69", "id4tree": 31, "date": "2025-05-11", "name": "Jennifer", "country": "Japan", "flag": "japan.png", "product": "Galaxy S25", "color": "Yellow", "quantity": 7, "price": 75800 }];
-</script>
-</head>
-<body>
+            // 그리드 데이터
+            const gridData = [
+                {
+                    "id": "#Cust-100",
+                    "id4tree": 0,
+                    "date": "2025-06-11",
+                    "name": "Anna",
+                    "country": "Japan",
+                    "flag": "japan.png",
+                    "product": "Galaxy Note21",
+                    "color": "Orange",
+                    "quantity": 7,
+                    "price": 405300
+                },
+                {
+                    "id": "#Cust-99",
+                    "id4tree": 1,
+                    "date": "2025-06-10",
+                    "name": "Anna",
+                    "country": "Japan",
+                    "flag": "japan.png",
+                    "product": "Galaxy Note21",
+                    "color": "Orange",
+                    "quantity": 7,
+                    "price": 179000
+                },
+                {
+                    "id": "#Cust-98",
+                    "id4tree": 2,
+                    "date": "2025-06-09",
+                    "name": "Emma",
+                    "country": "UK",
+                    "flag": "uk.png",
+                    "product": "IPhone 16",
+                    "color": "Pink",
+                    "quantity": 9,
+                    "price": 922300
+                },
+                {
+                    "id": "#Cust-97",
+                    "id4tree": 3,
+                    "date": "2025-06-08",
+                    "name": "Anna",
+                    "country": "France",
+                    "flag": "france.png",
+                    "product": "Galaxy S25",
+                    "color": "Violet",
+                    "quantity": 0,
+                    "price": 622100
+                },
+                {
+                    "id": "#Cust-96",
+                    "id4tree": 4,
+                    "date": "2025-06-07",
+                    "name": "Kim",
+                    "country": "UK",
+                    "flag": "uk.png",
+                    "product": "Galaxy S25",
+                    "color": "Pink",
+                    "quantity": 9,
+                    "price": 353900
+                },
+                {
+                    "id": "#Cust-95",
+                    "id4tree": 5,
+                    "date": "2025-06-06",
+                    "name": "Jennifer",
+                    "country": "France",
+                    "flag": "france.png",
+                    "product": "Galaxy S25 Ultra",
+                    "color": "Violet",
+                    "quantity": 0,
+                    "price": 793500
+                },
+                {
+                    "id": "#Cust-94",
+                    "id4tree": 6,
+                    "date": "2025-06-05",
+                    "name": "Kim",
+                    "country": "Ireland",
+                    "flag": "ireland.png",
+                    "product": "IPhone 16 Pro",
+                    "color": "Pink",
+                    "quantity": 12,
+                    "price": 194800
+                },
+                {
+                    "id": "#Cust-93",
+                    "id4tree": 7,
+                    "date": "2025-06-04",
+                    "name": "Anna",
+                    "country": "China",
+                    "flag": "china.png",
+                    "product": "Galaxy S25",
+                    "color": "Violet",
+                    "quantity": 10,
+                    "price": 954700
+                },
+                {
+                    "id": "#Cust-92",
+                    "id4tree": 8,
+                    "date": "2025-06-03",
+                    "name": "Steve",
+                    "country": "Italy",
+                    "flag": "italy.png",
+                    "product": "IPhone 16 Pro",
+                    "color": "Blue",
+                    "quantity": 15,
+                    "price": 409900
+                },
+                {
+                    "id": "#Cust-91",
+                    "id4tree": 9,
+                    "date": "2025-06-02",
+                    "name": "Emma",
+                    "country": "China",
+                    "flag": "china.png",
+                    "product": "Galaxy Note21",
+                    "color": "Green",
+                    "quantity": 10,
+                    "price": 961200
+                },
+                {
+                    "id": "#Cust-90",
+                    "id4tree": 10,
+                    "date": "2025-06-01",
+                    "name": "Anna",
+                    "country": "Singapore",
+                    "flag": "singapore.png",
+                    "product": "IPhone 16",
+                    "color": "Orange",
+                    "quantity": 20,
+                    "price": 183500
+                },
+                {
+                    "id": "#Cust-89",
+                    "id4tree": 11,
+                    "date": "2025-05-31",
+                    "name": "Lawrence",
+                    "country": "France",
+                    "flag": "france.png",
+                    "product": "Galaxy Note21",
+                    "color": "Orange",
+                    "quantity": 0,
+                    "price": 13000
+                },
+                {
+                    "id": "#Cust-88",
+                    "id4tree": 12,
+                    "date": "2025-05-30",
+                    "name": "Jennifer",
+                    "country": "Korea",
+                    "flag": "korea.png",
+                    "product": "IPhone 16",
+                    "color": "Green",
+                    "quantity": 1,
+                    "price": 666900
+                },
+                {
+                    "id": "#Cust-87",
+                    "id4tree": 13,
+                    "date": "2025-05-29",
+                    "name": "Kim",
+                    "country": "Japan",
+                    "flag": "japan.png",
+                    "product": "Galaxy S25 Ultra",
+                    "color": "Yellow",
+                    "quantity": 7,
+                    "price": 401000
+                },
+                {
+                    "id": "#Cust-86",
+                    "id4tree": 14,
+                    "date": "2025-05-28",
+                    "name": "Kim",
+                    "country": "UK",
+                    "flag": "uk.png",
+                    "product": "Galaxy Note21",
+                    "color": "Orange",
+                    "quantity": 9,
+                    "price": 732200
+                },
+                {
+                    "id": "#Cust-85",
+                    "id4tree": 15,
+                    "date": "2025-05-27",
+                    "name": "Kim",
+                    "country": "Singapore",
+                    "flag": "singapore.png",
+                    "product": "Galaxy S25 Ultra",
+                    "color": "Green",
+                    "quantity": 20,
+                    "price": 263700
+                },
+                {
+                    "id": "#Cust-84",
+                    "id4tree": 16,
+                    "date": "2025-05-26",
+                    "name": "Jennifer",
+                    "country": "Japan",
+                    "flag": "japan.png",
+                    "product": "Galaxy Note21",
+                    "color": "Green",
+                    "quantity": 7,
+                    "price": 719000
+                },
+                {
+                    "id": "#Cust-83",
+                    "id4tree": 17,
+                    "date": "2025-05-25",
+                    "name": "Steve",
+                    "country": "Singapore",
+                    "flag": "singapore.png",
+                    "product": "Galaxy S25 Ultra",
+                    "color": "Orange",
+                    "quantity": 20,
+                    "price": 330700
+                },
+                {
+                    "id": "#Cust-82",
+                    "id4tree": 18,
+                    "date": "2025-05-24",
+                    "name": "Lawrence",
+                    "country": "USA",
+                    "flag": "usa.png",
+                    "product": "IPhone 16",
+                    "color": "Green",
+                    "quantity": 3,
+                    "price": 186200
+                },
+                {
+                    "id": "#Cust-81",
+                    "id4tree": 19,
+                    "date": "2025-05-23",
+                    "name": "Kim",
+                    "country": "China",
+                    "flag": "china.png",
+                    "product": "IPhone 16 Pro",
+                    "color": "Yellow",
+                    "quantity": 10,
+                    "price": 676200
+                },
+                {
+                    "id": "#Cust-80",
+                    "id4tree": 20,
+                    "date": "2025-05-22",
+                    "name": "Jennifer",
+                    "country": "China",
+                    "flag": "china.png",
+                    "product": "IPhone 16 Pro",
+                    "color": "Pink",
+                    "quantity": 10,
+                    "price": 659800
+                },
+                {
+                    "id": "#Cust-79",
+                    "id4tree": 21,
+                    "date": "2025-05-21",
+                    "name": "Emma",
+                    "country": "UK",
+                    "flag": "uk.png",
+                    "product": "Galaxy S25 Ultra",
+                    "color": "Pink",
+                    "quantity": 9,
+                    "price": 469100
+                },
+                {
+                    "id": "#Cust-78",
+                    "id4tree": 22,
+                    "date": "2025-05-20",
+                    "name": "Steve",
+                    "country": "Singapore",
+                    "flag": "singapore.png",
+                    "product": "Galaxy S25",
+                    "color": "Gray",
+                    "quantity": 20,
+                    "price": 387500
+                },
+                {
+                    "id": "#Cust-77",
+                    "id4tree": 23,
+                    "date": "2025-05-19",
+                    "name": "Anna",
+                    "country": "Singapore",
+                    "flag": "singapore.png",
+                    "product": "Galaxy Note21",
+                    "color": "Violet",
+                    "quantity": 20,
+                    "price": 720000
+                },
+                {
+                    "id": "#Cust-76",
+                    "id4tree": 24,
+                    "date": "2025-05-18",
+                    "name": "Anna",
+                    "country": "UK",
+                    "flag": "uk.png",
+                    "product": "IPhone 16 Pro",
+                    "color": "Gray",
+                    "quantity": 9,
+                    "price": 83500
+                },
+                {
+                    "id": "#Cust-75",
+                    "id4tree": 25,
+                    "date": "2025-05-17",
+                    "name": "Steve",
+                    "country": "USA",
+                    "flag": "usa.png",
+                    "product": "IPhone 16",
+                    "color": "Orange",
+                    "quantity": 3,
+                    "price": 35800
+                },
+                {
+                    "id": "#Cust-74",
+                    "id4tree": 26,
+                    "date": "2025-05-16",
+                    "name": "Emma",
+                    "country": "Korea",
+                    "flag": "korea.png",
+                    "product": "Galaxy S25 Ultra",
+                    "color": "Yellow",
+                    "quantity": 1,
+                    "price": 680600
+                },
+                {
+                    "id": "#Cust-73",
+                    "id4tree": 27,
+                    "date": "2025-05-15",
+                    "name": "Lawrence",
+                    "country": "Korea",
+                    "flag": "korea.png",
+                    "product": "Galaxy S25",
+                    "color": "Pink",
+                    "quantity": 1,
+                    "price": 363800
+                },
+                {
+                    "id": "#Cust-72",
+                    "id4tree": 28,
+                    "date": "2025-05-14",
+                    "name": "Lawrence",
+                    "country": "China",
+                    "flag": "china.png",
+                    "product": "IPhone 16",
+                    "color": "Green",
+                    "quantity": 10,
+                    "price": 82900
+                },
+                {
+                    "id": "#Cust-71",
+                    "id4tree": 29,
+                    "date": "2025-05-13",
+                    "name": "Jennifer",
+                    "country": "Ireland",
+                    "flag": "ireland.png",
+                    "product": "Galaxy Note21",
+                    "color": "Pink",
+                    "quantity": 12,
+                    "price": 747900
+                },
+                {
+                    "id": "#Cust-70",
+                    "id4tree": 30,
+                    "date": "2025-05-12",
+                    "name": "Emma",
+                    "country": "Japan",
+                    "flag": "japan.png",
+                    "product": "IPhone 16",
+                    "color": "Orange",
+                    "quantity": 7,
+                    "price": 909300
+                },
+                {
+                    "id": "#Cust-69",
+                    "id4tree": 31,
+                    "date": "2025-05-11",
+                    "name": "Jennifer",
+                    "country": "Japan",
+                    "flag": "japan.png",
+                    "product": "Galaxy S25",
+                    "color": "Yellow",
+                    "quantity": 7,
+                    "price": 75800
+                }
+            ];
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>일반 그리드를 트리 계층형 데이터로 만들고, 반대로 계층형 데이터를 일반 데이터로 만드는 예제입니다.</p>
-		<p>즉, 이 예제는 "depth 올리기(indent)" 와 "depth 내리기(outdent)" 가 트리 그리드에 국한되지 않다는 것을 보여줍니다.
-			일반 그리드에서 depth 를 올리고 내림으로써 트리 그리드로 데이터를 만들 수 있습니다.</p>
-		<p>■ 그리드 데이터 가져오기 : getGridData() 메소드</p>
-		<p>■ 계층 구조를 이루는 그리드 데이터 가져오기 : getTreeGridData() 메소드</p>
-		<ul class="nav_u">
-			<li><button class="btn" onclick="outdentTreeDepth()">◁ Outdent</button></li>
-			<li><button class="btn" onclick="indentTreeDepth()">▷ Indent</button></li>
-			<li><button class="btn" onclick="expand()">모두 열기/ 닫기</button></li>
-		</ul>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        일반 그리드를 트리 계층형 데이터로 만들고, 반대로 계층형 데이터를 일반 데이터로 만드는
+                        예제입니다.
+                    </p>
+                    <p>
+                        즉, 이 예제는 "depth 올리기(indent)" 와 "depth 내리기(outdent)" 가 트리 그리드에 국한되지 않다는
+                        것을 보여줍니다. 일반 그리드에서 depth 를 올리고 내림으로써 트리 그리드로 데이터를 만들 수
+                        있습니다.
+                    </p>
+                    <p>■ 그리드 데이터 가져오기 : getGridData() 메소드</p>
+                    <p>■ 계층 구조를 이루는 그리드 데이터 가져오기 : getTreeGridData() 메소드</p>
+                    <ul class="nav_u">
+                        <li><button class="btn" onclick="outdentTreeDepth()">◁ Outdent</button></li>
+                        <li><button class="btn" onclick="indentTreeDepth()">▷ Indent</button></li>
+                        <li><button class="btn" onclick="expand()">모두 열기/ 닫기</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom"></div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

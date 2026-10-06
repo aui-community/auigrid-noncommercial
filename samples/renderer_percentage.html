@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
+<link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+        <script src="../export_server_samples/FileSaver.min.js"></script>
+        <script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <style>
+            .percentage-demo-name {
+                text-align: left;
+            }
+            .percentage-demo-label {
+                text-align: right;
+            }
+            .demo-shell .percentage-options input[type="range"] {
+                width: 120px;
+            }
+            .percentage-options output {
+                min-width: 36px;
+                font-variant-numeric: tabular-nums;
+            }
+            /* 구간 클래스는 해당 렌더러의 막대와 라벨에만 적용합니다. */
+            .percentage-demo-low .aui-grid-percentage-bar {
+                background: #bd5639;
+            }
+            .percentage-demo-low .aui-grid-percentage-label {
+                color: #a04730;
+            }
+            .percentage-demo-medium .aui-grid-percentage-bar {
+                background: #a77a20;
+            }
+            .percentage-demo-medium .aui-grid-percentage-label {
+                color: #846119;
+            }
+            .percentage-demo-high .aui-grid-percentage-bar {
+                background: #18825d;
+            }
+        </style>
+        <script>
+            // 같은 비율을 네 표시 방식으로 비교합니다. 원본 비율은 변경하지 않습니다.
+            let myGridID;
+            function init() {
+                const columnLayout = [
+                    {
+                        dataField: "task",
+                        headerText: "업무",
+                        width: 220,
+                        style: "percentage-demo-name"
+                    },
+                    {
+                        dataField: "progress",
+                        headerText: "기본 표시",
+                        width: 200,
+                        dataType: "numeric",
+                        style: "percentage-demo-export",
+                        renderer: { type: "PercentageRenderer", precision: 1 }
+                    },
+                    {
+                        dataField: "styled",
+                        headerText: "구간별 색상",
+                        width: 220,
+                        dataType: "numeric",
+                        style: "percentage-demo-export",
+                        renderer: {
+                            type: "PercentageRenderer",
+                            precision: 1,
+                            offset: 20,
+                            styleRange: [
+                                { "0.3": "percentage-demo-low" },
+                                { "0.5": "percentage-demo-medium" },
+                                { "1": "percentage-demo-high" }
+                            ]
+                        }
+                    },
+                    {
+                        dataField: "barOnly",
+                        headerText: "막대만 표시",
+                        width: 170,
+                        dataType: "numeric",
+                        style: "percentage-demo-export",
+                        renderer: { type: "PercentageRenderer", showLabel: false }
+                    },
+                    {
+                        dataField: "labelOnly",
+                        headerText: "백분율만 표시",
+                        width: 150,
+                        dataType: "numeric",
+                        style: "percentage-demo-label",
+                        renderer: { type: "PercentageRenderer", showBar: false, precision: 1 }
+                    }
+                ];
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, {
+                    rowHeight: 46,
+                    selectionMode: "singleRow"
+                });
+                // 0%, 구간 경계, 100% 초과 및 미입력 상태를 고정 데이터로 비교합니다.
+                const tasks = [
+                    "주문 화면 개편",
+                    "배송 알림 연동",
+                    "정산 보고서 작성",
+                    "회원 정보 이전",
+                    "고객 포털 구축",
+                    "검색 기능 개선",
+                    "운영 자동화",
+                    "차기 기능 검토"
+                ];
+                const ratios = [0, 0.18, 0.3, 0.5, 0.815, 1, 1.25, null];
+                AUIGrid.setGridData(
+                    myGridID,
+                    ratios.map(function (value, index) {
+                        return { task: tasks[index], progress: value, styled: value, barOnly: value, labelOnly: value };
+                    })
+                );
+                applyPercentageOptions();
+            }
+            // 앞의 두 비교 칼럼에만 옵션을 적용하고 고정 예시 칼럼은 그대로 둡니다.
+            function applyPercentageOptions() {
+                const bars = document.getElementById("percentage-bars");
+                const labels = document.getElementById("percentage-labels");
+                if (!bars.checked) labels.checked = true;
+                labels.disabled = !bars.checked;
+                const offset = Number(document.getElementById("percentage-offset").value);
+                document.getElementById("percentage-offset-value").textContent = offset + "px";
+                const props = {
+                    showBar: bars.checked,
+                    showLabel: labels.checked,
+                    precision: Number(document.getElementById("percentage-precision").value),
+                    offset: offset
+                };
+                AUIGrid.setRendererProp(myGridID, 1, props);
+                AUIGrid.setRendererProp(myGridID, 2, props);
+            }
+            // 숫자 비율과 백분율 서식 및 데이터 막대를 Excel에 저장합니다.
+            function exportClick() {
+                const options = { fileName: "백분율_표시" };
+                // Excel의 정렬만 재정의하며 화면의 칼럼 정렬은 유지합니다.
+                if (document.getElementById("percentage-export-center").checked) {
+                    options.useExportStyle = true;
+                    options.exportStyle = {
+                        "percentage-demo-export": { textAlign: "center" },
+                        "percentage-demo-label": { textAlign: "center" }
+                    };
+                }
+                AUIGrid.exportToXlsx(myGridID, options);
+            }
+            // PDF에도 각 칼럼의 표시 옵션과 구간 색상을 적용합니다.
+            function exportPdfClick() {
+                AUIGrid.exportToPdf(myGridID, {
+                    fileName: "백분율_표시",
+                    fontPath: "../pdfkit/nyjgothic-medium.ttf"
+                });
+            }
+        </script>
+    </head>
+<body class="demo-typography">
+
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        <strong
+                            >PercentageRenderer는 화면의 백분율 표시를 Excel 내보내기에서도 같은 백분율 서식으로
+                            유지하기 위한 렌더러입니다.</strong
+                        >
+                    </p>
+                    <p>
+                        데이터 <code>0.815</code>는 <strong>81.5%</strong>로 표시하며, Excel에도 숫자 값과 백분율 서식을
+                        함께 저장합니다.
+                    </p>
+                    <p>
+                        구간별 색상은 <code>styleRange</code>, 막대와 텍스트의 표시 여부는 <code>showBar</code>와
+                        <code>showLabel</code>로 지정합니다.
+                    </p>
+                    <div class="demo-options percentage-options" role="group" aria-label="백분율 표시 및 Excel 옵션">
+                        <div class="demo-option-row">
+                            <label class="demo-check"
+                                ><input
+                                    id="percentage-bars"
+                                    type="checkbox"
+                                    checked
+                                    onchange="applyPercentageOptions()"
+                                />
+                                막대 표시</label
+                            >
+                            <label class="demo-check"
+                                ><input
+                                    id="percentage-labels"
+                                    type="checkbox"
+                                    checked
+                                    onchange="applyPercentageOptions()"
+                                />
+                                백분율 표시</label
+                            >
+                            <label
+                                >소수 자릿수
+                                <select id="percentage-precision" onchange="applyPercentageOptions()">
+                                    <option value="0">0</option>
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select></label
+                            >
+                            <label
+                                >간격
+                                <input
+                                    id="percentage-offset"
+                                    type="range"
+                                    min="0"
+                                    max="40"
+                                    value="20"
+                                    oninput="applyPercentageOptions()"
+                                /><output id="percentage-offset-value" for="percentage-offset">20px</output></label
+                            >
+                            <label class="demo-check"
+                                ><input id="percentage-export-center" type="checkbox" /> Excel 가운데 정렬</label
+                            >
+                        </div>
+                        <p class="demo-option-note">표시 옵션은 기본 표시와 구간별 색상 칼럼에 적용합니다.</p>
+                    </div>
+                    <button type="button" class="btn" onclick="exportClick()">Excel로 저장</button>
+                    <button type="button" class="btn" onclick="exportPdfClick()">PDF로 저장</button>
+                    <a href="javascript:changeLocation('./editRenderer_percentage.html?erpercentage')"
+                        >백분율 편집 데모 보기</a
+                    >
+                </div>
+                <div id="grid_wrap" style="width: 100%; height: 440px; margin: 0 auto"></div>
+                <div class="desc_bottom">
+                    <p>
+                        칼럼의 <code>labelFunction</code>이나 <code>formatString</code>으로 출력 텍스트를 변경할 수
+                        없습니다. 백분율 형식을 유지하며 소수 자릿수는 <code>precision</code>으로 지정합니다.
+                    </p>
+                    <p>
+                        100%를 초과하면 막대는 가득 채우고 실제 백분율을 표시합니다. <code>null</code>과
+                        <code>undefined</code>는 빈 셀로 표시합니다.
+                    </p>
+                </div>
+            </div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

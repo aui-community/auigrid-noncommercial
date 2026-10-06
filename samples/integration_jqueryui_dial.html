@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,201 +37,213 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<!-- jQuery -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-<style>
-	/* 드랍 리스트의 아이템 텍스트 left 로 재정의 */
-	.aui-grid-drop-list-item-wrapper {
-		text-align: left;
-	}
+        <!-- jQuery -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css" />
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <style>
+            /* 드랍 리스트의 아이템 텍스트 left 로 재정의 */
+            .aui-grid-drop-list-item-wrapper {
+                text-align: left;
+            }
 
-	/* jQuery UI 재정의 */
-	.ui-dialog .ui-dialog-content {
-		overflow: hidden;
-	}
+            /* jQuery UI 재정의 */
+            .ui-dialog .ui-dialog-content {
+                overflow: hidden;
+            }
 
-	.left {
-		text-align: left;
-	}
-</style>
-<script>
-	$(function () {
-		$("#dialog_wrap").dialog({
-			autoOpen: false,
-			position: { my: "bottom", at: "center", of: "#main" },
-			width: 1000,
-			height: 480,
-			minWidth: 240,
-			minHeight: 240,
-			show: {
-				effect: "blind",
-				duration: 700
-			},
-			buttons: {
-				"닫기": function () {
-					$(this).dialog("close");
-				}
-			},
-			hide: {
-				effect: "explode",
-				duration: 700
-			},
-			create: function (event, ui) {
-				this.style.display = "block";
-				createAUIGrid("#myGrid");
-			},
-			// Open 시 그리드 사이징 다시 해주기
-			open: function (event, ui) {
-				let $this = $(this);
-				let dWidth = $this.dialog("option", "width") - 30; // jQuery UI 다이얼로그 패딩 및 마진 계산한 값 빼주기
-				let dHeight = $this.dialog("option", "height") - 130;
-				AUIGrid.resize("#myGrid", dWidth, dHeight);
-			},
-			// 리사이징 시 똑같이 그리드도 리사이징 하기
-			resize: function (event, ui) {
-				AUIGrid.resize("#myGrid", ui.size.width - 30, ui.size.height - 130);
-			}
-		});
+            .left {
+                text-align: left;
+            }
+        </style>
+        <script>
+            $(function () {
+                $("#dialog_wrap").dialog({
+                    autoOpen: false,
+                    position: { my: "bottom", at: "center", of: "#main" },
+                    width: 1000,
+                    height: 480,
+                    minWidth: 240,
+                    minHeight: 240,
+                    show: {
+                        effect: "blind",
+                        duration: 700
+                    },
+                    buttons: {
+                        "닫기": function () {
+                            $(this).dialog("close");
+                        }
+                    },
+                    hide: {
+                        effect: "explode",
+                        duration: 700
+                    },
+                    create: function (event, ui) {
+                        this.style.display = "block";
+                        createAUIGrid("#myGrid");
+                    },
+                    // Open 시 그리드 사이징 다시 해주기
+                    open: function (event, ui) {
+                        let $this = $(this);
+                        let dWidth = $this.dialog("option", "width") - 30; // jQuery UI 다이얼로그 패딩 및 마진 계산한 값 빼주기
+                        let dHeight = $this.dialog("option", "height") - 130;
+                        AUIGrid.resize("#myGrid", dWidth, dHeight);
+                    },
+                    // 리사이징 시 똑같이 그리드도 리사이징 하기
+                    resize: function (event, ui) {
+                        AUIGrid.resize("#myGrid", ui.size.width - 30, ui.size.height - 130);
+                    }
+                });
 
-		$("#opener").click(function () {
-			let $dia = $("#dialog_wrap");
-			if ($dia.dialog("isOpen")) {
-				return;
-			}
+                $("#opener").click(function () {
+                    let $dia = $("#dialog_wrap");
+                    if ($dia.dialog("isOpen")) {
+                        return;
+                    }
 
-			$dia.dialog("option", {
-				"width": 1000,
-				"height": 480,
-				"position": { my: "bottom", at: "center", of: "#main" }
-			}).dialog("open");
-		});
-	});
+                    $dia.dialog("option", {
+                        "width": 1000,
+                        "height": 480,
+                        "position": { my: "bottom", at: "center", of: "#main" }
+                    }).dialog("open");
+                });
+            });
 
-	// 윈도우 리사이징 시 그리드도 사이즈 변경시키기
-	$(window).resize(function () {
-		AUIGrid.resize("#myGrid");
-	});
+            // 윈도우 리사이징 시 그리드도 사이즈 변경시키기
+            $(window).resize(function () {
+                AUIGrid.resize("#myGrid");
+            });
 
-	// 칼럼 레이아웃 생성
-	function getColumnLayout() {
-		const columnLayout = [{
-			headerText: "Group Header",
-			children: [{
-				dataField: "id",
-				headerText: "ID",
-				width: "10%",
-				minWidth: 90,
-				headerTooltip: { // 헤더 툴팁 표시 HTML 양식
-					show: true,
-					tooltipHtml: "프로젝트 태스크 ID"
-				}
-			}, {
-				dataField: "name",
-				headerText: "Task Name",
-				style: "left",
-				width: "30%",
-				minWidth: 260,
-				filter: {
-					showIcon: true
-				}
-			}, {
-				dataField: "charge",
-				headerText: "Charge",
-				style: "left",
-				width: "20%",
-				editRenderer: {
-					type: "ComboBoxRenderer",
-					historyMode: true // 콤보 리스트 외에 사용자가 다른 값을 입력하면 해당 값이 기존 list 에 추가되어 출력됨
-				},
-				minWidth: 100
-			}]
-		}, {
-			dataField: "complete",
-			headerText: "Complete(%)",
-			renderer: {
-				type: "BarRenderer",
-				min: 0,
-				max: 100
-			},
-			width: "20%",
-			minWidth: 140,
-			showEditorBtn: true,
-			filter: {
-				showIcon: true,
-				type: "numeric"
-			}
-		}, {
-			dataField: "start",
-			headerText: "Start Date",
-			width: "10%",
-			minWidth: 80
-		}, {
-			dataField: "end",
-			headerText: "End Date",
-			width: "10%",
-			minWidth: 80
-		}];
-		return columnLayout;
-	}
+            // 칼럼 레이아웃 생성
+            function getColumnLayout() {
+                const columnLayout = [
+                    {
+                        headerText: "Group Header",
+                        children: [
+                            {
+                                dataField: "id",
+                                headerText: "ID",
+                                width: "10%",
+                                minWidth: 90,
+                                headerTooltip: {
+                                    // 헤더 툴팁 표시 HTML 양식
+                                    show: true,
+                                    tooltipHtml: "프로젝트 태스크 ID"
+                                }
+                            },
+                            {
+                                dataField: "name",
+                                headerText: "Task Name",
+                                style: "left",
+                                width: "30%",
+                                minWidth: 260,
+                                filter: {
+                                    showIcon: true
+                                }
+                            },
+                            {
+                                dataField: "charge",
+                                headerText: "Charge",
+                                style: "left",
+                                width: "20%",
+                                editRenderer: {
+                                    type: "ComboBoxRenderer",
+                                    historyMode: true // 콤보 리스트 외에 사용자가 다른 값을 입력하면 해당 값이 기존 list 에 추가되어 출력됨
+                                },
+                                minWidth: 100
+                            }
+                        ]
+                    },
+                    {
+                        dataField: "complete",
+                        headerText: "Complete(%)",
+                        renderer: {
+                            type: "BarRenderer",
+                            min: 0,
+                            max: 100
+                        },
+                        width: "20%",
+                        minWidth: 140,
+                        showEditorBtn: true,
+                        filter: {
+                            showIcon: true,
+                            type: "numeric"
+                        }
+                    },
+                    {
+                        dataField: "start",
+                        headerText: "Start Date",
+                        width: "10%",
+                        minWidth: 80
+                    },
+                    {
+                        dataField: "end",
+                        headerText: "End Date",
+                        width: "10%",
+                        minWidth: 80
+                    }
+                ];
+                return columnLayout;
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid(gridPID) {
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid(gridPID) {
+                // type에 맞는 칼럼 레이아웃
+                const columnLayout = getColumnLayout();
 
-		// type에 맞는 칼럼 레이아웃 
-		const columnLayout = getColumnLayout();
+                // 긜드 속성 설정
+                const gridProps = {
+                    editable: true,
+                    // singleRow 선택모드
+                    selectionMode: "singleRow",
+                    enableColumnResize: true,
+                    enableMovingColumn: true,
+                    displayTreeOpen: true,
+                    enableFilter: true,
+                    useContextMenu: true,
+                    // 행 체크 박스 칼럼 사용
+                    showRowCheckColumn: true,
+                    // 트리 체크 부모에 의존성 갖음.
+                    rowCheckDependingTree: true,
+                    //  jQuery UI Dialog 의 ID를 지정해서 해당 dialog 안에 그리드 레이어들이 생성하도록 지시
+                    dialogId: "dialog_wrap"
+                };
 
-		// 긜드 속성 설정
-		const gridProps = {
-			editable: true,
-			// singleRow 선택모드
-			selectionMode: "singleRow",
-			enableColumnResize: true,
-			enableMovingColumn: true,
-			displayTreeOpen: true,
-			enableFilter: true,
-			useContextMenu: true,
-			// 행 체크 박스 칼럼 사용
-			showRowCheckColumn: true,
-			// 트리 체크 부모에 의존성 갖음.
-			rowCheckDependingTree: true,
-			//  jQuery UI Dialog 의 ID를 지정해서 해당 dialog 안에 그리드 레이어들이 생성하도록 지시
-			dialogId: "dialog_wrap"
-		};
+                // 실제로 #grid_wrap 에 그리드 생성
+                AUIGrid.create(gridPID, columnLayout, gridProps);
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		AUIGrid.create(gridPID, columnLayout, gridProps);
+                // 데이터 요청
+                requestGridData(gridPID, "./data/schedule_tree.json");
+            }
 
-		// 데이터 요청
-		requestGridData(gridPID, "./data/schedule_tree.json");
-	}
+            function requestGridData(gridPID, url) {
+                AUIGrid.showAjaxLoader(gridPID); // 로딩바 출력
+                $.get(url, function (data) {
+                    AUIGrid.setGridData(gridPID, data);
 
-	function requestGridData(gridPID, url) {
-		AUIGrid.showAjaxLoader(gridPID); // 로딩바 출력
-		$.get(url, function (data) {
-			AUIGrid.setGridData(gridPID, data);
+                    AUIGrid.removeAjaxLoader(gridPID); // 로딩바 제거
+                });
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-			AUIGrid.removeAjaxLoader(gridPID); // 로딩바 제거
-		});
-	}
-</script>
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<p>jQuery 와 jQuery UI 를 이용해서 AUIGrid 를 어떻게 생성하는지를 보여줍니다.</p>
-		<p>UI 컨테이너 중 가장 일반적인 Dialog 에서 어떻게 그리드를 생성하고, Dialog 에서 리사이징 시 그리드도 같이 리사이징이 이루어지도록 설정했습니다.</p>
-		<p>아래 버턴을 눌러 Dialog 를 열어보시고, Dialog 이동 및 크기 조절을 테스트 해 보십시오.</p>
-		<span id="opener" class="btn">Open jQuery UI Dialog</span><span>&lt;- 클릭</span>
-	</div>
-	<!--  jQuery UI Dialog 정의 -->
-	<div id="dialog_wrap" title="AUIGrid-jQuery UI 연동" style="display:none;">
-		<!--  여기에 그리드가 생성됩니다. -->
-		<div id="myGrid"></div>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>jQuery 와 jQuery UI 를 이용해서 AUIGrid 를 어떻게 생성하는지를 보여줍니다.</p>
+                    <p>
+                        UI 컨테이너 중 가장 일반적인 Dialog 에서 어떻게 그리드를 생성하고, Dialog 에서 리사이징 시
+                        그리드도 같이 리사이징이 이루어지도록 설정했습니다.
+                    </p>
+                    <p>아래 버턴을 눌러 Dialog 를 열어보시고, Dialog 이동 및 크기 조절을 테스트 해 보십시오.</p>
+                    <span id="opener" class="btn">Open jQuery UI Dialog</span><span>&lt;- 클릭</span>
+                </div>
+                <!--  jQuery UI Dialog 정의 -->
+                <div id="dialog_wrap" title="AUIGrid-jQuery UI 연동" style="display: none">
+                    <!--  여기에 그리드가 생성됩니다. -->
+                    <div id="myGrid"></div>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

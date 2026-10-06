@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,122 +37,175 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// AUIGrid 에 데이터 삽입합니다.
-		AUIGrid.setGridData(myGridID, genRandomData());
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // AUIGrid 에 데이터 삽입합니다.
+                AUIGrid.setGridData(myGridID, genRandomData());
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 생성
-		const columnLayout = [];
-		const chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-		for (let i = 0; i < 26; i++) {
-			columnLayout.push({
-				headerText: chars[i],
-				dataField: i,
-				width: 80
-			});
-		}
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 생성
+                const columnLayout = [];
+                const chars = [
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                    "E",
+                    "F",
+                    "G",
+                    "H",
+                    "I",
+                    "J",
+                    "K",
+                    "L",
+                    "M",
+                    "N",
+                    "O",
+                    "P",
+                    "Q",
+                    "R",
+                    "S",
+                    "T",
+                    "U",
+                    "V",
+                    "W",
+                    "X",
+                    "Y",
+                    "Z"
+                ];
+                for (let i = 0; i < 26; i++) {
+                    columnLayout.push({
+                        headerText: chars[i],
+                        dataField: i,
+                        width: 80
+                    });
+                }
 
-		// 그리드 속성 설정
-		const gridProps = {
-			editable: true, // 수정 모드
-			selectionMode: "multipleCells",
-			editingOnKeyDown: true, // 키보드 입력으로 편집 모드 진입 (기본값:true임;)
-			showRowCheckColumn: false,
-			enableSorting: false,
-			// 엔터키가 옆 칼럼으로 이동
-			enterKeyColumnBase: true,
-			//softRemoveRowMode 적용을 원래 데이터에만 적용 즉, 새 행인 경우 적용 안시킴
-			softRemovePolicy: "exceptNew",
-			// 상태 칼럼 사용
-			showStateColumn: true,
-			// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-			wrapSelectionMove: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    editable: true, // 수정 모드
+                    selectionMode: "multipleCells",
+                    editingOnKeyDown: true, // 키보드 입력으로 편집 모드 진입 (기본값:true임;)
+                    showRowCheckColumn: false,
+                    enableSorting: false,
+                    // 엔터키가 옆 칼럼으로 이동
+                    enterKeyColumnBase: true,
+                    //softRemoveRowMode 적용을 원래 데이터에만 적용 즉, 새 행인 경우 적용 안시킴
+                    softRemovePolicy: "exceptNew",
+                    // 상태 칼럼 사용
+                    showStateColumn: true,
+                    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                    wrapSelectionMove: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 에디팅 시작 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
-			const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginDesc").textContent = msg;
-		});
+                // 에디팅 시작 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+                    const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginDesc").textContent = msg;
+                });
 
-		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
-			const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginEnd").textContent = msg;
-		});
+                // 에디팅 정상 종료 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+                    const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginEnd").textContent = msg;
+                });
 
-		// 에디팅 정상 종료 직전 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
-			// 여기서 반환하는 값이 곧 에디팅 완료 값입니다.
-			// 개발자가 입력한 값을 변경할 수 있습니다.
-			return event.value; // 원래 값으로 적용 시킴
-		});
+                // 에디팅 정상 종료 직전 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
+                    // 여기서 반환하는 값이 곧 에디팅 완료 값입니다.
+                    // 개발자가 입력한 값을 변경할 수 있습니다.
+                    return event.value; // 원래 값으로 적용 시킴
+                });
 
-		// 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
-			const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginEnd").textContent = msg;
-		});
-	}
+                // 에디팅 취소 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+                    const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginEnd").textContent = msg;
+                });
+            }
 
-	// 주어진 개수만큼 랜덤 데이터 생성하여 그리드에 삽입
-	function genRandomData(count = 100) {
-		const data = [];
-		for (let i = 0; i < count; i++) {
-			const row = {
-				"0": "v" + i
-			};
-			for (let j = 1; j < 26; j++) {
-				row[j] = "";
-			}
-			data[i] = row;
-		}
-		return data;
-	}
+            // 주어진 개수만큼 랜덤 데이터 생성하여 그리드에 삽입
+            function genRandomData(count = 100) {
+                const data = [];
+                for (let i = 0; i < count; i++) {
+                    const row = {
+                        "0": "v" + i
+                    };
+                    for (let j = 1; j < 26; j++) {
+                        row[j] = "";
+                    }
+                    data[i] = row;
+                }
+                return data;
+            }
 
-	function openInputer() {
-		// 현재 선택 셀에 편집 인풋터를 강제로 오픈합니다.
-		AUIGrid.openInputer(myGridID);
-	}
-</script>
-</head>
-<body>
+            function openInputer() {
+                // 현재 선택 셀에 편집 인풋터를 강제로 오픈합니다.
+                AUIGrid.openInputer(myGridID);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>편집 가능 상태(editable=true)에서 키보드로 바로 입력이 가능합니다.(editingOnKeyDown=true, 기본값 true)</p>
-		<p>편집 가능 상태로 들어가기 위해서는 "F2 키 또는 (더블)클릭" 과 "키보드 바로 입력" 2가지가 존재합니다.</p>
-		<p>기본 입력기(InputEditRenderer)에서 편집을 시작하는 방식과 updownArrowEditEnd 설정에 따라 위/아래 화살표 키의 동작이 달라집니다.</p>
-		<p>■"F2 또는 (더블)클릭"으로 편집을 시작한 경우, updownArrowEditEnd=true(기본값)이면 위/아래 화살표 키로 편집을 완료합니다. false이면 이 키로 편집을 완료하지 않고 현재 입력기를 유지합니다.</p>
-		<p>■"키보드 바로 입력"으로 편집을 시작한 경우에는 updownArrowEditEnd 설정과 관계없이 위/아래 화살표 키로 편집을 완료합니다.</p>
-		<p>참고 : updownArrowEditEnd는 기본 입력기인 InputEditRenderer에만 적용됩니다. 한 번의 클릭으로 편집을 시작하려면 editBeginMode="click"으로 설정하십시오.</p>
-		<p><span class="btn" onclick="openInputer()">강제로 편집 모드 진입하기(셀 편집기) 열기</span>
-			: 셀 기본 편집기 뿐 아니라 editRenderer 의 type 을 DropDownListRenderer 로 설정하면, 리스트가 열립니다. 즉, 편집 모드로 진입합니다.</p>
-		<p><strong>■ 첫번째 셀의 v0 의 값을 다른 값으로 변경하면, 셀 수정 마크(editedCellMarker)가 표시됩니다. 이 때 그 값을 v0 으로 다시 입력하면 수정 마크는 해제 됩니다.</strong></p>
-	</div>
-	<div style="clear:both;"></div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:420px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="editBeginDesc"></p>
-		<p id="editBeginEnd"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        편집 가능 상태(editable=true)에서 키보드로 바로 입력이 가능합니다.(editingOnKeyDown=true, 기본값
+                        true)
+                    </p>
+                    <p>
+                        편집 가능 상태로 들어가기 위해서는 "F2 키 또는 (더블)클릭" 과 "키보드 바로 입력" 2가지가
+                        존재합니다.
+                    </p>
+                    <p>
+                        기본 입력기(InputEditRenderer)에서 편집을 시작하는 방식과 updownArrowEditEnd 설정에 따라 위/아래
+                        화살표 키의 동작이 달라집니다.
+                    </p>
+                    <p>
+                        ■"F2 또는 (더블)클릭"으로 편집을 시작한 경우, updownArrowEditEnd=true(기본값)이면 위/아래 화살표
+                        키로 편집을 완료합니다. false이면 이 키로 편집을 완료하지 않고 현재 입력기를 유지합니다.
+                    </p>
+                    <p>
+                        ■"키보드 바로 입력"으로 편집을 시작한 경우에는 updownArrowEditEnd 설정과 관계없이 위/아래 화살표
+                        키로 편집을 완료합니다.
+                    </p>
+                    <p>
+                        참고 : updownArrowEditEnd는 기본 입력기인 InputEditRenderer에만 적용됩니다. 한 번의 클릭으로
+                        편집을 시작하려면 editBeginMode="click"으로 설정하십시오.
+                    </p>
+                    <p>
+                        <span class="btn" onclick="openInputer()">강제로 편집 모드 진입하기(셀 편집기) 열기</span> : 셀
+                        기본 편집기 뿐 아니라 editRenderer 의 type 을 DropDownListRenderer 로 설정하면, 리스트가
+                        열립니다. 즉, 편집 모드로 진입합니다.
+                    </p>
+                    <p>
+                        <strong
+                            >■ 첫번째 셀의 v0 의 값을 다른 값으로 변경하면, 셀 수정 마크(editedCellMarker)가 표시됩니다.
+                            이 때 그 값을 v0 으로 다시 입력하면 수정 마크는 해제 됩니다.</strong
+                        >
+                    </p>
+                </div>
+                <div style="clear: both"></div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 420px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="editBeginDesc"></p>
+                    <p id="editBeginEnd"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

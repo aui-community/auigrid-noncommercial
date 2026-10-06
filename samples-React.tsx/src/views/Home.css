@@ -1,0 +1,30 @@
+/* TypeScript HOME의 설치 안내만 피벗과 같은 터미널 형태로 표시합니다. */
+.sample-shell .home-main > p > code {
+    padding: 2px 5px;
+    border-radius: 3px;
+    background: #edf4fb;
+    color: #164f83;
+}
+.sample-shell .home-install {
+    position: relative;
+    margin: 16px 0;
+    border: 1px solid #384b5c;
+    border-radius: 8px;
+    background: #1e2c3a;
+    overflow: hidden;
+}
+.sample-shell .home-install-title {
+    padding: 14px 16px;
+    border-bottom: 1px solid #384b5c;
+    color: #b4d2e5;
+    font-weight: 600;
+}
+/* 복사 기능과 원문은 유지하고 도구만 제목 행에 배치합니다. */
+.sample-shell .home-install .demo-code-frame { position: static; margin: 0; }
+.sample-shell .home-install .demo-code-frame > pre {
+    margin: 0;
+    padding: 20px;
+    border-radius: 0;
+    background: transparent;
+}
+.sample-shell .home-install .demo-code-tools { top: 10px; right: 12px; }

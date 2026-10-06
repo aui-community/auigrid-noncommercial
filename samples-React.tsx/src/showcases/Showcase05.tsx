@@ -1,147 +1,95 @@
-import { useEffect, useRef } from 'react';
-import * as IGrid from 'aui-grid';
+import { useEffect, useRef, useState } from 'react';
 import AUIGrid from '../static/AUIGrid-React.tsx/AUIGridReact';
-import axios from 'axios';
-import ExportGridDataView from '../samples/ExportGridDataView';
-import './Showcase05.css';
+import FileSaver from 'file-saver';
+import '../static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
+import { createDemo, initialView } from './showcase5Model';
+import './showcase-workspaces.css';
+import './showcase-grid-features.css';
 
-const exportProps = {
-	fileName: '쇼케이스-05',
-	headers: [
-		{ text: '', height: 20 },
-		{
-			text: '국가별 핸드폰 판매 통계',
-			height: 40,
-			style: { fontSize: 20, textAlign: 'center', color: '#ff0000', fontWeight: 'bold', underline: true, background: '#DAD9FF' }
-		},
-		{ text: '', height: 5, style: { background: '#555555' } }
-	],
-	footers: [
-		{ text: '', height: 5, style: { background: '#555555' } },
-		{
-			text: 'Copyright © AUISoft Co., Ltd.',
-			height: 24,
-			style: { textAlign: 'right', fontWeight: 'bold', color: '#ffffff', background: '#222222' }
-		}
-	]
-};
+// public 자원은 Vite 배포 경로를 기준으로 읽습니다.
+window.saveAs = FileSaver.saveAs;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const columnLayout: IGrid.Column[] = [
-	{
-		dataField: 'country',
-		headerText: 'Country',
-		width: 150,
-		filter: { showIcon: true, useExMenu: true }
-	},
-	{
-		dataField: 'product',
-		headerText: 'Product',
-		width: 150,
-		filter: { showIcon: true, useExMenu: true }
-	},
-	...Array.from({ length: 12 }, (_, i) => ({
-		dataField: `m${i + 1}`,
-		headerText: `${i + 1}월`,
-		dataType: 'numeric' as const,
-		formatString: '#,##0',
-		width: 100,
-		disableGrouping: true,
-		style: 'showcase5-aui-grid-my-right-style'
-	}))
-];
-
-const footerLayout: IGrid.Footer[] = [
-	{ labelText: '∑', positionField: '#base' },
-	...Array.from({ length: 12 }, (_, i) => ({
-		dataField: `m${i + 1}`,
-		positionField: `m${i + 1}`,
-		operation: 'SUM' as const,
-		formatString: '#,##0',
-		style: 'showcase5-aui-grid-my-custom-sum-total'
-	}))
-];
-
-const gridProps: IGrid.Props = {
-	width: '100%',
-	height: 480,
-	useContextMenu: true,
-	showBranchOnGrouping: false,
-	enableFilter: true,
-	showFooter: true,
-	editable: true,
-	selectionMode: 'singleRow',
-	useGroupingPanel: true,
-	groupingFields: ['country', 'product'],
-	groupingSummary: {
-		dataFields: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10', 'm11', 'm12']
-	},
-	displayTreeOpen: true,
-	enableCellMerge: true,
-	cellMergeRowSpan: false,
-	rowStyleFunction: (_rowIndex, item) => {
-		if (!item._$isGroupSumField) return null;
-		switch (item._$depth) {
-			case 2:
-				return 'aui-grid-row-depth1-style';
-			case 3:
-				return 'aui-grid-row-depth2-style';
-			case 4:
-				return 'aui-grid-row-depth3-style';
-			default:
-				return 'aui-grid-row-depth-default-style';
-		}
-	}
-};
-
-// 데이터 요청과 그리드 반영. 종료된 컴포넌트에는 응답을 적용하지 않습니다.
-async function loadGridData(grid: AUIGrid, signal: AbortSignal) {
-	grid.showAjaxLoader();
-	try {
-		const { data } = await axios.get('./data/country_phone_month_500.json', { signal });
-		if (!signal.aborted) grid.setGridData(data);
-	} catch (error) {
-		if (!signal.aborted) console.error('데이터 로딩 오류:', error);
-	} finally {
-		if (!signal.aborted) grid.removeAjaxLoader();
-	}
+export default function Showcase05() {
+    const myGrid = useRef<AUIGrid>(null);
+    const [view, setView] = useState(initialView);
+    // 데이터와 칼럼 정의는 인스턴스별로 만들고 React가 조작 UI를 갱신합니다.
+    const [demo] = useState(() => createDemo(setView, baseUrl));
+    useEffect(() => {
+        demo.attach(myGrid.current!);
+        // StrictMode의 재연결에서도 이벤트와 타이머가 중복되지 않게 정리합니다.
+        return () => demo.detach();
+    }, [demo]);
+    return (
+        <div className="workspace-demo grid-feature-showcase benchmark-showcase">
+            <div className="workspace-heading">
+                <div>
+                    <h2>AI 모델 벤치마크 비교</h2>
+                    <p>지표는 세로로, 모델은 가로로. 같은 항목의 수치를 한 줄에서 비교하세요.</p>
+                </div>
+                <span className="feature-volume">18개 지표 × 4개 모델</span>
+            </div>
+            <div className="workspace-toolbar">
+                <div className="workspace-controls" aria-label="비교 모델 선택">
+                    <label>
+                        <input
+                            type="checkbox"
+                            data-model="aster"
+                            checked={view.aster}
+                            onChange={(event) => demo.setControl('aster', event.target.checked)}
+                        />{' '}
+                        ASTER 32B
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            data-model="orbit"
+                            checked={view.orbit}
+                            onChange={(event) => demo.setControl('orbit', event.target.checked)}
+                        />{' '}
+                        ORBIT 70B
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            data-model="pico"
+                            checked={view.pico}
+                            onChange={(event) => demo.setControl('pico', event.target.checked)}
+                        />{' '}
+                        PICO 8B
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            data-model="nova"
+                            checked={view.nova}
+                            onChange={(event) => demo.setControl('nova', event.target.checked)}
+                        />{' '}
+                        NOVA 14B
+                    </label>
+                </div>
+                <div className="workspace-controls">
+                    <button type="button" className="btn" onClick={() => demo.exportReport('xlsx')}>
+                        Excel 내보내기
+                    </button>
+                    <button type="button" className="btn" onClick={() => demo.exportReport('pdf')}>
+                        PDF 내보내기
+                    </button>
+                </div>
+            </div>
+            <div className="comparison-caption">
+                <span>셀 템플릿 / 세로 병합 / 고정 칼럼 / 칼럼 표시 전환</span>
+                <span className="benchmark-key">최고값 강조 (동점 포함)</span>
+            </div>
+            <div className="showcase-grid">
+                <AUIGrid ref={myGrid} name="showcase5" columnLayout={demo.columnLayout} gridProps={demo.gridProps} />
+            </div>
+            <div className="workspace-note">
+                <span id="benchmark-status" role="status">
+                    {view.status}
+                </span>
+                <span>모델과 측정값은 기능 설명을 위한 가상 데이터입니다.</span>
+            </div>
+        </div>
+    );
 }
-
-// 그리드 생성 뒤 이벤트를 연결합니다. 리스너 해제는 wrapper가 담당합니다.
-function bindGridEvents(grid: AUIGrid) {
-	grid.bind(IGrid.EventKind.CellClick, (event: IGrid.CellClickEvent) => {
-		console.log(event.type);
-	});
-
-	grid.bind(IGrid.EventKind.HeaderClick, (event: IGrid.HeaderClickEvent) => {
-		console.log(event.type);
-	});
-}
-
-const Showcase05 = () => {
-	const myGrid = useRef<AUIGrid>(null);
-
-	// 생성된 wrapper 참조에 초기화하고, effect가 종료되면 요청/작업을 정리합니다.
-	useEffect(() => {
-		const grid = myGrid.current as AUIGrid;
-		const controller = new AbortController();
-		bindGridEvents(grid);
-		loadGridData(grid, controller.signal);
-		return () => {
-			controller.abort();
-		};
-	}, []);
-
-	return (
-		<div>
-			<div className="desc">
-				<ExportGridDataView myGrid={myGrid} xlsxProps={exportProps} pdfProps={exportProps} />
-				<p>각각의 나라에 따라 각 제품별로 판매량을 보기 위해 그룹핑을 하여 가격에 대하여 합계를 계산한 자료입니다.</p>
-				<p>일반 데이터를 받아 그리드가 그룹핑을 하고, 각 나라, 제품에 대하여 그리드에서 직접 합계를 계산합니다.</p>
-				<p>필터링 또는 데이터 값 수정 시 동적으로 그룹핑 합계 및 푸터 값이 변경됩니다.</p>
-			</div>
-			<AUIGrid ref={myGrid} columnLayout={columnLayout} gridProps={gridProps} footerLayout={footerLayout} />
-		</div>
-	);
-};
-
-export default Showcase05;

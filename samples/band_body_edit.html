@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,275 +37,327 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<!--CustomEditRenderer 의 JS와 스타일을 함께 포함합니다. -->
-<script src="../AUIGrid/editRenderers/AUIGrid.TextareaEditor.js"></script>
-<link href="../AUIGrid/editRenderers/AUIGrid.TextareaEditor.css" rel="stylesheet">
-<style>
-    .my-team {
-        background: #edf3ff;
-        color: #315da8;
-    }
+        <!--CustomEditRenderer 의 JS와 스타일을 함께 포함합니다. -->
+        <script src="../AUIGrid/editRenderers/AUIGrid.TextareaEditor.js"></script>
+        <link href="../AUIGrid/editRenderers/AUIGrid.TextareaEditor.css" rel="stylesheet" />
+        <style>
+            .my-team {
+                background: #edf3ff;
+                color: #315da8;
+            }
 
-    .my-right {
-        text-align: right;
-    }
-</style>
-<script>
-    let myGridID;
-    // 삭제한 행의 ID를 재사용하지 않도록 추가할 때마다 번호를 늘립니다.
-    let nextRowNumber = 24;
-    function init() {
-        createAUIGrid();
-        // 정적 JSON을 읽어 그리드에 표시합니다.
-        requestGridData("./data/band_body_edit.json");
-    }
-    // 밴드형 상위 셀과 하위 셀 모두 편집할 수 있도록 설정합니다.
-    function createAUIGrid() {
-        // children으로 상위 칼럼과 하위 칼럼의 계층을 작성합니다.
-        const columnLayout = [
-            {
-                dataField: "id",
-                headerText: "ID",
-                width: 70,
-                editable: false,
-            }, {
-                dataField: "team",
-                headerText: "소속",
-                bodyCell: true,
-                style: "my-team",
-                filter: { showIcon: true },
-                children: [
+            .my-right {
+                text-align: right;
+            }
+        </style>
+        <script>
+            let myGridID;
+            // 삭제한 행의 ID를 재사용하지 않도록 추가할 때마다 번호를 늘립니다.
+            let nextRowNumber = 24;
+            function init() {
+                createAUIGrid();
+                // 정적 JSON을 읽어 그리드에 표시합니다.
+                requestGridData("./data/band_body_edit.json");
+            }
+            // 밴드형 상위 셀과 하위 셀 모두 편집할 수 있도록 설정합니다.
+            function createAUIGrid() {
+                // children으로 상위 칼럼과 하위 칼럼의 계층을 작성합니다.
+                const columnLayout = [
                     {
-                        dataField: "name",
-                        headerText: "이름",
-                        width: 130,
-                        tooltip: { show: true, tooltipField: "note" },
-                        // 이름은 입력, 붙여넣기, 값 지우기 모두 같은 기존 검증 규칙을 사용합니다.
-                        editRenderer: {
-                            type: "InputEditRenderer", validator: function (oldValue, value) {
-                                return { validate: String(value).trim().length > 0, message: "이름을 입력하십시오." };
-                            }
-                        }
-                    }, {
-                        dataField: "position",
-                        headerText: "직급",
-                        bodyCell: true,
-                        editRenderer: { type: "DropDownListRenderer", list: ["사원", "대리", "과장", "책임"] },
-                        children: [
-                            {
-                                dataField: "age",
-                                headerText: "나이",
-                                width: 70,
-                                dataType: "numeric",
-                                filter: { showIcon: true },
-                                editRenderer: {
-                                    type: "InputEditRenderer",
-                                    onlyNumeric: true,
-                                    validator: function (oldValue, value) {
-                                        return { validate: value === "" || (Number(value) >= 0 && Number(value) <= 120), message: "나이는 0~120 또는 빈 값으로 입력하십시오." };
-                                    }
-                                }
-                            }, {
-                                dataField: "birth",
-                                headerText: "생년월일",
-                                width: 120,
-                                dataType: "date",
-                                dateInputFormat: "yyyy-mm-dd",
-                                formatString: "yyyy/mm/dd",
-                                editRenderer: {
-                                    type: "CalendarRenderer",
-                                    defaultFormat: "yyyy-mm-dd",
-                                    onlyCalendar: true
-                                }
-                            }
-                        ]
-                    }
-                ]
-            }, {
-                dataField: "checked",
-                headerText: "확인",
-                bodyCell: true,
-                editable: false,
-                renderer: { type: "CheckBoxEditRenderer" },
-                children: [
-                    {
-                        dataField: "qty",
-                        headerText: "수량",
-                        width: 95,
-                        dataType: "numeric",
-                        // 큰 계층 셀에서도 입력창과 스텝 버튼은 고유 높이로 함께 가운데 정렬됩니다.
-                        renderer: {
-                            type: "NumberStepRenderer",
-                            min: 0,
-                            step: 1
-                        },
-                        editRenderer: { type: "InputEditRenderer", onlyNumeric: true }
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 70,
+                        editable: false
                     },
                     {
-                        dataField: "amount",
-                        headerText: "금액",
-                        width: 120,
-                        dataType: "numeric",
-                        formatString: "#,##0",
-                        style: "my-right"
+                        dataField: "team",
+                        headerText: "소속",
+                        bodyCell: true,
+                        style: "my-team",
+                        filter: { showIcon: true },
+                        children: [
+                            {
+                                dataField: "name",
+                                headerText: "이름",
+                                width: 130,
+                                tooltip: { show: true, tooltipField: "note" },
+                                // 이름은 입력, 붙여넣기, 값 지우기 모두 같은 기존 검증 규칙을 사용합니다.
+                                editRenderer: {
+                                    type: "InputEditRenderer",
+                                    validator: function (oldValue, value) {
+                                        return {
+                                            validate: String(value).trim().length > 0,
+                                            message: "이름을 입력하십시오."
+                                        };
+                                    }
+                                }
+                            },
+                            {
+                                dataField: "position",
+                                headerText: "직급",
+                                bodyCell: true,
+                                editRenderer: { type: "DropDownListRenderer", list: ["사원", "대리", "과장", "책임"] },
+                                children: [
+                                    {
+                                        dataField: "age",
+                                        headerText: "나이",
+                                        width: 70,
+                                        dataType: "numeric",
+                                        filter: { showIcon: true },
+                                        editRenderer: {
+                                            type: "InputEditRenderer",
+                                            onlyNumeric: true,
+                                            validator: function (oldValue, value) {
+                                                return {
+                                                    validate:
+                                                        value === "" || (Number(value) >= 0 && Number(value) <= 120),
+                                                    message: "나이는 0~120 또는 빈 값으로 입력하십시오."
+                                                };
+                                            }
+                                        }
+                                    },
+                                    {
+                                        dataField: "birth",
+                                        headerText: "생년월일",
+                                        width: 120,
+                                        dataType: "date",
+                                        dateInputFormat: "yyyy-mm-dd",
+                                        formatString: "yyyy/mm/dd",
+                                        editRenderer: {
+                                            type: "CalendarRenderer",
+                                            defaultFormat: "yyyy-mm-dd",
+                                            onlyCalendar: true
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        dataField: "checked",
+                        headerText: "확인",
+                        bodyCell: true,
+                        editable: false,
+                        renderer: { type: "CheckBoxEditRenderer" },
+                        children: [
+                            {
+                                dataField: "qty",
+                                headerText: "수량",
+                                width: 95,
+                                dataType: "numeric",
+                                // 큰 계층 셀에서도 입력창과 스텝 버튼은 고유 높이로 함께 가운데 정렬됩니다.
+                                renderer: {
+                                    type: "NumberStepRenderer",
+                                    min: 0,
+                                    step: 1
+                                },
+                                editRenderer: { type: "InputEditRenderer", onlyNumeric: true }
+                            },
+                            {
+                                dataField: "amount",
+                                headerText: "금액",
+                                width: 120,
+                                dataType: "numeric",
+                                formatString: "#,##0",
+                                style: "my-right"
+                            }
+                        ]
+                    },
+                    {
+                        dataField: "status",
+                        headerText: "상태",
+                        width: 105,
+                        filter: { showIcon: true },
+                        editRenderer: {
+                            type: "ComboBoxRenderer",
+                            list: ["준비", "진행", "완료"],
+                            showEditorBtnOver: true
+                        }
+                    },
+                    {
+                        dataField: "button",
+                        headerText: "상세",
+                        width: 100,
+                        editable: false,
+                        renderer: {
+                            type: "ButtonRenderer",
+                            labelText: "상세 보기",
+                            onClick: function (event) {
+                                alert(event.item.id + " / " + event.item.name + " / " + event.item.team);
+                            }
+                        }
                     }
-                ]
-            }, {
-                dataField: "status",
-                headerText: "상태",
-                width: 105,
-                filter: { showIcon: true },
-                editRenderer: {
-                    type: "ComboBoxRenderer",
-                    list: ["준비", "진행", "완료"],
-                    showEditorBtnOver: true
+                ];
+                // 이 예제의 상위 체크박스는 출력용 설정이며, 아래 승인 칼럼은 직접 체크 편집을 허용합니다.
+                columnLayout.push({
+                    dataField: "approved",
+                    headerText: "승인 (편집 가능)",
+                    width: 105,
+                    renderer: { type: "CheckBoxEditRenderer", editable: true }
+                });
+                columnLayout.push({
+                    dataField: "note",
+                    headerText: "메모",
+                    width: 180,
+                    // 기존 CustomEditRenderer 예제의 여러 줄 편집기를 그대로 사용합니다.
+                    editRenderer: {
+                        type: "CustomEditRenderer",
+                        jsClass: AUIGrid.TextareaEditor,
+                        vPosition: "top",
+                        fitWidth: true,
+                        extraProps: { confirm: "확인(Ctrl+Enter)", cancel: "취소(Esc)" }
+                    },
+                    tooltip: { show: true }
+                });
+                const gridProps = {
+                    bodyLayoutMode: "band",
+                    rowHeight: 120,
+                    rowIdField: "id",
+                    // 외부에서 지정한 R24, R25 등의 ID를 행 추가 때도 그대로 사용합니다.
+                    rowIdTrustMode: true,
+                    // 이 예제의 삭제 버튼은 삭제 표시만 남기지 않고 행을 화면에서 제거합니다.
+                    softRemoveRowMode: false,
+                    editable: true,
+                    selectionMode: "multipleCells",
+                    wrapSelectionMove: true
+                };
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
+            // 상위 셀도 조회됩니다. isPrimeCell은 다중 선택을 시작한 활성 셀을 뜻합니다.
+            function getCurrentCell() {
+                const cell = AUIGrid.getSelectedItems(myGridID).find(function (item) {
+                    return item.isPrimeCell;
+                });
+                if (!cell) {
+                    alert("먼저 변경할 행의 셀을 선택하세요.");
+                    return null;
                 }
-            }, {
-                dataField: "button",
-                headerText: "상세",
-                width: 100,
-                editable: false,
-                renderer: {
-                    type: "ButtonRenderer",
-                    labelText: "상세 보기",
-                    onClick: function (event) {
-                        alert(event.item.id + " / " + event.item.name + " / " + event.item.team);
+                return cell;
+            }
+            // 행 추가: 새 ID와 각 필드의 값을 한 객체에 넣습니다.
+            function addDataRow() {
+                const id = "R" + nextRowNumber++;
+                AUIGrid.addRow(
+                    myGridID,
+                    {
+                        id: id,
+                        name: "새 담당자",
+                        team: "개발팀",
+                        position: "사원",
+                        age: 25,
+                        birth: "2001-01-01",
+                        qty: 1,
+                        amount: 12000,
+                        checked: false,
+                        status: "준비",
+                        approved: false,
+                        note: "새 행입니다."
+                    },
+                    "last"
+                );
+                // 행 ID로 현재 위치를 찾아 추가된 행을 보여 줍니다.
+                AUIGrid.setSelectionByDataField(myGridID, AUIGrid.rowIdToIndex(myGridID, id), "name");
+            }
+            // 상위 셀을 선택해도 같은 데이터 행을 삭제하거나 수정합니다.
+            function removeDataRow() {
+                const cell = getCurrentCell();
+                if (!cell) return;
+                AUIGrid.removeRow(myGridID, cell.rowIndex);
+            }
+            function updateDataRow() {
+                const cell = getCurrentCell();
+                if (!cell) return;
+                AUIGrid.updateRow(
+                    myGridID,
+                    {
+                        name: "수정한 담당자",
+                        team: "지원팀",
+                        position: "책임"
+                    },
+                    cell.rowIndex
+                );
+            }
+            // 특정 셀 변경: 정렬 후에도 R0 행을 찾아 이름만 바꿉니다.
+            function changeNameValue() {
+                const rowIndex = AUIGrid.rowIdToIndex(myGridID, "R0");
+                if (rowIndex < 0) {
+                    alert("R0 행이 삭제되어 이름을 변경할 수 없습니다.");
+                    return;
+                }
+                const value = document.getElementById("new_cell_value").value;
+                if (!value.trim()) {
+                    alert("이름을 입력하세요.");
+                    return;
+                }
+                AUIGrid.setCellValue(myGridID, rowIndex, "name", value);
+            }
+            // 선택 셀 변경: 범위를 선택했으면 시작한 활성 셀 하나만 변경합니다.
+            // 상위 셀도 독립된 dataField이므로 updateRow에 그 필드 하나만 전달합니다.
+            function changeSelectedValue() {
+                const cell = getCurrentCell();
+                if (!cell) return;
+                if (cell.dataField === "id" || cell.dataField === "button") {
+                    alert("ID와 상세 버튼은 이 예제에서 변경하지 않습니다.");
+                    return;
+                }
+                const column = AUIGrid.getColumnItemByDataField(myGridID, cell.dataField);
+                const item = AUIGrid.getItemByRowIndex(myGridID, cell.rowIndex);
+                let value = document.getElementById("new_cell_value").value;
+                // 입력칸의 문자열을 해당 셀의 숫자 또는 체크 값으로 변환합니다.
+                if (column.dataType === "numeric") {
+                    if (!value.trim() || !Number.isFinite(Number(value))) {
+                        alert("숫자를 입력하세요.");
+                        return;
                     }
+                    value = Number(value);
+                    if (cell.dataField === "age" && (value < 0 || value > 120)) {
+                        alert("나이는 0~120으로 입력하세요.");
+                        return;
+                    }
+                } else if (typeof item[cell.dataField] === "boolean") {
+                    if (value !== "true" && value !== "false") {
+                        alert("체크 값은 true 또는 false를 입력하세요.");
+                        return;
+                    }
+                    value = value === "true";
+                } else if (cell.dataField === "name" && !value.trim()) {
+                    alert("이름을 입력하세요.");
+                    return;
                 }
+                AUIGrid.updateRow(myGridID, { [cell.dataField]: value }, cell.rowIndex);
             }
-        ];
-        // 이 예제의 상위 체크박스는 출력용 설정이며, 아래 승인 칼럼은 직접 체크 편집을 허용합니다.
-        columnLayout.push({
-            dataField: "approved",
-            headerText: "승인 (편집 가능)",
-            width: 105,
-            renderer: { type: "CheckBoxEditRenderer", editable: true }
-        });
-        columnLayout.push({
-            dataField: "note",
-            headerText: "메모",
-            width: 180,
-            // 기존 CustomEditRenderer 예제의 여러 줄 편집기를 그대로 사용합니다.
-            editRenderer: {
-                type: "CustomEditRenderer",
-                jsClass: AUIGrid.TextareaEditor,
-                vPosition: "top",
-                fitWidth: true,
-                extraProps: { confirm: "확인(Ctrl+Enter)", cancel: "취소(Esc)" }
-            },
-            tooltip: { show: true }
-        });
-        const gridProps = {
-            bodyLayoutMode: "band",
-            rowHeight: 120,
-            rowIdField: "id",
-            // 외부에서 지정한 R24, R25 등의 ID를 행 추가 때도 그대로 사용합니다.
-            rowIdTrustMode: true,
-            // 이 예제의 삭제 버튼은 삭제 표시만 남기지 않고 행을 화면에서 제거합니다.
-            softRemoveRowMode: false,
-            editable: true,
-            selectionMode: "multipleCells",
-            wrapSelectionMove: true,
-        };
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-    }
-    // 상위 셀도 조회됩니다. isPrimeCell은 다중 선택을 시작한 활성 셀을 뜻합니다.
-    function getCurrentCell() {
-        const cell = AUIGrid.getSelectedItems(myGridID).find(function (item) { return item.isPrimeCell; });
-        if (!cell) {
-            alert("먼저 변경할 행의 셀을 선택하세요.");
-            return null;
-        }
-        return cell;
-    }
-    // 행 추가: 새 ID와 각 필드의 값을 한 객체에 넣습니다.
-    function addDataRow() {
-        const id = "R" + nextRowNumber++;
-        AUIGrid.addRow(myGridID, {
-            id: id, name: "새 담당자", team: "개발팀", position: "사원",
-            age: 25, birth: "2001-01-01", qty: 1, amount: 12000,
-            checked: false, status: "준비", approved: false, note: "새 행입니다."
-        }, "last");
-        // 행 ID로 현재 위치를 찾아 추가된 행을 보여 줍니다.
-        AUIGrid.setSelectionByDataField(myGridID, AUIGrid.rowIdToIndex(myGridID, id), "name");
-    }
-    // 상위 셀을 선택해도 같은 데이터 행을 삭제하거나 수정합니다.
-    function removeDataRow() {
-        const cell = getCurrentCell();
-        if (!cell) return;
-        AUIGrid.removeRow(myGridID, cell.rowIndex);
-    }
-    function updateDataRow() {
-        const cell = getCurrentCell();
-        if (!cell) return;
-        AUIGrid.updateRow(myGridID, {
-            name: "수정한 담당자", team: "지원팀", position: "책임"
-        }, cell.rowIndex);
-    }
-    // 특정 셀 변경: 정렬 후에도 R0 행을 찾아 이름만 바꿉니다.
-    function changeNameValue() {
-        const rowIndex = AUIGrid.rowIdToIndex(myGridID, "R0");
-        if (rowIndex < 0) {
-            alert("R0 행이 삭제되어 이름을 변경할 수 없습니다.");
-            return;
-        }
-        const value = document.getElementById("new_cell_value").value;
-        if (!value.trim()) { alert("이름을 입력하세요."); return; }
-        AUIGrid.setCellValue(myGridID, rowIndex, "name", value);
-    }
-    // 선택 셀 변경: 범위를 선택했으면 시작한 활성 셀 하나만 변경합니다.
-    // 상위 셀도 독립된 dataField이므로 updateRow에 그 필드 하나만 전달합니다.
-    function changeSelectedValue() {
-        const cell = getCurrentCell();
-        if (!cell) return;
-        if (cell.dataField === "id" || cell.dataField === "button") {
-            alert("ID와 상세 버튼은 이 예제에서 변경하지 않습니다.");
-            return;
-        }
-        const column = AUIGrid.getColumnItemByDataField(myGridID, cell.dataField);
-        const item = AUIGrid.getItemByRowIndex(myGridID, cell.rowIndex);
-        let value = document.getElementById("new_cell_value").value;
-        // 입력칸의 문자열을 해당 셀의 숫자 또는 체크 값으로 변환합니다.
-        if (column.dataType === "numeric") {
-            if (!value.trim() || !Number.isFinite(Number(value))) {
-                alert("숫자를 입력하세요."); return;
-            }
-            value = Number(value);
-            if (cell.dataField === "age" && (value < 0 || value > 120)) {
-                alert("나이는 0~120으로 입력하세요."); return;
-            }
-        } else if (typeof item[cell.dataField] === "boolean") {
-            if (value !== "true" && value !== "false") {
-                alert("체크 값은 true 또는 false를 입력하세요."); return;
-            }
-            value = value === "true";
-        } else if (cell.dataField === "name" && !value.trim()) {
-            alert("이름을 입력하세요."); return;
-        }
-        AUIGrid.updateRow(myGridID, { [cell.dataField]: value }, cell.rowIndex);
-    }
-</script>
-</head>
-<body>
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-    <div class="desc">
-        <p>셀을 더블 클릭하거나 F2를 눌러 편집합니다. 직급은 목록, 생년월일은 달력에서 고릅니다.</p>
-        <p>외부 버튼으로 행과 셀 값을 바꿀 수 있습니다. 소속, 직급 같은 상위 셀도 독립된 필드입니다.</p>
-        <p><strong>행 변경: </strong>
-            <button class="btn" onclick="addDataRow()">행 추가</button>
-            <button class="btn" onclick="removeDataRow()">선택 행 삭제</button>
-            <button class="btn" onclick="updateDataRow()">선택 행 수정</button>
-        </p>
-        <p><label for="new_cell_value">변경할 값 </label><input id="new_cell_value" value="외부에서 수정" style="width:140px;max-width:100%;">
-            <button class="btn" onclick="changeNameValue()">R0 이름 변경</button>
-            <button class="btn" onclick="changeSelectedValue()">현재 선택 셀 값 변경</button>
-        </p>
-    </div>
-    <div>
-        <div id="grid_wrap" style="width:100%;height:480px;margin:0 auto;"></div>
-    </div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>셀을 더블 클릭하거나 F2를 눌러 편집합니다. 직급은 목록, 생년월일은 달력에서 고릅니다.</p>
+                    <p>외부 버튼으로 행과 셀 값을 바꿀 수 있습니다. 소속, 직급 같은 상위 셀도 독립된 필드입니다.</p>
+                    <!-- 공통 조작 영역에서 설정과 실행 버튼을 용도별로 묶습니다. -->
+                    <div class="demo-options">
+                        <div class="demo-option-row">
+                            <span class="demo-option-label">행 변경</span>
+                            <button type="button" class="btn" onclick="addDataRow()">행 추가</button>
+                            <button type="button" class="btn" onclick="removeDataRow()">선택 행 삭제</button>
+                            <button type="button" class="btn" onclick="updateDataRow()">선택 행 수정</button>
+                        </div>
+                        <div class="demo-option-row">
+                            <label class="demo-option-group" for="new_cell_value"
+                                ><span class="demo-option-label">변경할 값</span
+                                ><input id="new_cell_value" value="외부에서 수정" style="width: 180px; max-width: 100%"
+                            /></label>
+                            <button type="button" class="btn" onclick="changeNameValue()">R0 이름 변경</button>
+                            <button type="button" class="btn" onclick="changeSelectedValue()">
+                                현재 선택 셀 값 변경
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# AUIGrid React JavaScript 샘플
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React 18과 Vite를 사용하는 AUIGrid 예제 프로젝트입니다. 기존 데모 목록과 HOME의 Dependencies, HOW TO CODE 구성은 유지합니다.
 
-## Available Scripts
+## 개발 서버 실행
 
-In the project directory, you can run:
+Node.js 20.19 이상(20.x) 또는 22.12 이상이 필요합니다. Node.js 22.12 이상을 권장합니다.
 
-### `npm start`
+```sh
+npm ci
+npm run dev
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+기존 `npm start`도 같은 Vite 개발 서버를 실행합니다. 터미널에 표시되는 주소의 `/demo/auigrid-react/` 경로를 엽니다. 기본 포트는 5173이며 사용 중이면 다음 포트를 사용합니다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 빌드와 미리보기
 
-### `npm test`
+```sh
+npm run build
+npm run preview
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+배포 파일은 기존과 동일하게 `build/`에 생성됩니다. 미리보기 서버의 `/demo/auigrid-react/` 경로에서 배포 결과를 확인합니다. 서버에 배포할 때는 이 경로에 `build/`의 내용을 배치하고, 데모 상세 주소를 새로고침해도 같은 `index.html`을 반환하도록 SPA 대체 경로를 설정합니다.
 
-### `npm run build`
+배포 경로를 바꾸려면 `vite.config.mjs`의 `base`를 수정합니다. 라우터와 public 자산 경로는 `import.meta.env.BASE_URL`을 사용합니다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 예제 구성
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- `index.html`: Vite의 HTML 진입점입니다. `public/`은 데이터, 이미지 등 정적 자산만 보관합니다.
+- `src/App.js`: 기존 메뉴와 데모 라우팅을 유지합니다.
+- `src/views/Home.js`: Dependencies 및 HOW TO CODE를 제공합니다.
+- `src/demoSources.js`: 각 데모의 소스 보기 목록입니다. Vite의 `?raw` 가져오기로 원문을 표시합니다.
+- `src/static/`: 제공된 AUIGrid 엔진, 라이선스, 스타일과 React 래퍼를 사용합니다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## JavaScript의 JSX
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+기존 예제 및 공용 래퍼의 `.js` 파일명을 유지합니다. `vite.config.mjs`의 변환 플러그인이 해당 JSX를 처리하며, 제품 엔진 및 외부 라이브러리와 `?raw` 소스 보기는 변환 대상에서 제외합니다.

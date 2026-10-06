@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,103 +37,170 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// AUIGrid 에 데이터 삽입합니다.
-		AUIGrid.setGridData(myGridID, gridData);
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // AUIGrid 에 데이터 삽입합니다.
+                AUIGrid.setGridData(myGridID, gridData);
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayut) {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "col1",
-			headerText: "Bottom(기본값)",
-			headerRenderer: { // 헤더 렌더러
-				type: "ButtonHeaderRenderer",
-				position: "bottom", // 기본값 bottom
-				text: "일괄 작업",
-				onClick: myHeaderButtonClick // 클릭 핸들러
-			}
-		}, {
-			dataField: "col2",
-			headerText: "Top",
-			headerRenderer: { // 헤더 렌더러
-				type: "ButtonHeaderRenderer",
-				position: "top", // headerText 기준 하단에 위치
-				text: "일괄 작업",
-				onClick: myHeaderButtonClick // 클릭 핸들러
-			}
-		}, {
-			dataField: "col3",
-			headerText: "Left",
-			headerRenderer: { // 헤더 렌더러
-				type: "ButtonHeaderRenderer",
-				position: "left", // headerText 기준 하단에 위치
-				text: "일괄 작업",
-				onClick: myHeaderButtonClick // 클릭 핸들러
-			}
-		}, {
-			dataField: "col4",
-			headerText: "Right",
-			headerRenderer: { // 헤더 렌더러
-				type: "ButtonHeaderRenderer",
-				position: "right", // headerText 기준 하단에 위치
-				text: "일괄 작업",
-				onClick: myHeaderButtonClick // 클릭 핸들러
-			}
-		}, {
-			dataField: "col5",
-			headerText: "", // 텍스트 표시 안하고 버턴만 나오게 함.
-			//headerStyle : "my-check-column", // 여기 주석 제거하면 큰 체크박스가 보임. 상단의 style 확인바람.
-			headerRenderer: { // 헤더 렌더러
-				type: "ButtonHeaderRenderer",
-				text: "일괄 작업",
-				onClick: myHeaderButtonClick // 클릭 핸들러
-			}
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid(columnLayut) {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "col1",
+                        headerText: "Bottom(기본값)",
+                        headerRenderer: {
+                            // 헤더 렌더러
+                            type: "ButtonHeaderRenderer",
+                            position: "bottom", // 기본값 bottom
+                            text: "일괄 작업",
+                            onClick: myHeaderButtonClick // 클릭 핸들러
+                        }
+                    },
+                    {
+                        dataField: "col2",
+                        headerText: "Top",
+                        headerRenderer: {
+                            // 헤더 렌더러
+                            type: "ButtonHeaderRenderer",
+                            position: "top", // headerText 기준 하단에 위치
+                            text: "일괄 작업",
+                            onClick: myHeaderButtonClick // 클릭 핸들러
+                        }
+                    },
+                    {
+                        dataField: "col3",
+                        headerText: "Left",
+                        headerRenderer: {
+                            // 헤더 렌더러
+                            type: "ButtonHeaderRenderer",
+                            position: "left", // headerText 기준 하단에 위치
+                            text: "일괄 작업",
+                            onClick: myHeaderButtonClick // 클릭 핸들러
+                        }
+                    },
+                    {
+                        dataField: "col4",
+                        headerText: "Right",
+                        headerRenderer: {
+                            // 헤더 렌더러
+                            type: "ButtonHeaderRenderer",
+                            position: "right", // headerText 기준 하단에 위치
+                            text: "일괄 작업",
+                            onClick: myHeaderButtonClick // 클릭 핸들러
+                        }
+                    },
+                    {
+                        dataField: "col5",
+                        headerText: "", // 텍스트 표시 안하고 버턴만 나오게 함.
+                        //headerStyle : "my-check-column", // 여기 주석 제거하면 큰 체크박스가 보임. 상단의 style 확인바람.
+                        headerRenderer: {
+                            // 헤더 렌더러
+                            type: "ButtonHeaderRenderer",
+                            text: "일괄 작업",
+                            onClick: myHeaderButtonClick // 클릭 핸들러
+                        }
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			// 헤더 높이 지정
-			headerHeight: 50,
-			editable: true,
-			enableMovingColumn: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    // 헤더 높이 지정
+                    headerHeight: 50,
+                    editable: true,
+                    enableMovingColumn: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
 
-	// 헤더렌더러 버튼 클릭 핸들러
-	function myHeaderButtonClick(event) {
-		alert("columnIndex : " + event.columnIndex + " 버튼 클릭");
-		const rowCount = AUIGrid.getRowCount(event.pid); // 행 개수
-		const dataField = event.dataField;
-		// 전체 데이터를 대상으로 값 변경
-		AUIGrid.updateRowBlockToValue(event.pid, 0, rowCount - 1, dataField, "작업 완료");
-	}
+            // 헤더렌더러 버튼 클릭 핸들러
+            function myHeaderButtonClick(event) {
+                alert("columnIndex : " + event.columnIndex + " 버튼 클릭");
+                const rowCount = AUIGrid.getRowCount(event.pid); // 행 개수
+                const dataField = event.dataField;
+                // 전체 데이터를 대상으로 값 변경
+                AUIGrid.updateRowBlockToValue(event.pid, 0, rowCount - 1, dataField, "작업 완료");
+            }
 
-	// 그리드 데이터
-	const gridData = [{ "col1": "작업 중", "col2": "작업 완료", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 중" }, { "col1": "작업 중", "col2": "작업 중", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 완료" }, { "col1": "작업 완료", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 중", "col5": "작업 중" }, { "col1": "작업 중", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 완료" }, { "col1": "작업 완료", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 완료" }, { "col1": "작업 중", "col2": "작업 중", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 완료" }, { "col1": "작업 완료", "col2": "작업 중", "col3": "작업 중", "col4": "작업 중", "col5": "작업 완료" }, { "col1": "작업 중", "col2": "작업 중", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 중" }, { "col1": "작업 완료", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 중", "col5": "작업 중" }, { "col1": "작업 완료", "col2": "작업 중", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 완료" }, { "col1": "작업 완료", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 완료" }, { "col1": "작업 완료", "col2": "작업 완료", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 완료" }, { "col1": "작업 중", "col2": "작업 완료", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 완료" }, { "col1": "작업 중", "col2": "작업 중", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 완료" }, { "col1": "작업 중", "col2": "작업 완료", "col3": "작업 완료", "col4": "작업 중", "col5": "작업 중" }, { "col1": "작업 완료", "col2": "작업 중", "col3": "작업 완료", "col4": "작업 중", "col5": "작업 완료" }, { "col1": "작업 중", "col2": "작업 중", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 중" }, { "col1": "작업 완료", "col2": "작업 완료", "col3": "작업 완료", "col4": "작업 중", "col5": "작업 완료" }, { "col1": "작업 중", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 중", "col5": "작업 중" }, { "col1": "작업 중", "col2": "작업 중", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 중" }];
-</script>
+            // 그리드 데이터
+            const gridData = [
+                { "col1": "작업 중", "col2": "작업 완료", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 중" },
+                { "col1": "작업 중", "col2": "작업 중", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 완료" },
+                { "col1": "작업 완료", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 중", "col5": "작업 중" },
+                { "col1": "작업 중", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 완료" },
+                {
+                    "col1": "작업 완료",
+                    "col2": "작업 완료",
+                    "col3": "작업 중",
+                    "col4": "작업 완료",
+                    "col5": "작업 완료"
+                },
+                { "col1": "작업 중", "col2": "작업 중", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 완료" },
+                { "col1": "작업 완료", "col2": "작업 중", "col3": "작업 중", "col4": "작업 중", "col5": "작업 완료" },
+                { "col1": "작업 중", "col2": "작업 중", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 중" },
+                { "col1": "작업 완료", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 중", "col5": "작업 중" },
+                {
+                    "col1": "작업 완료",
+                    "col2": "작업 중",
+                    "col3": "작업 완료",
+                    "col4": "작업 완료",
+                    "col5": "작업 완료"
+                },
+                {
+                    "col1": "작업 완료",
+                    "col2": "작업 완료",
+                    "col3": "작업 중",
+                    "col4": "작업 완료",
+                    "col5": "작업 완료"
+                },
+                {
+                    "col1": "작업 완료",
+                    "col2": "작업 완료",
+                    "col3": "작업 완료",
+                    "col4": "작업 완료",
+                    "col5": "작업 완료"
+                },
+                {
+                    "col1": "작업 중",
+                    "col2": "작업 완료",
+                    "col3": "작업 완료",
+                    "col4": "작업 완료",
+                    "col5": "작업 완료"
+                },
+                { "col1": "작업 중", "col2": "작업 중", "col3": "작업 완료", "col4": "작업 완료", "col5": "작업 완료" },
+                { "col1": "작업 중", "col2": "작업 완료", "col3": "작업 완료", "col4": "작업 중", "col5": "작업 중" },
+                { "col1": "작업 완료", "col2": "작업 중", "col3": "작업 완료", "col4": "작업 중", "col5": "작업 완료" },
+                { "col1": "작업 중", "col2": "작업 중", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 중" },
+                {
+                    "col1": "작업 완료",
+                    "col2": "작업 완료",
+                    "col3": "작업 완료",
+                    "col4": "작업 중",
+                    "col5": "작업 완료"
+                },
+                { "col1": "작업 중", "col2": "작업 완료", "col3": "작업 중", "col4": "작업 중", "col5": "작업 중" },
+                { "col1": "작업 중", "col2": "작업 중", "col3": "작업 중", "col4": "작업 완료", "col5": "작업 중" }
+            ];
+        </script>
+    </head>
+<body class="demo-typography">
 
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<p>헤더에 버튼 렌더러를 설정한 모습입니다.</p>
-		<p>헤더의 버튼 렌더러는 클릭 이벤트만 발생 시킬 뿐 독립적인 역할을 합니다.</p>
-		<p>이 이벤트를 바인딩하여 클릭 시 원하는 메소드를 실행하십시오.</p>
-		<div class="src_cover">
-			<pre>
+            <div id="main">
+                <div class="desc">
+                    <p>헤더에 버튼 렌더러를 설정한 모습입니다.</p>
+                    <p>헤더의 버튼 렌더러는 클릭 이벤트만 발생 시킬 뿐 독립적인 역할을 합니다.</p>
+                    <p>이 이벤트를 바인딩하여 클릭 시 원하는 메소드를 실행하십시오.</p>
+                    <div class="src_cover">
+                        <pre>
 dataField : "col1",
 headerText : "Bottom(기본값)",
 headerRenderer : { // 헤더 렌더러
@@ -140,17 +215,16 @@ headerRenderer : { // 헤더 렌더러
 	}
 }
 </pre>
-		</div>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:320px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-
-	</div>
-</div>
+                    </div>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 320px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

@@ -1,34 +1,222 @@
-#aui-grid-wrap-showcase4 .my-right-style {
-	text-align: right;
+/* 이 쇼케이스의 요약과 조작 도구에만 적용하며 그리드는 선택한 제품 테마를 사용합니다. */
+.live-demo .live-heading,
+.live-demo .live-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 20px;
 }
-
-/* 행 갱신 시 깜빡이게 하는 스타일 */
-#aui-grid-wrap-showcase4 .my-refresh-row-flash-style {
-	background: #dfdfdf;
+.live-demo .live-heading h2 {
+    margin: 0 0 4px;
 }
-
-/* 주식 하락 색상*/
-#aui-grid-wrap-showcase4 .my-custom-down {
-	color: #0000ff;
-	text-align: right;
+.live-demo .live-heading p {
+    margin: 0;
+    color: #68737d;
 }
-/* 주식 상승 색상*/
-#aui-grid-wrap-showcase4 .my-custom-up {
-	color: #ff0000;
-	text-align: right;
+.live-demo .live-stream {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border: 1px solid #cfe7dc;
+    border-radius: 20px;
+    color: #247354;
+    background: #f0f8f4;
+    white-space: nowrap;
 }
-#aui-grid-wrap-showcase4 .my-custom-normal {
-	color: inherit;
-	text-align: right;
+.live-demo .live-stream::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
 }
-
-/* 바게이지 양수 음수 함께 사용되는 영역에서 음수 바 재정의*/
-#aui-grid-wrap-showcase4 .aui-grid-bar-renderer-negative {
-	background: #4641d9;
-	border: 1px solid #4641d9;
+.live-demo .live-stream[data-paused='true'] {
+    color: #68737d;
+    background: #f4f6f8;
+    border-color: #dfe4e9;
 }
-/* 바게이지 양수 음수 함께 사용되는 영역에서 양수 바 재정의*/
-#aui-grid-wrap-showcase4 .aui-grid-bar-renderer-positive {
-	background: #df4d4d;
-	border: 1px solid #df4d4d;
+.live-demo .live-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 20px 0 24px;
+}
+.live-demo .live-metric {
+    padding: 16px 18px;
+    border: 1px solid #e0e5ea;
+    border-radius: 8px;
+    background: #fafbfd;
+    min-width: 0;
+}
+.live-demo .live-metric dt {
+    margin: 0 0 8px;
+    color: #68737d;
+}
+.live-demo .live-metric dd {
+    margin: 0;
+}
+.live-demo .live-value {
+    color: #23292b;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+}
+.live-demo .live-unit {
+    margin-left: 5px;
+    color: #68737d;
+}
+.live-demo .live-caption {
+    display: block;
+    margin-top: 7px;
+    color: #68737d;
+}
+.live-demo .live-attention[data-active='true'] .live-value {
+    color: #9d6215;
+}
+.live-demo .live-toolbar {
+    margin-bottom: 12px;
+}
+.live-demo .live-grid-title {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+}
+.live-demo .live-grid-title h3 {
+    margin: 0;
+}
+.live-demo .live-grid-title span {
+    color: #68737d;
+}
+.live-demo .live-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+}
+.live-demo .live-controls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #4d5867;
+}
+.live-demo .live-controls select {
+    height: 34px;
+    padding: 4px 24px 4px 8px;
+    border: 1px solid #d7dce3;
+    border-radius: 5px;
+    background: #fff;
+    color: #303946;
+    font: inherit;
+}
+.live-demo .live-controls .btn {
+    margin: 0;
+}
+.live-demo #live-toggle {
+    min-width: 106px;
+}
+.live-demo .showcase-grid > [id^='aui-grid-wrap-'] {
+    width: 100%;
+    height: 510px;
+}
+.live-demo .live-footnote {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 20px;
+    margin-top: 10px;
+    color: #68737d;
+}
+.live-demo .live-footnote p {
+    margin: 0;
+}
+.live-demo .live-footnote time {
+    font-variant-numeric: tabular-nums;
+}
+.live-demo .live-key {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    border: 1px solid #b9d5ed;
+    border-radius: 2px;
+    background: #e4f0fa;
+}
+/* 갱신된 셀만 짧게 강조합니다. 상태는 색뿐 아니라 텍스트로도 구분합니다. */
+.live-demo .live-cell-update {
+    background: #e4f0fa;
+    color: #193e60;
+}
+.live-demo .live-service {
+    text-align: left;
+    font-weight: 600;
+}
+.live-demo .live-number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+/* 수치 강조는 제품 테마의 글자색을 유지해 어두운 테마에서도 읽을 수 있게 합니다. */
+.live-demo .live-warning,
+.live-demo .live-delayed {
+    font-weight: 700;
+}
+.live-demo .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 600;
+    line-height: 18px;
+    background: #edf7f2;
+    color: #247354;
+}
+.live-demo .live-badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+}
+.live-demo .live-badge--watch {
+    color: #98600f;
+    background: #fbf3e3;
+}
+.live-demo .live-badge--delayed {
+    color: #af4141;
+    background: #fbeeee;
+}
+.live-demo .live-cpu-normal .aui-grid-percentage-bar {
+    background: #3982ba;
+}
+.live-demo .live-cpu-watch .aui-grid-percentage-bar {
+    background: #bc8b36;
+}
+.live-demo .live-cpu-delayed .aui-grid-percentage-bar {
+    background: #c56662;
+}
+@media (max-width: 760px) {
+    .live-demo .live-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin: 16px 0 20px;
+    }
+    .live-demo .live-metric {
+        padding: 12px;
+    }
+    .live-demo .live-value {
+        font-size: 24px;
+    }
+    .live-demo .live-heading {
+        align-items: flex-start;
+    }
+    .live-demo .live-controls {
+        width: 100%;
+    }
+    .live-demo .showcase-grid > [id^='aui-grid-wrap-'] {
+        height: 460px;
+    }
 }

@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,190 +37,211 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<!-- PDF 내보내기 필수 JS 추가-->
-<script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <!-- PDF 내보내기 필수 JS 추가-->
+        <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
-<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+        <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+        <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-<script>
-    // AUIGrid 생성 후 반환 ID
-    let myGridID;
-    // 시작점
-    function init() {
-        // AUIGrid 그리드를 생성합니다.
-        createAUIGrid();
-        // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-        loadGridData();
-    }
-    // AUIGrid 를 생성합니다.
-    function createAUIGrid() {
-        // 그리드 칼럼 레이아웃 설정
-        const columnLayout = [
-            {
-                dataField: "id",
-                headerText: "Server ID",
-                width: 140
-            }, {
-                dataField: "name",
-                headerText: "Server Name",
-                width: 140
-            }, {
-                dataField: "charge",
-                headerText: "In Charge",
-                width: 140
-            }, {
-                dataField: "location",
-                headerText: "Location",
-                width: 140
-            }, {
-                dataField: "available",
-                headerText: "Available",
-                width: 120,
-                dataType: "boolean",
-                renderer: {
-                    type: "SwitchRenderer",
-                    editable: true,
-                    isRound: true,
-                    //사용자가 체크 상태를 변경하고자 할 때 변경을 허락할지 여부를 지정할 수 있는 함수 입니다.
-                    checkableFunction: function (rowIndex, columnIndex, value, isChecked, item, dataField) {
-                        // 행 아이템의 charge 가 Anna 라면 수정 불가로 지정. (기존 값 유지)
-                        if (item.charge === "Anna") {
-                            AUIGrid.showToastMessage(myGridID, rowIndex, columnIndex, "In Charge = 'Anna' 인 경우 체크 변경 불가능합니다.");
-                            return false;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                loadGridData();
+            }
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "id",
+                        headerText: "Server ID",
+                        width: 140
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Server Name",
+                        width: 140
+                    },
+                    {
+                        dataField: "charge",
+                        headerText: "In Charge",
+                        width: 140
+                    },
+                    {
+                        dataField: "location",
+                        headerText: "Location",
+                        width: 140
+                    },
+                    {
+                        dataField: "available",
+                        headerText: "Available",
+                        width: 120,
+                        dataType: "boolean",
+                        renderer: {
+                            type: "SwitchRenderer",
+                            editable: true,
+                            isRound: true,
+                            //사용자가 체크 상태를 변경하고자 할 때 변경을 허락할지 여부를 지정할 수 있는 함수 입니다.
+                            checkableFunction: function (rowIndex, columnIndex, value, isChecked, item, dataField) {
+                                // 행 아이템의 charge 가 Anna 라면 수정 불가로 지정. (기존 값 유지)
+                                if (item.charge === "Anna") {
+                                    AUIGrid.showToastMessage(
+                                        myGridID,
+                                        rowIndex,
+                                        columnIndex,
+                                        "In Charge = 'Anna' 인 경우 체크 변경 불가능합니다."
+                                    );
+                                    return false;
+                                }
+                                return true;
+                            }
                         }
-                        return true;
+                    },
+                    {
+                        dataField: "isActive",
+                        headerText: "isActive",
+                        width: 160,
+                        renderer: {
+                            type: "SwitchRenderer",
+                            editable: true,
+                            checkValue: "Active",
+                            unCheckValue: "Inactive",
+                            //사용자가 체크 상태를 변경하고자 할 때 변경을 허락할지 여부를 지정할 수 있는 함수 입니다.
+                            checkableFunction: function (rowIndex, columnIndex, value, isChecked, item, dataField) {
+                                // 행 아이템의 charge 가 Anna 라면 수정 불가로 지정. (기존 값 유지)
+                                if (item.charge === "Anna") {
+                                    AUIGrid.showToastMessage(
+                                        myGridID,
+                                        rowIndex,
+                                        columnIndex,
+                                        "In Charge = 'Anna' 인 경우 체크 변경 불가능합니다."
+                                    );
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
                     }
+                ];
+                // 그리드 속성 설정
+                const gridProps = {
+                    editable: true,
+                    rowHeight: 30
+                };
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
+            // 수정된 행들 얻기
+            function getEditedRowItems() {
+                // 수정된 행 아이템들(배열)
+                const editedRowItems = AUIGrid.getEditedRowItems(myGridID);
+                let str = "";
+                for (let i = 0, len = editedRowItems.length; i < len; i++) {
+                    str += editedRowItems[i]["id"] + ", " + editedRowItems[i]["isActive"] + "\n";
                 }
-            }, {
-                dataField: "isActive",
-                headerText: "isActive",
-                width: 160,
-                renderer: {
-                    type: "SwitchRenderer",
-                    editable: true,
-                    checkValue: "Active",
-                    unCheckValue: "Inactive",
-                    //사용자가 체크 상태를 변경하고자 할 때 변경을 허락할지 여부를 지정할 수 있는 함수 입니다.
-                    checkableFunction: function (rowIndex, columnIndex, value, isChecked, item, dataField) {
-                        // 행 아이템의 charge 가 Anna 라면 수정 불가로 지정. (기존 값 유지)
-                        if (item.charge === "Anna") {
-                            AUIGrid.showToastMessage(myGridID, rowIndex, columnIndex, "In Charge = 'Anna' 인 경우 체크 변경 불가능합니다.");
-                            return false;
-                        }
-                        return true;
-                    }
+                alert(str);
+            }
+            // 필드값으로 아이템들 얻기
+            function getItemsByField() {
+                // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+                const activeItems = AUIGrid.getItemsByValue(myGridID, "isActive", "Active");
+                const ids = [];
+                for (let i = 0, len = activeItems.length; i < len; i++) {
+                    ids.push(activeItems[i].id); // 아이디만 따로 보관해서 alert 출력
+                }
+                const str = ids.join("\n");
+                alert(str);
+            }
+            //엑셀 내보내기(Export);
+            function exportToXlsx() {
+                // 엑셀 내보내기 속성
+                const exportProps = {
+                    // 저장하기 파일명
+                    fileName: "AUIGridExport"
+                };
+                // 내보내기 실행
+                AUIGrid.exportToXlsx(myGridID, exportProps);
+            }
+            //PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
+            function exportPdfClick() {
+                // PDF 내보내기 속성
+                const exportProps = {
+                    // 폰트 지정
+                    fontPath: "../pdfkit/nyjgothic-medium.ttf",
+                    // 저장하기 파일명
+                    fileName: "AUIGridExport"
+                };
+                // 내보내기 실행
+                AUIGrid.exportToPdf(myGridID, exportProps);
+            }
+            let originalDemoRowHeight;
+            // 같은 데이터에서 행 높이와 렌더러 높이를 분리하고 기본 설정으로 되돌립니다.
+            function compareRendererHeight(compact) {
+                if (originalDemoRowHeight === undefined) originalDemoRowHeight = AUIGrid.getProp(myGridID, "rowHeight");
+                AUIGrid.setProp(myGridID, "rowHeight", compact ? 90 : originalDemoRowHeight);
+                AUIGrid.refresh(myGridID);
+                for (const columnIndex of [4, 5])
+                    AUIGrid.setRendererProp(myGridID, columnIndex, { height: compact ? 30 : NaN });
+            }
+            // 여러 데모가 같은 JSON 자료를 사용합니다. 실제 서비스에서는 이 주소를 데이터 API로 바꾸세요.
+            // 응답을 받은 뒤 setGridData에 전달하는 과정까지 이 HTML에서 확인할 수 있습니다.
+            async function loadGridData() {
+                AUIGrid.showAjaxLoader(myGridID);
+                try {
+                    const response = await fetch("./data/server_50.json");
+                    if (!response.ok) throw new Error("데이터를 불러오지 못했습니다.");
+                    const data = await response.json();
+                    AUIGrid.setGridData(myGridID, data);
+                } catch (error) {
+                    document.getElementById("elapse").textContent = error.message;
+                } finally {
+                    AUIGrid.removeAjaxLoader(myGridID);
                 }
             }
-        ];
-        // 그리드 속성 설정
-        const gridProps = {
-            editable: true,
-            rowHeight: 30,
-        };
-        // 실제로 #grid_wrap 에 그리드 생성
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-    }
-    // 수정된 행들 얻기
-    function getEditedRowItems() {
-        // 수정된 행 아이템들(배열)
-        const editedRowItems = AUIGrid.getEditedRowItems(myGridID);
-        let str = "";
-        for (let i = 0, len = editedRowItems.length; i < len; i++) {
-            str += editedRowItems[i]["id"] + ", " + editedRowItems[i]["isActive"] + "\n";
-        }
-        alert(str);
-    }
-    // 필드값으로 아이템들 얻기
-    function getItemsByField() {
-        // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
-        const activeItems = AUIGrid.getItemsByValue(myGridID, "isActive", "Active");
-        const ids = [];
-        for (let i = 0, len = activeItems.length; i < len; i++) {
-            ids.push(activeItems[i].id); // 아이디만 따로 보관해서 alert 출력
-        }
-        const str = ids.join("\n");
-        alert(str);
-    }
-    //엑셀 내보내기(Export);
-    function exportToXlsx() {
-        // 엑셀 내보내기 속성
-        const exportProps = {
-            // 저장하기 파일명
-            fileName: "AUIGridExport"
-        };
-        // 내보내기 실행
-        AUIGrid.exportToXlsx(myGridID, exportProps);
-    }
-    //PDF 내보내기(Export), AUIGrid.pdfkit.js 파일을 추가하십시오.
-    function exportPdfClick() {
-        // PDF 내보내기 속성
-        const exportProps = {
-            // 폰트 지정
-            fontPath: "../pdfkit/nyjgothic-medium.ttf",
-            // 저장하기 파일명
-            fileName: "AUIGridExport"
-        };
-        // 내보내기 실행
-        AUIGrid.exportToPdf(myGridID, exportProps);
-    }
-    let originalDemoRowHeight;
-    // 같은 데이터에서 행 높이와 렌더러 높이를 분리하고 기본 설정으로 되돌립니다.
-    function compareRendererHeight(compact) {
-        if (originalDemoRowHeight === undefined)
-            originalDemoRowHeight = AUIGrid.getProp(myGridID, 'rowHeight');
-        AUIGrid.setProp(myGridID, 'rowHeight', compact ? 90 : originalDemoRowHeight);
-        AUIGrid.refresh(myGridID);
-        for (const columnIndex of [4, 5])
-            AUIGrid.setRendererProp(myGridID, columnIndex, { height: compact ? 30 : NaN });
-    }
-    // 여러 데모가 같은 JSON 자료를 사용합니다. 실제 서비스에서는 이 주소를 데이터 API로 바꾸세요.
-    // 응답을 받은 뒤 setGridData에 전달하는 과정까지 이 HTML에서 확인할 수 있습니다.
-    async function loadGridData() {
-        AUIGrid.showAjaxLoader(myGridID);
-        try {
-            const response = await fetch("./data/server_50.json");
-            if (!response.ok)
-                throw new Error("데이터를 불러오지 못했습니다.");
-            const data = await response.json();
-            AUIGrid.setGridData(myGridID, data);
-        }
-        catch (error) {
-            document.getElementById("elapse").textContent = error.message;
-        }
-        finally {
-            AUIGrid.removeAjaxLoader(myGridID);
-        }
-    }
-</script>
-</head>
-<body>
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-    <div class="desc">
-        <p>스위치를 눌러 참과 거짓 값을 바꿉니다. 담당자가 Anna인 행의 isActive는 변경할 수 없도록 설정했습니다.</p>
-        <p>렌더러의 <code>height</code>를 바꾸어 스위치 높이도 비교하세요.</p>
-        <p><button class="btn" id="renderer-height-compact" onclick="compareRendererHeight(true)">90px 행에 렌더러 30px</button>
-            <button class="btn" id="renderer-height-reset" onclick="compareRendererHeight(false)">기본 높이 복원</button>
-            <a href="javascript:changeLocation('./renderer_height.html?renderer_height')">5종 렌더러와 자동 줄바꿈 비교</a>
-        </p>
-        <ul class="nav_u">
-            <li><span onclick="getEditedRowItems()" class="btn">수정된 아이템 모두 가져오기</span></li>
-            <li><span onclick="getItemsByField()" class="btn">"Active" 아이템 모두 가져오기</span></li>
-        </ul>
-        <div>
-            <span class="btn" onclick="exportToXlsx()">엑셀(xlsx) 저장하기</span>
-            <span class="btn" onclick="exportPdfClick()">PDF 저장하기</span>
-        </div>
-    </div>
-    <div>
-        <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-        <div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-    </div>
-    <div class="desc_bottom">
-        <p id="elapse"></p>
-    </div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        스위치를 눌러 참과 거짓 값을 바꿉니다. 담당자가 Anna인 행의 isActive는 변경할 수 없도록
+                        설정했습니다.
+                    </p>
+                    <p>렌더러의 <code>height</code>를 바꾸어 스위치 높이도 비교하세요.</p>
+                    <p>
+                        <button class="btn" id="renderer-height-compact" onclick="compareRendererHeight(true)">
+                            90px 행에 렌더러 30px
+                        </button>
+                        <button class="btn" id="renderer-height-reset" onclick="compareRendererHeight(false)">
+                            기본 높이 복원
+                        </button>
+                        <a href="javascript:changeLocation('./renderer_height.html?renderer_height')"
+                            >5종 렌더러와 자동 줄바꿈 비교</a
+                        >
+                    </p>
+                    <ul class="nav_u">
+                        <li><span onclick="getEditedRowItems()" class="btn">수정된 아이템 모두 가져오기</span></li>
+                        <li><span onclick="getItemsByField()" class="btn">"Active" 아이템 모두 가져오기</span></li>
+                    </ul>
+                    <div>
+                        <span class="btn" onclick="exportToXlsx()">엑셀(xlsx) 저장하기</span>
+                        <span class="btn" onclick="exportPdfClick()">PDF 저장하기</span>
+                    </div>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

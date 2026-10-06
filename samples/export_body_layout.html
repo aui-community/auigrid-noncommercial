@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
+<link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+        <script src="../export_server_samples/FileSaver.min.js"></script>
+        <script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+        <style>
+            /* 기본 밴드형 데모와 같은 상위 셀 색상 및 숫자 정렬입니다. */
+            .my-team {
+                background: #edf3ff;
+                color: #315da8;
+            }
+
+            .my-right {
+                text-align: right;
+            }
+
+            .export-layout-heading {
+                margin: 24px 0 10px;
+                font-size: 16px;
+            }
+
+            #detail-caption {
+                margin: 8px 0 12px;
+            }
+        </style>
+        <script>
+            let myGridID, myGridID2;
+
+            function init() {
+                createAUIGrid();
+                createDetailGrid();
+                // 클릭 이벤트의 실제 데이터 항목을 사용하므로 정렬 후에도 해당 사용자의 상세를 표시합니다.
+                AUIGrid.bind(myGridID, "cellClick", function (event) {
+                    showDetail(event.item);
+                });
+                loadData();
+            }
+
+            function createAUIGrid() {
+                // band_body.html과 같은 칼럼 계층, 셀 렌더러 및 표시 높이를 사용합니다.
+                const columnLayout = [
+                    {
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 70,
+                        editable: false
+                    },
+                    {
+                        dataField: "team",
+                        headerText: "소속",
+                        bodyCell: true,
+                        style: "my-team",
+                        children: [
+                            {
+                                dataField: "name",
+                                headerText: "이름",
+                                width: 130
+                            },
+                            {
+                                dataField: "position",
+                                headerText: "직급",
+                                bodyCell: true,
+                                children: [
+                                    {
+                                        dataField: "age",
+                                        headerText: "나이",
+                                        width: 70,
+                                        dataType: "numeric"
+                                    },
+                                    {
+                                        dataField: "birth",
+                                        headerText: "생년월일",
+                                        width: 90,
+                                        dataType: "date",
+                                        dateInputFormat: "yyyy-mm-dd",
+                                        formatString: "yyyy/mm/dd"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        // 확인은 출력용 상위 셀입니다. 자식 수량과 금액은 아래쪽에 나란히 표시합니다.
+                        dataField: "checked",
+                        headerText: "확인",
+                        bodyCell: true,
+                        editable: false,
+                        renderer: { type: "CheckBoxEditRenderer" },
+                        children: [
+                            {
+                                dataField: "qty",
+                                headerText: "수량",
+                                width: 95,
+                                dataType: "numeric"
+                            },
+                            {
+                                dataField: "amount",
+                                headerText: "금액",
+                                width: 90,
+                                dataType: "numeric",
+                                formatString: "#,##0",
+                                style: "my-right"
+                            }
+                        ]
+                    }
+                ];
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, {
+                    bodyLayoutMode: "band",
+                    rowHeight: 90,
+                    editable: true,
+                    selectionMode: "multipleCells"
+                });
+            }
+
+            function createDetailGrid() {
+                // 하단도 밴드형으로 표시하여 두 시트의 출력 레이아웃을 각각 비교할 수 있습니다.
+                const columnLayout = [
+                    {
+                        dataField: "orderNo",
+                        headerText: "주문번호",
+                        bodyCell: true,
+                        style: "my-team",
+                        children: [
+                            { dataField: "product", headerText: "품목", width: 220 },
+                            {
+                                dataField: "orderDate",
+                                headerText: "주문일",
+                                width: 180,
+                                dataType: "date",
+                                dateInputFormat: "yyyy-mm-dd",
+                                formatString: "yyyy/mm/dd"
+                            }
+                        ]
+                    },
+                    {
+                        dataField: "status",
+                        headerText: "처리 상태",
+                        bodyCell: true,
+                        children: [
+                            { dataField: "qty", headerText: "수량", width: 90, dataType: "numeric" },
+                            {
+                                dataField: "amount",
+                                headerText: "금액",
+                                width: 160,
+                                dataType: "numeric",
+                                formatString: "#,##0",
+                                style: "my-right"
+                            }
+                        ]
+                    }
+                ];
+                myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, {
+                    bodyLayoutMode: "band",
+                    rowHeight: 80,
+                    selectionMode: "multipleCells",
+                    noDataMessage: "상단 그리드에서 사용자를 선택하세요."
+                });
+            }
+
+            function showDetail(item) {
+                if (!item) return;
+                // 별도 서버 없이 실행하는 예제입니다. 사용자 ID와 수량, 금액을 바탕으로 주문 내역을 구성합니다.
+                // 1~3건에 수량과 금액을 나누되 마지막 주문에 잔여값을 넣어 상단 합계와 일치시킵니다.
+                const totalQty = Math.max(0, Math.trunc(Number(item.qty) || 0));
+                const totalAmount = Number(item.amount) || 0;
+                const count = Math.min(3, totalQty);
+                const products = ["업무용 노트", "파일 정리함", "데스크 패드"];
+                const details = [];
+                let remainingQty = totalQty,
+                    remainingAmount = totalAmount;
+                for (let i = 0; i < count; i++) {
+                    const qty = Math.ceil(remainingQty / (count - i));
+                    const amount = i === count - 1 ? remainingAmount : Math.round((totalAmount * qty) / totalQty);
+                    details.push({
+                        userId: item.id,
+                        orderNo: item.id + "-ORD-" + (i + 1),
+                        product: products[i],
+                        orderDate: "2026-09-" + String(i + 1).padStart(2, "0"),
+                        status: item.checked ? "확인 완료" : "확인 대기",
+                        qty: qty,
+                        amount: amount
+                    });
+                    remainingQty -= qty;
+                    remainingAmount -= amount;
+                }
+                AUIGrid.setGridData(myGridID2, details);
+                document.getElementById("detail-caption").textContent =
+                    item.name + " (" + item.id + ", " + item.team + ") — 주문 상세 " + details.length + "건";
+            }
+
+            function loadData() {
+                AUIGrid.showAjaxLoader(myGridID);
+                // 원본 데모의 JSON을 공유하고 데이터 파일은 복제하지 않습니다.
+                fetch("./data/band_body.json")
+                    .then(function (response) {
+                        if (!response.ok) throw new Error("데이터를 불러오지 못했습니다.");
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        AUIGrid.setGridData(myGridID, data);
+                        // 처음에도 두 시트를 바로 내보낼 수 있도록 첫 사용자의 상세를 표시합니다.
+                        if (data.length) {
+                            AUIGrid.setSelectionByIndex(myGridID, 0, 0);
+                            showDetail(data[0]);
+                        }
+                        document.querySelectorAll(".export-layout-button").forEach(function (button) {
+                            button.disabled = false;
+                        });
+                    })
+                    .catch(function (error) {
+                        document.getElementById("detail-caption").textContent = error.message;
+                    })
+                    .finally(function () {
+                        AUIGrid.removeAjaxLoader(myGridID);
+                    });
+            }
+
+            function exportExcel() {
+                const mode = document.getElementById("main-export-mode").value;
+                // 화면 속성은 바꾸지 않고, 내보내기 옵션에서 파일의 레이아웃과 행 높이만 지정합니다.
+                AUIGrid.exportToXlsx(myGridID, {
+                    fileName: "사용자_목록_" + mode,
+                    sheetName: "사용자 목록",
+                    bodyLayoutMode: mode,
+                    rowHeight: mode === "band" ? 90 : 30
+                });
+            }
+
+            // PDF는 각 그리드를 별도 파일로 저장하며 화면 모드는 그대로 둡니다.
+            function exportPdf(detail) {
+                const mode = document.getElementById(detail ? "detail-export-mode" : "main-export-mode").value;
+                AUIGrid.exportToPdf(detail ? myGridID2 : myGridID, {
+                    fileName: (detail ? "주문_상세_" : "사용자_목록_") + mode,
+                    bodyLayoutMode: mode,
+                    rowHeight: mode === "band" ? (detail ? 80 : 90) : 30,
+                    fontPath: "../pdfkit/nyjgothic-medium.ttf"
+                });
+            }
+
+            function exportExcelMulti() {
+                const mainMode = document.getElementById("main-export-mode").value;
+                const detailMode = document.getElementById("detail-export-mode").value;
+                // 첫 옵션은 상단, 두 번째 옵션은 하단 그리드에 대응합니다. 현재 표시된 주문 상세를 함께 저장합니다.
+                AUIGrid.exportToXlsxMulti(
+                    myGridID,
+                    [myGridID2],
+                    [
+                        {
+                            fileName: "사용자_목록과_주문_상세",
+                            sheetName: "사용자 목록",
+                            bodyLayoutMode: mainMode,
+                            rowHeight: mainMode === "band" ? 90 : 30
+                        },
+                        {
+                            sheetName: "선택 사용자 주문 상세",
+                            bodyLayoutMode: detailMode,
+                            rowHeight: detailMode === "band" ? 80 : 30
+                        }
+                    ]
+                );
+            }
+        </script>
+    </head>
+<body class="demo-typography">
+
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        화면 설정을 바꾸지 않고 Excel과 PDF 파일의 레이아웃만 원하는 형태(band, flat, flatAll)로
+                        지정합니다.
+                    </p>
+                    <p>
+                        내보내기 옵션의 <code>bodyLayoutMode</code>를 사용합니다. 생략하면 현재 화면의 레이아웃을
+                        따릅니다. (v3.0.19부터 지원)
+                    </p>
+                    <ul>
+                        <li><strong>band</strong>: 상위 셀과 하위 셀을 밴드형으로 출력합니다.</li>
+                        <li><strong>flat</strong>: 그룹형 헤더를 유지하고 본문에는 최하위 칼럼만 출력합니다.</li>
+                        <li>
+                            <strong>flatAll</strong>: dataField가 있는 상위 칼럼과 하위 칼럼을 독립된 열로 펼칩니다.
+                        </li>
+                    </ul>
+                    <p>
+                        상단의 셀을 클릭하면 해당 사용자의 주문 상세가 하단에 표시됩니다. 두 그리드를 각각 다른
+                        레이아웃으로 한 파일의 두 시트에 저장할 수 있습니다.
+                    </p>
+                    <div class="desc">
+                        <div class="src_cover">
+                            <pre>
+// 그리드 하나를 독립된 열로 펼쳐 내보냅니다.
+AUIGrid.exportToXlsx(myGridID, {
+    fileName: "사용자_목록",
+    bodyLayoutMode: "flatAll", // 현재 그리드 출력된 바디 레이아웃과 무관하게 전체 펼치기(flatAll)로 내보내기
+    rowHeight: 30
+});
+
+// 각 그리드를 서로 다른 레이아웃의 시트로 내보냅니다.
+AUIGrid.exportToXlsxMulti(myGridID, [myGridID2], [
+    { fileName: "사용자_목록과_주문_상세", sheetName: "사용자 목록", bodyLayoutMode: "flatAll", rowHeight: 30 },
+    { sheetName: "선택 사용자 주문 상세", bodyLayoutMode: "flat", rowHeight: 30 }
+]);
+
+// PDF도 같은 옵션으로 파일의 레이아웃만 지정합니다.
+AUIGrid.exportToPdf(myGridID, {
+    fileName: "사용자_목록",
+    bodyLayoutMode: "flatAll", // 현재 그리드 출력된 바디 레이아웃과 무관하게 전체 펼치기(flatAll)로 내보내기
+    rowHeight: 30,
+    fontPath: "../pdfkit/nyjgothic-medium.ttf"
+});</pre>
+                        </div>
+                    </div>
+                    <!-- 출력 레이아웃 설정과 파일 저장을 공통 조작 영역으로 구분합니다. -->
+                    <div class="demo-options">
+                        <div class="demo-option-row">
+                            <label for="main-export-mode"
+                                ><span class="demo-option-label">사용자 목록의 내보내기 레이아웃</span>
+                                <select id="main-export-mode">
+                                    <option value="band">band</option>
+                                    <option value="flat">flat</option>
+                                    <option value="flatAll" selected>flatAll</option>
+                                </select>
+                            </label>
+                            <label for="detail-export-mode"
+                                ><span class="demo-option-label">주문 상세의 내보내기 레이아웃</span>
+                                <select id="detail-export-mode">
+                                    <option value="band">band</option>
+                                    <option value="flat" selected>flat</option>
+                                    <option value="flatAll">flatAll</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="demo-option-row">
+                            <span class="demo-option-label">Excel</span>
+                            <button
+                                type="button"
+                                id="export-single"
+                                class="btn export-layout-button"
+                                disabled
+                                onclick="exportExcel()"
+                            >
+                                사용자 목록만 Excel 내보내기
+                            </button>
+                            <button
+                                type="button"
+                                id="export-multi"
+                                class="btn export-layout-button"
+                                disabled
+                                onclick="exportExcelMulti()"
+                            >
+                                목록과 상세를 두 시트(멀티 시트)로 내보내기
+                            </button>
+                        </div>
+                        <div class="demo-option-row">
+                            <span class="demo-option-label">PDF</span>
+                            <button
+                                type="button"
+                                id="export-pdf-main"
+                                class="btn export-layout-button"
+                                disabled
+                                onclick="exportPdf(false)"
+                            >
+                                사용자 목록 PDF 내보내기
+                            </button>
+                            <button
+                                type="button"
+                                id="export-pdf-detail"
+                                class="btn export-layout-button"
+                                disabled
+                                onclick="exportPdf(true)"
+                            >
+                                주문 상세 PDF 내보내기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="grid_wrap" style="width: 100%; height: 320px; margin: 0 auto"></div>
+                <p id="detail-caption" role="status">사용자 목록을 불러오고 있습니다.</p>
+                <div id="grid_wrap2" style="width: 100%; height: 300px; margin: 0 auto"></div>
+            </div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

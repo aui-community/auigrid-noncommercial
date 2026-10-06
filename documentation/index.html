@@ -8,63 +8,79 @@
 <meta content="IE=edge" http-equiv="X-UA-Compatible">
 <meta content="no-cache" http-equiv="Pragma">
 <meta content="-1" http-equiv="Expires">
-<meta content="width=1200" name="viewport">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
 <meta content="AUIGrid API Documentation" property="og:title">
 <meta content="https://www.auisoft.net/documentation/auigrid" property="og:url">
 <meta content="AUIGrid API Documentation" property="og:description">
 <meta content="AUIGrid API Documentation" name="keywords">
 <title>AUIGrid Documentation</title>
+<link rel="stylesheet" href="./static/prism.css">
 <link rel="stylesheet" href="./static/style.css" type="text/css" media="screen">
-<link rel="shortcut icon" href="./static/aui.ico">
-<!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
-<link href="./static/prism.css" rel="stylesheet">
-<script src="./static/prism.js" type="text/javascript"></script>
+<link rel="stylesheet" href="./static/typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+
+<!-- Prism.js는 MIT 라이선스로 제공됩니다: https://prismjs.com/ 및 https://opensource.org/licenses/MIT -->
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js"></script>
+
+<link rel="icon" href="static/favicon.ico" sizes="any">
+<link rel="icon" href="static/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="static/apple-touch-icon.png">
+<meta name="theme-color" content="#222729">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="static/docs-brand.css">
 </head>
-<body>
-<div class="header">
-<div id="logo-bar">
-<a href="./index.html"><img src="./images/auisoft.png" alt="AUISoft" title="AUISoft"></a>
+<body class="demo-typography docs-site docs-home">
+<!-- 생성기가 문서 종류와 경로에 맞는 공통 브랜드 헤더를 삽입합니다. -->
+<header class="docs-header"><div class="docs-header-inner">
+    <a id="logo-bar" class="docs-brand" href="https://www.auisoft.net/" aria-label="AUISoft 홈페이지">
+      <img src="static/favicon.svg" width="40" height="40" alt="">
+      <span>AUISoft<small>에이유아이소프트</small></span>
+    </a>
+    <span id="title" class="docs-context">AUIGrid 3.0.19 Documentation</span>
+    <nav class="docs-navigation" aria-label="주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="index.html" aria-current="page">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav>
+    <details class="docs-mobile-navigation"><summary>메뉴</summary><nav aria-label="모바일 주 메뉴"><a href="https://www.auisoft.net../../samples/index.html">AUIGrid 데모</a>
+    <a href="https://www.auisoft.net/demo/auipivot/index.html">AUIPivot 데모</a>
+    <a href="index.html" aria-current="page">문서</a>
+    <a href="https://www.auisoft.net/board/bbs/board.php?bo_table=support">고객지원</a>
+    <a class="docs-download" href="https://www.auisoft.net/dcenter.html">다운로드 센터</a></nav></details>
+  </div></header>
+<section class="docs-home-intro" aria-labelledby="docs-home-title">
+<div class="docs-home-intro-inner">
+<p class="docs-eyebrow">개발 문서</p>
+<h1 id="docs-home-title">AUIGrid 개발 문서</h1>
+<p class="docs-lead">설치와 데이터 구성부터 칼럼 설정, API 활용까지 AUIGrid 개발에 필요한 내용을 확인하세요.</p>
+<nav class="docs-products" aria-label="제품 문서">
+<span class="doc_menu_item doc_menu_item_selected" aria-current="page">AUIGrid</span>
+
+</nav>
 </div>
-<span id="title">AUIGrid 3.0.18 Documentation</span>
-</div>
-<div class="MainContent">
-<p style="text-align:left;border-bottom:1px solid #565e60; margin-top:20px;">
-<span class="doc_menu_item doc_menu_item_selected">AUIGrid</span>
-</p>
-<ol style="margin-top:60px;" class="main_ul">
-<li>
-<a href="./Desc/setup.html">AUIGrid 소개 및 사용 방법</a>
-</li>
-<li>
-<a href="./Desc/data-desc.html">데이터 구조 및 작성 방법에 대하여</a>
-</li>
-<li>
-<a href="./Desc/quick-start.html">간단하게 그리드 생성해 보기(Quick Start)</a>
-</li>
-<li>
-<a href="./ColumnLayout/package-detail.html">칼럼 레이아웃(Column Layout) 설정에 대하여</a>
-</li>
-<li>
-<a href="./FooterLayout/Footer.html">푸터 레이아웃(Footer Layout) 설정에 대하여</a>
-</li>
-<li>
-<a href="./DataGrid/package-detail.html">AUIGrid 속성, 메소드, 이벤트 설정에 대하여 (개발 API 문서)</a>
-</li>
-<li>
-<a href="./Desc/mcp-server.html">AI 개발 지원: AUIGrid MCP Server</a>
-</li>
+</section>
+<main class="MainContent">
+<h2>문서 살펴보기</h2>
+<!-- 기존 1~8번 문서의 순서와 URL을 유지합니다. 번호는 목록 순서로 표시합니다. -->
+<ol class="main_ul docs-chapters" role="list">
+<li><a href="./Desc/setup.html"><span><strong>AUIGrid 소개 및 사용 방법</strong><small>제품 구성과 설치 방법을 확인합니다.</small></span></a></li>
+<li><a href="./Desc/data-desc.html"><span><strong>데이터 구조 및 작성 방법에 대하여</strong><small>그리드에 사용할 데이터 구조를 알아봅니다.</small></span></a></li>
+<li><a href="./Desc/quick-start.html"><span><strong>간단하게 그리드 생성해 보기(Quick Start)</strong><small>예제 코드로 첫 그리드를 만들어 봅니다.</small></span></a></li>
+<li><a href="./ColumnLayout/package-detail.html"><span><strong>칼럼 레이아웃(Column Layout) 설정에 대하여</strong><small>칼럼 구성과 셀 표시 방법을 설정합니다.</small></span></a></li>
+<li><a href="./FooterLayout/Footer.html"><span><strong>푸터 레이아웃(Footer Layout) 설정에 대하여</strong><small>그리드 하단의 합계와 요약 정보를 구성합니다.</small></span></a></li>
+<li><a href="./DataGrid/package-detail.html"><span><strong>AUIGrid 속성, 메소드, 이벤트 설정에 대하여 (개발 API 문서)</strong><small>기능별 설정값과 API 사용 방법을 찾아봅니다.</small></span></a></li>
+<li><a href="./Desc/mcp-server.html"><span><strong>AI 개발 지원: AUIGrid MCP Server</strong><small>AI 개발 도구에서 공식 문서와 예제를 활용합니다.</small></span></a></li>
+<li><a href="./Desc/noncommercial.html"><span><strong>비상업용 CDN으로 시작하기</strong><small>로컬 환경에서 비상업용 버전을 실행합니다.</small></span></a></li>
 </ol>
-<div style="margin-top:40px;">
-<p>■ 칼럼 레이아웃 작성 시 무엇을 정의할 수 있는지 보고자 한다면 <a href="./ColumnLayout/package-detail.html"><span>칼럼 레이아웃 속성</span></a>을 참고하세요.</p>
-<p>■ 정의한 칼럼 레이아웃을 갖고 어떻게 그리드를 생성하고, 추가 속성을 어떻게 넣는지 보고자 한다면 <a href="./DataGrid/package-detail.html"><span>그리드 생성 시 설정하는 속성 및 메소드 리스트 </span></a>를 참고하세요.</p>
-<p>■ <a href="./Desc/license.html">AUIGrid 에서 사용하는 OpenSource 라이선스 명시 의무 준수</a>
-</p>
-</div>
-<div style="margin-top:80px;">
-<center class="copyright">Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</center>
-</div>
-</div>
-</body>
+<aside class="docs-related" aria-label="관련 안내">
+<p>칼럼 레이아웃 작성 시 무엇을 정의할 수 있는지 보고자 한다면 <a href="./ColumnLayout/package-detail.html">칼럼 레이아웃 속성</a>을 참고하세요.</p>
+<p>정의한 칼럼 레이아웃을 갖고 어떻게 그리드를 생성하고, 추가 속성을 어떻게 넣는지 보고자 한다면 <a href="./DataGrid/package-detail.html">그리드 생성 시 설정하는 속성 및 메소드 리스트</a>를 참고하세요.</p>
+<p><a href="./Desc/license.html">AUIGrid에서 사용하는 OpenSource 라이선스 명시 의무 준수</a></p>
+</aside>
+</main>
+<footer class="docs-footer"><div><a href="index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
 </html>
 <!--Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved-->

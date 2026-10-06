@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,141 +37,171 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 스타일 */
-	.left {
-		text-align: left;
-	}
+        <style>
+            /* 커스텀 스타일 */
+            .left {
+                text-align: left;
+            }
 
-	.c-red {
-		color: #CC3D3D;
-		font-weight: bold;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            .c-red {
+                color: #cc3d3d;
+                font-weight: bold;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/schedule_tree.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/schedule_tree.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		let columnLayout = [{
-			dataField: "id",
-			headerText: "ID",
-			width: 140
-		}, {
-			dataField: "name",
-			headerText: "Task Name",
-			style: "left",
-			width: 360
-		}, {
-			dataField: "charge",
-			headerText: "Charge",
-			style: "left",
-			width: 140
-		}, {
-			dataField: "complete",
-			headerText: "Complete(%)",
-			postfix: "%",
-			width: 120
-		}, {
-			dataField: "start",
-			headerText: "Start Date"
-		}, {
-			dataField: "end",
-			headerText: "End Date"
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                let columnLayout = [
+                    {
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 140
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Task Name",
+                        style: "left",
+                        width: 360
+                    },
+                    {
+                        dataField: "charge",
+                        headerText: "Charge",
+                        style: "left",
+                        width: 140
+                    },
+                    {
+                        dataField: "complete",
+                        headerText: "Complete(%)",
+                        postfix: "%",
+                        width: 120
+                    },
+                    {
+                        dataField: "start",
+                        headerText: "Start Date"
+                    },
+                    {
+                        dataField: "end",
+                        headerText: "End Date"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			// 편집 가능 여부
-			editable: true,
-			// 사용자가 정의한 데이터 필드 중 id 를 rowIdField 로 설정함
-			rowIdField: "id",
-			// singleRow 선택모드
-			selectionMode: "singleRow",
-			hoverMode: "singleRow",
-			// 최초 보여질 때 모두 열린 상태로 출력 여부
-			displayTreeOpen: false,
-			// 체크박스 사용 
-			showRowCheckColumn: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    // 편집 가능 여부
+                    editable: true,
+                    // 사용자가 정의한 데이터 필드 중 id 를 rowIdField 로 설정함
+                    rowIdField: "id",
+                    // singleRow 선택모드
+                    selectionMode: "singleRow",
+                    hoverMode: "singleRow",
+                    // 최초 보여질 때 모두 열린 상태로 출력 여부
+                    displayTreeOpen: false,
+                    // 체크박스 사용
+                    showRowCheckColumn: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// ready 이벤트 바인딩
-		AUIGrid.bind(myGridID, "ready", function (event) {
-			// 첫 셀에 선택되도록 지정
-			AUIGrid.setSelectionByIndex(myGridID, 0, 0);
-		});
-	}
+                // ready 이벤트 바인딩
+                AUIGrid.bind(myGridID, "ready", function (event) {
+                    // 첫 셀에 선택되도록 지정
+                    AUIGrid.setSelectionByIndex(myGridID, 0, 0);
+                });
+            }
 
-	let isOpen = false;
-	function expandItem() {
-		let isOpen = AUIGrid.isItemOpenByRowId(myGridID, "T30");
-		//-- id 가 T30 인 행 열기/ 닫기
-		AUIGrid.expandItemByRowId(myGridID, "T30", !isOpen);
-	}
+            let isOpen = false;
+            function expandItem() {
+                let isOpen = AUIGrid.isItemOpenByRowId(myGridID, "T30");
+                //-- id 가 T30 인 행 열기/ 닫기
+                AUIGrid.expandItemByRowId(myGridID, "T30", !isOpen);
+            }
 
-	let isExpanded = false;
-	function expand() {
-		if (!isExpanded) {
-			AUIGrid.expandAll(myGridID);
-			isExpanded = true;
-			return;
-		}
-		AUIGrid.collapseAll(myGridID);
-		isExpanded = false;
-	}
+            let isExpanded = false;
+            function expand() {
+                if (!isExpanded) {
+                    AUIGrid.expandAll(myGridID);
+                    isExpanded = true;
+                    return;
+                }
+                AUIGrid.collapseAll(myGridID);
+                isExpanded = false;
+            }
 
-	function showItemsOnDepth(event) {
-		const depthSelect = document.getElementById("depthSelect");
-		const depth = depthSelect.value;
-		// 해당 depth 까지 오픈함
-		AUIGrid.showItemsOnDepth(myGridID, Number(depth));
-	}
-</script>
-</head>
-<body>
+            function showItemsOnDepth(event) {
+                const depthSelect = document.getElementById("depthSelect");
+                const depth = depthSelect.value;
+                // 해당 depth 까지 오픈함
+                AUIGrid.showItemsOnDepth(myGridID, Number(depth));
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>프로젝트 일정 관리 테이블을 출력한 모습입니다. ( 계층구조 데이터 표현 )
-			<button class="btn" onclick="javascript:window.open('./data/schedule_tree.txt', '_blank', 'width=1024 height=768 scrollbars=yes')">
-				계층 데이터 구조 보기</button>
-		</p>
-		<p>AUIGrid 에서 트리그리드로 출력을 하고자 한다면, JSON 데이터 작성 시 children 하위에 계층 구조 데이터로 작성을 하여 삽입하면 가능합니다.</p>
-		<p>그 외 다른 설정은 필요 하지 않습니다. ( 상단 "계층 데이터 구조 보기" 버턴을 눌러 데이터 구조 확인 바람 )</p>
-		<p>■ Space 키 : 트리 열기/닫기 토글</p>
-		<p>■ Ctrl + 오른쪽 키 : 트리 열기</p>
-		<p>■ Ctrl + 왼쪽 키 : 트리 닫기</p>
-		<ul class="nav_u">
-			<li><button onclick="expand()" class="btn">모두 열기/ 닫기</button></li>
-			<li><button onclick="expandItem()" class="btn">특정 브랜치(ID = T30) 열기/닫기</button></li>
-			<li><label>계층 선택 : <select id="depthSelect" onchange="showItemsOnDepth()">
-						<option value="default" selected="selected" disabled="disabled">-- 특정 계층까지만 보이기 -- </option>
-						<option value="1">계층 1 Depth 만 보이기</option>
-						<option value="2">계층 2 Depth 까지 보이기</option>
-						<option value="3">계층 3 Depth 까지 보이기</option>
-					</select></label></li>
-		</ul>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        프로젝트 일정 관리 테이블을 출력한 모습입니다. ( 계층구조 데이터 표현 )
+                        <button
+                            class="btn"
+                            onclick="
+                                javascript: window.open(
+                                    './data/schedule_tree.txt',
+                                    '_blank',
+                                    'width=1024 height=768 scrollbars=yes'
+                                );
+                            "
+                        >
+                            계층 데이터 구조 보기
+                        </button>
+                    </p>
+                    <p>
+                        AUIGrid 에서 트리그리드로 출력을 하고자 한다면, JSON 데이터 작성 시 children 하위에 계층 구조
+                        데이터로 작성을 하여 삽입하면 가능합니다.
+                    </p>
+                    <p>
+                        그 외 다른 설정은 필요 하지 않습니다. ( 상단 "계층 데이터 구조 보기" 버턴을 눌러 데이터 구조
+                        확인 바람 )
+                    </p>
+                    <p>■ Space 키 : 트리 열기/닫기 토글</p>
+                    <p>■ Ctrl + 오른쪽 키 : 트리 열기</p>
+                    <p>■ Ctrl + 왼쪽 키 : 트리 닫기</p>
+                    <ul class="nav_u">
+                        <li><button onclick="expand()" class="btn">모두 열기/ 닫기</button></li>
+                        <li><button onclick="expandItem()" class="btn">특정 브랜치(ID = T30) 열기/닫기</button></li>
+                        <li>
+                            <label
+                                >계층 선택 :
+                                <select id="depthSelect" onchange="showItemsOnDepth()">
+                                    <option value="default" selected="selected" disabled="disabled">
+                                        -- 특정 계층까지만 보이기 --
+                                    </option>
+                                    <option value="1">계층 1 Depth 만 보이기</option>
+                                    <option value="2">계층 2 Depth 까지 보이기</option>
+                                    <option value="3">계층 3 Depth 까지 보이기</option>
+                                </select></label
+                            >
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom"></div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

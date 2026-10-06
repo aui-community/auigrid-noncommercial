@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -28,293 +36,583 @@
 <!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+        <style>
+            /* 이 쇼케이스의 요약과 조작 도구에만 적용하며 그리드는 선택한 제품 테마를 사용합니다. */
+            .live-demo .live-heading,
+            .live-demo .live-toolbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 12px 20px;
+            }
+            #main.live-demo .live-heading h2 {
+                margin: 0 0 4px;
+            }
+            .live-demo .live-heading p {
+                margin: 0;
+                color: #68737d;
+            }
+            .live-demo .live-stream {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 7px 12px;
+                border: 1px solid #cfe7dc;
+                border-radius: 20px;
+                color: #247354;
+                background: #f0f8f4;
+                white-space: nowrap;
+            }
+            .live-demo .live-stream::before {
+                content: "";
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: currentColor;
+            }
+            .live-demo .live-stream[data-paused="true"] {
+                color: #68737d;
+                background: #f4f6f8;
+                border-color: #dfe4e9;
+            }
+            .live-demo .live-summary {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 12px;
+                margin: 20px 0 24px;
+            }
+            .live-demo .live-metric {
+                padding: 16px 18px;
+                border: 1px solid #e0e5ea;
+                border-radius: 8px;
+                background: #fafbfd;
+                min-width: 0;
+            }
+            .live-demo .live-metric dt {
+                margin: 0 0 8px;
+                color: #68737d;
+            }
+            .live-demo .live-metric dd {
+                margin: 0;
+            }
+            .live-demo .live-value {
+                color: #23292b;
+                font-size: 28px;
+                font-weight: 700;
+                line-height: 1.25;
+                font-variant-numeric: tabular-nums;
+            }
+            .live-demo .live-unit {
+                margin-left: 5px;
+                color: #68737d;
+            }
+            .live-demo .live-caption {
+                display: block;
+                margin-top: 7px;
+                color: #68737d;
+            }
+            .live-demo .live-attention[data-active="true"] .live-value {
+                color: #9d6215;
+            }
+            .live-demo .live-toolbar {
+                margin-bottom: 12px;
+            }
+            .live-demo .live-grid-title {
+                display: flex;
+                align-items: baseline;
+                flex-wrap: wrap;
+                gap: 8px 12px;
+            }
+            #main.live-demo .live-grid-title h3 {
+                margin: 0;
+            }
+            .live-demo .live-grid-title span {
+                color: #68737d;
+            }
+            .live-demo .live-controls {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px 12px;
+            }
+            .live-demo .live-controls label {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                color: #4d5867;
+            }
+            .live-demo .live-controls select {
+                height: 34px;
+                padding: 4px 24px 4px 8px;
+                border: 1px solid #d7dce3;
+                border-radius: 5px;
+                background: #fff;
+                color: #303946;
+                font: inherit;
+            }
+            #main.live-demo .live-controls .btn {
+                margin: 0;
+            }
+            #main.live-demo #live-toggle {
+                min-width: 106px;
+            }
+            .live-demo #grid_wrap {
+                width: 100%;
+                height: 510px;
+            }
+            .live-demo .live-footnote {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 6px 20px;
+                margin-top: 10px;
+                color: #68737d;
+            }
+            .live-demo .live-footnote p {
+                margin: 0;
+            }
+            .live-demo .live-footnote time {
+                font-variant-numeric: tabular-nums;
+            }
+            .live-demo .live-key {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                margin-right: 6px;
+                border: 1px solid #b9d5ed;
+                border-radius: 2px;
+                background: #e4f0fa;
+            }
+            /* 갱신된 셀만 짧게 강조합니다. 상태는 색뿐 아니라 텍스트로도 구분합니다. */
+            .live-demo .live-cell-update {
+                background: #e4f0fa;
+                color: #193e60;
+            }
+            .live-demo .live-service {
+                text-align: left;
+                font-weight: 600;
+            }
+            .live-demo .live-number {
+                text-align: right;
+                font-variant-numeric: tabular-nums;
+            }
+            /* 수치 강조는 제품 테마의 글자색을 유지해 어두운 테마에서도 읽을 수 있게 합니다. */
+            .live-demo .live-warning,
+            .live-demo .live-delayed {
+                font-weight: 700;
+            }
+            .live-demo .live-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 3px 9px;
+                border-radius: 20px;
+                font-weight: 600;
+                line-height: 18px;
+                background: #edf7f2;
+                color: #247354;
+            }
+            .live-demo .live-badge::before {
+                content: "";
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: currentColor;
+            }
+            .live-demo .live-badge--watch {
+                color: #98600f;
+                background: #fbf3e3;
+            }
+            .live-demo .live-badge--delayed {
+                color: #af4141;
+                background: #fbeeee;
+            }
+            .live-demo .live-cpu-normal .aui-grid-percentage-bar {
+                background: #3982ba;
+            }
+            .live-demo .live-cpu-watch .aui-grid-percentage-bar {
+                background: #bc8b36;
+            }
+            .live-demo .live-cpu-delayed .aui-grid-percentage-bar {
+                background: #c56662;
+            }
+            @media (max-width: 760px) {
+                .live-demo .live-summary {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 8px;
+                    margin: 16px 0 20px;
+                }
+                .live-demo .live-metric {
+                    padding: 12px;
+                }
+                .live-demo .live-value {
+                    font-size: 24px;
+                }
+                .live-demo .live-heading {
+                    align-items: flex-start;
+                }
+                .live-demo .live-controls {
+                    width: 100%;
+                }
+                .live-demo #grid_wrap {
+                    height: 460px;
+                }
+            }
+        </style>
+        <script>
+            // 외부 서버 없이 가상 운영 지표를 생성합니다. 최초 데이터 입력 후에는 refreshRows로 일부 행만 갱신합니다.
+            let myGridID;
+            let timerId = null;
+            let isRunning = true;
+            let disposed = false;
+            let nextRow = 0;
+            let sampleNumber = 0;
+            let services = [];
+            const historyFields = Array.from({ length: 12 }, (_, index) => "sample" + index);
+            const numberFormat = new Intl.NumberFormat("ko-KR");
+            const serviceDefinitions = [
+                { id: "gateway", name: "API 게이트웨이", region: "서울", requests: 8200, latency: 42, cpu: 0.42 },
+                { id: "auth", name: "회원 인증", region: "서울", requests: 2100, latency: 68, cpu: 0.36 },
+                { id: "catalog", name: "상품 조회", region: "서울", requests: 4600, latency: 95, cpu: 0.51 },
+                { id: "search", name: "상품 검색", region: "서울", requests: 1800, latency: 185, cpu: 0.68 },
+                { id: "cart", name: "장바구니", region: "서울", requests: 980, latency: 54, cpu: 0.31 },
+                { id: "orders", name: "주문 접수", region: "서울", requests: 620, latency: 128, cpu: 0.48 },
+                { id: "payment", name: "결제 승인", region: "부산", requests: 480, latency: 265, cpu: 0.62 },
+                { id: "stock", name: "재고 조회", region: "부산", requests: 1650, latency: 82, cpu: 0.58 },
+                { id: "delivery", name: "배송 추적", region: "부산", requests: 540, latency: 116, cpu: 0.4 },
+                { id: "notify", name: "알림 발송", region: "부산", requests: 760, latency: 74, cpu: 0.44 },
+                { id: "media", name: "이미지 처리", region: "부산", requests: 980, latency: 218, cpu: 0.77 },
+                { id: "logs", name: "로그 수집", region: "부산", requests: 3100, latency: 38, cpu: 0.53 },
+                { id: "recommend", name: "상품 추천", region: "서울", requests: 1350, latency: 174, cpu: 0.64 },
+                { id: "pricing", name: "가격 계산", region: "서울", requests: 880, latency: 64, cpu: 0.38 },
+                { id: "coupon", name: "쿠폰 적용", region: "서울", requests: 510, latency: 76, cpu: 0.34 },
+                { id: "reviews", name: "구매 후기", region: "서울", requests: 930, latency: 91, cpu: 0.42 },
+                { id: "wishlist", name: "관심 상품", region: "서울", requests: 720, latency: 49, cpu: 0.29 },
+                { id: "sessions", name: "세션 관리", region: "서울", requests: 2800, latency: 31, cpu: 0.55 },
+                { id: "settlement", name: "정산 처리", region: "부산", requests: 320, latency: 198, cpu: 0.61 },
+                { id: "returns", name: "반품 접수", region: "부산", requests: 180, latency: 105, cpu: 0.32 },
+                { id: "tracking", name: "운송장 발급", region: "부산", requests: 440, latency: 144, cpu: 0.47 },
+                { id: "analytics", name: "방문 분석", region: "부산", requests: 4200, latency: 67, cpu: 0.72 },
+                { id: "cdn", name: "정적 자원 전달", region: "부산", requests: 6900, latency: 24, cpu: 0.46 },
+                { id: "audit", name: "감사 이벤트", region: "부산", requests: 1560, latency: 58, cpu: 0.41 }
+            ];
+            const statusLabels = { healthy: "정상", watch: "주의", delayed: "지연" };
 
-<style>
-	.right_style {
-		text-align: right;
-	}
+            function init() {
+                myGridID = AUIGrid.create("#grid_wrap", createColumnLayout(), {
+                    rowIdField: "id",
+                    rowHeight: 38,
+                    headerHeight: 36,
+                    showRowNumColumn: false,
+                    fixedColumnCount: 1,
+                    selectionMode: "singleRow",
+                    enableSorting: true
+                });
+                const now = new Date();
+                services = serviceDefinitions.map((definition, index) => {
+                    const row = {
+                        id: definition.id,
+                        name: definition.name,
+                        region: definition.region,
+                        ...sampleService(index, now)
+                    };
+                    historyFields.forEach((field, point) => {
+                        row[field] = Math.round(definition.requests * (0.9 + Math.sin(point * 0.55 + index) * 0.13));
+                    });
+                    row[historyFields[historyFields.length - 1]] = row.requests;
+                    return row;
+                });
+                // 데모의 상태와 그리드에 전달하는 객체를 분리해 공개 갱신 메소드만으로 화면을 변경합니다.
+                AUIGrid.setGridData(
+                    myGridID,
+                    services.map((row) => ({ ...row }))
+                );
+                updateSummary(now, 0);
+                document.getElementById("live-toggle").addEventListener("click", toggleUpdates);
+                document.getElementById("live-step").addEventListener("click", refreshRows);
+                document.getElementById("live-interval").addEventListener("change", syncTimer);
+                document.getElementById("live-traffic").addEventListener("change", () => {
+                    if (isRunning) refreshRows();
+                });
+                document.addEventListener("visibilitychange", syncTimer);
+                window.addEventListener("pagehide", disposeDemo);
+                window.addEventListener("pageshow", restoreDemo);
+                syncTimer();
+            }
 
-	/* 행 갱신 시 깜빡이게 하는 스타일 */
-	.my-refresh-row-flash-style {
-		background: #dfdfdf;
-	}
+            // 요청량, 응답 시간과 자원 사용률이 함께 변하도록 모의 부하를 계산합니다.
+            function sampleService(index, now) {
+                const definition = serviceDefinitions[index];
+                const peak = document.getElementById("live-traffic").value === "peak";
+                const wave = Math.sin(sampleNumber * 0.55 + index * 0.9);
+                const load = 1 + wave * 0.14 + (Math.random() - 0.5) * 0.08;
+                const requests = Math.max(1, Math.round(definition.requests * load * (peak ? 1.65 : 1)));
+                const latency = Math.round(definition.latency * (1 + wave * 0.2) * (peak ? 2.1 : 1));
+                const cpu = Number(
+                    Math.min(0.99, Math.max(0.05, definition.cpu + wave * 0.07 + (peak ? 0.23 : 0))).toFixed(3)
+                );
+                const errorRate = Number(Math.max(0, 0.0015 + wave * 0.0012 + (peak ? 0.008 : 0)).toFixed(4));
+                const status =
+                    latency >= 500 || cpu >= 0.9 || errorRate >= 0.012
+                        ? "delayed"
+                        : latency >= 220 || cpu >= 0.75 || errorRate >= 0.006
+                          ? "watch"
+                          : "healthy";
+                return { requests, latency, cpu, errorRate, status, updatedAt: formatTime(now) };
+            }
 
-	/* 주식 하락 색상*/
-	.my-custom-down {
-		color: #0000ff;
-		text-align: right;
-	}
+            // 매번 서로 다른 네 서비스만 선택합니다. 정렬하거나 행을 선택해도 고유 ID로 같은 행을 갱신합니다.
+            function refreshRows() {
+                if (disposed || !myGridID) return;
+                const now = new Date();
+                sampleNumber++;
+                const updates = [];
+                for (let offset = 0; offset < 4; offset++) {
+                    const index = (nextRow + offset) % services.length;
+                    const previous = services[index];
+                    const update = { id: previous.id, ...sampleService(index, now) };
+                    historyFields.forEach((field, point) => {
+                        update[field] =
+                            point === historyFields.length - 1 ? update.requests : previous[historyFields[point + 1]];
+                    });
+                    services[index] = { ...previous, ...update };
+                    updates.push(update);
+                }
+                nextRow = (nextRow + updates.length) % services.length;
+                const flashStyle = matchMedia("(prefers-reduced-motion: reduce)").matches ? "" : "live-cell-update";
+                AUIGrid.refreshRows(myGridID, updates, flashStyle, 420);
+                updateSummary(now, updates.length);
+            }
 
-	/* 주식 상승 색상*/
-	.my-custom-up {
-		color: #ff0000;
-		text-align: right;
-	}
+            // 요약도 마지막으로 수신한 행 값으로 계산합니다. 평균 응답은 요청량으로 가중합니다.
+            function updateSummary(now, changedCount) {
+                const requests = services.reduce((sum, row) => sum + row.requests, 0);
+                const latency = services.reduce((sum, row) => sum + row.requests * row.latency, 0) / requests;
+                const healthy = services.filter((row) => row.status === "healthy").length;
+                document.getElementById("live-healthy").textContent = healthy;
+                document.getElementById("live-total").textContent = "/ " + services.length;
+                document.getElementById("live-requests").textContent = numberFormat.format(requests);
+                document.getElementById("live-latency").textContent = numberFormat.format(Math.round(latency));
+                document.getElementById("live-attention").textContent = services.length - healthy;
+                document.getElementById("live-attention-card").dataset.active = String(healthy < services.length);
+                document.getElementById("live-updated").textContent = changedCount
+                    ? changedCount + "개 서비스 갱신"
+                    : services.length + "개 서비스 모니터링";
+                const time = document.getElementById("live-last-update");
+                time.textContent = formatTime(now);
+                time.dateTime = now.toISOString();
+            }
 
-	.my-custom-normal {
-		color: inherit;
-		text-align: right;
-	}
+            function formatTime(date) {
+                // 로케일의 시/분/초 표기 차이 없이 수신 시각의 너비를 일정하게 유지합니다.
+                return [date.getHours(), date.getMinutes(), date.getSeconds()]
+                    .map((value) => String(value).padStart(2, "0"))
+                    .join(":");
+            }
 
-	/* 바게이지 양수 음수 함께 사용되는 영역에서 음수 바 재정의*/
-	.aui-grid-bar-renderer-negative {
-		background: #4641D9;
-		border: 1px solid #4641D9;
-	}
+            function createColumnLayout() {
+                // 비율 너비와 최소 너비를 함께 지정해 데스크톱과 모바일을 같은 칼럼으로 구성합니다.
+                return [
+                    { dataField: "name", headerText: "서비스", width: "17%", minWidth: 158, style: "live-service" },
+                    { dataField: "region", headerText: "리전", width: "7%", minWidth: 66 },
+                    {
+                        dataField: "status",
+                        headerText: "상태",
+                        width: "8%",
+                        minWidth: 88,
+                        renderer: { type: "TemplateRenderer" },
+                        // 상태 값은 위에서 정의한 세 가지 코드만 사용하며 서버 HTML을 그대로 삽입하지 않습니다.
+                        labelFunction: (rowIndex, columnIndex, value) =>
+                            '<span class="live-badge live-badge--' + value + '">' + statusLabels[value] + "</span>"
+                    },
+                    {
+                        dataField: "requests",
+                        headerText: "요청/초",
+                        width: "9%",
+                        minWidth: 92,
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        style: "live-number"
+                    },
+                    {
+                        dataField: "latency",
+                        headerText: "응답 시간(ms)",
+                        width: "10%",
+                        minWidth: 104,
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        style: "live-number",
+                        styleFunction: (rowIndex, columnIndex, value) =>
+                            value >= 500
+                                ? "live-number live-delayed"
+                                : value >= 220
+                                  ? "live-number live-warning"
+                                  : "live-number"
+                    },
+                    {
+                        dataField: "errorRate",
+                        headerText: "오류율",
+                        width: "8%",
+                        minWidth: 84,
+                        dataType: "numeric",
+                        style: "live-number",
+                        renderer: { type: "PercentageRenderer", showBar: false, precision: 2 }
+                    },
+                    {
+                        dataField: "cpu",
+                        headerText: "CPU 사용률",
+                        width: "14%",
+                        minWidth: 142,
+                        dataType: "numeric",
+                        renderer: {
+                            type: "PercentageRenderer",
+                            offset: 10,
+                            styleRange: [
+                                { "0.75": "live-cpu-normal" },
+                                { "0.9": "live-cpu-watch" },
+                                { "1": "live-cpu-delayed" }
+                            ]
+                        }
+                    },
+                    {
+                        dataField: historyFields.join(","),
+                        headerText: "요청 추이",
+                        width: "16%",
+                        minWidth: 138,
+                        sortable: false,
+                        renderer: {
+                            type: "SparkLineRenderer",
+                            lineColor: "#3982ba",
+                            lineWidth: 2,
+                            markFirstValue: false,
+                            markMinValue: false,
+                            markMaxValue: false,
+                            markLastValue: true,
+                            lastColor: "#206bab",
+                            height: 24
+                        }
+                    },
+                    { dataField: "updatedAt", headerText: "수신 시각", width: "11%", minWidth: 90 }
+                ];
+            }
 
-	/* 바게이지 양수 음수 함께 사용되는 영역에서 양수 바 재정의*/
-	.aui-grid-bar-renderer-positive {
-		background: #DF4D4D;
-		border: 1px solid #DF4D4D;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            // 주기 변경, 재개와 탭 복귀는 한 경로를 사용해 타이머가 중복 생성되지 않게 합니다.
+            function stopTimer() {
+                if (timerId !== null) {
+                    clearInterval(timerId);
+                    timerId = null;
+                }
+            }
+            function syncTimer() {
+                stopTimer();
+                if (disposed) return;
+                if (isRunning && !document.hidden)
+                    timerId = setInterval(refreshRows, Number(document.getElementById("live-interval").value));
+                const state = document.getElementById("live-state");
+                state.textContent = !isRunning ? "일시정지" : document.hidden ? "백그라운드 대기" : "실시간 수신 중";
+                state.dataset.paused = String(!isRunning || document.hidden);
+                document.getElementById("live-toggle").textContent = isRunning ? "일시정지" : "실시간 재개";
+                document.getElementById("live-step").disabled = isRunning;
+            }
+            function toggleUpdates() {
+                isRunning = !isRunning;
+                syncTimer();
+            }
+            function restoreDemo(event) {
+                if (event.persisted) syncTimer();
+            }
 
-	let timerId = null;
+            // 뒤로 가기 캐시에서는 타이머만 멈추고, 실제 페이지 종료에서 그리드와 이벤트를 정리합니다.
+            function disposeDemo(event) {
+                stopTimer();
+                if (event.persisted) return;
+                disposed = true;
+                document.removeEventListener("visibilitychange", syncTimer);
+                window.removeEventListener("pagehide", disposeDemo);
+                window.removeEventListener("pageshow", restoreDemo);
+                AUIGrid.destroy(myGridID);
+                myGridID = null;
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 랜덤 데이터 생성
-		loadGridData();
-		startUpdates();
-	};
-
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 칼럼 레이아웃
-		const columnLayout = createColumnLayout();
-
-		// 그리드 속성 설정
-		const gridProps = createGridProps();
-
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
-
-	const names = ["A 전자", "B 상사", "C 철강", "D 회사", "E 통신", "F 공사", "G 주식회사", "H 인터넷", "I 식품", "J 제과", "K 연구소", "L 전자", "M 화학", "N 인터넷", "O로 통신", "P 주식회사", "Q 코스메틱", "R 청과", "S 방송", "T 자동차", "UU 엔터"];
-	const prices = [150000, 230000, 420000, 1200000, 320000, 100000, 240000, 320000, 520000, 820000, 300000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000, 200000];
-	const gaps = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-	const volumes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-	// 초기 데이터 생성과 갱신 데이터 계산은 그리드 호출과 분리합니다.
-	function createRandomData() {
-		return names.map((name, i) => ({
-			id: i + 1,
-			name,
-			price: prices[i],
-			open: prices[i],
-			high: prices[i],
-			low: prices[i],
-			gap: 0,
-			volume: 0
-		}));
-	}
-
-	function createRandomRows(gaps, volumes) {
-		const codeCount = names.length;
-		const randomCount = Math.floor(Math.random() * 10);
-		const codes = [];
-
-		for (let i = 0; i < randomCount; i++) {
-			codes.push(Math.ceil(Math.random() * codeCount));
-		}
-
-		return codes.map((code) => {
-			const isPlus = Math.random() > 0.5;
-			let gap = isPlus ? 3000 : -3000;
-			const index = code - 1;
-			const limitGap = prices[index] * 0.3;
-
-			gaps[index] += gap;
-			gap = gaps[index];
-
-			if (Math.abs(gap) > limitGap) {
-				gap = gap > 0 ? limitGap : -limitGap;
-			}
-
-			const price = prices[index] + gap;
-			volumes[index] += Math.floor(Math.random() * 10000);
-
-			return { id: code, price, gap, volume: volumes[index] };
-		});
-	}
-
-	function loadGridData() {
-		AUIGrid.setGridData(myGridID, createRandomData());
-	}
-
-	function refreshRows() {
-		AUIGrid.refreshRows(myGridID, createRandomRows(gaps, volumes), "my-refresh-row-flash-style", 200);
-	}
-
-	function startUpdates() {
-		stopTimer();
-		timerId = setInterval(refreshRows, 300);
-	}
-
-	function stopTimer() {
-		if (timerId) {
-			clearInterval(timerId);
-			timerId = null;
-		}
-	}
-
-	// 칼럼 레이아웃을 정의합니다.
-	function createColumnLayout() {
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "종목명",
-			width: 200
-		}, {
-			dataField: "price",
-			headerText: "현재가",
-			width: 120,
-			dataType: "numeric",
-			style: "right_style",
-			formatString: "#,##0"
-		}, {
-			dataField: "gap",
-			headerText: "대비",
-			dataType: "numeric",
-			formatString: "#,##0",
-			style: "right_style",
-			width: 120,
-			renderer: {
-				type: "IconRenderer",
-				iconPosition: "aisle",
-				iconWidth: 7, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-				iconHeight: 6,
-				iconFunction: function (rowIndex, columnIndex, value, item) {
-					if (item.gap < 0)
-						return "./assets/ico_down.gif";
-					else if (item.gap > 0)
-						return "./assets/ico_up.gif";
-					return "./assets/ico_flat.gif";
-				}
-			},
-			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-				if (item.gap < 0)
-					return "my-custom-down";
-				else if (item.gap > 0)
-					return "my-custom-up";
-				return "my-custom-normal";
-			}
-		}, {
-			dataField: "rate",
-			headerText: "등락율",
-			dataType: "numeric",
-			formatString: "#,##0.00",
-			postfix: " %",
-			style: "right_style",
-			width: 120,
-			expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				// expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-				const oldPrice = item.price - item.gap
-				const rate = Number((item.gap / oldPrice * 100).toFixed(2));
-				return rate;
-			},
-			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-				if (item.gap < 0)
-					return "my-custom-down";
-				else if (item.gap > 0)
-					return "my-custom-up";
-				return "my-custom-normal";
-			}
-		}, {
-			dataField: "rateGraph",
-			headerText: "등락율 그래프",
-			width: 120,
-			expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				return item.rate;
-			},
-			renderer: {
-				type: "BarRenderer",
-				showLabel: false,
-				min: -30,
-				max: 30,
-				offset: 30
-			}
-		}, {
-			dataField: "volume",
-			headerText: "거래량",
-			dataType: "numeric",
-			formatString: "#,##0",
-			style: "right_style",
-			width: 120
-		}, {
-			dataField: "open",
-			headerText: "시가",
-			dataType: "numeric",
-			formatString: "#,##0",
-			style: "right_style",
-			width: 120
-		}, {
-			dataField: "high",
-			headerText: "고가",
-			dataType: "numeric",
-			formatString: "#,##0",
-			style: "my-custom-up",
-			expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				return Math.max(item.high, item.price);
-			},
-			width: 120
-		}, {
-			dataField: "low",
-			headerText: "저가",
-			dataType: "numeric",
-			formatString: "#,##0",
-			style: "my-custom-down",
-			expFunction: function (rowIndex, columnIndex, item, dataField) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-				return Math.min(item.price, item.low);
-			}
-		}];
-		return columnLayout;
-	}
-
-	// 그리드 속성을 정의합니다.
-	function createGridProps() {
-		const gridProps = {
-			// row 를 구별짓는 유니크한 값을 갖는 필드 설정
-			rowIdField: "id"
-		};
-		return gridProps;
-	}
-
-	// 뒤로 가기 캐시에 보관되는 페이지는 유지하고, 실제 종료에서만 정리합니다.
-	function disposeDemo(event) {
-		if (event.persisted) return;
-		stopTimer();
-		AUIGrid.destroy(myGridID);
-		myGridID = null;
-		window.removeEventListener("pagehide", disposeDemo);
-	}
-	window.addEventListener("pagehide", disposeDemo);
-</script>
-</head>
-<body>
-
-<div id="main">
-	<div class="desc">
-		<p>실시간 주식 현황(나의 관심 종목)을 구현한 데모입니다.</p>
-		<p>주식은 가상의 주식으로 랜덤하게 로컬에서 0.3초 마다 거래가 이루어진 종목만 갱신하도록 설정한 모습입니다.</p>
-		<p>처음 데이터를 그리드에 삽입 한 후 그리드에 특정 행의 셀 값(현재가, 대비가, 거래량)만 갱신하는 모습입니다.</p>
-		<p>참고 : AUIGrid 가 서버와 통신하는 방법 및 속도까지 커버하지 않습니다. AUIGrid 는 단순히 출력해 주는 역할만 할 뿐입니다.
-			이 데모와 같이 빠른 속도로 주식 정보를 갱신하는 것은 일반 Ajax 통신으론 불가능합니다.</p>
-		<p>만약, 웹 상에서 주식 정보를 실시간으로 빠르게 갱신하고자 한다면 웹소켓(Web Socket)으로 구성하는 것이 최선일 것입니다.</p>
-		<button class="btn" onclick="stopTimer()">실시간 갱신 중지</button>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:400px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+            <div id="main" class="live-demo">
+                <div class="live-heading">
+                    <div>
+                        <h2>서비스 운영 현황</h2>
+                        <p>가상 서비스의 운영 지표를 실시간으로 모니터링합니다.</p>
+                    </div>
+                    <span id="live-state" class="live-stream" role="status">실시간 수신 중</span>
+                </div>
+                <dl class="live-summary" aria-label="서비스 운영 요약">
+                    <div class="live-metric">
+                        <dt>정상 서비스</dt>
+                        <dd>
+                            <strong id="live-healthy" class="live-value">—</strong
+                            ><span id="live-total" class="live-unit">/ 24</span
+                            ><span class="live-caption">현재 수신 상태 기준</span>
+                        </dd>
+                    </div>
+                    <div class="live-metric">
+                        <dt>처리 요청</dt>
+                        <dd>
+                            <strong id="live-requests" class="live-value">—</strong><span class="live-unit">/초</span
+                            ><span class="live-caption">전체 서비스 합계</span>
+                        </dd>
+                    </div>
+                    <div class="live-metric">
+                        <dt>평균 응답 시간</dt>
+                        <dd>
+                            <strong id="live-latency" class="live-value">—</strong><span class="live-unit">ms</span
+                            ><span class="live-caption">요청량 기준 가중 평균</span>
+                        </dd>
+                    </div>
+                    <div id="live-attention-card" class="live-metric live-attention">
+                        <dt>확인 필요</dt>
+                        <dd>
+                            <strong id="live-attention" class="live-value">—</strong><span class="live-unit">개</span
+                            ><span class="live-caption">주의 또는 응답 지연</span>
+                        </dd>
+                    </div>
+                </dl>
+                <div class="live-toolbar">
+                    <div class="live-grid-title">
+                        <h3>서비스별 상태</h3>
+                        <span>요청 추이: 최근 12회 측정</span>
+                    </div>
+                    <div class="live-controls" role="group" aria-label="실시간 갱신 설정">
+                        <label
+                            >트래픽<select id="live-traffic">
+                                <option value="normal">평시</option>
+                                <option value="peak">증가</option>
+                            </select></label
+                        >
+                        <label
+                            >갱신 주기<select id="live-interval">
+                                <option value="500">0.5초</option>
+                                <option value="1000" selected>1초</option>
+                                <option value="2000">2초</option>
+                            </select></label
+                        >
+                        <button type="button" class="btn" id="live-toggle">일시정지</button>
+                        <button type="button" class="btn" id="live-step" disabled>한 번 갱신</button>
+                    </div>
+                </div>
+                <div id="grid_wrap"></div>
+                <div class="live-footnote">
+                    <p>
+                        <span class="live-key" aria-hidden="true"></span
+                        ><span id="live-updated">24개 서비스 모니터링</span> / 마지막 수신
+                        <time id="live-last-update">—</time>
+                    </p>
+                    <p>모의 데이터이며 외부 서버에 연결하지 않습니다.</p>
+                </div>
+                <div class="desc_bottom">
+                    <p><code>refreshRows()</code>로 변경된 행만 갱신하며, 선택한 행과 현재 화면을 유지합니다.</p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

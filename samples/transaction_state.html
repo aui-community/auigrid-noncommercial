@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,135 +37,154 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	.my-right {
-		text-align: right;
-	}
-</style>
+        <style>
+            .my-right {
+                text-align: right;
+            }
+        </style>
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_500.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_500.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "Name"
-		}, {
-			dataField: "country",
-			headerText: "Country"
-		}, {
-			dataField: "product",
-			headerText: "Product"
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			style: "my-right"
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			style: "my-right"
-		}, {
-			dataField: "date",
-			headerText: "Date"
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "name",
+                        headerText: "Name"
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country"
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product"
+                    },
+                    {
+                        dataField: "quantity",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        style: "my-right"
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        style: "my-right"
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date"
+                    }
+                ];
 
-		// 그리드 속성
-		const gridProps = {
-			editable: true,
-			selectionMode: "multipleCells",
-			// 행 고유 id 에 속하는 필드명 (필드의 값은 중복되지 않은 고유값이여야 함)
-			rowIdField: "id",
-			// 새 행 제거 제외 정책 사용
-			softRemovePolicy: "exceptNew",
-			// 상태 칼럼 사용
-			showStateColumn: true,
-			// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-			wrapSelectionMove: true,
-			// 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-			enterKeyColumnBase: true
-		};
+                // 그리드 속성
+                const gridProps = {
+                    editable: true,
+                    selectionMode: "multipleCells",
+                    // 행 고유 id 에 속하는 필드명 (필드의 값은 중복되지 않은 고유값이여야 함)
+                    rowIdField: "id",
+                    // 새 행 제거 제외 정책 사용
+                    softRemovePolicy: "exceptNew",
+                    // 상태 칼럼 사용
+                    showStateColumn: true,
+                    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                    wrapSelectionMove: true,
+                    // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
+                    enterKeyColumnBase: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// ready 이벤트 바인딩
-		AUIGrid.bind(myGridID, "ready", function (event) {
-			// 강제로 수정, 삭제, 행 추가 시키기
-			// 강제로 5개 행 수정한 걸로 간주하기 위해 updateRow 실행
-			const items2editing = [];
-			for (let i = 0, len = 5; i < len; i++) {
-				items2editing[i] = {
-					id: "#Cust" + i,
-					name: "Name 강제 수정" + i,
-					country: "Country 강제 수정" + i,
-					product: "PRD 강제 수정" + i,
-					price: Math.floor(Math.random() * 100000)
-				};
-				if (i % 2 === 0) items2editing[i]["quantity"] = Math.floor(Math.random() * 10);
-			}
+                // ready 이벤트 바인딩
+                AUIGrid.bind(myGridID, "ready", function (event) {
+                    // 강제로 수정, 삭제, 행 추가 시키기
+                    // 강제로 5개 행 수정한 걸로 간주하기 위해 updateRow 실행
+                    const items2editing = [];
+                    for (let i = 0, len = 5; i < len; i++) {
+                        items2editing[i] = {
+                            id: "#Cust" + i,
+                            name: "Name 강제 수정" + i,
+                            country: "Country 강제 수정" + i,
+                            product: "PRD 강제 수정" + i,
+                            price: Math.floor(Math.random() * 100000)
+                        };
+                        if (i % 2 === 0) items2editing[i]["quantity"] = Math.floor(Math.random() * 10);
+                    }
 
-			// 수정 취소를 보여주기 위해 강제로 수정 만듬.
-			AUIGrid.updateRowsById(myGridID, items2editing);
+                    // 수정 취소를 보여주기 위해 강제로 수정 만듬.
+                    AUIGrid.updateRowsById(myGridID, items2editing);
 
-			// 행인덱스 5,6,7 삭제 하기
-			AUIGrid.removeRow(myGridID, [5, 6, 7]);
+                    // 행인덱스 5,6,7 삭제 하기
+                    AUIGrid.removeRow(myGridID, [5, 6, 7]);
 
-			// 8번째 인덱스에 행 2개 추가하기	
-			AUIGrid.addRow(myGridID, [{ name: "New Name", country: "New Country", product: "New Product" },
-			{ name: "New Name", country: "New Country", product: "New Product" }], 8);
+                    // 8번째 인덱스에 행 2개 추가하기
+                    AUIGrid.addRow(
+                        myGridID,
+                        [
+                            { name: "New Name", country: "New Country", product: "New Product" },
+                            { name: "New Name", country: "New Country", product: "New Product" }
+                        ],
+                        8
+                    );
 
-			// 0, 0에 포커싱
-			AUIGrid.setSelectionByIndex(myGridID, 0, 0);
-		});
-	}
+                    // 0, 0에 포커싱
+                    AUIGrid.setSelectionByIndex(myGridID, 0, 0);
+                });
+            }
 
-	// DB 저장에 성공한 경우  - 수정 내역 초기화
-	function successCase() {
-		AUIGrid.removeSoftRows(myGridID); // 삭제 표시된 행(소프트 삭제) 그리드에서 제거
-		AUIGrid.resetUpdatedItems(myGridID); // 현재 수정 정보 초기화
-		alert("저장 완료!!!");
-	}
+            // DB 저장에 성공한 경우  - 수정 내역 초기화
+            function successCase() {
+                AUIGrid.removeSoftRows(myGridID); // 삭제 표시된 행(소프트 삭제) 그리드에서 제거
+                AUIGrid.resetUpdatedItems(myGridID); // 현재 수정 정보 초기화
+                alert("저장 완료!!!");
+            }
 
-	// DB 저장 실패한 경우( 서버에서 DB 는 롤백 처리된 경우 )
-	function failCase() {
-		// 그리드에는 어떠한 조취도 하지 않아도 됨.
-		alert("저장에 실패하였습니다.\r\n잠시 후 다시 시도해 주십시오.");
-	}
-</script>
-</head>
-<body>
+            // DB 저장 실패한 경우( 서버에서 DB 는 롤백 처리된 경우 )
+            function failCase() {
+                // 그리드에는 어떠한 조취도 하지 않아도 됨.
+                alert("저장에 실패하였습니다.\r\n잠시 후 다시 시도해 주십시오.");
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>현재 데모 상의 그리드는 사용자가 그리드를 수정한 모습을 표현한 것입니다.</p>
-		<p>이 수정 내역을 서버로 전송하여 보통 DB 에서 Insert, Delete, Update 를 하게 됩니다.</p>
-		<p>여기서 DB 트랜잭션 응답에 대한 대응을 어떻게 하냐에 대한 설명입니다.</p>
-		<p>■ 정상적 성공한 경우 : 수정 내역을 초기화하여 마치 수정되지 않은 것 처럼 만듬, 또는 성공 후 다시 조회(새로운 데이터 전체를 조회 Refresh)</p>
-		<p>■ DB 에러 또는 기타 에러로 인해 저장 실패(롤백 처리)한 경우 : 수정 내역을 그대로 유지 즉, 그리드에 어떤 조치도 취하지 않음</p>
-		<p><span onclick="successCase()" class="btn">성공한 경우 - 수정 내역 초기화</span>
-			<span onclick="failCase()" class="btn">실패한 경우</span>
-		</p>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:420px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>현재 데모 상의 그리드는 사용자가 그리드를 수정한 모습을 표현한 것입니다.</p>
+                    <p>이 수정 내역을 서버로 전송하여 보통 DB 에서 Insert, Delete, Update 를 하게 됩니다.</p>
+                    <p>여기서 DB 트랜잭션 응답에 대한 대응을 어떻게 하냐에 대한 설명입니다.</p>
+                    <p>
+                        ■ 정상적 성공한 경우 : 수정 내역을 초기화하여 마치 수정되지 않은 것 처럼 만듬, 또는 성공 후 다시
+                        조회(새로운 데이터 전체를 조회 Refresh)
+                    </p>
+                    <p>
+                        ■ DB 에러 또는 기타 에러로 인해 저장 실패(롤백 처리)한 경우 : 수정 내역을 그대로 유지 즉,
+                        그리드에 어떤 조치도 취하지 않음
+                    </p>
+                    <p>
+                        <span onclick="successCase()" class="btn">성공한 경우 - 수정 내역 초기화</span>
+                        <span onclick="failCase()" class="btn">실패한 경우</span>
+                    </p>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 420px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom"></div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

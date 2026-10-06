@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,99 +37,122 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.my-column {
-		text-align: right;
-	}
-</style>
+        <style>
+            /* 커스텀 칼럼 스타일 정의 */
+            .my-column {
+                text-align: right;
+            }
+        </style>
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_100.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_100.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "name",
-			headerText: "Name",
-			headerTooltip: { // 헤더 툴팁 표시 HTML 양식
-				show: true,
-				tooltipHtml: '<div style="width:120px;"><p>Name</p><img width="120" src="./assets/auisoft.png"><p>툴팁에 나타내고자 하는 내용과 스타일을 자유롭게 설정할 수 있습니다.</p></div>'
-			}
-		}, {
-			dataField: "country",
-			headerText: "Country",
-			headerTooltip: { // 헤더 툴팁 표시 일반 스트링
-				show: true,
-				tooltipHtml: '<div style="width:180px;"><p>국가명</p><p>Just an incredibly simple <span style="color:#F29661;">AUIGrid</span></p><p>Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. </p></div>'
-			}
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			headerTooltip: { // 헤더 툴팁 표시- 이미지와 같이 표시
-				show: true,
-				tooltipHtml: "제품명"
-			}
-		}, {
-			dataField: "quantity",
-			headerText: "Quantity",
-			dataType: "numeric",
-			headerTooltip: { // 헤더 툴팁 표시- 이미지와 같이 표시
-				show: true,
-				tooltipHtml: "수량"
-			}
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric",
-			headerTooltip: { // 헤더 툴팁 표시- 이미지와 같이 표시
-				show: true,
-				tooltipHtml: '<div style="width:180px;"><p>Price</p><p>Just an incredibly simple <span style="color:#F29661;">AUIGrid</span></p><p>Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. </p></div>'
-			},
-			style: "my-column"
-		}, {
-			dataField: "date",
-			headerText: "Date",
-			headerTooltip: { // 헤더 툴팁 표시 일반 스트링
-				show: true,
-				tooltipHtml: '<div style="width:180px;"><p>Date</p><p>Just an incredibly simple <span style="color:#F29661;">AUIGrid</span></p><p>Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. </p></div>'
-			}
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "name",
+                        headerText: "Name",
+                        headerTooltip: {
+                            // 헤더 툴팁 표시 HTML 양식
+                            show: true,
+                            tooltipHtml:
+                                '<div style="width:120px;"><p>Name</p><img width="120" src="./assets/auisoft.png"><p>툴팁에 나타내고자 하는 내용과 스타일을 자유롭게 설정할 수 있습니다.</p></div>'
+                        }
+                    },
+                    {
+                        dataField: "country",
+                        headerText: "Country",
+                        headerTooltip: {
+                            // 헤더 툴팁 표시 일반 스트링
+                            show: true,
+                            tooltipHtml:
+                                '<div style="width:180px;"><p>국가명</p><p>Just an incredibly simple <span style="color:#F29661;">AUIGrid</span></p><p>Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. </p></div>'
+                        }
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        headerTooltip: {
+                            // 헤더 툴팁 표시- 이미지와 같이 표시
+                            show: true,
+                            tooltipHtml: "제품명"
+                        }
+                    },
+                    {
+                        dataField: "quantity",
+                        headerText: "Quantity",
+                        dataType: "numeric",
+                        headerTooltip: {
+                            // 헤더 툴팁 표시- 이미지와 같이 표시
+                            show: true,
+                            tooltipHtml: "수량"
+                        }
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric",
+                        headerTooltip: {
+                            // 헤더 툴팁 표시- 이미지와 같이 표시
+                            show: true,
+                            tooltipHtml:
+                                '<div style="width:180px;"><p>Price</p><p>Just an incredibly simple <span style="color:#F29661;">AUIGrid</span></p><p>Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. </p></div>'
+                        },
+                        style: "my-column"
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date",
+                        headerTooltip: {
+                            // 헤더 툴팁 표시 일반 스트링
+                            show: true,
+                            tooltipHtml:
+                                '<div style="width:180px;"><p>Date</p><p>Just an incredibly simple <span style="color:#F29661;">AUIGrid</span></p><p>Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. </p></div>'
+                        }
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			showRowCheckColumn: false,
-			// singleRow 선택모드
-			selectionMode: "singleRow",
-			// 소팅
-			enableSorting: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    showRowCheckColumn: false,
+                    // singleRow 선택모드
+                    selectionMode: "singleRow",
+                    // 소팅
+                    enableSorting: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-	}
-</script>
-</head>
-<body>
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>헤더 툴팁은 해당 칼럼이 나타내는 데이터에 대한 설명을 표시하는 역할을 합니다.</p>
-		<p>칼럼 레이아웃을 정의 할 때 설명이 필요한 칼럼에 대하여 선택적으로 또는 모두의 칼럼에 툴팁을 표시 할 수 있습니다.</p>
-		<p>툴팁에 표시되는 내용은 단순 텍스트로 간단히 지정할 수 있고, 스타일과 레이아웃을 갖춘 HTML로 지정할 수 있습니다.</p>
-		<p>툴팁은 다음과 같이 칼럼 레이아웃에서 headerTooltip 을 정의하여 설정합니다.</p>
-		<div class="src_cover">
-			<pre><xmp>const columnLayout = [ {
+            <div id="main">
+                <div class="desc">
+                    <p>헤더 툴팁은 해당 칼럼이 나타내는 데이터에 대한 설명을 표시하는 역할을 합니다.</p>
+                    <p>
+                        칼럼 레이아웃을 정의 할 때 설명이 필요한 칼럼에 대하여 선택적으로 또는 모두의 칼럼에 툴팁을 표시
+                        할 수 있습니다.
+                    </p>
+                    <p>
+                        툴팁에 표시되는 내용은 단순 텍스트로 간단히 지정할 수 있고, 스타일과 레이아웃을 갖춘 HTML로
+                        지정할 수 있습니다.
+                    </p>
+                    <p>툴팁은 다음과 같이 칼럼 레이아웃에서 headerTooltip 을 정의하여 설정합니다.</p>
+                    <div class="src_cover">
+                        <pre><xmp>const columnLayout = [ {
 	dataField : "name",
 	headerText : "Name",
 	headerTooltip : { // 헤더 툴팁 표시 HTML 양식
@@ -129,16 +160,16 @@
 	tooltipHtml : '<div style="width:120px;"><p>Name</p><img width="120" src="./assets/auisoft.png"><p>툴팁에 나타내고자 하는 내용과 스타일을 자유롭게 설정할 수 있습니다.</p></div>'
 }, {
 	....</xmp></pre>
-		</div>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:400px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 400px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

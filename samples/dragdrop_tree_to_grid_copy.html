@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,165 +37,179 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script>
-	// 상단 그리드 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // 상단 그리드 생성 후 반환 ID
+            let myGridID;
 
-	// 하단 그리드 생성 후 반환ID
-	let myGridID2;
+            // 하단 그리드 생성 후 반환ID
+            let myGridID2;
 
-	// 시작점
-	function init() {
-		// 상단 그리드를 생성합니다.
-		createAUIGrid();
-		// 하단 그리드를 생성합니다.
-		createDetailAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/schedule_tree.json");
-	}
+            // 시작점
+            function init() {
+                // 상단 그리드를 생성합니다.
+                createAUIGrid();
+                // 하단 그리드를 생성합니다.
+                createDetailAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/schedule_tree.json");
+            }
 
-	// Master 그리드 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "id",
-			headerText: "ID",
-			width: 80
-		}, {
-			dataField: "name",
-			headerText: "Task Name",
-			width: 400
-		}, {
-			dataField: "charge",
-			headerText: "Charge",
-			width: 140
-		}, {
-			dataField: "complete",
-			headerText: "Complete(%)",
-			postfix: "%",
-			width: 120
-		}, {
-			dataField: "start",
-			headerText: "Start Date"
-		}, {
-			dataField: "end",
-			headerText: "End Date"
-		}];
+            // Master 그리드 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 80
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Task Name",
+                        width: 400
+                    },
+                    {
+                        dataField: "charge",
+                        headerText: "Charge",
+                        width: 140
+                    },
+                    {
+                        dataField: "complete",
+                        headerText: "Complete(%)",
+                        postfix: "%",
+                        width: 120
+                    },
+                    {
+                        dataField: "start",
+                        headerText: "Start Date"
+                    },
+                    {
+                        dataField: "end",
+                        headerText: "End Date"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			selectionMode: "singleRow",
-			// 그리드 데이터와 무관하게 무조건적인 트리 그리드로 출력.
-			forceTreeView: true,
-			// 일반 데이터를 트리로 표현할지 여부
-			treeColumnIndex: 1,
-			// 드래깅 행 이동 가능 여부 (기본값 : false)
-			enableDrag: true,
-			// 셀에서 바로  드래깅 해 이동 가능 여부 (기본값 : false) - enableDrag=true 설정이 선행 
-			enableDragByCellDrag: true,
-			// 드랍 가능 여부 (기본값 : true)
-			// false 설정했다는 의미는 이 그리드는 드래깅만 가능하고, 드랍은 절대 받지 않는다는 뜻임.
-			enableDrop: false,
-			// 드랍을 받아줄 그리드가 다른 그리드에도 있는지 여부 (기본값 : false)
-			// 즉, 드리드 간의 행 이동인지 여부
-			dropToOthers: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    selectionMode: "singleRow",
+                    // 그리드 데이터와 무관하게 무조건적인 트리 그리드로 출력.
+                    forceTreeView: true,
+                    // 일반 데이터를 트리로 표현할지 여부
+                    treeColumnIndex: 1,
+                    // 드래깅 행 이동 가능 여부 (기본값 : false)
+                    enableDrag: true,
+                    // 셀에서 바로  드래깅 해 이동 가능 여부 (기본값 : false) - enableDrag=true 설정이 선행
+                    enableDragByCellDrag: true,
+                    // 드랍 가능 여부 (기본값 : true)
+                    // false 설정했다는 의미는 이 그리드는 드래깅만 가능하고, 드랍은 절대 받지 않는다는 뜻임.
+                    enableDrop: false,
+                    // 드랍을 받아줄 그리드가 다른 그리드에도 있는지 여부 (기본값 : false)
+                    // 즉, 드리드 간의 행 이동인지 여부
+                    dropToOthers: true
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 드랍 종료 전 이벤트 바인딩 - 여기서 행 이동, 복사를 결정합니다.
-		AUIGrid.bind(myGridID, "dropEndBefore", function (event) {
-			if (event.items.length === 0) return false;
+                // 드랍 종료 전 이벤트 바인딩 - 여기서 행 이동, 복사를 결정합니다.
+                AUIGrid.bind(myGridID, "dropEndBefore", function (event) {
+                    if (event.items.length === 0) return false;
 
-			// 행 복사 모드 설정
-			// 이벤트의 isMoveMode 속성을 false 설정하면 행 복사를 합니다.
-			event.isMoveMode = false;
+                    // 행 복사 모드 설정
+                    // 이벤트의 isMoveMode 속성을 false 설정하면 행 복사를 합니다.
+                    event.isMoveMode = false;
 
-			const pidToDrop = event.pidToDrop;
-			const item = event.items[0];
-			const isUnique = AUIGrid.isUniqueValue(pidToDrop, "id", item.id);
+                    const pidToDrop = event.pidToDrop;
+                    const item = event.items[0];
+                    const isUnique = AUIGrid.isUniqueValue(pidToDrop, "id", item.id);
 
-			if (!isUnique) {
-				return confirm("지금 드랍되는 행은 이미 이전에 드랍된 행입니다. 또 드랍하시겠습니까?");
-			}
+                    if (!isUnique) {
+                        return confirm("지금 드랍되는 행은 이미 이전에 드랍된 행입니다. 또 드랍하시겠습니까?");
+                    }
 
-			return true; // 만약 return false 를 하게 되면 드랍 행위를 하지 않습니다.(즉, 기본 행위를 안함)
-		});
-	}
+                    return true; // 만약 return false 를 하게 되면 드랍 행위를 하지 않습니다.(즉, 기본 행위를 안함)
+                });
+            }
 
-	// 하단 그리드 생성
-	function createDetailAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "id",
-			headerText: "ID",
-			width: 80
-		}, {
-			dataField: "name",
-			headerText: "Task Name",
-			width: 400
-		}, {
-			dataField: "charge",
-			headerText: "Charge",
-			width: 140
-		}, {
-			dataField: "complete",
-			headerText: "Complete(%)",
-			postfix: "%",
-			width: 120
-		}, {
-			dataField: "start",
-			headerText: "Start Date"
-		}, {
-			dataField: "end",
-			headerText: "End Date"
-		}];
+            // 하단 그리드 생성
+            function createDetailAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "id",
+                        headerText: "ID",
+                        width: 80
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Task Name",
+                        width: 400
+                    },
+                    {
+                        dataField: "charge",
+                        headerText: "Charge",
+                        width: 140
+                    },
+                    {
+                        dataField: "complete",
+                        headerText: "Complete(%)",
+                        postfix: "%",
+                        width: 120
+                    },
+                    {
+                        dataField: "start",
+                        headerText: "Start Date"
+                    },
+                    {
+                        dataField: "end",
+                        headerText: "End Date"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			selectionMode: "singleRow",
-			// 그리드 데이터와 무관하게 무조건적인 트리 그리드로 출력.
-			forceTreeView: true,
-			// 일반 데이터를 트리로 표현할지 여부
-			treeColumnIndex: 1,
-			// 드래깅 행 이동 가능 여부 (기본값 : false)
-			enableDrag: true,
-			// 셀에서 바로  드래깅 해 이동 가능 여부 (기본값 : false) - enableDrag=true 설정이 선행 
-			enableDragByCellDrag: true,
-			// 드랍 가능 여부 (기본값 : true)
-			enableDrop: true,
-			// 드랍을 받아줄 그리드가 다른 그리드에도 있는지 여부 (기본값 : false)
-			// 즉, 드리드 간의 행 이동인지 여부
-			dropToOthers: true
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    selectionMode: "singleRow",
+                    // 그리드 데이터와 무관하게 무조건적인 트리 그리드로 출력.
+                    forceTreeView: true,
+                    // 일반 데이터를 트리로 표현할지 여부
+                    treeColumnIndex: 1,
+                    // 드래깅 행 이동 가능 여부 (기본값 : false)
+                    enableDrag: true,
+                    // 셀에서 바로  드래깅 해 이동 가능 여부 (기본값 : false) - enableDrag=true 설정이 선행
+                    enableDragByCellDrag: true,
+                    // 드랍 가능 여부 (기본값 : true)
+                    enableDrop: true,
+                    // 드랍을 받아줄 그리드가 다른 그리드에도 있는지 여부 (기본값 : false)
+                    // 즉, 드리드 간의 행 이동인지 여부
+                    dropToOthers: true
+                };
 
-		// 실제로 #grid_wrap2 에 그리드 생성
-		myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridProps);
+                // 실제로 #grid_wrap2 에 그리드 생성
+                myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridProps);
 
-		// 최초 빈 배열로 초기화
-		AUIGrid.setGridData(myGridID2, []);
-	}
-</script>
-</head>
-<body>
+                // 최초 빈 배열로 초기화
+                AUIGrid.setGridData(myGridID2, []);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>2 개의 트리 그리드 간의 드래그&amp;드랍으로 행 복사(copy)를 정의한 모습입니다.</p>
-		<p>상단 그리드에서 하단 그리드로 드래그&드랍을 행 복사(copy) 정의한 모습입니다.</p>
-	</div>
-	<div>
-		<!-- 상단 Grid -->
-		<div id="grid_wrap" style="width:100%;height:280px; margin:0 auto;"></div>
-		<div style="width:100%; height:20px;"></div>
-		<!-- 하단 Grid -->
-		<div id="grid_wrap2" style="width:100%;height:280px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>2 개의 트리 그리드 간의 드래그&amp;드랍으로 행 복사(copy)를 정의한 모습입니다.</p>
+                    <p>상단 그리드에서 하단 그리드로 드래그&드랍을 행 복사(copy) 정의한 모습입니다.</p>
+                </div>
+                <div>
+                    <!-- 상단 Grid -->
+                    <div id="grid_wrap" style="width: 100%; height: 280px; margin: 0 auto"></div>
+                    <div style="width: 100%; height: 20px"></div>
+                    <!-- 하단 Grid -->
+                    <div id="grid_wrap2" style="width: 100%; height: 280px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

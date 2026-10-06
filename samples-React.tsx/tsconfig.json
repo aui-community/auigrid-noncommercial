@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "es5",
 		"lib": ["dom", "dom.iterable", "esnext"],
-		"typeRoots": ["./node_modules/@types", "./@types"],
+		"types": ["vite/client"],
 		"allowJs": false,
 		"skipLibCheck": true,
 		"esModuleInterop": true,

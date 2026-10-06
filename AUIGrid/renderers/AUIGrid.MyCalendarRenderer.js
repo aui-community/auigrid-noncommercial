@@ -107,7 +107,10 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 	 * 메모리 누수를 유발하는 코드들을 모두 해제 하십시오.
 	 */
 	destroy: function (unload) {
-		if (this.__childEle2) this.__childEle2.onclick = null;
+		if (this.__childEle2) {
+			this.__childEle2.onclick = null;
+			this.__childEle2.onkeydown = null;
+		}
 
 		this.__childEle = null;
 		this.__childEle2 = null;
@@ -145,10 +148,26 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 		const c2 = document.createElement('div');
 		c2.className = 'my-child2';
 		this.__childEle2 = c2;
+		// 기존 아이콘 DOM을 유지하면서 키보드로도 상세 값을 확인합니다.
+		c2.setAttribute('role', 'button');
+		c2.tabIndex = 0;
+		c2.onkeydown = (event) => {
+			if (event.key === 'Enter' || event.key === ' ') {
+				event.preventDefault();
+				c2.click();
+			}
+		};
 
 		// 아이콘 클릭 핸들러
 		c2.onclick = (event) => {
-			const { date, value } = this.data[this.dataField];
+			const item = this.data && this.data[this.dataField];
+			if (!item) return;
+			const { date, value, dateLabel } = item;
+			// 날짜 설명이 있는 쇼케이스는 해당 날짜와 달성률을 표시합니다.
+			if (dateLabel) {
+				alert(`${dateLabel}\n목표 달성률: ${value}%`);
+				return;
+			}
 			// 원하는 작업 작성
 			alert(`rowIndex: ${this.rowIndex}, columnIndex: ${this.columnIndex}, 날짜: ${date}, 값: ${value} 아이콘 클릭`);
 		};
@@ -181,6 +200,9 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 		const value = ownItem.date ?? '';
 
 		el.textContent = value;
+		// 표시 모양은 각 데모 CSS에서 결정하고 렌더러에는 날짜 상태만 전달합니다.
+		el.dataset.today = String(ownItem.isToday === true);
+		this.__childEle2.setAttribute('aria-label', `${ownItem.dateLabel || value + '일'}, 달성률 ${ownItem.value}%, 상세 보기`);
 	},
 
 	// 차트를 생성합니다.
@@ -222,20 +244,20 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 		// % 텍스트 출력
 		labelEl.textContent = `${percent} %`;
 
-		// 전체 너비 대비 차트 비율 계산
-		const chartWidth = 90; // 차트 전체 width
-		const width = `${((chartWidth * percent) / 100).toFixed(2)}px`;
+		// 기존 90px 막대와 반응형 막대 모두 CSS가 지정한 전체 너비를 기준으로 채웁니다.
+		const width = `${percent}%`;
 
-		// 구간별 색상 정의
+		// 기본 색상을 유지하며 필요한 데모에서만 CSS 변수로 구간 색상을 지정합니다.
 		const getBarColor = (val) => {
-			if (val < 20) return '#FF0000'; // 빨강
-			if (val < 50) return '#FFBB00'; // 주황
-			if (val < 75) return '#ABF200'; // 연두
-			return '#1DDB16'; // 초록
+			if (val < 20) return 'var(--calendar-low, #FF0000)'; // 빨강
+			if (val < 50) return 'var(--calendar-middle, #FFBB00)'; // 주황
+			if (val < 75) return 'var(--calendar-high, #ABF200)'; // 연두
+			return 'var(--calendar-top, #1DDB16)'; // 초록
 		};
 
 		this.__setStyle(chartEl, 'width', width);
 		this.__setStyle(chartEl, 'background', getBarColor(percent));
+		this.element.style.setProperty('--calendar-value-color', getBarColor(percent));
 	},
 
 	/* 생성된 자식들 엘리먼트 보이기/ 감추기 설정 */

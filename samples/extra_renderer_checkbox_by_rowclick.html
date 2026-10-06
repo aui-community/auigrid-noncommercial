@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,112 +37,119 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	/* 커스텀 칼럼 스타일 정의 */
-	.aui-grid-user-custom-left {
-		text-align: left;
-	}
+        <style>
+            /* 커스텀 칼럼 스타일 정의 */
+            .aui-grid-user-custom-left {
+                text-align: left;
+            }
 
-	/* 엑스트라 체크박스 사용자 선택 못하는 표시 스타일 */
-	.disable-check-style {
-		color: #d3825c;
-	}
-</style>
+            /* 엑스트라 체크박스 사용자 선택 못하는 표시 스타일 */
+            .disable-check-style {
+                color: #d3825c;
+            }
+        </style>
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/normal_100.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/normal_100.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "id",
-			headerText: "Client ID",
-			disableGrouping: true
-		}, {
-			dataField: "name",
-			headerText: "Name"
-		}, {
-			dataField: "product",
-			headerText: "Product",
-			styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-				if (value === "Galaxy S25 Ultra") {
-					return "disable-check-style";
-				}
-			}
-		}, {
-			dataField: "date",
-			headerText: "Date"
-		}, {
-			dataField: "price",
-			headerText: "Price",
-			dataType: "numeric"
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "id",
+                        headerText: "Client ID",
+                        disableGrouping: true
+                    },
+                    {
+                        dataField: "name",
+                        headerText: "Name"
+                    },
+                    {
+                        dataField: "product",
+                        headerText: "Product",
+                        styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+                            if (value === "Galaxy S25 Ultra") {
+                                return "disable-check-style";
+                            }
+                        }
+                    },
+                    {
+                        dataField: "date",
+                        headerText: "Date"
+                    },
+                    {
+                        dataField: "price",
+                        headerText: "Price",
+                        dataType: "numeric"
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			// rowIdField 설정
-			rowIdField: "id",
-			selectionMode: "singleRow",
-			// 체크박스 표시 설정
-			showRowCheckColumn: true,
-			// 전체 체크박스 표시 설정
-			showRowAllCheckBox: true,
-			// 엑스트라 체크박스 disabled 함수
-			// 이 함수는 렌더링 시 빈번히 호출됩니다. 무리한 DOM 작업 하지 마십시오. (성능에 영향을 미침)
-			// rowCheckDisabledFunction 이 아래와 같이 간단한 로직이라면, 실제로 rowCheckableFunction 정의가 필요 없습니다.
-			// rowCheckDisabledFunction 으로 비활성화된 체크박스는 체크 반응이 일어나지 않습니다.(rowCheckableFunction 불필요)
-			rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
-				if (item.product === "Galaxy S25 Ultra") { // 제품이 Galaxy S25 Ultra 인 경우 체크박스 disabeld 처리함
-					return false; // false 반환하면 disabled 처리됨
-				}
-				return true;
-			}
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    // rowIdField 설정
+                    rowIdField: "id",
+                    selectionMode: "singleRow",
+                    // 체크박스 표시 설정
+                    showRowCheckColumn: true,
+                    // 전체 체크박스 표시 설정
+                    showRowAllCheckBox: true,
+                    // 엑스트라 체크박스 disabled 함수
+                    // 이 함수는 렌더링 시 빈번히 호출됩니다. 무리한 DOM 작업 하지 마십시오. (성능에 영향을 미침)
+                    // rowCheckDisabledFunction 이 아래와 같이 간단한 로직이라면, 실제로 rowCheckableFunction 정의가 필요 없습니다.
+                    // rowCheckDisabledFunction 으로 비활성화된 체크박스는 체크 반응이 일어나지 않습니다.(rowCheckableFunction 불필요)
+                    rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
+                        if (item.product === "Galaxy S25 Ultra") {
+                            // 제품이 Galaxy S25 Ultra 인 경우 체크박스 disabeld 처리함
+                            return false; // false 반환하면 disabled 처리됨
+                        }
+                        return true;
+                    }
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 셀클릭 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellClick", function (event) {
-			const item = event.item;
-			// 제품이 Galaxy S25 Ultra 인 경우 체크박스 disabeld 처리됨.
-			if (item.product === "Galaxy S25 Ultra") {
-				return;
-			}
+                // 셀클릭 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellClick", function (event) {
+                    const item = event.item;
+                    // 제품이 Galaxy S25 Ultra 인 경우 체크박스 disabeld 처리됨.
+                    if (item.product === "Galaxy S25 Ultra") {
+                        return;
+                    }
 
-			const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
-			const rowId = item[rowIdField];
+                    const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
+                    const rowId = item[rowIdField];
 
-			// 이미 체크 선택되었는지 검사
-			if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
-				// 엑스트라 체크박스 체크해제 추가
-				AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
-			} else {
-				// 엑스트라 체크박스 체크 추가
-				AUIGrid.addCheckedRowsByIds(event.pid, rowId);
-			}
-		});
-	}
-</script>
-</head>
-<body>
+                    // 이미 체크 선택되었는지 검사
+                    if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
+                        // 엑스트라 체크박스 체크해제 추가
+                        AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+                    } else {
+                        // 엑스트라 체크박스 체크 추가
+                        AUIGrid.addCheckedRowsByIds(event.pid, rowId);
+                    }
+                });
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>그리드의 행(셀)을 클릭하면 엑스트라 체크박스의 선택/해제하도록 작성한 데모입니다.</p>
-		<p>데모 상에서 Product 가 Galaxy S25 Ultra 인 경우는 선택/해제 불가로 설정하였습니다.</p>
-		<div class="src_cover">
-			<pre>
+            <div id="main">
+                <div class="desc">
+                    <p>그리드의 행(셀)을 클릭하면 엑스트라 체크박스의 선택/해제하도록 작성한 데모입니다.</p>
+                    <p>데모 상에서 Product 가 Galaxy S25 Ultra 인 경우는 선택/해제 불가로 설정하였습니다.</p>
+                    <div class="src_cover">
+                        <pre>
 // 셀클릭 이벤트 바인딩
 AUIGrid.bind(myGridID, "cellClick", function(event) {
 	const item = event.item;
@@ -156,16 +171,16 @@ AUIGrid.bind(myGridID, "cellClick", function(event) {
 	}
 });
 </pre>
-		</div>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:300px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 300px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

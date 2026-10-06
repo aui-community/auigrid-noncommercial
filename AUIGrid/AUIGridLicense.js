@@ -1,5 +1,5 @@
 /*!
- * AUIGrid Non-Commercial LICENSE v3.0.18
+ * AUIGrid Non-Commercial LICENSE v3.0.19
  * Authorized Domain(or IP) : localhost, 127.0.0.1
  * www.auisoft.net
  *
@@ -27,5 +27,6 @@
  * Copyright © AUISoft Co., Ltd. https://www.auisoft.net
  */
 /* eslint-disable */
-const AUIGridLicense = 'eyJjdCI6IndCUXlGMW1Sd29kUTAveDRiUlNickxDcC9XSFk5V1FZUmhpdWN6VkVnVFFma0ZLUmZwNG4wNFFkbUdGa0lieERHaUFmVlBIVEQ5NnhDK0JoTkRpd0hBR3A0Z3ZwQU9udC9KRm40dGp2RnZNPSIsIml2IjoiMmM3ZWNlMTU1MmVmOTJjNjU2ZTJmYmZkMmVmNWUwYTYiLCJzIjoiMmFiNjgxYWQ4NjBiZjJmNiJ9';
+// 비상업용 배포에 사용하는 라이선스입니다.
+const AUIGridLicense = "eyJjdCI6IndSOHA1UitaTTl5Z1JtWVN1Y0NvV1ZtU0JSU0djNTBvTmM0aVIyU3FvNi8vVEFzQi9qbjlmMVF5ZDFnTzRQSG1icHpkV0F5K3hpclpqVzVEMmE5THVBPT0iLCJpdiI6ImY3NTc5NGYwYTc0NTYwNTY3NWU2ZDM4YjAyZjI3M2E2IiwicyI6ImZkMDFkZDU2NzU2YmQ1MTUifQ==";
 if (typeof window !== 'undefined') window.AUIGridLicense = AUIGridLicense;

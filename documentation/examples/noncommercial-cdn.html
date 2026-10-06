@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AUIGrid 비상업용 CDN 시작 예제</title>
+  <!-- 비상업용 라이선스는 localhost 또는 127.0.0.1에서 사용합니다. -->
+  <script src="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGridLicense.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGrid.js"></script>
+  <!-- CDN 테마의 스타일 규칙도 읽을 수 있도록 CORS 방식으로 불러옵니다. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aui-community/auigrid-noncommercial@main/dist/AUIGrid_style.css" crossorigin="anonymous">
+  <style>
+    body { margin: 24px; font-family: "Segoe UI", sans-serif; font-size: 14px; line-height: 1.5; letter-spacing: normal; color: #242830; }
+    body > h1 { font-size: 28px; font-weight: 700; line-height: 1.6; margin: 16px 0 8px; }
+    body > p { line-height: 1.5; margin: 10px 0 4px; }
+    #grid_wrap { width: 100%; height: 360px; }
+  </style>
+</head>
+<body>
+  <h1>AUIGrid를 CDN으로 시작하기</h1>
+  <p>헤더를 클릭해 정렬하고 필터 아이콘으로 데이터를 골라 보십시오. 셀을 더블클릭하면 값을 편집할 수 있습니다.</p>
+  <div id="grid_wrap"></div>
+  <p id="status" role="status">그리드를 불러오는 중입니다.</p>
+  <p>비상업용 목적의 localhost / 127.0.0.1 환경에서 사용하는 예제입니다.
+    <a href="https://github.com/aui-community/auigrid-noncommercial#readme">배포 안내 및 사용 조건</a></p>
+  <p>다른 서버의 도메인이나 IP에서 확인하려면 <a href="https://www.auisoft.net/dcenter.html">평가판을 내려받아</a>
+    예제의 엔진, 라이선스 및 CSS 경로를 평가판 파일로 변경하십시오.</p>
+  <script>
+    var myGridID;
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var status = document.getElementById("status");
+      // 파일로 직접 열었을 때 서버 실행 방법을 안내합니다. 접속 주소의 허용 여부는 라이선스가 판단합니다.
+      // 평가판 파일로 교체한 뒤에도 테스트 서버에서 사용할 수 있도록 여기서 도메인을 제한하지 않습니다.
+      if (!/^https?:$/.test(location.protocol)) {
+        status.textContent = "이 HTML을 로컬 웹 서버에 두고 http://localhost 또는 http://127.0.0.1 주소로 열어 주세요.";
+        return;
+      }
+      if (typeof AUIGrid === "undefined") {
+        status.textContent = "CDN 파일을 불러오지 못했습니다. 인터넷 연결과 cdn.jsdelivr.net 접속 상태를 확인해 주세요.";
+        return;
+      }
+
+      // 칼럼과 데이터를 바꾸면 자신의 업무 화면을 빠르게 만들어 볼 수 있습니다.
+      var columnLayout = [
+        { dataField: "name", headerText: "이름", filter: { showIcon: true } },
+        { dataField: "country", headerText: "국가", filter: { showIcon: true } },
+        { dataField: "product", headerText: "상품", filter: { showIcon: true } },
+        { dataField: "quantity", headerText: "수량", dataType: "numeric" },
+        { dataField: "price", headerText: "단가", dataType: "numeric", formatString: "#,##0" }
+      ];
+      // 별도 데이터 파일이나 API 서버 없이 실행하도록 데이터를 함께 제공합니다.
+      var rows = [
+        { name: "김서연", country: "Korea", product: "노트북", quantity: 3, price: 1250000 },
+        { name: "박민준", country: "USA", product: "모니터", quantity: 5, price: 320000 },
+        { name: "이도윤", country: "Japan", product: "키보드", quantity: 12, price: 89000 },
+        { name: "최지우", country: "Korea", product: "마우스", quantity: 20, price: 35000 }
+      ];
+      myGridID = AUIGrid.create("#grid_wrap", columnLayout, {
+        editable: true,
+        enableSorting: true,
+        enableFilter: true,
+        showRowNumColumn: true
+      });
+      AUIGrid.setGridData(myGridID, rows);
+      status.textContent = rows.length + "건의 데이터를 표시했습니다.";
+      AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+        status.textContent = (event.rowIndex + 1) + "행의 " + event.dataField + " 값을 " + event.value + "(으)로 변경했습니다.";
+      });
+    });
+
+    // 창 크기가 달라지면 그리드도 컨테이너의 새 폭에 맞춥니다.
+    window.addEventListener("resize", function () {
+      if (myGridID) AUIGrid.resize(myGridID);
+    });
+  </script>
+</body>
+</html>

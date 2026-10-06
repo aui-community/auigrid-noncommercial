@@ -1,193 +1,172 @@
 <script setup>
-// 현재 WebDemo 쇼케이스 9을 Vue 샘플 8번으로 제공합니다.
+import { ref, computed, onMounted, onActivated, nextTick, watch } from 'vue';
 import AUIGrid from '@/static/AUIGrid-Vue.js/AUIGrid.vue';
-import { ref, computed, watch, nextTick, onMounted, onActivated, onDeactivated, onBeforeUnmount } from 'vue';
+import MyCalendarRenderer from '@/renderers/MyCalendarRenderer';
 import 'file-saver';
 import '@/static/AUIGrid.pdfkit/AUIGrid.pdfkit.js';
 import './Showcase08.css';
-const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
-// 데이터의 문자가 셀 안에서 HTML 태그로 해석되지 않게 합니다.
-function escapeText(value) {
-    return String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-// 하위 칼럼은 남은 폭을 25%씩 나누고, 좁은 화면에서도 최소 66px을 유지합니다.
-// 전체 펼치기에서는 applyRestPercentWidth로 상위 칼럼의 고정 폭을 제외합니다.
-const columnLayout = [{
-        dataField: 'project', headerText: '프로젝트', bodyCell: true, width: 215,
-        style: 'sc-project-cell',
-        renderer: {
-            type: 'TemplateRenderer',
-            // 화면의 번호, 프로젝트명과 ID를 Excel 및 PDF에서는 두 줄의 텍스트로 표시합니다.
-            aliasFunction: function (row, col, value, header, item) {
-                return item.code + ' ' + value + '\n' + item.id;
-            }
-        },
-        labelFunction: function (row, col, value, header, item) {
-            return '<div class="sc-project-label"><span class="sc-project-icon">' + escapeText(item.code) + '</span><span><b>' + escapeText(value) + '</b><small>' + escapeText(item.id) + '</small></span></div>';
-        },
-        children: [{
-                dataField: 'client', headerText: '고객사', bodyCell: true, width: 145, style: 'sc-client-cell',
-                children: [
-                    { dataField: 'owner', headerText: '담당자', width: '25%', minWidth: 66 },
-                    { dataField: 'due', headerText: '목표일', width: '25%', minWidth: 66, dataType: 'date', dateInputFormat: 'yyyy-mm-dd', formatString: 'mm/dd' }
-                ]
-            }, {
-                dataField: 'status', headerText: '진행 상태', bodyCell: true, width: 110,
-                renderer: { type: 'TemplateRenderer' },
-                labelFunction: function (row, col, value) {
-                    const kind = value === '완료' ? 'done' : value === '검토중' ? 'review' : '';
-                    return '<span class="sc-status ' + kind + '">' + escapeText(value) + '</span>';
-                },
-                children: [{
-                        dataField: 'progress', headerText: '진행률', width: '25%', minWidth: 66, dataType: 'numeric',
-                        renderer: { type: 'TemplateRenderer' },
-                        labelFunction: function (row, col, value) {
-                            const percent = Math.max(0, Math.min(100, Number(value) || 0));
-                            return '<div class="sc-progress"><div class="sc-progress-track"><i style="width:' + percent + '%"></i></div><span>' + percent + '%</span></div>';
-                        }
-                    }, {
-                        dataField: 'budget', headerText: '예산(백만)', width: '25%', minWidth: 66, dataType: 'numeric', formatString: '#,##0'
-                    }]
-            }]
-    }];
-const gridProps = {
-    bodyLayoutMode: 'band', rowHeight: 122, headerHeight: 28, showRowNumColumn: false,
-    rowIdField: 'id', selectionMode: 'singleRow', enableSorting: true, applyRestPercentWidth: true,
-    showStateColumn: false,
-    width: '100%', height: 430
-};
-const modeNames = { band: '밴드형', flat: '일반형', flatAll: '전체 펼치기' };
-const modeHints = {
-    band: '프로젝트와 고객 정보를 위아래로 쌓아 한눈에.',
-    flat: '담당자, 일정, 진행률, 예산을 간결하게 비교.',
-    flatAll: '상위 필드까지 모두 펼쳐 가로로 비교.'
-};
-const modes = ['band', 'flat', 'flatAll'];
-const myGrid = ref(null);
-const description = ref(null);
-const availableWidth = ref(1200);
-// null이면 화면 전체 폭을 사용하며, 직접 선택한 폭은 화면 안에서 유지합니다.
-const requestedWidth = ref(null);
-const automatic = ref(true);
-const manualMode = ref('band');
-const width = computed(() => Math.min(requestedWidth.value ?? availableWidth.value, availableWidth.value));
-const mode = computed(() => automatic.value
-    ? (width.value < 600 ? 'band' : width.value < 920 ? 'flat' : 'flatAll') : manualMode.value);
-let observer = null;
-let resizeFrame = 0;
-let inputFrame = 0;
-let active = false;
-const controller = new AbortController();
-// 메뉴 복귀 시 현재 화면 크기를 다시 측정합니다.
-function observeWidth() {
-    active = true;
-    if (observer)
-        return;
-    const measure = () => {
-        const available = Math.floor(description.value?.clientWidth ?? 0);
-        if (available > 0)
-            availableWidth.value = available;
-        nextTick(applyLayout);
-    };
-    observer = new ResizeObserver(() => {
-        cancelAnimationFrame(resizeFrame);
-        resizeFrame = requestAnimationFrame(measure);
-    });
-    if (description.value)
-        observer.observe(description.value);
-    measure();
-}
-function stopObserving() {
-    active = false;
-    observer?.disconnect();
-    observer = null;
-    cancelAnimationFrame(resizeFrame);
-    cancelAnimationFrame(inputFrame);
-}
-// 슬라이더의 폭이 반영되면 표시 구조를 전환하고 그리드의 크기를 갱신합니다.
-function applyLayout() {
-    const grid = myGrid.value;
-    if (!active || !grid || !width.value)
-        return;
-    if (grid.getProp('bodyLayoutMode') !== mode.value) {
-        grid.setProp({ bodyLayoutMode: mode.value, rowHeight: mode.value === 'band' ? 122 : 52 });
-        grid.refresh();
-    }
-    grid.resize();
-}
-function changeWidth(event) {
-    const value = Number(event.target.value);
-    cancelAnimationFrame(inputFrame);
-    inputFrame = requestAnimationFrame(() => {
-        requestedWidth.value = value === availableWidth.value ? null : value;
-        automatic.value = true;
-    });
-}
-function changeLayout(value) {
-    manualMode.value = value;
-    automatic.value = false;
-}
-function toggleAutomatic() {
-    manualMode.value = mode.value;
-    automatic.value = !automatic.value;
-}
-async function loadProjects() {
-    const grid = myGrid.value;
-    grid.showAjaxLoader();
-    try {
-        const response = await fetch(`${baseUrl}/data/showcase8.json`, { signal: controller.signal });
-        if (!response.ok)
-            throw new Error('데이터 요청 실패');
-        const rows = await response.json();
-        if (controller.signal.aborted)
-            return;
-        grid.setGridData(rows);
-    }
-    catch (error) {
-        if (!controller.signal.aborted)
-            alert('프로젝트 데이터를 불러오지 못했습니다. 페이지를 새로고침해 주세요.');
-    }
-    finally {
-        if (!controller.signal.aborted)
-            grid.removeAjaxLoader();
-    }
-}
-function exportExcel() {
-    myGrid.value?.exportToXlsx({ fileName: '프로젝트_현황', sheetName: '프로젝트 현황' });
-}
-function exportPdf() {
-    // 프로젝트명과 ID가 두 줄로 들어가는 전체 펼치기에서는 PDF 행 높이를 지정합니다.
-    myGrid.value?.exportToPdf({ fileName: '프로젝트_현황', fontPath: `${baseUrl}/fonts/nyjgothic-medium.ttf`,
-        orientation: 'landscape', ...(mode.value === 'flatAll' ? { rowHeight: 52 } : {}) });
-}
-watch([mode, width], applyLayout, { flush: 'post' });
-onMounted(() => { observeWidth(); loadProjects(); });
-onActivated(observeWidth);
-onDeactivated(stopObserving);
-// KeepAlive 비활성화는 관찰만 중지하고, 실제 종료일 때 데이터 요청도 취소합니다.
-onBeforeUnmount(() => { controller.abort(); stopObserving(); });
-</script>
 
+// 하위 경로에 배포해도 공개 폴더의 한글 폰트를 찾을 수 있게 합니다.
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// 날짜 비교의 기준은 화면을 연 시점의 오늘입니다.
+const today = new Date();
+// 표시 월의 주별 데이터를 생성합니다. 앞쪽 빈 셀과 마지막 주의 길이를 유지합니다.
+function genGridData(inputDate) {
+    const year = inputDate.getFullYear();
+    const month = inputDate.getMonth();
+    const startWeekday = new Date(year, month, 1).getDay();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    const weeks = [];
+    let week = [];
+    for (let i = 0; i < startWeekday; i++) week.push(null);
+    for (let day = 1; day <= totalDays; day++) {
+        // 월을 다시 방문해도 같은 예제 값을 보여주도록 날짜로 값을 계산합니다.
+        week.push({
+            date: day,
+            value: (year * 13 + month * 31 + day * 47) % 101,
+            dateLabel: `${year}년 ${month + 1}월 ${day}일`,
+            isToday: year === today.getFullYear() && month === today.getMonth() && day === today.getDate()
+        });
+        if (week.length === 7) {
+            weeks.push(week);
+            week = [];
+        }
+    }
+    if (week.length > 0) weeks.push(week);
+    return weeks;
+}
+
+// 모든 요일에 같은 렌더러를 적용하고 좁은 화면의 읽기 폭을 유지합니다.
+const columnLayout = ['일', '월', '화', '수', '목', '금', '토'].map((day, index) => ({
+    dataField: String(index),
+    headerText: day,
+    minWidth: 72,
+    style: index === 0 ? 'my-sunday-style' : index === 6 ? 'my-saturday-style' : '',
+    headerStyle: index === 0 ? 'my-sunday-style' : index === 6 ? 'my-saturday-style' : '',
+    renderer: {
+        type: 'CustomRenderer',
+        jsClass: MyCalendarRenderer,
+        // 화면의 날짜/막대 객체를 파일에서는 날짜와 목표 달성률 두 줄로 표시합니다.
+        aliasFunction: function (rowIndex, columnIndex, value) {
+            return value ? value.dateLabel + '\n목표 달성률: ' + value.value + '%' : '';
+        }
+    }
+}));
+
+// 주 수에 따라 높이를 자동으로 조절하여 마지막 주가 잘리지 않게 합니다.
+const gridProps = {
+    width: '100%',
+    height: 540,
+    selectionMode: 'none',
+    enableSorting: false,
+    showRowNumColumn: false,
+    enableColumnResize: false,
+    rowHeight: 112,
+    headerHeight: 36,
+    autoGridHeight: true
+};
+
+const myGrid = ref(null);
+const originDate = ref(new Date(today.getFullYear(), today.getMonth(), 1));
+const formatOriginDate = computed(() => `${originDate.value.getFullYear()}년 ${originDate.value.getMonth() + 1}월`);
+
+// 월 상태 변경은 데이터만 갱신하고 그리드 생성과 정리는 래퍼에 맡깁니다.
+function loadGridData() {
+    myGrid.value?.setGridData(genGridData(originDate.value));
+}
+// 항상 1일을 기준으로 이동하여 월말에도 다음 달을 건너뛰지 않습니다.
+function changeData(direction) {
+    originDate.value = new Date(originDate.value.getFullYear(), originDate.value.getMonth() + direction, 1);
+}
+function goToThisMonth() {
+    originDate.value = new Date(today.getFullYear(), today.getMonth(), 1);
+}
+// 현재 보고 있는 월의 요일 배치와 빈 날짜를 유지하여 Excel로 저장합니다.
+function exportClick() {
+    var month = originDate.value.getFullYear() + '년 ' + (originDate.value.getMonth() + 1) + '월';
+    myGrid.value?.exportToXlsx({
+        fileName: '일별_목표치_달성률_' + month,
+        sheetName: month,
+        rowHeight: 64,
+        headers: [
+            {
+                text: month + ' 일별 목표치 달성률',
+                height: 32,
+                style: { fontSize: 16, textAlign: 'center', fontWeight: 'bold' }
+            }
+        ],
+        useExportStyle: true,
+        exportStyle: {
+            'my-sunday-style': { color: '#dc5262' },
+            'my-saturday-style': { color: '#2563eb' }
+        }
+    });
+}
+
+// 6주인 달도 한 페이지에서 읽을 수 있도록 가로 용지와 두 줄 셀 높이를 지정합니다.
+function exportPdfClick() {
+    var month = originDate.value.getFullYear() + '년 ' + (originDate.value.getMonth() + 1) + '월';
+    myGrid.value?.exportToPdf({
+        fileName: '일별_목표치_달성률_' + month,
+        fontPath: baseUrl + '/fonts/nyjgothic-medium.ttf',
+        layout: 'landscape',
+        rowHeight: 80,
+        fontSize: 12,
+        headers: [
+            {
+                text: month + ' 일별 목표치 달성률',
+                height: 32,
+                style: { fontSize: 16, textAlign: 'center', fontWeight: 'bold' }
+            }
+        ],
+        useExportStyle: true,
+        exportStyle: {
+            'my-sunday-style': { color: '#dc5262' },
+            'my-saturday-style': { color: '#2563eb' }
+        }
+    });
+}
+
+onMounted(loadGridData);
+// 캐시된 달력으로 돌아오면 현재 화면 폭에 맞춥니다.
+onActivated(() => nextTick(() => myGrid.value?.resize()));
+watch(originDate, loadGridData);
+</script>
 <template>
-    <div>
-        <div class="desc" ref="description">
-            <p>슬라이더로 폭을 줄이거나 넓혀 반응형 레이아웃을 확인해 보세요.</p>
-            <p>좁은 화면은 밴드형, 중간 화면은 일반형, 넓은 화면은 전체 펼치기로 실시간 전환됩니다.</p>
-            <div class="showcase8-width">
-                <label for="showcase8-width">그리드 폭</label>
-                <input id="showcase8-width" type="range" :min="Math.min(320, availableWidth)" :max="availableWidth" step="1" :value="width" @input="changeWidth" />
-                <output for="showcase8-width">{{ width }} px</output>
+    <div class="showcase-calendar">
+        <div class="calendar-heading">
+            <p>한 달의 성과를 달력으로 살펴보세요. 날짜마다 목표 달성률을 숫자와 막대로 표시합니다.</p>
+            <p>그리드에 출력되는 셀은 사용자 정의 렌더러(CustomRenderer)를 사용하였습니다.</p>
+            <p>이와 같이 사용자가 원하는 셀 형식을 자바스크립트로 작성할 수 있습니다.</p>
+        </div>
+        <div class="calendar-export">
+            <button type="button" class="btn" @click="exportClick">엑셀(xlsx)로 저장</button>
+            <button type="button" class="btn" @click="exportPdfClick">PDF로 저장</button>
+        </div>
+        <section class="calendar-card" aria-label="월별 목표 달성률 달력">
+            <div class="calendar-toolbar">
+                <div class="calendar-month">
+                    <button type="button" class="calendar-nav" @click="changeData(-1)" aria-label="이전 달">
+                        &#8249;
+                    </button>
+                    <h2 class="calendar-date" aria-live="polite">{{ formatOriginDate }}</h2>
+                    <button type="button" class="calendar-nav" @click="changeData(1)" aria-label="다음 달">
+                        &#8250;
+                    </button>
+                    <button type="button" class="calendar-nav" @click="goToThisMonth()">이번 달</button>
+                </div>
+                <div class="calendar-legend" aria-label="목표 달성률 색상 범례">
+                    <span><i class="legend-dot" style="--goal-color: #df6474"></i>20% 미만</span>
+                    <span><i class="legend-dot" style="--goal-color: #b88026"></i>20~49%</span>
+                    <span><i class="legend-dot" style="--goal-color: #4b85ce"></i>50~74%</span>
+                    <span><i class="legend-dot" style="--goal-color: #299579"></i>75% 이상</span>
+                </div>
             </div>
-            <p class="showcase8-controls">
-                <button v-for="value in modes" :key="value" :aria-pressed="mode === value" @click="changeLayout(value)">{{ modeNames[value] }}</button>
-                <button :aria-pressed="automatic" @click="toggleAutomatic">화면에 맞게</button>
-            </p>
-            <p class="showcase8-controls"><button @click="exportExcel">Excel 내보내기</button><button @click="exportPdf">PDF 내보내기</button></p>
-            <p>{{ modeHints[mode] }} ({{ automatic ? '자동 전환' : '직접 선택' }} / {{ modeNames[mode] }})</p>
-        </div>
-        <div class="showcase8-preview" :style="{ maxWidth: width + 'px' }">
-            <AUIGrid ref="myGrid" name="showcase8" :gridProps="gridProps" :columnLayout="columnLayout" :autoResize="false" />
-        </div>
+            <!-- 그리드가 날짜와 사용자 정의 렌더러를 배치합니다. -->
+            <div class="calendar-grid">
+                <AUIGrid name="showcase8" ref="myGrid" :columnLayout="columnLayout" :gridProps="gridProps" />
+            </div>
+        </section>
     </div>
 </template>

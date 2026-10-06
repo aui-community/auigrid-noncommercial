@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
+<meta name="og:url" content="https://www.auisoft.net/">
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
+<link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
+
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script type="text/javascript" src="./common.js"></script>
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+
+        <style>
+            /* 시간축과 교육이 배정된 셀만 구별하고 그리드의 기본 테마를 유지합니다. */
+            .training-time {
+                background: #f4f5f7;
+                color: #555e6b;
+            }
+
+            .training-course {
+                background: #f0ede7;
+                color: #514a40;
+                font-weight: bold;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            var myGridID;
+            var weekdays = ["월요일", "화요일", "수요일", "목요일", "금요일"];
+
+            // 시작점: 주간 교육 일정 데이터를 공용 데이터 요청 함수로 불러옵니다.
+            function init() {
+                createAUIGrid();
+                requestGridData("./data/dragdrop_cells.json");
+            }
+
+            // 30분 단위의 시간축과 요일별 교육 일정으로 그리드를 생성합니다.
+            function createAUIGrid() {
+                var fields = ["mon", "tue", "wed", "thu", "fri"];
+                var columnLayout = [
+                    {
+                        dataField: "time",
+                        headerText: "시간",
+                        width: 150,
+                        editable: false,
+                        // 시간축은 이동 원본과 목적지로 사용하지 않습니다.
+                        disableCellDrag: true,
+                        style: "training-time"
+                    }
+                ];
+                for (var i = 0; i < fields.length; i++) {
+                    columnLayout.push({
+                        dataField: fields[i],
+                        headerText: weekdays[i],
+                        minWidth: 150,
+                        cellMerge: true,
+                        styleFunction: function (rowIndex, columnIndex, value) {
+                            return value ? "training-course" : "";
+                        }
+                    });
+                }
+
+                var gridProps = {
+                    editable: true,
+                    selectionMode: "multipleCells",
+                    // 선택 영역 윗변의 손잡이로 셀 범위를 이동합니다.
+                    enableDrag: true,
+                    enableDragCells: true,
+                    enableDrop: true,
+                    // 연속된 같은 교육을 병합하고, 선택 시 해당 시간대를 함께 선택합니다.
+                    enableCellMerge: true,
+                    selectionMultiOnMerge: true,
+                    enableUndoRedo: true,
+                    // 일정표의 시간 순서를 유지합니다. 셀 범위 이동은 정렬되지 않은 표에서 사용합니다.
+                    enableSorting: false,
+                    showRowNumColumn: false,
+                    fixedColumnCount: 1,
+                    rowHeight: 36,
+                    headerHeight: 36
+                };
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+                // 기본은 이동이며 Ctrl/Cmd를 누르고 놓으면 복사합니다.
+                // 복사 선택 시에는 보조키 없이도 원본을 남깁니다. 터치에서도 같은 설정을 사용합니다.
+                AUIGrid.bind(myGridID, "dropCellsEndBefore", function (event) {
+                    if (document.getElementById("dragMode").value === "copy") {
+                        event.isMoveMode = false;
+                    }
+                    // valuesToDrop은 원본이 아니라 덮어쓸 목적지의 기존 값입니다.
+                    var occupied = event.valuesToDrop.some(function (value) {
+                        return value != null && value !== "";
+                    });
+                    return (
+                        !occupied ||
+                        window.confirm("놓을 범위에 교육 일정이 있습니다. 선택한 내용으로 덮어쓰시겠습니까?")
+                    );
+                });
+
+                // 원본 및 목적지의 요일과 시간을 표시해 실제 반영된 위치를 알립니다.
+                AUIGrid.bind(myGridID, "dropCellsEnd", function (event) {
+                    var source = AUIGrid.getItemByRowIndex(myGridID, event.fromRowIndex);
+                    var target = AUIGrid.getItemByRowIndex(myGridID, event.toRowIndex);
+                    document.getElementById("dropResult").textContent =
+                        (event.isMoveMode ? "이동" : "복사") +
+                        " 완료: " +
+                        weekdays[event.fromColumnIndex - 1] +
+                        " " +
+                        source.time +
+                        " → " +
+                        weekdays[event.toColumnIndex - 1] +
+                        " " +
+                        target.time +
+                        " (" +
+                        event.rowCount +
+                        "개 시간대 × " +
+                        event.columnCount +
+                        "개 요일)";
+                });
+
+                // 기존 편집 데모와 같은 버튼 형태로 실행 취소 및 다시 실행 가능 여부를 표시합니다.
+                AUIGrid.bind(myGridID, "undoRedoChange", function (event) {
+                    var undoBtn = document.getElementById("undoBtn");
+                    var redoBtn = document.getElementById("redoBtn");
+                    undoBtn.disabled = !event.undoable;
+                    redoBtn.disabled = !event.redoable;
+                    undoBtn.className = event.undoable ? "btn" : "btn-disabled";
+                    redoBtn.className = event.redoable ? "btn" : "btn-disabled";
+                    if (event.action === "undo" || event.action === "redo") {
+                        document.getElementById("dropResult").textContent =
+                            event.action === "undo" ? "이전 작업을 취소했습니다." : "취소한 작업을 다시 적용했습니다.";
+                    }
+                });
+            }
+        </script>
+    </head>
+<body class="demo-typography">
+
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        <strong>주간 교육 일정표</strong>에서 선택한 셀 범위를 다른 요일이나 시간대로 이동하고 복사하는
+                        데모입니다.
+                    </p>
+                    <p>
+                        ① 월요일 09:00의 <strong>신규 입사자 교육</strong>을 클릭합니다. 병합된 두 시간대가 함께
+                        선택됩니다.
+                    </p>
+                    <p>
+                        ② <strong>선택 영역 윗변의 손잡이</strong>를 잡고 화요일 09:00의 빈 셀에 놓아 보십시오. 이동하면
+                        원래 위치는 비워집니다.
+                    </p>
+                    <p>
+                        ③ <strong>복사</strong>를 선택하고 끌어 놓으면 원본을 유지합니다. 이동 모드에서도
+                        <strong>Ctrl 또는 Cmd(⌘)</strong>를 누른 채 놓으면 복사합니다.
+                    </p>
+                    <p>
+                        여러 셀은 드래그로 범위를 선택한 뒤 손잡이를 끌어 한 번에 옮길 수 있습니다. Esc로 드래그를
+                        취소하며, 변경한 내용은 실행 취소로 복구할 수 있습니다.
+                    </p>
+                    <p>
+                        <label for="dragMode">드래그 동작 : </label>
+                        <select id="dragMode">
+                            <option value="move">이동</option>
+                            <option value="copy">복사 (원본 유지)</option>
+                        </select>
+                        <button id="undoBtn" class="btn-disabled" disabled onclick="AUIGrid.undo(myGridID)">
+                            실행 취소
+                        </button>
+                        <button id="redoBtn" class="btn-disabled" disabled onclick="AUIGrid.redo(myGridID)">
+                            다시 실행
+                        </button>
+                    </p>
+                </div>
+                <div>
+                    <!-- 공통 WebDemo 테마와 엔진을 사용하는 주간 교육 일정 그리드입니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="dropResult" role="status" aria-live="polite">
+                        교육이 있는 셀에 놓으면 덮어쓰기 전에 확인합니다. 시간 칼럼은 변경되지 않습니다.
+                    </p>
+                    <p>
+                        설정: editable, enableDrag, enableDragCells를 true로 지정합니다. dropCellsEndBefore에서
+                        이동/복사 여부와 덮어쓰기 허용을 결정할 수 있습니다.
+                    </p>
+                    <p>
+                        셀 범위 이동은 일반형(flat, flatAll)에서 지원합니다. 밴드형, 트리, 그룹핑 및 정렬된 표에는
+                        적용되지 않습니다.
+                    </p>
+                </div>
+            </div>
+<div id="footer">
+     <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

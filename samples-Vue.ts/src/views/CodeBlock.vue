@@ -1,42 +1,48 @@
-<template>
-	<pre><code :class="`language-${language}`" ref="codeBlock">
-    <slot />
-  </code></pre>
-</template>
-
 <script setup lang="ts">
-	import { onMounted, ref, nextTick } from 'vue';
-	import Prism from 'prismjs';
+import { onMounted, ref, watch } from 'vue';
+import Prism from 'prismjs';
+// Prism 1.30.0 Tomorrow와 예제에 사용하는 문법만 불러옵니다.
+import 'prismjs/components/prism-markup';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-jsx';
+import 'prismjs/components/prism-tsx';
 
-	// Prism CSS 테마 불러오기 (다크 테마 예제)
-	import 'prismjs/themes/prism-tomorrow.css';
+const props = defineProps<{ code: string; language?: string }>();
+const codeBlock = ref<HTMLElement | null>(null);
+const feedback = ref('');
 
-	// 필요한 언어 컴포넌트 불러오기
-	import 'prismjs/components/prism-javascript';
-	import 'prismjs/components/prism-css';
-	import 'prismjs/components/prism-markup';
-
-	defineProps<{
-		language?: string;
-	}>();
-
-	const codeBlock = ref<HTMLElement | null>(null);
-
-	const highlight = () => {
-		if (codeBlock.value) {
-			Prism.highlightElement(codeBlock.value);
+// 슬롯 DOM과 Prism 토큰의 충돌을 피하고 원문이 변경된 경우에만 다시 강조합니다.
+function highlight() {
+	if (!codeBlock.value) return;
+	codeBlock.value.textContent = props.code;
+	Prism.highlightElement(codeBlock.value);
+}
+onMounted(highlight);
+watch(() => [props.code, props.language], highlight, { flush: 'post' });
+	// 토큰 HTML 대신 원문을 복사하고, 권한이 없으면 직접 복사할 영역을 선택합니다.
+	async function copyCode() {
+		try {
+			await navigator.clipboard.writeText(props.code.trim());
+			feedback.value = '복사했습니다.';
+		} catch (error) {
+			const element = codeBlock.value;
+			if (!element) return;
+			const range = document.createRange();
+			range.selectNodeContents(element);
+			const selection = window.getSelection();
+			if (selection) { selection.removeAllRanges(); selection.addRange(range); }
+			feedback.value = '선택한 코드를 Ctrl+C 또는 ⌘C로 복사하세요.';
 		}
-	};
-
-	onMounted(() => {
-		nextTick(highlight); // slot 내용이 렌더링된 후 하이라이트
-	});
-</script>
-
-<style scoped>
-	pre {
-		border-radius: 8px;
-		padding: 1rem;
-		overflow-x: auto;
 	}
-</style>
+</script>
+<template>
+	<div class="demo-code-frame">
+		<pre tabindex="0" aria-label="코드 예제"><code :class="`language-${language || 'markup'}`" ref="codeBlock"></code></pre>
+		<div class="demo-code-tools">
+			<span class="demo-code-feedback" role="status">{{ feedback }}</span>
+			<button type="button" class="demo-code-copy" @click="copyCode">코드 복사</button>
+		</div>
+	</div>
+</template>

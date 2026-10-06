@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,123 +37,147 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-		requestGridData("./data/nutrition.json");
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+                requestGridData("./data/nutrition.json");
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 설정
-		const columnLayout = [{
-			dataField: "gubun1",
-			headerText: "구분1",
-			width: 160
-		}, {
-			dataField: "gubun2",
-			headerText: "구분2",
-			width: 160
-		}, {
-			headerText: "2018년",
-			children: [{
-				dataField: "avg08",
-				headerText: "평균(g)",
-				width: 100
-			}, {
-				dataField: "sdev08",
-				headerText: "표준편차",
-				width: 100
-			}]
-		}, {
-			headerText: "2019년",
-			children: [{
-				dataField: "avg09",
-				headerText: "평균(g)",
-				width: 100
-			}, {
-				dataField: "sdev09",
-				headerText: "표준편차",
-				width: 100
-			}]
-		}, {
-			headerText: "2020년",
-			children: [{
-				dataField: "avg10",
-				headerText: "평균(g)",
-				width: 100
-			}, {
-				dataField: "sdev10",
-				headerText: "표준편차",
-				width: 100
-			}]
-		}, {
-			headerText: "2021년",
-			children: [{
-				dataField: "avg11",
-				headerText: "평균(g)",
-				width: 100
-			}, {
-				dataField: "sdev11",
-				headerText: "표준편차",
-				width: 100
-			}]
-		}, {
-			headerText: "2022년",
-			children: [{
-				dataField: "avg12",
-				headerText: "평균(g)",
-				width: 100
-			}, {
-				dataField: "sdev12",
-				headerText: "표준편차",
-				width: 100
-			}]
-		}];
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 설정
+                const columnLayout = [
+                    {
+                        dataField: "gubun1",
+                        headerText: "구분1",
+                        width: 160
+                    },
+                    {
+                        dataField: "gubun2",
+                        headerText: "구분2",
+                        width: 160
+                    },
+                    {
+                        headerText: "2018년",
+                        children: [
+                            {
+                                dataField: "avg08",
+                                headerText: "평균(g)",
+                                width: 100
+                            },
+                            {
+                                dataField: "sdev08",
+                                headerText: "표준편차",
+                                width: 100
+                            }
+                        ]
+                    },
+                    {
+                        headerText: "2019년",
+                        children: [
+                            {
+                                dataField: "avg09",
+                                headerText: "평균(g)",
+                                width: 100
+                            },
+                            {
+                                dataField: "sdev09",
+                                headerText: "표준편차",
+                                width: 100
+                            }
+                        ]
+                    },
+                    {
+                        headerText: "2020년",
+                        children: [
+                            {
+                                dataField: "avg10",
+                                headerText: "평균(g)",
+                                width: 100
+                            },
+                            {
+                                dataField: "sdev10",
+                                headerText: "표준편차",
+                                width: 100
+                            }
+                        ]
+                    },
+                    {
+                        headerText: "2021년",
+                        children: [
+                            {
+                                dataField: "avg11",
+                                headerText: "평균(g)",
+                                width: 100
+                            },
+                            {
+                                dataField: "sdev11",
+                                headerText: "표준편차",
+                                width: 100
+                            }
+                        ]
+                    },
+                    {
+                        headerText: "2022년",
+                        children: [
+                            {
+                                dataField: "avg12",
+                                headerText: "평균(g)",
+                                width: 100
+                            },
+                            {
+                                dataField: "sdev12",
+                                headerText: "표준편차",
+                                width: 100
+                            }
+                        ]
+                    }
+                ];
 
-		// 그리드 속성 설정
-		const gridProps = {
-			selectionMode: "singleCell", // 선택 모드: 단일 셀 선택
-			enableSorting: false         // 정렬 기능 비활성화
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    selectionMode: "singleCell", // 선택 모드: 단일 셀 선택
+                    enableSorting: false // 정렬 기능 비활성화
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 셀 클릭 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellClick", function (event) {
-			alert(`( ${event.rowIndex}, ${event.columnIndex} ) : ${event.value} clicked!!`);
-		});
-	}
-</script>
-</head>
-<body>
+                // 셀 클릭 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellClick", function (event) {
+                    alert(`( ${event.rowIndex}, ${event.columnIndex} ) : ${event.value} clicked!!`);
+                });
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>셀 클릭 이벤트를 정의한 모습입니다.</p>
-		<div class="src_cover">
-			<pre>// 셀 클릭 이벤트 바인딩
+            <div id="main">
+                <div class="desc">
+                    <p>셀 클릭 이벤트를 정의한 모습입니다.</p>
+                    <div class="src_cover">
+                        <pre>
+// 셀 클릭 이벤트 바인딩
 AUIGrid.bind(myGridID, "cellClick", function(event) {
 	alert(`( ${event.rowIndex}, ${event.columnIndex} ) : ${event.value} clicked!!`);
 });
 </pre>
-		</div>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:480px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="elapse"></p>
-	</div>
-</div>
+                    </div>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="elapse"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

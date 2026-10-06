@@ -13,7 +13,15 @@
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link rel="stylesheet" href="./static/prism.css">
 <link href="./demo.css" rel="stylesheet">
+
+<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
+<link rel="stylesheet" href="./style/demo-typography.css">
+<link rel="stylesheet" href="./static/code-examples.css">
+<script src="./static/prism.js" data-manual></script>
+<script src="./static/code-examples.js" data-source-viewer></script>
+
 
 <!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
 <script type="text/javascript" src="./common.js"></script>
@@ -29,134 +37,181 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 
-<style>
-	.readonly-style {
-		color: #f00;
-		text-decoration: underline;
-		font-style: italic;
-	}
+        <style>
+            .readonly-style {
+                color: #f00;
+                text-decoration: underline;
+                font-style: italic;
+            }
 
-	.readonly-style2 {
-		color: #f00;
-		font-style: italic;
-	}
-</style>
-<script>
-	// AUIGrid 생성 후 반환 ID
-	let myGridID;
+            .readonly-style2 {
+                color: #f00;
+                font-style: italic;
+            }
+        </style>
+        <script>
+            // AUIGrid 생성 후 반환 ID
+            let myGridID;
 
-	const chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+            const chars = [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+                "I",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "O",
+                "P",
+                "Q",
+                "R",
+                "S",
+                "T",
+                "U",
+                "V",
+                "W",
+                "X",
+                "Y",
+                "Z"
+            ];
 
-	// 시작점
-	function init() {
-		// AUIGrid 그리드를 생성합니다.
-		createAUIGrid();
-		// AUIGrid 에 데이터 삽입합니다.
-		AUIGrid.setGridData(myGridID, genRandomData());
-	}
+            // 시작점
+            function init() {
+                // AUIGrid 그리드를 생성합니다.
+                createAUIGrid();
+                // AUIGrid 에 데이터 삽입합니다.
+                AUIGrid.setGridData(myGridID, genRandomData());
+            }
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid() {
-		// 그리드 칼럼 레이아웃 작성
-		const columnLayout = [];
-		for (let i = 0; i < 26; i++) {
-			columnLayout.push({
-				headerText: chars[i],
-				dataField: i,
-				width: 80
-			});
+            // AUIGrid 를 생성합니다.
+            function createAUIGrid() {
+                // 그리드 칼럼 레이아웃 작성
+                const columnLayout = [];
+                for (let i = 0; i < 26; i++) {
+                    columnLayout.push({
+                        headerText: chars[i],
+                        dataField: i,
+                        width: 80
+                    });
 
-			// 3의 배수 칼럼에는 editable : false 지정
-			if (i % 3 === 0) {
-				columnLayout[columnLayout.length - 1].style = "readonly-style";
-				columnLayout[columnLayout.length - 1].editable = false;
-			}
-		}
+                    // 3의 배수 칼럼에는 editable : false 지정
+                    if (i % 3 === 0) {
+                        columnLayout[columnLayout.length - 1].style = "readonly-style";
+                        columnLayout[columnLayout.length - 1].editable = false;
+                    }
+                }
 
-		// 그리드 속성 설정
-		const gridProps = {
-			editable: true, // 수정 모드
-			fixedColumnCount: 1,
-			editableOnFixedCell: false,
-			selectionMode: "multipleCells", // 다중셀 선택
-			editingOnKeyDown: true, // 키보드 입력으로 편집 모드 진입 (기본값:true임;)
-			showRowCheckColumn: false,
-			showStateColumn: true,
-			enableSorting: false,
-			skipReadonlyColumns: true, // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-			wrapSelectionMove: true // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-		};
+                // 그리드 속성 설정
+                const gridProps = {
+                    editable: true, // 수정 모드
+                    fixedColumnCount: 1,
+                    editableOnFixedCell: false,
+                    selectionMode: "multipleCells", // 다중셀 선택
+                    editingOnKeyDown: true, // 키보드 입력으로 편집 모드 진입 (기본값:true임;)
+                    showRowCheckColumn: false,
+                    showStateColumn: true,
+                    enableSorting: false,
+                    skipReadonlyColumns: true, // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                    wrapSelectionMove: true // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                };
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                // 실제로 #grid_wrap 에 그리드 생성
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
 
-		// 에디팅 시작 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
-			const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginDesc").textContent = msg;
-		});
+                // 에디팅 시작 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+                    const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginDesc").textContent = msg;
+                });
 
-		// 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
-			const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginEnd").textContent = msg;
-		});
+                // 에디팅 정상 종료 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+                    const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginEnd").textContent = msg;
+                });
 
-		// 에디팅 정상 종료 직전 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
-			// 여기서 반환하는 값이 곧 에디팅 완료 값입니다.
-			// 개발자가 입력한 값을 변경할 수 있습니다.
-			return event.value; // 원래 값으로 적용 시킴
-		});
+                // 에디팅 정상 종료 직전 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditEndBefore", function (event) {
+                    // 여기서 반환하는 값이 곧 에디팅 완료 값입니다.
+                    // 개발자가 입력한 값을 변경할 수 있습니다.
+                    return event.value; // 원래 값으로 적용 시킴
+                });
 
-		// 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
-			const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
-			document.getElementById("editBeginEnd").textContent = msg;
-		});
-	}
+                // 에디팅 취소 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+                    const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+                    document.getElementById("editBeginEnd").textContent = msg;
+                });
+            }
 
-	// 주어진 개수만큼 랜덤 데이터 생성하여 그리드에 삽입
-	function genRandomData(count = 100) {
-		const data = [];
-		for (let i = 1; i <= count; i++) {
-			const row = {};
-			for (let j = 0; j < 26; j++) {
-				row[j] = chars[j] + ", " + i;
-			}
-			data.push(row);
-		}
-		return data;
-	}
+            // 주어진 개수만큼 랜덤 데이터 생성하여 그리드에 삽입
+            function genRandomData(count = 100) {
+                const data = [];
+                for (let i = 1; i <= count; i++) {
+                    const row = {};
+                    for (let j = 0; j < 26; j++) {
+                        row[j] = chars[j] + ", " + i;
+                    }
+                    data.push(row);
+                }
+                return data;
+            }
 
-	function toggleSkipReadonlyColumns() {
-		const isSkip = AUIGrid.getProp(myGridID, "skipReadonlyColumns");
-		// skipReadonlyColumns 속성 토글하기
-		AUIGrid.setProp(myGridID, "skipReadonlyColumns", !isSkip);
-		// 그리드에 포커스 넣기(즉, 현재 체크박스 선택해서 포커스가 체크박스에 놓임)
-		AUIGrid.setFocus(myGridID);
-	}
-</script>
-</head>
-<body>
+            function toggleSkipReadonlyColumns() {
+                const isSkip = AUIGrid.getProp(myGridID, "skipReadonlyColumns");
+                // skipReadonlyColumns 속성 토글하기
+                AUIGrid.setProp(myGridID, "skipReadonlyColumns", !isSkip);
+                // 그리드에 포커스 넣기(즉, 현재 체크박스 선택해서 포커스가 체크박스에 놓임)
+                AUIGrid.setFocus(myGridID);
+            }
+        </script>
+    </head>
+<body class="demo-typography">
 
-<div id="main">
-	<div class="desc">
-		<p>데모는 매 3번째 칼럼에 대해 읽기 전용(editable=false) 로 설정한 모습입니다.(빨강색 스타일 적용된 칼럼)</p>
-		<p>skipReadonlyColumns=true 설정하면 키보드 방향키(또는 Tab, Home, End 등의 이동 역할 키)로 이동 시 칼럼에 editable=false 를 지정한 칼럼은 제외됩니다.</p>
-		<p>즉, 수정 완료를 위해 Tab 키나 방향키를 누른 경우 읽기 전용(editable=false)칼럼은 건너 뛰고 온전한 칼럼으로 이동합니다.</p>
-		<p>wrapSelectionMove = true 설정하여 칼럼의 끝에서 오른쪽 키를 누른 경우 다음 행의 시작 칼럼으로 이동합니다. 이 때 시작 칼럼이 읽기 전용 칼럼인 경우 다음 칼럼에 선택자가 놓입니다.</p>
-		<p><input type="checkbox" id="c1" value="name" checked="checked" onclick="toggleSkipReadonlyColumns()"><label for="c1">skipReadonlyColumns (기본값:false) </label></p>
-	</div>
-	<div>
-		<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-		<div id="grid_wrap" style="width:100%;height:420px; margin:0 auto;"></div>
-	</div>
-	<div class="desc_bottom">
-		<p id="editBeginDesc"></p>
-		<p id="editBeginEnd"></p>
-	</div>
-</div>
+            <div id="main">
+                <div class="desc">
+                    <p>
+                        데모는 매 3번째 칼럼에 대해 읽기 전용(editable=false) 로 설정한 모습입니다.(빨강색 스타일 적용된
+                        칼럼)
+                    </p>
+                    <p>
+                        skipReadonlyColumns=true 설정하면 키보드 방향키(또는 Tab, Home, End 등의 이동 역할 키)로 이동 시
+                        칼럼에 editable=false 를 지정한 칼럼은 제외됩니다.
+                    </p>
+                    <p>
+                        즉, 수정 완료를 위해 Tab 키나 방향키를 누른 경우 읽기 전용(editable=false)칼럼은 건너 뛰고
+                        온전한 칼럼으로 이동합니다.
+                    </p>
+                    <p>
+                        wrapSelectionMove = true 설정하여 칼럼의 끝에서 오른쪽 키를 누른 경우 다음 행의 시작 칼럼으로
+                        이동합니다. 이 때 시작 칼럼이 읽기 전용 칼럼인 경우 다음 칼럼에 선택자가 놓입니다.
+                    </p>
+                    <p>
+                        <input
+                            type="checkbox"
+                            id="c1"
+                            value="name"
+                            checked="checked"
+                            onclick="toggleSkipReadonlyColumns()"
+                        /><label for="c1">skipReadonlyColumns (기본값:false) </label>
+                    </p>
+                </div>
+                <div>
+                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+                    <div id="grid_wrap" style="width: 100%; height: 420px; margin: 0 auto"></div>
+                </div>
+                <div class="desc_bottom">
+                    <p id="editBeginDesc"></p>
+                    <p id="editBeginEnd"></p>
+                </div>
+            </div>
 <div id="footer">
      <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>

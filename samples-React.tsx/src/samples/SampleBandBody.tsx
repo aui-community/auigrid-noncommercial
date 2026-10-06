@@ -7,7 +7,8 @@ import './SampleBandBody.css';
 
 // 파일 저장 도구와 한글 PDF 글꼴의 기준 경로를 연결합니다.
 window.saveAs = FileSaver.saveAs;
-const baseUrl = process.env.PUBLIC_URL || '';
+// 배포 하위 경로에서도 public의 데이터와 이미지에 접근하도록 끝 슬래시를 정리합니다.
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // 레이아웃 모드는 aui-grid의 공식 속성 타입에서 가져옵니다.
 type LayoutMode = NonNullable<IGrid.Props['bodyLayoutMode']>;
@@ -24,13 +25,13 @@ const columnLayout: IGrid.Column[] = [
     {
         dataField: "team",
         headerText: "소속",
-        bodyCell: true,
+        bodyCell: true, // team(소속)도 바디에 출력
         style: "band-basic-team",
         children: [
             {
                 dataField: "name",
                 headerText: "이름",
-                width: 130,
+                width: 130
             },
             {
                 dataField: "position",
@@ -41,7 +42,7 @@ const columnLayout: IGrid.Column[] = [
                         dataField: "age",
                         headerText: "나이",
                         width: 70,
-                        dataType: "numeric",
+                        dataType: "numeric"
                     },
                     {
                         dataField: "birth",
@@ -83,7 +84,8 @@ const columnLayout: IGrid.Column[] = [
 
 const gridProps: IGrid.Props = {
     width: '100%', height: 480,
-    bodyLayoutMode: 'band', rowHeight: 120,
+    bodyLayoutMode: 'band', // 밴드형 바디 레이아웃 설정
+    rowHeight: 120, // 행 높이 지정. (밴드형에 맞게 지정)
     editable: true, selectionMode: 'multipleCells'
 };
 const bodyFields: { field: BodyField; label: string }[] = [
@@ -151,8 +153,9 @@ export default function SampleBandBody() {
         <div>
             <div className="desc">
                 <p>한 행의 데이터를 그룹형 헤더에서 정의한 구조대로 바디에도 표현합니다.</p>
-                <p>bodyLayoutMode: "band"와 원하는 rowHeight를 설정합니다. 이 데모의 행 높이는 120입니다.</p>
-                <p>그룹형 헤더 칼럼에 dataField와 bodyCell: true를 지정하면 해당 값을 상위 바디 셀에 표시합니다.</p>
+                <p>bodyLayoutMode: "band" 설정 그리고 원하는 크기의 rowHeight를 설정하십시오. (데모는 rowHeight: 120 설정)</p>
+                <p>칼럼 레이아웃을 정의할 때 그룹형 헤더는 dataField 설정만으로 해당 값을 표시하지 않습니다. (헤더의 그룹만 형성함)</p>
+                <p>bodyLayoutMode: "band" 설정과 그룹형 헤더 칼럼에 dataField: "team", bodyCell: true를 지정하면 소속(team) 값도 칼럼 레이아웃 구조와 동일하게 바디에 표시됩니다.</p>
                 <p>밴드형에서 체크를 해제하면 해당 상위 바디 셀만 숨깁니다. 전체 칼럼 보기에서는 bodyCell 설정과 관계없이 표시합니다.</p>
                 <p className="band-basic-controls"><strong>상위 바디 셀 표시: </strong>
                     {bodyFields.map(({ field, label }) => <label key={field}>
