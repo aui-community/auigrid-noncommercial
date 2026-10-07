@@ -12,6 +12,10 @@ body.docs-site {
 .docs-site :is(a, button, summary, input):focus-visible { outline: 2px solid var(--docs-blue); outline-offset: 4px; }
 .docs-site :is(h1, h2, h3) { color: var(--docs-ink); }
 .docs-site :is(h1, h2, h3, tr[id], a[name]) { scroll-margin-top: 28px; }
+/* 웹용 헤더는 고정되므로 API 앵커가 메뉴 아래에 가리지 않게 합니다. 패키지 간격은 유지합니다. */
+.docs-website :is(h1, h2, h3, tr[id], a[name]) { scroll-margin-top: 85px; }
+/* 웹 문서의 숨김 제목에는 이전 #title의 여백을 적용하지 않고 본문 배치에서도 제외합니다. */
+.docs-site #title.docs-site-context { position: absolute; width: 1px; height: 1px; margin: 0; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* 홈페이지의 흰색 헤더와 사각 로고를 사용하고 문서 제목이 함께 들어갈 여백을 둡니다. */
 .docs-header { border-bottom: 1px solid var(--docs-line); background: var(--docs-background); }
 .docs-header-inner { max-width: 1600px; min-height: 80px; margin: auto; padding: 16px 32px; display: flex; align-items: center; gap: 24px; }
@@ -19,6 +23,10 @@ body.docs-site {
 .docs-brand img { display: block; width: 40px; height: 40px; }
 .docs-brand > span { display: flex; flex-direction: column; gap: 3px; font-size: 24px; font-weight: 800; line-height: 1.05; }
 .docs-brand small { color: var(--docs-muted); font-size: 12px; font-weight: 600; }
+/* 패키지 문서는 회사 메뉴 없이 로고와 제품 제목을 연결하고 좁은 화면에서는 제목만 줄바꿈합니다. */
+.docs-site #logo-bar.docs-package-brand { min-width: 0; max-width: 100%; }
+.docs-package-brand img { flex-shrink: 0; }
+.docs-site #title.docs-package-title { display: block; min-width: 0; padding: 0; color: var(--docs-charcoal); font-size: 26px; font-weight: 700; line-height: 1.25; }
 .docs-site #title.docs-context { padding: 0 0 0 24px; display: block; border-left: 1px solid var(--docs-line); font-size: 14px; color: var(--docs-muted); font-weight: 500; line-height: 1.5; }
 .docs-navigation { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 .docs-navigation a, .docs-mobile-navigation a { padding: 9px 12px; border-radius: 6px; white-space: nowrap; font-size: 14px; font-weight: 600; color: var(--docs-ink); text-decoration: none; }
@@ -68,7 +76,6 @@ body.docs-site {
 /* 홈은 목차 1~8의 내용과 순서를 유지하며 각 문서의 시작점을 넉넉한 클릭 영역으로 제공합니다. */
 .docs-home-intro { background: var(--docs-surface); border-bottom: 1px solid var(--docs-line); }
 .docs-home-intro-inner { max-width: 1200px; margin: auto; padding: 48px 0 32px; }
-body.docs-home p.docs-eyebrow { margin: 0 0 12px; color: var(--docs-blue); font-weight: 700; }
 body.docs-home h1 { margin: 0 0 12px; }
 body.docs-home p.docs-lead { margin: 0; color: var(--docs-muted); }
 .docs-products { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
@@ -128,4 +135,7 @@ body.docs-home .docs-related p:last-child { margin: 0; }
     /* 이전 표에 thead가 없는 경우에도 세로로 쌓인 API 카드 위의 열 제목을 숨깁니다. */
     .docs-site #summaryTableStyle tr:first-child:not([id]) { display: none; }
     .docs-site #summaryTableStyle td + td { border-top: 0; padding-top: 0; }
+}
+@media (max-width: 420px) {
+    .docs-site #title.docs-package-title { font-size: 23px; }
 }

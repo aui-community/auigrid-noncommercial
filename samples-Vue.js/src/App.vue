@@ -115,8 +115,8 @@ const keyword = computed(() => query.value.trim().toLocaleLowerCase());
 const matches = (item) => item.text.toLocaleLowerCase().includes(keyword.value) || item.name.toLocaleLowerCase().includes(keyword.value);
 const currentMenu = computed(() => [...mainMenuList, ...subMenuList].find(item => item.path.toLowerCase() === route.path.toLowerCase()));
 const isHome = computed(() => route.path === '/');
-const category = computed(() => isHome.value ? 'HOME' : (currentMenu.value && mainMenuList.includes(currentMenu.value)) ? '쇼케이스' : '샘플');
-const pageTitle = computed(() => isHome.value ? 'AUIGrid 데모 라이브러리' : currentMenu.value?.text || 'AUIGrid 데모');
+const category = computed(() => (currentMenu.value && mainMenuList.includes(currentMenu.value)) ? '쇼케이스' : '샘플');
+const pageTitle = computed(() => currentMenu.value?.text || 'AUIGrid 데모');
 const resultCount = computed(() => [...mainMenuList, ...subMenuList].filter(matches).length);
 const closeNavigation = () => { isNavOpen.value = false; };
 const closeOnEscape = (event) => { if (event.key === 'Escape') closeNavigation(); };
@@ -137,7 +137,6 @@ onUnmounted(() => { window.removeEventListener('resize', closeNavigation); windo
             <div class="sample-logo-bar">
                 <button type="button" class="sample-menu-toggle" aria-label="데모 메뉴" aria-controls="sample-nav" :aria-expanded="isNavOpen" @click="isNavOpen = !isNavOpen"><span class="sample-menu-icon"></span></button>
                 <RouterLink class="sample-brand" to="/" aria-label="AUIGrid HOME"><span class="sample-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sample-brand-text"><strong>AUIGrid</strong><span>JavaScript 데이터 그리드</span></span></RouterLink>
-                <span class="sample-header-label">Vue 데모</span>
             </div>
             <nav class="sample-header-links" aria-label="제품 안내"><a href="https://www.auisoft.net/documentation/auigrid/">문서</a><a href="https://www.auisoft.net/price.html">라이선스</a><a href="https://www.auisoft.net/dcenter.html" class="btn sample-trial">평가판 다운로드</a></nav>
         </header>
@@ -154,7 +153,8 @@ onUnmounted(() => { window.removeEventListener('resize', closeNavigation); windo
             </div>
         </nav>
         <main id="sample-main" class="sample-main" tabindex="-1">
-            <div class="sample-page-heading"><div><div class="sample-breadcrumb"><RouterLink to="/">데모</RouterLink><span aria-hidden="true">/</span><span>{{ category }}</span></div><h1>{{ pageTitle }}</h1></div><button v-if="!isHome && currentMenu" type="button" class="sample-source-open" @click="sourceOpen = true"><span aria-hidden="true">&lt;/&gt;</span> 소스 보기</button></div>
+            <!-- HOME은 소개 제목을 사용하므로 경로와 중복 제목 영역 없이 콘텐츠부터 표시합니다. -->
+            <div v-if="!isHome" class="sample-page-heading"><div><div class="sample-breadcrumb"><RouterLink to="/">데모</RouterLink><span aria-hidden="true">/</span><span>{{ category }}</span></div><h1>{{ pageTitle }}</h1></div><button v-if="currentMenu" type="button" class="sample-source-open" @click="sourceOpen = true"><span aria-hidden="true">&lt;/&gt;</span> 소스 보기</button></div>
             <div v-if="!isHome" class="sample-preview-toolbar"><span class="sample-preview-label"><i aria-hidden="true"></i>실행 화면</span><span class="sample-framework-label">Vue</span></div>
             <div class="view-content sample-view" :class="{ 'sample-view--home': isHome }">
 <RouterView />

@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
-	 * AUIGrid.vue for Vue.js + Typescript v1.6.20261006
-	 * Based on AUIGrid v3.0.19.0
+	 * AUIGrid.vue for Vue.js + Typescript v1.6.20261007
+	 * Based on AUIGrid v3.0.19.1
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */
@@ -1066,7 +1066,8 @@
 		readonly version: string;
 		readonly releaseDate: string;
 		isCreated: () => boolean;
-		getPluginRuntime: (apiVersion: 1) => IGrid.PluginRuntimeV1;
+		// 제공 보류 중에는 항상 오류를 던지므로 반환값이 없습니다. 재개 시 npm의 공용 런타임 타입도 함께 연결합니다.
+		getPluginRuntime: (apiVersion: 1) => never;
 		formatDate: (date: string | Date, formatString: string) => string;
 		formatNumber: (number: number, formatString: string, rounding?: 'round' | 'ceil' | 'floor' | 'rounding') => string;
 		getActiveGrid: () => string | null;

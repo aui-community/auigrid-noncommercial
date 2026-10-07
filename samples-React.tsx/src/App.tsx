@@ -69,8 +69,8 @@ function DemoShell() {
     const matches = (item: IMenuItem) => item.text.toLocaleLowerCase().includes(keyword) || item.name.toLocaleLowerCase().includes(keyword);
     const currentMenu = [...mainMenuList, ...subMenuList].find(item => item.path.toLowerCase() === pathname.toLowerCase());
     const isHome = pathname === '/';
-    const category = isHome ? 'HOME' : (currentMenu && mainMenuList.includes(currentMenu)) ? '쇼케이스' : '샘플';
-    const pageTitle = isHome ? 'AUIGrid 데모 라이브러리' : currentMenu?.text || 'AUIGrid 데모';
+    const category = (currentMenu && mainMenuList.includes(currentMenu)) ? '쇼케이스' : '샘플';
+    const pageTitle = currentMenu?.text || 'AUIGrid 데모';
     const resultCount = [...mainMenuList, ...subMenuList].filter(matches).length;
 
     // 뒤로/앞으로 이동에서도 소스 창과 모바일 메뉴가 이전 페이지에 남지 않습니다.
@@ -97,7 +97,6 @@ function DemoShell() {
                         <span className="sample-brand-mark" aria-hidden="true"><i /><i /><i /><i /></span>
                         <span className="sample-brand-text"><strong>AUIGrid</strong><span>JavaScript 데이터 그리드</span></span>
                     </NavLink>
-                    <span className="sample-header-label">React + TypeScript 데모</span>
                 </div>
                 <nav className="sample-header-links" aria-label="제품 안내">
                     <a href="https://www.auisoft.net/documentation/auigrid/">문서</a>
@@ -121,10 +120,13 @@ function DemoShell() {
                 </div>
             </nav>
             <main id="sample-main" className="sample-main" tabIndex={-1}>
-                <div className="sample-page-heading">
-                    <div><div className="sample-breadcrumb"><NavLink to="/">데모</NavLink><span aria-hidden="true">/</span><span>{category}</span></div><h1>{pageTitle}</h1></div>
-                    {!isHome && currentMenu && <button type="button" className="sample-source-open" onClick={() => setSourceOpen(true)}><span aria-hidden="true">&lt;/&gt;</span> 소스 보기</button>}
-                </div>
+                {/* HOME은 소개 제목을 사용하므로 경로와 중복 제목 영역 없이 콘텐츠부터 표시합니다. */}
+                {!isHome && (
+                    <div className="sample-page-heading">
+                        <div><div className="sample-breadcrumb"><NavLink to="/">데모</NavLink><span aria-hidden="true">/</span><span>{category}</span></div><h1>{pageTitle}</h1></div>
+                        {currentMenu && <button type="button" className="sample-source-open" onClick={() => setSourceOpen(true)}><span aria-hidden="true">&lt;/&gt;</span> 소스 보기</button>}
+                    </div>
+                )}
                 {!isHome && <div className="sample-preview-toolbar"><span className="sample-preview-label"><i aria-hidden="true" />실행 화면</span><span className="sample-framework-label">React + TypeScript</span></div>}
                 <div className={`view-content sample-view${isHome ? ' sample-view--home' : ''}`}>
                     <Routes>

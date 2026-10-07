@@ -25,6 +25,8 @@ type GridPort = Pick<
     | 'getGridData'
     | 'isCreated'
     | 'resize'
+    // 병합 표시 전환에서 호출하는 래퍼 메소드도 이 모델의 계약에 포함합니다.
+    | 'setCellMerge'
     | 'setFilter'
     | 'setFixedColumnCount'
     | 'setGridData'

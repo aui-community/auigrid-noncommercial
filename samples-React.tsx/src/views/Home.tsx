@@ -20,7 +20,7 @@ const Home = () => {
 			{/* 설치 명령은 기존 코드 복사 도구를 재사용하여 안내합니다. */}
 			<div className="home-install">
 				<div className="home-install-title">터미널</div>
-				<CodeBlock language="none">npm install aui-grid@2.0.18</CodeBlock>
+				<CodeBlock language="none">npm install aui-grid@latest</CodeBlock>
 			</div>
 			{/* 의존성 안내를 독립된 카드로 구성하고 두 종류가 있으면 나란히 표시합니다. */}
 			<div className="home-dependencies">
@@ -28,7 +28,7 @@ const Home = () => {
 					<h2>Dependencies</h2>
 					<ul>
 						<li>
-						<strong>aui-grid</strong>: ^2.0.18
+						<strong>aui-grid</strong>: latest
 						</li>
 						<li>
 						<strong>axios</strong>: ^1.0.0

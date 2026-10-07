@@ -17,7 +17,7 @@
 		<!-- 설치 명령은 기존 코드 복사 도구를 재사용하여 안내합니다. -->
 		<div class="home-install">
 			<div class="home-install-title">터미널</div>
-			<CodeBlock language="none" code="npm install aui-grid@2.0.18" />
+			<CodeBlock language="none" code="npm install aui-grid@latest" />
 		</div>
 		<!-- 의존성 안내를 독립된 카드로 구성하고 두 종류가 있으면 나란히 표시합니다. -->
 		<div class="home-dependencies">
@@ -34,7 +34,7 @@
 				<h2>Dev Dependencies</h2>
 				<ul>
 					<li><strong>@vitejs/plugin-vue</strong>: ^5.0.5</li>
-					<li><strong>aui-grid</strong>: ^2.0.18</li>
+					<li><strong>aui-grid</strong>: latest</li>
 					<li><strong>typescript</strong>: ~5.4.0</li>
 					<li><strong>vite</strong>: ^5.3.1</li>
 					<li><strong>vue-tsc</strong>: ^2.0.21</li>

@@ -1,68 +1,186 @@
-﻿AUIGrid 사용 방법 및 샘플 실행 방법
+﻿AUIGrid 설치 및 샘플 실행 안내
+
+이 안내는 정품, 평가판, 비상업용 패키지에 공통으로 적용됩니다.
+아래의 "패키지 루트"는 이 파일과 index.html, AUIGrid 폴더가 있는 위치입니다.
 
 --------------------------------------------------------------------------------
-1 AUIGrid 사용 방법
+1. 패키지 구성
 
-- AUIGridLicense.js, AUIGrid.js, AUIGrid_style.css 포함
-- HTML에 다음과 같이 삽입
+- index.html             : 전체 JavaScript 데모 목록과 실행 안내
+- AUIGrid/               : 제품 엔진, 테마 CSS, 이미지 및 렌더러 관련 파일
+- AUIGrid-React/         : React용 JavaScript 및 TypeScript 래퍼 컴포넌트
+- AUIGrid-Vue/           : Vue용 JavaScript 및 TypeScript 래퍼 컴포넌트
+- documentation/        : 개발 문서. index.html에서 시작
+- samples/              : 개별 JavaScript 데모와 데이터, 데모 화면용 자원
+- samples-React.js/     : React + JavaScript + Vite 예제 프로젝트
+- samples-React.tsx/    : React + TypeScript + Vite 예제 프로젝트
+- samples-Vue.js/       : Vue 3 + JavaScript + Vite 예제 프로젝트
+- samples-Vue.ts/       : Vue 3 + TypeScript + Vite 예제 프로젝트
+- export_server_samples/: 내보내기 서버 예제(PHP, JSP, ASP, ASP.NET) 및 파일 저장 도구
+- pdfkit/                : PDF 내보내기 라이브러리, 글꼴 및 사용 설명서
 
-```
-<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
-<script src="./AUIGrid/AUIGridLicense.js"></script>
-<!-- AUIGrid 라이브러리 메인 JS -->
-<script src="./AUIGrid/AUIGrid.js"></script>
-<!-- AUIGrid CSS 테마 파일 (원하는 테마로 변경 가능) -->
-<link rel="stylesheet" href="./AUIGrid/AUIGrid_style.css" />
-```
-
---------------------------------------------------------------------------------
-2 폴더 구조
-
-제품 패키지를 압축을 해제하면 다음 디렉토리가 보입니다.
-- AUIGrid: AUIGrid 라이브러리와 스타일(css)
-- AUIGrid-React: React.js용 서브 컴포넌트
-- AUIGrid-Vue: Vue.js용 서브 컴포넌트
-- documentation: 공식 문서 (index.html 포함)
-- export_server_samples: 서버 내보내기 샘플(PHP, JSP, ASP)
-- pdfkit: PDF 출력용 라이브러리
-- samples: JavaScript 샘플
-- samples-React.js: React 샘플
-- samples-React.tsx: React + TypeScript 샘플
-- samples-Vue.js: Vue 샘플
-- samples-Vue.ts: Vue + TypeScript 샘플
+JavaScript 데모 목록은 패키지 루트의 index.html입니다.
+samples/index.html을 실행하는 구조가 아닙니다.
 
 --------------------------------------------------------------------------------
-3 일반 JS 샘플 실행 방법
+2. 라이선스 준비
 
-	3.1. 제품 패키지를 압축을 해제한 후 웹 서버에 FTP 또는 파일 복사 방식으로 업로드합니다.
-	3.2. /samples 또는 /documentation 폴더의 index.html을 브라우저로 실행합니다.
-	3.3. AUIGrid 샘플 기능을 바로 확인하고 테스트할 수 있습니다.
+AUIGridLicense.js는 AUIGrid.js보다 먼저 불러와야 합니다.
+사용하는 판본과 접속 주소에 맞는 라이선스를 준비하십시오.
+
+[정품]
+- 구매 후 발급받은 AUIGridLicense.js를 패키지의 AUIGrid/ 폴더에 넣습니다.
+- 라이선스에 등록된 접속 도메인 또는 IP로 실행합니다.
+
+[평가판]
+- 평가판용 AUIGrid.js와 발급받은 AUIGridLicense.js를 함께 사용합니다.
+- AUIGridLicense.js를 패키지의 AUIGrid/ 폴더에 넣고, 평가판 신청 시 지정한
+  접속 도메인 또는 IP로 실행합니다.
+- 정품과 동일한 기능으로 사전 평가, 적합성 검토(PoC) 및 테스트를 할 수 있으며,
+  제공 기간은 30일입니다.
+
+[비상업용]
+- 패키지에 포함된 AUIGridLicense.js를 사용합니다.
+- 비상업용 목적의 localhost 또는 127.0.0.1 환경에서 사용할 수 있습니다.
+- 위 로컬 주소 이외의 접속 도메인이나 IP에서 확인하려면 30일 평가판을 이용하십시오.
+  다운로드: https://www.auisoft.net/dcenter.html
 
 --------------------------------------------------------------------------------
-4 Vue, React 샘플 실행 방법
+3. JavaScript 데모 실행
 
-	샘플에는 src/static/AUIGrid 폴더를 포함하지 않습니다.
-	실행 전에 제품 패키지의 AUIGrid 폴더를 각 샘플의 src/static/ 아래로 복사하십시오.
-	사용할 AUIGridLicense.js도 복사한 AUIGrid 폴더에 넣은 뒤 아래 명령을 실행합니다.
-	TypeScript 샘플의 타입은 package.json에 지정된 aui-grid 패키지로 설치됩니다.
+1) 압축을 해제한 뒤 2번 안내에 따라 라이선스를 준비합니다.
+2) 패키지 전체를 웹 서버에서 제공할 폴더에 배치합니다.
+   index.html만 따로 옮기지 말고 AUIGrid/, samples/ 등 상대 경로를 유지합니다.
+3) 브라우저에서 http:// 또는 https:// 주소로 패키지 루트의 index.html에 접속합니다.
+   데모 목록에서 원하는 항목을 선택하면 samples/의 개별 데모가 열립니다.
+4) 개발 문서는 같은 서버의 documentation/index.html에서 확인합니다.
 
-	4.1. samples-React.js
-	   - 프레임워크: React (JS 기반)
-	   - 빌드 도구: CRA
-	   - 실행 명령어:  
-	     npm install && npm start
-	4.2. samples-React.tsx
-	   - 프레임워크: React + TypeScript
-	   - 빌드 도구: CRA
-	   - 실행 명령어:  
-	     npm install && npm start
-	4.3. samples-Vue.js
-	   - 프레임워크: Vue 3 (Vue CLI)
-	   - 빌드 도구: Vue CLI
-	   - 실행 명령어:  
-	     npm install && npm run serve
-	4.4. samples-Vue.ts
-	   - 프레임워크: Vue 3 + TypeScript
-	   - 빌드 도구: Vite
-	   - 실행 명령어:  
-	     npm install && npm run dev
+파일 탐색기에서 HTML을 더블 클릭하여 file:// 주소로 실행하지 마십시오.
+라이선스 확인과 데모 데이터 요청을 위해 웹 서버를 통해 접속해야 합니다.
+일반 JavaScript 데모를 열 때 React/Vue 의존성을 설치할 필요는 없습니다.
+
+[로컬 웹 서버 실행 예시]
+localhost 또는 127.0.0.1 접속을 허용하는 라이선스를 사용하는 경우의 예시입니다.
+Python 3가 설치되어 있다면 패키지 루트에서 다음 명령을 실행할 수 있습니다.
+
+    python -m http.server 8080 --bind 127.0.0.1
+
+환경에 따라 python 대신 python3 또는 py -3 명령을 사용합니다.
+이미 사용하는 웹 서버나 개발 도구의 로컬 서버를 이용해도 됩니다.
+
+- 데모 목록: http://127.0.0.1:8080/index.html
+- 개발 문서: http://127.0.0.1:8080/documentation/index.html
+
+위 주소는 패키지 루트를 웹 서버의 루트로 지정한 예시입니다.
+하위 경로에 배치했다면 해당 경로를 포함한 URL로 접속하십시오.
+PHP, JSP, ASP, ASP.NET 등의 서버 처리를 사용하는 예제는 해당 서버 실행 환경과
+예제의 요청 경로 설정이 필요합니다. 단순 정적 서버에서는 서버 코드를 실행하지 않습니다.
+
+--------------------------------------------------------------------------------
+4. React 및 Vue 샘플 실행
+
+네 프로젝트는 모두 Vite를 사용합니다.
+공통 실행 환경으로 Node.js 22.12 이상과 npm을 준비하십시오.
+
+[실행 전 파일 준비]
+배포된 네 프로젝트에는 src/static/AUIGrid/ 폴더를 포함하지 않습니다.
+실행할 프로젝트마다 패키지 루트의 AUIGrid/ 폴더 전체를 src/static/ 아래로 복사합니다.
+2번에서 준비한 라이선스도 함께 복사되었는지 확인하십시오.
+
+예: React TypeScript 샘플
+    samples-React.tsx/src/static/AUIGrid/AUIGrid.js
+    samples-React.tsx/src/static/AUIGrid/AUIGridLicense.js
+    samples-React.tsx/src/static/AUIGrid/AUIGrid_style.css
+    samples-React.tsx/src/static/AUIGrid/images/...
+
+JS, CSS뿐 아니라 CSS에서 참조하는 이미지와 하위 폴더도 함께 유지합니다.
+이 위치는 제공된 샘플의 import 경로입니다. 직접 만드는 프로젝트에서는 원하는 위치에
+파일을 배치하고, 그 위치에 맞춰 import 또는 HTML의 src/href 경로를 지정하면 됩니다.
+
+[개발 서버 실행]
+실행할 샘플을 하나 선택하여 해당 폴더에서 의존성을 설치하고 개발 서버를 시작합니다.
+아래 명령의 cd는 패키지 루트에서 실행하는 예시입니다.
+
+React + JavaScript:
+    cd samples-React.js
+    npm install
+    npm run dev
+
+React + TypeScript:
+    cd samples-React.tsx
+    npm install
+    npm run dev
+
+Vue 3 + JavaScript:
+    cd samples-Vue.js
+    npm install
+    npm run dev
+
+Vue 3 + TypeScript:
+    cd samples-Vue.ts
+    npm install
+    npm run dev
+
+서버가 시작되면 터미널에 표시되는 Local 주소를 브라우저로 엽니다.
+기본 포트가 사용 중이면 포트가 달라질 수 있으므로 표시된 주소를 사용하십시오.
+각 프로젝트에 설정된 기본 경로는 다음과 같습니다.
+
+- samples-React.js  : /demo/auigrid-react/
+- samples-React.tsx : /demo/auigrid-react-tsx/
+- samples-Vue.js    : /demo/auigrid-vue/
+- samples-Vue.ts    : /demo/auigrid-vue-ts/
+
+[TypeScript]
+두 TypeScript 프로젝트는 npm의 aui-grid 패키지에서 타입 정의와 렌더러 및 이벤트
+상수를 가져옵니다. npm install을 실행하면 다른 의존성과 함께 설치됩니다.
+aui-grid 패키지는 제품 엔진과 라이선스를 대신하지 않으므로 위 파일 준비도 필요합니다.
+
+[빌드 및 미리보기]
+실행할 프로젝트 폴더에서 다음 명령을 사용합니다.
+
+    npm run build
+    npm run preview
+
+React 두 프로젝트의 결과는 build/, Vue 두 프로젝트의 결과는 dist/에 생성됩니다.
+TypeScript 프로젝트의 build 명령에는 타입 검사가 포함됩니다.
+미리보기는 터미널에 표시되는 주소로 접속합니다.
+
+실제 웹 서버에 배포할 때는 빌드 결과 폴더의 내용을 vite.config.*의 base 경로에 배치합니다.
+배포 경로를 바꾸려면 base를 수정한 뒤 다시 빌드하십시오.
+개별 데모 주소를 직접 열거나 새로고침할 때도 앱이 열리도록 해당 앱 경로의 요청을
+index.html로 연결하는 SPA 대체 경로 설정이 필요합니다.
+
+--------------------------------------------------------------------------------
+5. 직접 만드는 웹 페이지에 적용
+
+아래는 HTML의 head에서 제품 파일을 연결하는 예시입니다.
+./AUIGrid/는 예시 경로이며 실제 파일을 배치한 위치에 맞춰 변경하십시오.
+
+    <!-- 라이선스를 제품 엔진보다 먼저 불러옵니다. -->
+    <script src="./AUIGrid/AUIGridLicense.js"></script>
+    <script src="./AUIGrid/AUIGrid.js"></script>
+    <link rel="stylesheet" href="./AUIGrid/AUIGrid_style.css" />
+
+CSS와 참조 이미지의 상대 경로를 유지하십시오.
+그리드 영역 생성과 데이터 연결은 documentation/Desc/quick-start.html을 참고하십시오.
+React와 Vue 프로젝트는 함께 제공된 래퍼 및 각 샘플 HOME의 HOW TO CODE를 참고하십시오.
+
+--------------------------------------------------------------------------------
+6. 실행이 안 될 때 확인할 사항
+
+["unauthorized hosts for AUIGrid" 메시지가 표시되는 경우]
+- file://로 열었다면 웹 서버를 실행하고 http:// 또는 https://로 접속합니다.
+- 브라우저 주소의 도메인 또는 IP가 라이선스에 등록된 주소인지 확인합니다.
+- 비상업용이면 localhost 또는 127.0.0.1로 접속했는지 확인합니다.
+- AUIGridLicense.js의 경로와 로딩 순서, 사용 중인 판본에 맞는 파일인지 확인합니다.
+
+[제품 파일을 찾지 못하거나 화면이 나오지 않는 경우]
+- 브라우저 개발자 도구의 Network 및 Console에서 파일 요청 실패와 오류를 확인합니다.
+- AUIGrid.js, AUIGridLicense.js, CSS와 참조 이미지의 경로 및 파일명 대소문자를 확인합니다.
+- React/Vue 샘플은 src/static/AUIGrid/에 제품 폴더를 복사했는지 확인합니다.
+- npm install 및 npm run dev는 해당 프로젝트의 package.json이 있는 폴더에서 실행합니다.
+- 평가판은 발급받은 접속 주소와 사용 기간을 확인합니다.
+
+개발 문서: https://www.auisoft.net/documentation/auigrid/index.html
+데모: https://www.auisoft.net/demo/auigrid/index.html
+평가판 다운로드: https://www.auisoft.net/dcenter.html

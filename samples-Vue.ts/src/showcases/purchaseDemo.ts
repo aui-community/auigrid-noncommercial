@@ -42,8 +42,8 @@ export var gridProps: IGrid.Props = {
 var stageNames = ['접수', '검토', '결재', '발주'];
 
 
-// npm 2.0.18의 Filter 타입을 확장해 3.0.19 엔진의 날짜 트리 펼침 설정을 전달합니다.
-var dateFilter: NonNullable<IGrid.Column['filter']> & { expandAll: boolean } = { showIcon: true, type: 'date', expandAll: true };
+// npm의 공식 필터 타입으로 날짜 트리의 전체 펼침 옵션을 지정합니다.
+var dateFilter: NonNullable<IGrid.Column['filter']> = { showIcon: true, type: 'date', expandAll: true };
 function escapeLabel(value: unknown) {
     var escapes: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
     return String(value).replace(/[&<>"']/g, function (character) { return escapes[character]; });

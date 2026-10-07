@@ -8,7 +8,7 @@
 		"@types/react": "^18.0.21",
 		"@types/react-dom": "^18.0.6",
 		"@types/react-router-dom": "^5.3.3",
-		"aui-grid": "^2.0.18",
+		"aui-grid": "latest",
 		"axios": "^1.0.0",
 		"file-saver": "^2.0.5",
 		"prismjs": "^1.30.0",

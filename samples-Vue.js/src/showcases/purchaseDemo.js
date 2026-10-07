@@ -12,7 +12,7 @@ export var gridProps = {
     noDataMessage: '이 상태에 해당하는 요청이 없습니다.'
 };
 var stageNames = ['접수', '검토', '결재', '발주'];
-// npm 2.0.18의 Filter 타입을 확장해 3.0.19 엔진의 날짜 트리 펼침 설정을 전달합니다.
+// 날짜 필터 메뉴를 열 때 전체 트리를 펼쳐 표시합니다.
 var dateFilter = { showIcon: true, type: 'date', expandAll: true };
 function escapeLabel(value) {
     var escapes = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
