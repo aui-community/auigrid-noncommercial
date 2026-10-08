@@ -137,6 +137,8 @@ onUnmounted(() => { window.removeEventListener('resize', closeNavigation); windo
             <div class="sample-logo-bar">
                 <button type="button" class="sample-menu-toggle" aria-label="데모 메뉴" aria-controls="sample-nav" :aria-expanded="isNavOpen" @click="isNavOpen = !isNavOpen"><span class="sample-menu-icon"></span></button>
                 <RouterLink class="sample-brand" to="/" aria-label="AUIGrid HOME"><span class="sample-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sample-brand-text"><strong>AUIGrid</strong><span>JavaScript 데이터 그리드</span></span></RouterLink>
+                <!-- 프레임워크 제목은 HOME과 개별 데모 화면 모두에서 로고 옆에 유지합니다. -->
+                <h1 class="sample-home-title">AUIGrid for Vue 3</h1>
             </div>
             <nav class="sample-header-links" aria-label="제품 안내"><a href="https://www.auisoft.net/documentation/auigrid/">문서</a><a href="https://www.auisoft.net/price.html">라이선스</a><a href="https://www.auisoft.net/dcenter.html" class="btn sample-trial">평가판 다운로드</a></nav>
         </header>
@@ -153,7 +155,7 @@ onUnmounted(() => { window.removeEventListener('resize', closeNavigation); windo
             </div>
         </nav>
         <main id="sample-main" class="sample-main" tabindex="-1">
-            <!-- HOME은 소개 제목을 사용하므로 경로와 중복 제목 영역 없이 콘텐츠부터 표시합니다. -->
+            <!-- HOME 제목은 상단에 표시하므로 본문에는 경로와 중복 제목 영역을 만들지 않습니다. -->
             <div v-if="!isHome" class="sample-page-heading"><div><div class="sample-breadcrumb"><RouterLink to="/">데모</RouterLink><span aria-hidden="true">/</span><span>{{ category }}</span></div><h1>{{ pageTitle }}</h1></div><button v-if="currentMenu" type="button" class="sample-source-open" @click="sourceOpen = true"><span aria-hidden="true">&lt;/&gt;</span> 소스 보기</button></div>
             <div v-if="!isHome" class="sample-preview-toolbar"><span class="sample-preview-label"><i aria-hidden="true"></i>실행 화면</span><span class="sample-framework-label">Vue</span></div>
             <div class="view-content sample-view" :class="{ 'sample-view--home': isHome }">

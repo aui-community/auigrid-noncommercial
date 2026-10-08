@@ -73,7 +73,7 @@ body.docs-site {
 .docs-site.mcp-guide td, .docs-site.mcp-guide th { border-color: var(--docs-line); }
 .docs-site .docs-footer { max-width: 1200px; padding: 24px 0 32px; margin: 48px auto 0; border-top: 1px solid var(--docs-line); display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 13px; color: var(--docs-muted); }
 .docs-footer > div { display: flex; flex-wrap: wrap; gap: 20px; }
-/* 홈은 목차 1~8의 내용과 순서를 유지하며 각 문서의 시작점을 넉넉한 클릭 영역으로 제공합니다. */
+/* 홈은 목차의 내용과 순서를 유지하며 각 문서의 시작점을 넉넉한 클릭 영역으로 제공합니다. */
 .docs-home-intro { background: var(--docs-surface); border-bottom: 1px solid var(--docs-line); }
 .docs-home-intro-inner { max-width: 1200px; margin: auto; padding: 48px 0 32px; }
 body.docs-home h1 { margin: 0 0 12px; }
@@ -90,6 +90,12 @@ body.docs-home .main_ul > li { counter-increment: doc-chapter; margin: 0; font-s
 .docs-chapters a:hover { border-color: var(--docs-blue); background: var(--docs-surface); text-decoration: none; }
 .docs-chapters strong { display: block; font-size: 18px; font-weight: 600; }
 .docs-chapters small { display: block; color: var(--docs-muted); font-size: 14px; line-height: 1.6; margin-top: 5px; }
+/* 자주 사용하는 개발 API 문서는 같은 목차 안에서 색과 표식으로 강조합니다. 키보드 포커스도 동일하게 표시합니다. */
+.docs-chapter-api > a { border-color: var(--docs-blue); background: #edf5fc; box-shadow: inset 3px 0 0 var(--docs-blue); }
+.docs-chapter-api > a:hover, .docs-chapter-api > a:focus-visible { border-color: var(--docs-blue-dark); background: #e2effa; }
+.docs-chapter-api strong { color: var(--docs-blue-dark); font-weight: 700; }
+.docs-chapter-api > a::after { color: var(--docs-blue-dark); font-weight: 700; }
+.docs-chapters .docs-chapter-badge { display: inline-block; margin-bottom: 6px; padding: 3px 8px; border-radius: 4px; background: var(--docs-blue); color: #fff; font-size: 12px; font-weight: 700; line-height: 1.5; }
 .docs-related { margin-top: 28px; padding: 20px 24px; background: var(--docs-surface); border: 1px solid var(--docs-line); border-radius: 12px; }
 body.docs-home .docs-related p { margin: 0 0 8px; }
 body.docs-home .docs-related p:last-child { margin: 0; }

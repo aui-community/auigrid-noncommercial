@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Vue 3 JavaScript와 TypeScript에서 AUIGrid를 사용하는 방법입니다. ref, 이벤트, KeepAlive와 컴포넌트 생명주기를 안내합니다.">
+  <title>Vue 및 TypeScript에서 사용하기 | AUIGrid v3.0.19 Documentation</title>
+  <link rel="stylesheet" href="../static/prism.css">
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="../static/typography.css">
+  <link rel="stylesheet" href="../static/code-examples.css">
+  <link rel="stylesheet" href="../static/mcp-guide.css">
+  <script src="../static/prism.js" data-manual></script>
+  <script src="../static/prism-typescript.min.js"></script>
+  <script src="../static/code-examples.js"></script>
+
+<link rel="icon" href="../static/favicon.ico" sizes="any">
+<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
+<meta name="theme-color" content="#222729">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../static/docs-brand.css">
+</head>
+<body class="demo-typography mcp-guide docs-site">
+  <!-- Vue 코드도 실행하지 않고 공통 코드 뷰어의 원문으로 표시합니다. -->
+  <header class="docs-header"><div class="docs-header-inner">
+    <a id="logo-bar" class="docs-brand docs-package-brand" href="../index.html" aria-label="AUIGrid 문서 홈">
+      <img src="../static/favicon.svg" width="40" height="40" alt="">
+      <span id="title" class="docs-package-title">AUIGrid v3.0.19 Documentation</span>
+    </a>
+  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">7.3 Vue에서 사용하기</span></nav>
+  <main class="MainContent">
+    <h1>7.3 Vue에서 사용하기</h1>
+    <p>Vue 3 JavaScript와 TypeScript의 <code>script setup</code> 예제입니다.
+      제품 파일 준비는 <a href="frameworks.html#prepare">공통 안내</a>를 참고하십시오.
+      예제 파일을 <code>src/samples/</code>에 둘 때의 상대 import 경로를 사용하므로 별도의 <code>@</code> 별칭은 필요하지 않습니다.</p>
+    <nav class="mcp-toc" aria-label="이 페이지 목차">
+      <a href="#javascript">JavaScript</a><a href="#typescript">TypeScript</a><a href="#events">메서드와 이벤트</a>
+      <a href="#lifecycle">생명주기 및 KeepAlive</a><a href="component-props.html">컴포넌트 속성</a><a href="frameworks.html">공통 안내</a>
+    </nav>
+
+    <h2 id="javascript">7.3.1 JavaScript로 그리드 생성하기</h2>
+    <p><code>AUIGrid.vue</code>를 import하고 <code>:columnLayout</code>과 <code>:gridProps</code>로 설정을 전달합니다.
+      숫자, Boolean, 배열 및 객체를 전달할 때에는 <code>:</code> 바인딩을 사용하십시오.</p>
+    <pre><code class="language-html">&lt;script setup&gt;
+import { ref, onMounted } from 'vue';
+import AUIGrid from '../static/AUIGrid-Vue.js/AUIGrid.vue';
+
+const gridRef = ref(null);
+const columns = [
+  { dataField: 'name', headerText: '품목', width: 200 },
+  { dataField: 'quantity', headerText: '수량', dataType: 'numeric' }
+];
+const props = { width: '100%', height: 360, editable: true };
+const onCellClick = (event) =&gt; console.log(event.value);
+
+// 자식 래퍼가 생성한 그리드에 데이터를 설정합니다.
+onMounted(() =&gt; {
+  gridRef.value?.setGridData([
+    { name: '모니터', quantity: 12 },
+    { name: '키보드', quantity: 30 }
+  ]);
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;AUIGrid ref="gridRef" :columnLayout="columns" :gridProps="props"
+    @cellClick="onCellClick" /&gt;
+&lt;/template&gt;</code></pre>
+
+    <h2 id="typescript">7.3.2 TypeScript로 그리드 생성하기</h2>
+    <p>TypeScript에서는 <code>AUIGridT.vue</code>를 사용합니다.
+      <code>InstanceType&lt;typeof AUIGrid&gt;</code>로 컴포넌트 인스턴스를 지정하고,
+      <code>IGrid.Props</code>, <code>IGrid.Column</code>, <code>IGrid.CellClickEvent</code>로 엔진 설정과 이벤트를 작성합니다.</p>
+    <pre><code class="language-html">&lt;script setup lang="ts"&gt;
+import { ref, onMounted } from 'vue';
+import * as IGrid from 'aui-grid';
+import AUIGrid from '../static/AUIGrid-Vue/AUIGridT.vue';
+
+type GridInstance = InstanceType&lt;typeof AUIGrid&gt;;
+const gridRef = ref&lt;GridInstance | null&gt;(null);
+const columns: IGrid.Column[] = [
+  { dataField: 'name', headerText: '품목', width: 200 },
+  { dataField: 'quantity', headerText: '수량', dataType: 'numeric' }
+];
+const props: IGrid.Props = { width: '100%', height: 360, editable: true };
+const onCellClick = (event: IGrid.CellClickEvent) =&gt; console.log(event.value);
+
+// waitPortalRendering의 기본값 false를 사용하는 초기 데이터 설정입니다.
+onMounted(() =&gt; {
+  gridRef.value?.setGridData([
+    { name: '모니터', quantity: 12 },
+    { name: '키보드', quantity: 30 }
+  ]);
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;AUIGrid ref="gridRef" :columnLayout="columns" :gridProps="props"
+    @cellClick="onCellClick" /&gt;
+&lt;/template&gt;</code></pre>
+
+    <h2 id="events">7.3.3 메서드와 이벤트 사용하기</h2>
+    <p>래퍼가 그리드 ID를 전달하므로 <code>ref.value</code>의 메서드에는 ID를 다시 넣지 않습니다.</p>
+    <pre><code class="language-javascript">gridRef.value?.addRow({ name: '마우스', quantity: 5 }, 'last');
+gridRef.value?.setGridData(rows);
+gridRef.value?.resize();</code></pre>
+    <p><code>@cellClick</code>처럼 이벤트를 템플릿에 선언합니다.
+      <code>cellEditBegin</code> 등 반환값이 필요한 이벤트는 하나의 함수로 연결하고 해당 함수에서 값을 반환합니다.</p>
+    <pre><code class="language-html">&lt;!-- 기존 AUIGrid 태그에 이벤트를 함께 지정합니다. --&gt;
+&lt;AUIGrid ref="gridRef" :columnLayout="columns" :gridProps="props"
+  @cellClick="onCellClick" @cellEditBegin="onCellEditBegin" /&gt;</code></pre>
+    <pre><code class="language-javascript">// script setup 내부에 정의합니다. 품목 이름의 편집 시작을 막습니다.
+const onCellEditBegin = (event) =&gt; event.dataField !== 'name';</code></pre>
+    <p>TypeScript에서는 매개변수에 <code>IGrid.CellEditBeginEvent</code>를 지정할 수 있습니다.
+      반환값은 <a href="../DataGrid/Events.html#cellEditBegin">각 이벤트의 API 설명</a>을 따릅니다.</p>
+    <p>템플릿 이벤트의 연결 여부는 그리드 생성 시 확인합니다. 생성 당시 없던 이벤트를 나중에 추가해야 한다면
+      <code>gridRef.value.bind('cellClick', handler)</code>와 <code>unbind('cellClick')</code>로 명시적으로 관리하십시오.
+      같은 이벤트를 템플릿과 <code>bind()</code> 양쪽에서 중복 등록하지 않습니다.</p>
+
+    <h2 id="lifecycle">7.3.4 생명주기와 캐시된 화면</h2>
+    <p>기본 생성은 래퍼의 <code>mounted</code>에서, 최종 파괴는 Vue 3의 <code>beforeUnmount</code>에서 처리합니다.
+      부모는 최초 마운트 시 <code>create()</code>를 중복 호출하거나 동일 그리드를 다시 파괴할 필요가 없습니다.</p>
+    <ul>
+      <li>엔진 데이터는 <code>setGridData()</code>, 칼럼은 <code>changeColumnLayout()</code>, 실행 중 변경 가능한 속성은 <code>setProp()</code>으로 갱신합니다.
+        Vue 반응형 객체의 값을 바꾼 것만으로 생성 시 전달한 설정이 자동 적용되는 것은 아닙니다.</li>
+      <li>비동기 데이터 요청은 컴포넌트 해제 후 응답이 그리드에 적용되지 않도록 취소 또는 무효화합니다.
+        <code>KeepAlive</code>에서 캐시된 동안 응답을 적용할지는 애플리케이션 정책에 맞춰 별도로 관리하십시오.</li>
+      <li><strong>래퍼 1.7의 <code>resizeMode="container"</code>:</strong> <code>deactivated</code>에서 관찰과 예약된 크기 조정을 중단하고
+        <code>activated</code>에서 다시 연결합니다. 그리드를 재생성하지 않아 기존 편집 데이터와 화면 상태를 유지합니다.</li>
+      <li>직접 <code>resize()</code>를 호출할 때에는 캐시된 DOM이 문서에 복귀한 뒤 호출합니다.
+        <code>isCreated()</code>가 true여도 부모 DOM이 아직 분리된 상태일 수 있습니다.
+        <code>Transition</code>을 함께 사용하면 <code>nextTick()</code>만으로 전환 완료를 보장할 수 없으므로 전환 완료 시점도 확인하십시오.</li>
+      <li><code>waitPortalRendering</code>은 Vue TypeScript 래퍼에서 지원합니다. true이면 생성이 다음 프레임으로 미뤄지므로
+        부모의 <code>onMounted</code>에서 곧바로 데이터를 설정하는 위 예제의 순서도 조정해야 합니다.
+        Vue JavaScript 래퍼에는 이 속성이 없습니다.</li>
+    </ul>
+    <p>서버 렌더링 환경에서는 제품 파일의 로딩과 그리드 생성을 클라이언트 영역에 둡니다.
+      고유한 <code>name</code>을 지정하는 것만으로 서버 측 렌더링이 지원되는 것은 아닙니다.</p>
+    <p><a href="frameworks.html">7번 공통 안내</a> | <a href="react.html">React 사용법</a> | <a href="component-props.html">컴포넌트 속성</a></p>
+  </main>
+<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
+</html>

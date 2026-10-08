@@ -99,6 +99,8 @@ function DemoShell() {
                         <span className="sample-brand-mark" aria-hidden="true"><i /><i /><i /><i /></span>
                         <span className="sample-brand-text"><strong>AUIGrid</strong><span>JavaScript 데이터 그리드</span></span>
                     </NavLink>
+                    {/* 프레임워크 제목은 HOME과 개별 데모 화면 모두에서 로고 옆에 유지합니다. */}
+                    <h1 className="sample-home-title">AUIGrid for React.js</h1>
                 </div>
                 <nav className="sample-header-links" aria-label="제품 안내">
                     <a href="https://www.auisoft.net/documentation/auigrid/">문서</a>
@@ -122,7 +124,7 @@ function DemoShell() {
                 </div>
             </nav>
             <main id="sample-main" className="sample-main" tabIndex={-1}>
-                {/* HOME은 소개 제목을 사용하므로 경로와 중복 제목 영역 없이 콘텐츠부터 표시합니다. */}
+                {/* HOME 제목은 상단에 표시하므로 본문에는 경로와 중복 제목 영역을 만들지 않습니다. */}
                 {!isHome && (
                     <div className="sample-page-heading">
                         <div><div className="sample-breadcrumb"><NavLink to="/">데모</NavLink><span aria-hidden="true">/</span><span>{category}</span></div><h1>{pageTitle}</h1></div>

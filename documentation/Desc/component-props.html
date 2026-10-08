@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="React, Vue 및 TypeScript용 AUIGrid 서브 컴포넌트의 속성, 기본값, 지원 차이와 resizeMode 컨테이너 감지 방법입니다.">
+  <title>React, Vue 및 TypeScript 서브 컴포넌트 속성 | AUIGrid v3.0.19 Documentation</title>
+  <link rel="stylesheet" href="../static/prism.css">
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="../static/typography.css">
+  <link rel="stylesheet" href="../static/code-examples.css">
+  <link rel="stylesheet" href="../static/mcp-guide.css">
+  <script src="../static/prism.js" data-manual></script>
+  <!-- React 배치 예제는 기존 Prism 1.30.0의 공식 JSX 문법으로 표시합니다. -->
+  <script src="../static/prism-jsx.min.js"></script>
+  <script src="../static/code-examples.js"></script>
+
+<link rel="icon" href="../static/favicon.ico" sizes="any">
+<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
+<meta name="theme-color" content="#222729">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../static/docs-brand.css">
+</head>
+<body class="demo-typography mcp-guide docs-site">
+  <!-- 속성은 실제 네 래퍼의 선언 순서와 관계없이 이름순으로 안내합니다. -->
+  <header class="docs-header"><div class="docs-header-inner">
+    <a id="logo-bar" class="docs-brand docs-package-brand" href="../index.html" aria-label="AUIGrid 문서 홈">
+      <img src="../static/favicon.svg" width="40" height="40" alt="">
+      <span id="title" class="docs-package-title">AUIGrid v3.0.19 Documentation</span>
+    </a>
+  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">7.4 서브 컴포넌트 속성</span></nav>
+  <main class="MainContent">
+    <h1>7.4 서브 컴포넌트 속성</h1>
+    <p>React JavaScript, React TypeScript, Vue JavaScript 및 Vue TypeScript 래퍼에 직접 전달하는 속성입니다.
+      엔진의 <code>gridProps</code>와 구분하여 지정하십시오. 이 문서는 <strong>서브 컴포넌트 1.7</strong>을 기준으로 하며,
+      <code>resizeMode</code>는 1.7부터 지원합니다. 이 번호는 AUIGrid 엔진 버전이나 npm 타입 패키지 버전이 아닙니다.</p>
+    <p>다음 옵션은 생성 시 설정합니다. 실행 중 prop 값을 변경하는 것만으로 그리드 설정이나 크기 감지 방식이 자동 전환되지는 않습니다.
+      엔진의 실행 중 변경은 <a href="../DataGrid/Methods.html#setProp"><code>setProp()</code></a> 등 해당 메서드를 사용합니다.</p>
+    <nav class="mcp-toc" aria-label="속성 목록">
+      <a href="#autoResize">autoResize</a><a href="#columnLayout">columnLayout</a><a href="#footerLayout">footerLayout</a>
+      <a href="#gridProps">gridProps</a><a href="#name">name</a><a href="#resizeDelayTime">resizeDelayTime</a>
+      <a href="#resizeMode">resizeMode</a><a href="#waitPortalRendering">waitPortalRendering</a>
+    </nav>
+
+    <h2 id="autoResize">7.4.1 autoResize</h2>
+    <p><strong>타입:</strong> Boolean. <strong>기본값:</strong> <code>true</code>. <strong>지원:</strong> 네 래퍼 모두.</p>
+    <p>선택한 <code>resizeMode</code>에 따라 자동 크기 감지를 등록합니다.
+      false이면 자동 감지를 등록하지 않으며, 필요한 시점에 래퍼의 <code>resize()</code>를 직접 호출할 수 있습니다.</p>
+    <pre><code class="language-html">&lt;!-- Vue에서는 문자열 "false"가 아닌 Boolean을 전달합니다. --&gt;
+&lt;AUIGrid ref="gridRef" :columnLayout="columns" :gridProps="props"
+  :autoResize="false" /&gt;</code></pre>
+    <p>React에서는 <code>autoResize={false}</code>로 지정합니다.</p>
+
+    <h2 id="columnLayout">7.4.2 columnLayout</h2>
+    <p><strong>타입:</strong> Array, TypeScript에서는 <code>IGrid.Column[]</code>. <strong>지원:</strong> 네 래퍼 모두.</p>
+    <p>그리드를 생성할 칼럼 레이아웃입니다.
+      React JS/TS 및 Vue TS의 기본값은 <code>[]</code>, Vue JS의 기본값은 <code>null</code>입니다.
+      Vue JS에서 null이면 초기 자동 생성을 수행하지 않습니다. 일반적인 사용에서는 칼럼 배열을 명시적으로 전달하십시오.</p>
+    <p>생성 후 칼럼 구조를 바꾸려면 <a href="../DataGrid/Methods.html#changeColumnLayout"><code>changeColumnLayout()</code></a>을 사용합니다.
+      정의 방법은 <a href="../ColumnLayout/package-detail.html">칼럼 레이아웃 문서</a>를 참고하십시오.</p>
+
+    <h2 id="footerLayout">7.4.3 footerLayout</h2>
+    <p><strong>타입:</strong> Array, TypeScript에서는 <code>IGrid.Footer[]</code>. <strong>지원:</strong> 네 래퍼 모두.</p>
+    <p>생성 시 적용할 푸터 레이아웃입니다.
+      React JS/TS 및 Vue TS의 기본값은 <code>[]</code>, Vue JS의 기본값은 <code>null</code>입니다.</p>
+    <p>푸터를 표시하려면 <code>gridProps.showFooter=true</code>도 설정합니다.
+      생성 이후에는 <a href="../DataGrid/Methods.html#setFooter"><code>setFooter()</code></a>를 사용합니다.
+      항목 작성법은 <a href="../FooterLayout/Footer.html">푸터 레이아웃 문서</a>를 참고하십시오.</p>
+
+    <h2 id="gridProps">7.4.4 gridProps</h2>
+    <p><strong>타입:</strong> Object, TypeScript에서는 <code>IGrid.Props</code>. <strong>지원:</strong> 네 래퍼 모두.</p>
+    <p>엔진의 <a href="../DataGrid/Properties.html">생성 속성</a>을 담습니다.
+      React JS와 Vue JS의 기본값은 <code>{}</code>, React TS와 Vue TS의 기본값은 <code>null</code>입니다.
+      생략한 엔진 속성은 해당 엔진 및 래퍼의 공통 설정에 따릅니다.</p>
+    <pre><code class="language-javascript">// 엔진 생성 속성입니다. resizeMode 같은 래퍼 옵션은 여기 넣지 않습니다.
+const props = {
+  width: '100%',
+  height: 360,
+  editable: true,
+  enableFilter: true
+};</code></pre>
+    <p>공식 래퍼는 상단의 <code>AUIGrid.defaultProps</code>에 <code>autoScrollSize: true</code>와
+      <code>simplifySelectionEvent: true</code>를 설정합니다. 특히 선택 이벤트에서 <code>selectedItems</code>가 필요하다면
+      <a href="../DataGrid/Properties.html#simplifySelectionEvent">simplifySelectionEvent</a> 설명과 관련 제약을 확인하십시오.
+      공통 설정을 수정하면 같은 엔진을 사용하는 다른 그리드에도 영향을 줄 수 있습니다.</p>
+
+    <h2 id="name">7.4.5 name</h2>
+    <p><strong>타입:</strong> String. <strong>기본값:</strong> <code>""</code>. <strong>지원:</strong> 네 래퍼 모두.</p>
+    <p>그리드를 담는 호스트 DIV의 ID를 만들 때 사용합니다. <code>name="orders"</code>이면
+      ID는 <code>aui-grid-wrap-orders</code>가 됩니다. 생략하면 래퍼가 임의 식별자를 만듭니다.</p>
+    <p>이름을 지정한다면 같은 문서에서 고유해야 합니다. <code>KeepAlive</code>에 보관된 화면도 그리드 인스턴스가 남아 있으므로
+      다른 화면에 같은 이름을 재사용하지 마십시오.</p>
+
+    <h2 id="resizeDelayTime">7.4.6 resizeDelayTime</h2>
+    <p><strong>타입:</strong> Number. <strong>기본값:</strong> <code>300</code>ms. <strong>지원:</strong> 네 래퍼 모두.</p>
+    <p>자동 크기 감지 알림이 연속해서 들어올 때 마지막 알림 뒤 기다리는 시간입니다.
+      window 방식과 container 방식에 모두 적용합니다. 0 이상의 밀리초 값을 지정하십시오.</p>
+    <p>container 방식은 이 지연 이후 다음 애니메이션 프레임에서 크기를 반영합니다.
+      0으로 지정해도 동기 실행되는 것은 아닙니다. 수동 <code>resize()</code> 호출에 이 지연이 추가되지는 않습니다.</p>
+
+    <h2 id="resizeMode">7.4.7 resizeMode</h2>
+    <p><strong>타입:</strong> <code>"window" | "container"</code>. <strong>기본값:</strong> <code>"window"</code>.
+      <strong>지원:</strong> 네 래퍼의 <strong>1.7부터</strong>. 1.6에는 이 옵션이 없습니다.</p>
+    <ul>
+      <li><code>window</code>: 기존처럼 창의 resize 이벤트에 반응합니다.</li>
+      <li><code>container</code>: <code>ResizeObserver</code>로 그리드를 담는 호스트 DIV의 크기 변화를 감지합니다.
+        창 크기가 같아도 사이드바 접기나 부모 레이아웃 변경으로 호스트 크기가 바뀌면 그리드를 조정합니다.</li>
+    </ul>
+    <p>이 속성은 래퍼 옵션입니다. <code>gridProps.resizeMode</code> 또는 엔진의 <code>setProp('resizeMode', ...)</code>로 지정하지 않습니다.
+      <code>autoResize=false</code>이면 감지 방식을 지정해도 자동 감지는 동작하지 않습니다.</p>
+    <h3>React JS / TypeScript</h3>
+    <pre><code class="language-jsx">// 기존 AUIGrid 태그에 직접 지정합니다. columns와 props는 생성 설정입니다.
+&lt;AUIGrid ref={gridRef} columnLayout={columns} gridProps={props}
+  resizeMode="container" resizeDelayTime={100} /&gt;</code></pre>
+    <h3>Vue JS / TypeScript</h3>
+    <pre><code class="language-html">&lt;AUIGrid ref="gridRef" :columnLayout="columns" :gridProps="props"
+  resizeMode="container" :resizeDelayTime="100" /&gt;</code></pre>
+    <h3>크기와 레이아웃</h3>
+    <p>관찰 대상은 엔진 내부 셀이 아닌 호스트 DIV입니다. 크기가 달라지지 않으면 다시 호출하지 않으며,
+      DOM이 분리되었거나 너비 또는 높이가 5px 이하이면 크기 조정을 건너뜁니다.
+      <code>ResizeObserver</code>가 없는 환경에서는 창 크기 이벤트로 대체합니다.</p>
+    <p><code>gridProps</code>에 <code>width: '100%'</code>, <code>height: 360</code>을 사용하면 너비는 부모에 맞추고 높이는 지정값으로 유지합니다.
+      높이까지 부모를 따르게 하려면 호스트와 부모의 CSS 높이를 명확하게 정의해야 합니다.
+      Flex/Grid 배치에서는 필요에 따라 <code>min-width: 0</code>을 지정하고, 그리드 콘텐츠가 부모 크기를 계속 늘리는 순환 배치를 피하십시오.</p>
+    <h3>생명주기</h3>
+    <p>언마운트 또는 수동 <code>destroy()</code> 시 관찰자와 예약된 작업을 정리합니다.
+      <code>create()</code>로 다시 생성하면 다시 연결됩니다.
+      Vue의 <code>KeepAlive</code>에서는 <code>deactivated</code>에서 중단하고 <code>activated</code>에서 관찰을 재개하며,
+      크기 조정을 위해 그리드를 파괴하거나 재생성하지 않습니다.</p>
+    <p>실제 <code>resize()</code>가 호출되면 편집 완료 등 엔진의 기존 리사이징 동작이 적용됩니다.
+      <code>autoGridHeight</code>의 데이터 기반 높이 정책도 유지합니다.</p>
+
+    <h2 id="waitPortalRendering">7.4.8 waitPortalRendering</h2>
+    <p><strong>타입:</strong> Boolean. <strong>기본값:</strong> <code>false</code>.
+      <strong>지원:</strong> React JS, React TS 및 Vue TS. <strong>Vue JS에서는 지원하지 않습니다.</strong></p>
+    <p>true이면 그리드의 최초 생성을 <code>requestAnimationFrame</code>으로 다음 프레임에 예약합니다.
+      Portal이나 Teleport에서 호스트가 부착되는 시점 차이를 처리할 때 사용합니다.</p>
+    <p>임의 길이의 전환 애니메이션이나 비동기 데이터 로딩이 끝날 때까지 기다리는 옵션은 아닙니다.
+      true인 경우 부모의 effect 또는 mounted가 실행되어도 아직 그리드가 없을 수 있으므로,
+      실제 DOM 부착과 <code>isCreated()</code> 확인 후 메서드를 호출하십시오.</p>
+    <p><a href="frameworks.html">7번 공통 안내</a> | <a href="react.html">React 사용법</a> | <a href="vue.html">Vue 사용법</a></p>
+  </main>
+<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
+</html>

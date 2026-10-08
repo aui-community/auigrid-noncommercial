@@ -6,7 +6,6 @@ import sampleDefaultCode from '../samples/SampleDefault.js?raw';
 const Home = () => {
 	return (
 		<div className="home-main">
-			<h1 className="home-title">AUIGrid for React.js</h1>
 			<p>자바스크립트 라이브러리 중 하나인 React.js 에서 AUIGrid 를 어떻게 사용 할 수 있는지를 보여주는 데모입니다.</p>
 			<p>
 				AUIGrid 에서 지원하는 모든 기능에 대한 데모를 보고자 한다면{' '}

@@ -49,6 +49,9 @@ window.AUIGrid.TextareaEditor = window.AUIGrid.Class({
 	// textarea 엘리먼트
 	__textareaEle: null,
 
+	// 편집기가 먼저 닫히면 예약한 포커스도 함께 취소합니다.
+	__focusTimer: null,
+
 	/****************************************************************
 	 *
 	 * Overriden Methods
@@ -64,6 +67,8 @@ window.AUIGrid.TextareaEditor = window.AUIGrid.Class({
 	 * 메모리 누수를 유발하는 코드들을 모두 해제 하십시오.
 	 */
 	destroy: function (unload) {
+		clearTimeout(this.__focusTimer);
+		this.__focusTimer = null;
 		this.__textarea.removeEventListener('keyup', this.__textareaKeyUpHandler);
 		this.__confirmBtn.removeEventListener('click', this.__confirmBtnClickHandler);
 		this.__cancelBtn.removeEventListener('click', this.__cancelBtnClickHandler);
@@ -109,9 +114,10 @@ window.AUIGrid.TextareaEditor = window.AUIGrid.Class({
 		this.element.appendChild(this.__confirmBtn);
 		this.element.appendChild(this.__cancelBtn);
 
-		// textarea 선택 시키기
-		setTimeout(
+		// DOM 배치 뒤 포커스를 적용하며, destroy에서 취소할 수 있도록 타이머를 보관합니다.
+		this.__focusTimer = setTimeout(
 			function () {
+				this.__focusTimer = null;
 				this.__textarea.focus();
 				this.__textarea.select();
 			}.bind(this)

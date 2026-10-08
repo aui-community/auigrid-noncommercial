@@ -4,7 +4,6 @@
 </script>
 <template>
 	<div class="home-main">
-		<h1 class="home-title">AUIGrid for Vue 3</h1>
 		<p>자바스크립트 프레임워크 중 하나인 Vue.js 버전 3에서 AUIGrid 를 어떻게 사용 할 수 있는지를 보여주는 데모입니다.</p>
 		<p>
 			AUIGrid 에서 지원하는 모든 기능에 대한 데모를 보고자 한다면<a href="https://www.auisoft.net/demo/auigrid" class="link-is-link"> 여기 </a>

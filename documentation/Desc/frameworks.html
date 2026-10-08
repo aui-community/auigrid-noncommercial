@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="React, Vue 및 TypeScript에서 AUIGrid를 사용하는 방법입니다. 네 서브 컴포넌트의 설치, 속성, 이벤트와 컨테이너 크기 감지를 안내합니다.">
+  <title>React, Vue 및 TypeScript에서 사용하기 | AUIGrid v3.0.19 Documentation</title>
+  <link rel="stylesheet" href="../static/prism.css">
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="../static/typography.css">
+  <link rel="stylesheet" href="../static/code-examples.css">
+  <link rel="stylesheet" href="../static/mcp-guide.css">
+  <script src="../static/prism.js" data-manual></script>
+  <script src="../static/code-examples.js"></script>
+
+<link rel="icon" href="../static/favicon.ico" sizes="any">
+<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
+<meta name="theme-color" content="#222729">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../static/docs-brand.css">
+</head>
+<body class="demo-typography mcp-guide docs-site">
+  <!-- 사이트와 제품 패키지의 외곽 헤더는 공식 생성기가 각각 적용합니다. -->
+  <header class="docs-header"><div class="docs-header-inner">
+    <a id="logo-bar" class="docs-brand docs-package-brand" href="../index.html" aria-label="AUIGrid 문서 홈">
+      <img src="../static/favicon.svg" width="40" height="40" alt="">
+      <span id="title" class="docs-package-title">AUIGrid v3.0.19 Documentation</span>
+    </a>
+  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">7. React, Vue 및 TypeScript에서 사용하기</span></nav>
+  <main class="MainContent">
+    <h1>7. React, Vue 및 TypeScript에서 사용하기</h1>
+    <p>AUIGrid 서브 컴포넌트(래퍼)는 React와 Vue의 생성 및 해제 시점에 맞춰 그리드를 관리합니다.
+      칼럼과 속성을 컴포넌트에 전달하고, <code>ref</code>로 데이터 설정과 메서드를 호출합니다.</p>
+    <p>JavaScript와 TypeScript용 컴포넌트는 각각 제공됩니다. 아래에서 사용 환경에 맞는 예제를 선택하십시오.
+      Vue 예제는 Vue 3의 <code>script setup</code>을 기준으로 작성했습니다.</p>
+    <nav class="mcp-toc" aria-label="프레임워크 문서">
+      <a href="#prepare">파일 준비</a><a href="react.html">React 및 TypeScript</a>
+      <a href="vue.html">Vue 및 TypeScript</a><a href="component-props.html">컴포넌트 속성</a>
+    </nav>
+
+    <h2 id="prepare">7.1 파일 준비와 공통 사용 흐름</h2>
+    <p>배포 패키지의 해당 샘플 프로젝트에서 시작하거나, 래퍼와 제품 파일을 기존 프로젝트에 배치합니다.
+      샘플 실행 명령은 <a href="setup.html#framework-samples">Vue, React 샘플 실행 방법</a>을 참고하십시오.</p>
+    <ul>
+      <li><strong>React JavaScript:</strong> <code>samples-React.js</code>의 <code>src/static/AUIGrid-React.js/AUIGridReact.js</code></li>
+      <li><strong>React TypeScript:</strong> <code>samples-React.tsx</code>의 <code>src/static/AUIGrid-React.tsx/AUIGridReact.tsx</code></li>
+      <li><strong>Vue JavaScript:</strong> <code>samples-Vue.js</code>의 <code>src/static/AUIGrid-Vue.js/AUIGrid.vue</code></li>
+      <li><strong>Vue TypeScript:</strong> <code>samples-Vue.ts</code>의 <code>src/static/AUIGrid-Vue/AUIGridT.vue</code></li>
+    </ul>
+    <p>위 경로는 샘플 프로젝트 내부의 경로입니다. 단독 배포 래퍼 폴더 이름과 다를 수 있으므로 실제 복사한 위치에 맞춰 import 경로를 지정하십시오.</p>
+    <ol>
+      <li><code>src/static/AUIGrid/</code>에 제품 배포본의 <code>AUIGrid.js</code>, 접속 환경에 맞는 <code>AUIGridLicense.js</code>,
+        <code>AUIGrid_style.css</code>와 해당 CSS가 참조하는 <code>images/</code>를 준비합니다.</li>
+      <li>래퍼 상단의 엔진, 라이선스 및 CSS import 경로를 확인합니다. 기본 경로는 <code>../AUIGrid/</code>입니다.
+        래퍼가 엔진을 import하므로 같은 엔진을 별도의 script 태그로 중복 연결하지 않습니다.</li>
+      <li>TypeScript 프로젝트에는 <code>aui-grid</code>를 설치합니다. 이 패키지는 타입과 enum을 제공하며, 엔진 및 라이선스 파일을 대신하지 않습니다.</li>
+      <li><code>columnLayout</code>과 <code>gridProps</code>를 전달해 컴포넌트를 배치하고, 마운트 후 <code>ref</code>로 <code>setGridData()</code>를 호출합니다.</li>
+    </ol>
+    <pre><code class="language-plain">npm install aui-grid@latest</code></pre>
+    <p>사용하는 엔진 버전에서 지원하는 API인지도 함께 확인하십시오. 최신 타입에 선언되어 있다는 이유만으로 이전 엔진이 해당 API를 지원하는 것은 아닙니다.</p>
+    <p>공식 React JavaScript 샘플에는 <code>.js</code> 파일의 JSX를 처리하는 Vite 설정이 포함되어 있습니다.
+      기존 프로젝트에 래퍼를 옮길 때에는 해당 빌드 설정도 확인하십시오.
+      Vue 단일 파일 컴포넌트는 프로젝트의 Vue 빌드 도구로 처리합니다.</p>
+
+    <h3 id="guides">프레임워크별 문서</h3>
+    <ul>
+      <li><a href="react.html">7.2 React에서 사용하기</a>: JavaScript와 TypeScript 예제, <code>useRef</code>, <code>bind()</code>, 이벤트 해제</li>
+      <li><a href="vue.html">7.3 Vue에서 사용하기</a>: JavaScript와 TypeScript 예제, 템플릿 이벤트, <code>KeepAlive</code>, 비동기 처리</li>
+      <li><a href="component-props.html">7.4 서브 컴포넌트 속성</a>: 실제 기본값, 지원 래퍼, <code>resizeMode</code>와 크기 설정</li>
+    </ul>
+    <p><code>editable</code>, <code>height</code>, <code>enableFilter</code> 같은 엔진 속성은 <code>gridProps</code>에 넣습니다.
+      <code>autoResize</code>, <code>resizeMode</code> 같은 래퍼 속성은 컴포넌트에 직접 지정합니다.
+      엔진 속성의 전체 목록은 <a href="../DataGrid/Properties.html">AUIGrid 속성</a>에서 확인할 수 있습니다.</p>
+
+    <p><a href="../index.html">문서 홈으로 돌아가기</a></p>
+  </main>
+<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
+</html>

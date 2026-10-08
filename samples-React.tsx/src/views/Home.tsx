@@ -6,7 +6,6 @@ import sampleDefaultCode from '../samples/SampleDefault.tsx?raw';
 const Home = () => {
 	return (
 		<div className="home-main">
-			<h1 className="home-title">AUIGrid for React + TypeScript</h1>
 			<p>React의 TypeScript 환경에서 AUIGrid를 사용하는 방법을 보여주는 데모입니다.</p>
 			<p>
 				AUIGrid 에서 지원하는 모든 기능에 대한 데모를 보고자 한다면{' '}

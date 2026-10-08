@@ -16,6 +16,10 @@ body { margin: 0; background: #f5f7f9; }
 .sample-shell :is(.sample-header, .sample-nav, .sample-page-heading, .sample-footer) a { color: inherit; text-decoration: none; }
 .sample-header { position: fixed; inset: 0 0 auto; z-index: 40; width: 100%; max-width: var(--sample-max-width); height: var(--sample-header-height); margin: 0 auto; padding: 0 28px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: #fff; border-bottom: 1px solid var(--sample-line); }
 .sample-logo-bar, .sample-brand, .sample-header-links { display: flex; align-items: center; gap: 14px; }
+/* HOME 제목이 로고와 한 줄로 이어지고 제품 안내 링크의 공간은 유지합니다. */
+.sample-logo-bar { min-width: 0; }
+.sample-header-links { flex-shrink: 0; }
+body.demo-typography .sample-header .sample-home-title { min-width: 0; margin: 0 0 0 10px; padding-left: 24px; border-left: 1px solid var(--sample-line); color: var(--sample-ink); font-size: 22px !important; line-height: 1.3 !important; white-space: nowrap; }
 .sample-brand { flex-shrink: 0; }
 .sample-brand-mark { display: grid; grid-template-columns: repeat(2, 13px); grid-template-rows: repeat(2, 13px); gap: 6px; padding: 9px; border-radius: 12px; background: var(--sample-ink); }
 .sample-brand-mark i { width: 13px; height: 13px; border-radius: 2px; background: #fff; }
@@ -56,7 +60,7 @@ body.demo-typography .sample-page-heading h1 { margin: 6px 0 0; overflow-wrap: a
 .sample-footer { margin: 20px 32px 24px calc(var(--sample-nav-width) + 32px); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: #747e8b; }
 /* HOME의 Dependencies, HOW TO CODE와 원문은 유지하고 간격 및 코드 프레임만 맞춥니다. */
 .sample-shell .home-main { text-align: left; min-width: 0; }
-.sample-shell .home-title { margin-top: 0; color: var(--sample-ink); }
+.sample-shell .home-main > p:first-child { margin-top: 0; }
 .sample-shell .home-main .headline { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--sample-line); }
 /* 같은 행의 카드 폭과 높이를 맞추고, 안내가 하나뿐이면 전체 너비를 사용합니다. */
 .sample-shell .home-dependencies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin: 28px 0; }
@@ -73,6 +77,24 @@ body.demo-typography .sample-page-heading h1 { margin: 6px 0 0; overflow-wrap: a
 .sample-shell :is(button, .btn):not(:where(.aui-grid, .aui-grid *, [class^='aui-grid-'], [class^='aui-grid-'] *, [class*=' aui-grid-'], [class*=' aui-grid-'] *)) { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 34px; box-sizing: border-box; padding: 5px 13px; margin: 3px 4px 3px 0; border: 1px solid #d7dce3; border-radius: 5px; background: #fff; color: #303946; font: 600 14px/1.5 var(--demo-font); text-decoration: none; cursor: pointer; vertical-align: middle; }
 .sample-shell :is(button, .btn):hover:not(:where(.aui-grid, .aui-grid *, [class^='aui-grid-'], [class^='aui-grid-'] *, [class*=' aui-grid-'], [class*=' aui-grid-'] *)) { background: var(--sample-accent-soft); border-color: var(--sample-accent); }
 .sample-shell button:disabled:not(:where(.aui-grid, .aui-grid *, [class^='aui-grid-'], [class^='aui-grid-'] *, [class*=' aui-grid-'], [class*=' aui-grid-'] *)) { opacity: .5; cursor: not-allowed; }
+/* 개별 데모 실행 버튼은 WebDemo와 같은 파란색을 사용하며 기존 여백을 유지합니다.
+   보기 전환 탭, 코드 복사 도구와 그리드 내부 컨트롤에는 기존 상태 표시를 유지합니다. */
+.sample-shell .sample-view:not(.sample-view--home) :is(button, .btn, .btn-disabled):not(:where(.demo-segments *, .energy-views *, .demo-code-tools *, .aui-grid, .aui-grid *, [class^='aui-grid-'], [class^='aui-grid-'] *, [class*=' aui-grid-'], [class*=' aui-grid-'] *)) {
+    display: inline-block; min-height: 0; padding: 10px 17px; margin: 6px 8px 6px 0;
+    border: 1px solid #337ab7; border-radius: 4px; background: #337ab7; color: #fff !important;
+    font: 600 14px/1.5 var(--demo-font); box-shadow: none; transition: background-color .15s;
+}
+.sample-shell .sample-view:not(.sample-view--home) :is(button, .btn, .btn-disabled):hover:not(:where(.demo-segments *, .energy-views *, .demo-code-tools *, .aui-grid, .aui-grid *, [class^='aui-grid-'], [class^='aui-grid-'] *, [class*=' aui-grid-'], [class*=' aui-grid-'] *)) {
+    background: #286090; border-color: #337ab7;
+}
+.sample-shell .sample-view:not(.sample-view--home) :is(button, .btn, .btn-disabled)[aria-pressed='true']:not(:where(.demo-segments *, .energy-views *, .demo-code-tools *, .aui-grid, .aui-grid *, [class^='aui-grid-'], [class^='aui-grid-'] *, [class*=' aui-grid-'], [class*=' aui-grid-'] *)) {
+    background: #286090; border-color: #286090;
+}
+/* 비활성 버튼은 호버와 선택 상태보다 우선하여 기본 색상을 흐리게 표시합니다. */
+.sample-shell .sample-view:not(.sample-view--home) :is(button, .btn, .btn-disabled):is(.btn-disabled, :disabled, [aria-disabled='true']):not(:where(.demo-segments *, .energy-views *, .demo-code-tools *, .aui-grid, .aui-grid *, [class^='aui-grid-'], [class^='aui-grid-'] *, [class*=' aui-grid-'], [class*=' aui-grid-'] *)) {
+    background: #337ab7; border-color: #337ab7; color: #fff !important;
+    box-shadow: none; opacity: .45; cursor: default;
+}
 .sample-shell .sample-header .sample-trial { background: var(--sample-accent-strong); border-color: var(--sample-accent-strong); color: #fff; margin: 0; }
 .sample-shell .sample-page-heading .sample-source-open { background: var(--sample-ink); border-color: var(--sample-ink); color: #fff; white-space: nowrap; margin: 0; }
 .sample-shell .sample-source-open > span { font-family: var(--demo-code-font); }
@@ -99,12 +121,17 @@ body.demo-typography .sample-source-heading h2 { margin: 0; }
 .sample-shell :is(a, button, input, select):focus-visible:not(:where(.aui-grid *)) { outline: 2px solid var(--sample-accent); outline-offset: 3px; }
 .sample-skip { position: fixed; top: -60px; left: 12px; z-index: 100; padding: 10px 16px; background: #fff; color: #111; }.sample-skip:focus { top: 8px; }
 @media (max-width: 1100px) {
+    body.demo-typography .sample-header .sample-home-title { padding-left: 16px; margin-left: 0; font-size: 20px !important; }
     .sample-shell .sample-header .sample-menu-toggle { display: inline-flex; }
     .sample-nav { left: 0; transform: translateX(-100%); visibility: hidden; transition: transform .18s ease, visibility .18s; }
     .sample-nav-open .sample-nav { transform: translateX(0); visibility: visible; }
     .sample-shell .sample-nav-backdrop { display: block; position: fixed; inset: var(--sample-header-height) 0 0; z-index: 32; width: 100%; height: calc(100% - var(--sample-header-height)); padding: 0; margin: 0; border: 0; border-radius: 0; background: rgb(35 41 43 / 30%); }
     .sample-main { margin-left: 0; padding: calc(var(--sample-header-height) + 24px) 24px 20px; }
     .sample-footer { margin: 20px 24px; }
+}
+/* 좁은 화면에서는 제목을 시각적으로 숨기되 보조 기술에는 페이지 제목을 제공합니다. */
+@media (max-width: 960px) {
+    body.demo-typography .sample-header .sample-home-title { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); }
 }
 @media (max-width: 760px) { .sample-header-links > a:not(.sample-trial) { display: none; } }
 @media (max-width: 640px) {

@@ -1,7 +1,7 @@
 <script>
 	/**
-	 * AUIGrid.vue for Vue.js v1.6.20261007
-	 * Based on AUIGrid v3.0.19.1
+	 * AUIGrid.vue for Vue.js v1.7.20261008
+	 * Based on AUIGrid v3.0.19.2
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */
@@ -32,6 +32,87 @@
 	// 이 아래 소스는 절대 수정하지 마세요.
 	const $ag = typeof window === 'undefined' ? {} : window.AUIGrid;
 
+	// 엔진 내부가 아닌 호스트 DIV를 관찰하며, 래퍼마다 독립된 예약 작업을 소유합니다.
+	// 배포 시 래퍼 파일만 복사해도 사용할 수 있도록 외부 모듈에 의존하지 않습니다.
+	function createContainerResize(getPID, getDelay) {
+		let observer = null;
+		let host = null;
+		let timer = null;
+		let frame = null;
+		let generation = 0;
+		let width = -1,
+			height = -1;
+
+		function stop() {
+			// 해제 직전에 전달된 관찰 알림과 타이머도 이전 세대의 작업으로 무효화합니다.
+			generation++;
+			if (observer) observer.disconnect();
+			observer = null;
+			window.removeEventListener('resize', schedule);
+			if (timer !== null) window.clearTimeout(timer);
+			if (frame !== null) window.cancelAnimationFrame(frame);
+			timer = frame = null;
+			host = null;
+			width = height = -1;
+		}
+
+		function schedule() {
+			if (!host) return;
+			const current = generation;
+			if (timer !== null) window.clearTimeout(timer);
+			if (frame !== null) window.cancelAnimationFrame(frame);
+			frame = null;
+			// 기존 resizeDelayTime을 지키고 레이아웃 읽기/쓰기는 다음 프레임에 모읍니다.
+			timer = window.setTimeout(() => {
+				if (current !== generation) return;
+				timer = null;
+				frame = window.requestAnimationFrame(() => {
+					if (current !== generation || !host) return;
+					frame = null;
+					const pid = getPID();
+					if (!host.isConnected || document.getElementById(pid.slice(1)) !== host || !$ag.isCreated(pid)) return;
+					const nextWidth = host.offsetWidth,
+						nextHeight = host.offsetHeight;
+					// 엔진의 작은 크기 재시도 경로로 들어가지 않고, 다시 표시될 때 관찰 알림을 기다립니다.
+					if (nextWidth <= 5 || nextHeight <= 5) {
+						width = height = -1;
+						return;
+					}
+					if (nextWidth === width && nextHeight === height) return;
+					width = nextWidth;
+					height = nextHeight;
+					$ag.resize(pid);
+					// autoGridHeight 등 엔진 자체의 크기 반영을 다음 외부 변경으로 오인하지 않습니다.
+					if (current === generation && host) {
+						width = host.offsetWidth;
+						height = host.offsetHeight;
+					}
+				});
+			}, getDelay());
+		}
+
+		function start() {
+			const target = document.getElementById(getPID().slice(1));
+			if (!target || host === target) return;
+			stop();
+			host = target;
+			const current = generation;
+			if (typeof window.ResizeObserver === 'function') {
+				observer = new window.ResizeObserver(() => {
+					if (current === generation) schedule();
+				});
+				observer.observe(target, { box: 'border-box' });
+			} else {
+				// ResizeObserver가 없는 환경에서는 기존 창 크기 이벤트로 대체합니다.
+				window.addEventListener('resize', schedule);
+			}
+			schedule();
+		}
+
+		// Vue 반응형 프록시 대신 클로저가 네이티브 관찰자와 예약 핸들을 관리합니다.
+		return Object.freeze({ start, stop });
+	}
+
 	export default {
 		props: {
 			name: {
@@ -41,6 +122,12 @@
 			autoResize: {
 				type: Boolean,
 				default: true
+			},
+			// container는 호스트 크기를 관찰하고 window는 기존 창 크기 이벤트를 사용합니다.
+			resizeMode: {
+				type: String,
+				default: 'window',
+				validator: (value) => value === 'window' || value === 'container'
 			},
 			resizeDelayTime: {
 				type: Number,
@@ -67,7 +154,9 @@
 		},
 		data: () => ({
 			timerId: null,
-			auiMountGeneration: 0
+			auiMountGeneration: 0,
+			auiResizeInactive: false,
+			auiContainerResize: null
 		}),
 		created: function () {
 			//crypto 로 uuid 생성함. (유니크 값)
@@ -97,6 +186,15 @@
 			// for Vue 3
 			this.__resetGlobalResize();
 			if ($ag.isCreated(this.pid)) $ag.destroy(this.pid);
+		},
+		activated: function () {
+			this.auiResizeInactive = false;
+			// 캐시된 DOM 복귀 후 컨테이너 관찰만 재개하며 그리드 데이터는 재생성하지 않습니다.
+			if (this.resizeMode === 'container') this.__setupGlobalResize();
+		},
+		deactivated: function () {
+			this.auiResizeInactive = true;
+			if (this.auiContainerResize) this.auiContainerResize.stop();
 		},
 		methods: {
 			__setupEvents() {
@@ -227,9 +325,20 @@
 			},
 			__setupGlobalResize() {
 				if (!this.autoResize) return;
+				if (this.resizeMode === 'container') {
+					if (this.auiResizeInactive) return;
+					if (!this.auiContainerResize)
+						this.auiContainerResize = createContainerResize(
+							() => this.pid,
+							() => this.resizeDelayTime
+						);
+					this.auiContainerResize.start();
+					return;
+				}
 				window.addEventListener('resize', this.__globalResizeHandler);
 			},
 			__resetGlobalResize() {
+				if (this.auiContainerResize) this.auiContainerResize.stop();
 				this.auiMountGeneration++;
 				if (this.timerId !== null) {
 					clearTimeout(this.timerId);
@@ -360,6 +469,7 @@
 				$ag.collapseAll.call($ag, this.pid);
 			},
 			destroy() {
+				if (this.auiContainerResize) this.auiContainerResize.stop();
 				$ag.destroy.call($ag, this.pid);
 			},
 			expandAll() {
