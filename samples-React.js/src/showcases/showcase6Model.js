@@ -10,7 +10,6 @@ export function createDemo(onChange, baseUrl) {
     function publish() {
         if (instance) onChange({ ...view });
     }
-    let compact = window.innerWidth <= 700;
     const partNames = ['배터리 하우징', '냉각 플레이트', '센서 브래킷', '커넥터 커버', '모터 마운트', '차폐 패널'];
     // 부품 75개에 네 가지 변경 항목을 배치합니다. 같은 부품은 세로, 동일한 전후 값은 가로로 병합합니다.
     const revisionRows = Array.from({ length: 75 }, (_, index) => {
@@ -75,12 +74,6 @@ export function createDemo(onChange, baseUrl) {
             changes.filter((item) => item.reviewed).length +
             '건';
         publish();
-    }
-    function resizeComparison() {
-        const next = window.innerWidth <= 700;
-        if (!instance || compact === next) return;
-        compact = next;
-        grid().setFixedColumnCount(compact ? 0 : 2);
     }
     function exportReport(format) {
         const props = {
@@ -176,7 +169,8 @@ export function createDemo(onChange, baseUrl) {
         enableFilter: true,
         enableCellMerge: true,
         cellMergeRowSpan: true,
-        fixedColumnCount: compact ? 0 : 2,
+        // 모든 칼럼이 함께 가로 스크롤되도록 고정을 해제합니다.
+        fixedColumnCount: 0,
         selectionMode: 'multipleCells',
         rowStyleFunction: (row, item) => (item.stripe ? 'revision-alternate' : 'revision-base')
     };
@@ -194,14 +188,11 @@ export function createDemo(onChange, baseUrl) {
     }
     function attach(api) {
         instance = api;
-        resizeComparison();
-        window.addEventListener('resize', resizeComparison);
         initialize();
         publish();
     }
-    // 인스턴스 생성/파괴는 래퍼에 맡기고 이 모델의 이벤트와 타이머만 정리합니다.
+    // 인스턴스 생성/파괴는 래퍼에 맡기고 모델에서 연결한 이벤트와 참조를 정리합니다.
     function detach() {
-        window.removeEventListener('resize', resizeComparison);
         if (instance?.isCreated()) instance.unbind(['cellEditEnd', 'filtering', 'undoRedoChange']);
         instance = null;
     }

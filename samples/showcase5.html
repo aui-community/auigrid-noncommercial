@@ -1,285 +1,293 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
-<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="https://www.auisoft.net/">
-<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
 <title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<link rel="stylesheet" href="./static/prism.css">
-<link href="./demo.css" rel="stylesheet">
-
-<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
-<link rel="stylesheet" href="./style/demo-typography.css">
-<link rel="stylesheet" href="./static/code-examples.css">
-<script src="./static/prism.js" data-manual></script>
-<script src="./static/code-examples.js" data-source-viewer></script>
-
-
-<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<script type="text/javascript" src="./common.js"></script>
+<link href="./demo.css" rel="stylesheet" />
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-        <!-- 공용 화면은 유지하고 비교표와 변경 대조표의 셀 표현만 별도로 정의합니다. -->
-        <link href="./style/showcase-workspaces.css?v=20261006-3" rel="stylesheet" />
-        <link href="./style/showcase-grid-features.css?v=20261006-2" rel="stylesheet" />
-        <script src="../export_server_samples/FileSaver.min.js"></script>
-        <script src="../pdfkit/AUIGrid.pdfkit.js"></script>
-        <script>
-            let myGridID;
-            let compact = window.innerWidth <= 700;
-            const models = [
-                { field: "aster", name: "ASTER 32B", family: "균형형" },
-                { field: "orbit", name: "ORBIT 70B", family: "고성능" },
-                { field: "pico", name: "PICO 8B", family: "경량형" },
-                { field: "nova", name: "NOVA 14B", family: "효율형" }
-            ];
-            let visibleModels = models.map((model) => model.field);
-            // 서로 다른 단위를 갖는 지표를 행에 배치합니다. 모델과 수치는 실제 제품과 무관한 가상 자료입니다.
-            const benchmarkRows = [
-                ["품질", "한국어 이해", "문맥 및 의도 파악", "점", 1, "high", 92.4, 95.1, 83.2, 88.7],
-                ["품질", "복합 추론", "여러 단계의 문제 해결", "점", 1, "high", 86.8, 93.6, 74.5, 84.2],
-                ["품질", "코드 생성", "테스트 통과 기준", "점", 1, "high", 88.2, 94.3, 80.1, 87.5],
-                ["품질", "문서 검색 답변", "제공한 근거와의 일치", "점", 1, "high", 94.2, 93.8, 86.3, 91.7],
-                ["품질", "구조화 출력", "JSON 스키마 준수", "%", 1, "high", 99.2, 99.6, 96.8, 99.2],
-                ["품질", "지시 준수", "요청한 형식과 제약 준수", "점", 1, "high", 91.5, 94.7, 85.1, 90.8],
-                ["응답 성능", "첫 토큰 지연", "응답 시작까지 대기", "ms", 0, "low", 320, 580, 140, 210],
-                ["응답 성능", "출력 속도", "초당 생성 토큰", "tok/s", 0, "high", 78, 42, 146, 112],
-                ["응답 성능", "전체 응답 시간", "500 토큰 출력 기준", "초", 1, "low", 6.7, 12.5, 3.6, 4.7],
-                ["응답 성능", "동시 처리", "동일 장비의 동시 요청", "건", 0, "high", 24, 12, 64, 40],
-                ["운영 비용", "입력 단가", "100만 토큰당 비용", "원", 0, "low", 850, 2100, 180, 420],
-                ["운영 비용", "출력 단가", "100만 토큰당 비용", "원", 0, "low", 1700, 4200, 360, 840],
-                ["운영 비용", "월 예상 비용", "동일한 요청량 기준", "만원", 0, "low", 184, 462, 42, 91],
-                ["배포 환경", "GPU 메모리", "추론 서버 필요 용량", "GB", 0, "low", 48, 96, 16, 24],
-                ["배포 환경", "컨텍스트 길이", "한 번에 처리할 토큰", "K", 0, "high", 128, 128, 32, 64],
-                ["배포 환경", "최대 출력", "요청당 최대 출력 토큰", "K", 0, "high", 16, 16, 8, 16],
-                ["배포 환경", "모델 로딩", "추론 준비 시간", "초", 0, "low", 24, 51, 8, 14],
-                ["배포 환경", "추가 학습", "학습 소요 시간", "시간", 1, "low", 3.8, null, 1.1, 2.2]
-            ].map(([category, metric, hint, unit, precision, direction, ...values], index) => ({
-                id: "METRIC-" + index,
-                category,
-                metric,
-                hint,
-                unit,
-                precision,
-                direction,
-                ...Object.fromEntries(models.map((model, i) => [model.field, values[i]]))
-            }));
-            function escapeText(value) {
-                return String(value).replace(
-                    /[&<>"']/g,
-                    (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]
-                );
-            }
-            function formatMetric(value, item) {
-                return value == null
-                    ? "미측정"
-                    : value.toLocaleString("ko-KR", {
-                          minimumFractionDigits: item.precision,
-                          maximumFractionDigits: item.precision
-                      });
-            }
-            // 현재 보이는 모델끼리만 비교하며 미측정은 제외하고 동점은 함께 강조합니다.
-            function isBest(value, item) {
-                if (value == null) return false;
-                const values = visibleModels.map((field) => item[field]).filter((number) => number != null);
-                return value === (item.direction === "high" ? Math.max(...values) : Math.min(...values));
-            }
-            // 평가 지표의 보조 설명은 화면 템플릿과 파일 출력에서 같은 문구를 사용합니다.
-            function metricDescription(item) {
-                return item.hint + " / " + (item.direction === "high" ? "높을수록 좋음" : "낮을수록 좋음");
-            }
-            // 화면에 보이는 수치, 단위와 최고값 표시만 텍스트로 내보냅니다.
-            // 숨겨진 모델을 제외한 비교 기준은 화면과 동일하게 isBest를 사용합니다.
-            function modelAlias(value, item) {
+<!-- 공용 화면은 유지하고 비교표와 변경 대조표의 셀 표현만 별도로 정의합니다. -->
+<link href="./style/showcase-workspaces.css?v=20261006-3" rel="stylesheet" />
+<link href="./style/showcase-grid-features.css?v=20261006-2" rel="stylesheet" />
+<script src="../export_server_samples/FileSaver.min.js"></script>
+<script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+<script>
+    let myGridID;
+    const models = [
+        { field: "aster", name: "ASTER 32B", family: "균형형" },
+        { field: "orbit", name: "ORBIT 70B", family: "고성능" },
+        { field: "pico", name: "PICO 8B", family: "경량형" },
+        { field: "nova", name: "NOVA 14B", family: "효율형" }
+    ];
+    let visibleModels = models.map((model) => model.field);
+    // 서로 다른 단위를 갖는 지표를 행에 배치합니다. 모델과 수치는 실제 제품과 무관한 가상 자료입니다.
+    const benchmarkRows = [
+        ["품질", "한국어 이해", "문맥 및 의도 파악", "점", 1, "high", 92.4, 95.1, 83.2, 88.7],
+        ["품질", "복합 추론", "여러 단계의 문제 해결", "점", 1, "high", 86.8, 93.6, 74.5, 84.2],
+        ["품질", "코드 생성", "테스트 통과 기준", "점", 1, "high", 88.2, 94.3, 80.1, 87.5],
+        ["품질", "문서 검색 답변", "제공한 근거와의 일치", "점", 1, "high", 94.2, 93.8, 86.3, 91.7],
+        ["품질", "구조화 출력", "JSON 스키마 준수", "%", 1, "high", 99.2, 99.6, 96.8, 99.2],
+        ["품질", "지시 준수", "요청한 형식과 제약 준수", "점", 1, "high", 91.5, 94.7, 85.1, 90.8],
+        ["응답 성능", "첫 토큰 지연", "응답 시작까지 대기", "ms", 0, "low", 320, 580, 140, 210],
+        ["응답 성능", "출력 속도", "초당 생성 토큰", "tok/s", 0, "high", 78, 42, 146, 112],
+        ["응답 성능", "전체 응답 시간", "500 토큰 출력 기준", "초", 1, "low", 6.7, 12.5, 3.6, 4.7],
+        ["응답 성능", "동시 처리", "동일 장비의 동시 요청", "건", 0, "high", 24, 12, 64, 40],
+        ["운영 비용", "입력 단가", "100만 토큰당 비용", "원", 0, "low", 850, 2100, 180, 420],
+        ["운영 비용", "출력 단가", "100만 토큰당 비용", "원", 0, "low", 1700, 4200, 360, 840],
+        ["운영 비용", "월 예상 비용", "동일한 요청량 기준", "만원", 0, "low", 184, 462, 42, 91],
+        ["배포 환경", "GPU 메모리", "추론 서버 필요 용량", "GB", 0, "low", 48, 96, 16, 24],
+        ["배포 환경", "컨텍스트 길이", "한 번에 처리할 토큰", "K", 0, "high", 128, 128, 32, 64],
+        ["배포 환경", "최대 출력", "요청당 최대 출력 토큰", "K", 0, "high", 16, 16, 8, 16],
+        ["배포 환경", "모델 로딩", "추론 준비 시간", "초", 0, "low", 24, 51, 8, 14],
+        ["배포 환경", "추가 학습", "학습 소요 시간", "시간", 1, "low", 3.8, null, 1.1, 2.2]
+    ].map(([category, metric, hint, unit, precision, direction, ...values], index) => ({
+        id: "METRIC-" + index,
+        category,
+        metric,
+        hint,
+        unit,
+        precision,
+        direction,
+        ...Object.fromEntries(models.map((model, i) => [model.field, values[i]]))
+    }));
+    function escapeText(value) {
+        return String(value).replace(
+            /[&<>"']/g,
+            (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]
+        );
+    }
+    function formatMetric(value, item) {
+        return value == null
+            ? "미측정"
+            : value.toLocaleString("ko-KR", {
+                  minimumFractionDigits: item.precision,
+                  maximumFractionDigits: item.precision
+              });
+    }
+    // 현재 보이는 모델끼리만 비교하며 미측정은 제외하고 동점은 함께 강조합니다.
+    function isBest(value, item) {
+        if (value == null) return false;
+        const values = visibleModels.map((field) => item[field]).filter((number) => number != null);
+        return value === (item.direction === "high" ? Math.max(...values) : Math.min(...values));
+    }
+    // 평가 지표의 보조 설명은 화면 템플릿과 파일 출력에서 같은 문구를 사용합니다.
+    function metricDescription(item) {
+        return item.hint + " / " + (item.direction === "high" ? "높을수록 좋음" : "낮을수록 좋음");
+    }
+    // 화면에 보이는 수치, 단위와 최고값 표시만 텍스트로 내보냅니다.
+    // 숨겨진 모델을 제외한 비교 기준은 화면과 동일하게 isBest를 사용합니다.
+    function modelAlias(value, item) {
+        return (
+            formatMetric(value, item) + (value == null ? "" : " " + item.unit) + (isBest(value, item) ? "  최고" : "")
+        );
+    }
+    function modelColumn(model) {
+        return {
+            dataField: model.field,
+            headerText: model.name,
+            minWidth: 160,
+            headerStyle: "benchmark-model-header",
+            style: "benchmark-score",
+            styleFunction: (row, col, value, header, item) =>
+                isBest(value, item) ? "benchmark-best" : "benchmark-score",
+            renderer: {
+                type: "TemplateRenderer",
+                aliasFunction: (row, col, value, header, item) => modelAlias(value, item)
+            },
+            labelFunction: (row, col, value, header, item) => {
+                const best = isBest(value, item);
                 return (
+                    '<div class="benchmark-value"><strong>' +
                     formatMetric(value, item) +
-                    (value == null ? "" : " " + item.unit) +
-                    (isBest(value, item) ? "  최고" : "")
+                    (value == null ? "" : "<span>" + escapeText(item.unit) + "</span>") +
+                    "</strong><small>" +
+                    (best ? "최고" : value == null ? "—" : "비교") +
+                    "</small></div>"
                 );
             }
-            function modelColumn(model) {
-                return {
-                    dataField: model.field,
-                    headerText: model.name,
-                    minWidth: 160,
-                    headerStyle: "benchmark-model-header",
-                    style: "benchmark-score",
-                    styleFunction: (row, col, value, header, item) =>
-                        isBest(value, item) ? "benchmark-best" : "benchmark-score",
-                    renderer: {
-                        type: "TemplateRenderer",
-                        aliasFunction: (row, col, value, header, item) => modelAlias(value, item)
-                    },
-                    labelFunction: (row, col, value, header, item) => {
-                        const best = isBest(value, item);
-                        return (
-                            '<div class="benchmark-value"><strong>' +
-                            formatMetric(value, item) +
-                            (value == null ? "" : "<span>" + escapeText(item.unit) + "</span>") +
-                            "</strong><small>" +
-                            (best ? "최고" : value == null ? "—" : "비교") +
-                            "</small></div>"
-                        );
-                    }
-                };
-            }
-            function init() {
-                const columns = [
-                    {
-                        dataField: "category",
-                        headerText: "평가 영역",
-                        width: 94,
-                        cellMerge: true,
-                        style: "benchmark-category"
-                    },
-                    {
-                        dataField: "metric",
-                        headerText: "평가 지표",
-                        width: 210,
-                        style: "benchmark-metric",
-                        renderer: {
-                            type: "TemplateRenderer",
-                            // HTML의 두 줄 구성을 개행으로 옮겨 Excel과 PDF에도 지표 설명을 함께 기록합니다.
-                            aliasFunction: (row, col, value, header, item) => value + "\n" + metricDescription(item)
-                        },
-                        labelFunction: (row, col, value, header, item) =>
-                            '<div class="benchmark-metric-text"><strong>' +
-                            escapeText(value) +
-                            "</strong><small>" +
-                            escapeText(metricDescription(item)) +
-                            "</small></div>"
-                    },
-                    ...models.map((model) => ({
-                        headerText: model.family,
-                        headerStyle: "benchmark-family-header",
-                        children: [modelColumn(model)]
-                    }))
-                ];
-                myGridID = AUIGrid.create("#grid_wrap", columns, {
-                    rowIdField: "id",
-                    rowIdTrustMode: true,
-                    rowHeight: 54,
-                    headerHeights: [28, 42],
-                    showRowNumColumn: false,
-                    showStateColumn: false,
-                    enableCellMerge: true,
-                    enableSorting: false,
-                    fixedColumnCount: compact ? 0 : 2,
-                    selectionMode: "multipleCells"
-                });
-                AUIGrid.setGridData(myGridID, benchmarkRows);
-            }
-            function changeModels(input) {
-                const checked = Array.from(document.querySelectorAll("[data-model]:checked"));
-                if (checked.length < 2) {
-                    input.checked = true;
-                    document.getElementById("benchmark-status").textContent = "비교할 모델을 2개 이상 선택하세요.";
-                    return;
-                }
-                visibleModels = checked.map((element) => element.dataset.model);
-                models.forEach((model) => {
-                    if (visibleModels.includes(model.field)) AUIGrid.showColumnByDataField(myGridID, model.field);
-                    else AUIGrid.hideColumnByDataField(myGridID, model.field);
-                });
-                AUIGrid.refresh(myGridID);
-                document.getElementById("benchmark-status").textContent =
-                    "18개 지표 / " + visibleModels.length + "개 모델 비교";
-            }
-            function resizeComparison() {
-                const next = window.innerWidth <= 700;
-                if (!myGridID || compact === next) return;
-                compact = next;
-                AUIGrid.setFixedColumnCount(myGridID, compact ? 0 : 2);
-            }
-            function exportReport(format) {
-                const props = {
-                    fileName: "AI_모델_벤치마크",
-                    headers: [{ text: "AI 모델 벤치마크 비교 (가상 데이터)", height: 28 }]
-                };
-                if (format === "pdf")
-                    // 지표 이름과 보조 설명 두 줄이 잘리지 않도록 화면의 행 높이를 적용합니다.
-                    AUIGrid.exportToPdf(myGridID, {
-                        ...props,
-                        rowHeight: AUIGrid.getProp(myGridID, "rowHeight"),
-                        fontPath: "../pdfkit/nyjgothic-medium.ttf"
-                    });
-                else AUIGrid.exportToXlsx(myGridID, props);
-            }
-            // 페이지를 떠나면 제품 인스턴스와 이 데모가 등록한 이벤트를 정리합니다.
-            function disposeDemo(event) {
-                if (event.persisted) return;
-                AUIGrid.destroy(myGridID);
-                myGridID = null;
-                window.removeEventListener("resize", resizeComparison);
-                window.removeEventListener("pagehide", disposeDemo);
-            }
-            window.addEventListener("resize", resizeComparison);
-            window.addEventListener("pagehide", disposeDemo);
-        </script>
-    </head>
-<body class="demo-typography">
+        };
+    }
+    function init() {
+        const columns = [
+            {
+                dataField: "category",
+                headerText: "평가 영역",
+                width: 94,
+                cellMerge: true,
+                style: "benchmark-category"
+            },
+            {
+                dataField: "metric",
+                headerText: "평가 지표",
+                width: 210,
+                style: "benchmark-metric",
+                renderer: {
+                    type: "TemplateRenderer",
+                    // HTML의 두 줄 구성을 개행으로 옮겨 Excel과 PDF에도 지표 설명을 함께 기록합니다.
+                    aliasFunction: (row, col, value, header, item) => value + "\n" + metricDescription(item)
+                },
+                labelFunction: (row, col, value, header, item) =>
+                    '<div class="benchmark-metric-text"><strong>' +
+                    escapeText(value) +
+                    "</strong><small>" +
+                    escapeText(metricDescription(item)) +
+                    "</small></div>"
+            },
+            ...models.map((model) => ({
+                headerText: model.family,
+                headerStyle: "benchmark-family-header",
+                children: [modelColumn(model)]
+            }))
+        ];
+        myGridID = AUIGrid.create("#grid_wrap", columns, {
+            rowIdField: "id",
+            rowIdTrustMode: true,
+            rowHeight: 54,
+            headerHeights: [28, 42],
+            showRowNumColumn: false,
+            showStateColumn: false,
+            enableCellMerge: true,
+            enableSorting: false,
+            // 모든 칼럼이 함께 가로 스크롤되도록 고정을 해제합니다.
+            fixedColumnCount: 0,
+            selectionMode: "multipleCells"
+        });
+        AUIGrid.setGridData(myGridID, benchmarkRows);
+    }
+    function changeModels(input) {
+        const checked = Array.from(document.querySelectorAll("[data-model]:checked"));
+        if (checked.length < 2) {
+            input.checked = true;
+            document.getElementById("benchmark-status").textContent = "비교할 모델을 2개 이상 선택하세요.";
+            return;
+        }
+        visibleModels = checked.map((element) => element.dataset.model);
+        models.forEach((model) => {
+            if (visibleModels.includes(model.field)) AUIGrid.showColumnByDataField(myGridID, model.field);
+            else AUIGrid.hideColumnByDataField(myGridID, model.field);
+        });
+        AUIGrid.refresh(myGridID);
+        document.getElementById("benchmark-status").textContent =
+            "18개 지표 / " + visibleModels.length + "개 모델 비교";
+    }
+    function exportReport(format) {
+        const props = {
+            fileName: "AI_모델_벤치마크",
+            headers: [{ text: "AI 모델 벤치마크 비교 (가상 데이터)", height: 28 }]
+        };
+        if (format === "pdf")
+            // 지표 이름과 보조 설명 두 줄이 잘리지 않도록 화면의 행 높이를 적용합니다.
+            AUIGrid.exportToPdf(myGridID, {
+                ...props,
+                rowHeight: AUIGrid.getProp(myGridID, "rowHeight"),
+                fontPath: "../pdfkit/nyjgothic-medium.ttf"
+            });
+        else AUIGrid.exportToXlsx(myGridID, props);
+    }
+    // 페이지를 떠나면 제품 인스턴스와 이 데모가 등록한 이벤트를 정리합니다.
+    function disposeDemo(event) {
+        if (event.persisted) return;
+        AUIGrid.destroy(myGridID);
+        myGridID = null;
+        window.removeEventListener("pagehide", disposeDemo);
+    }
+    window.addEventListener("pagehide", disposeDemo);
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
 
-            <div id="main" class="workspace-demo grid-feature-showcase benchmark-showcase">
-                <div class="workspace-heading">
-                    <div>
-                        <h2>AI 모델 벤치마크 비교</h2>
-                        <p>지표는 세로로, 모델은 가로로. 같은 항목의 수치를 한 줄에서 비교하세요.</p>
-                    </div>
-                    <span class="feature-volume">18개 지표 × 4개 모델</span>
-                </div>
-                <div class="workspace-toolbar">
-                    <div class="workspace-controls" aria-label="비교 모델 선택">
-                        <label
-                            ><input type="checkbox" data-model="aster" checked onchange="changeModels(this)" /> ASTER
-                            32B</label
-                        >
-                        <label
-                            ><input type="checkbox" data-model="orbit" checked onchange="changeModels(this)" /> ORBIT
-                            70B</label
-                        >
-                        <label
-                            ><input type="checkbox" data-model="pico" checked onchange="changeModels(this)" /> PICO
-                            8B</label
-                        >
-                        <label
-                            ><input type="checkbox" data-model="nova" checked onchange="changeModels(this)" /> NOVA
-                            14B</label
-                        >
-                    </div>
-                    <div class="workspace-controls">
-                        <button type="button" class="btn" onclick="exportReport('xlsx')">Excel 내보내기</button>
-                        <button type="button" class="btn" onclick="exportReport('pdf')">PDF 내보내기</button>
-                    </div>
-                </div>
-                <div class="comparison-caption">
-                    <span>셀 템플릿 / 세로 병합 / 고정 칼럼 / 칼럼 표시 전환</span
-                    ><span class="benchmark-key">최고값 강조 (동점 포함)</span>
-                </div>
-                <div id="grid_wrap"></div>
-                <div class="workspace-note">
-                    <span id="benchmark-status" role="status">18개 지표 / 4개 모델 비교</span
-                    ><span>모델과 측정값은 기능 설명을 위한 가상 데이터입니다.</span>
-                </div>
-            </div>
+<div id="main" class="workspace-demo grid-feature-showcase benchmark-showcase">
+    <div class="workspace-heading">
+        <div>
+            <h2>AI 모델 벤치마크 비교</h2>
+            <p>지표는 세로로, 모델은 가로로. 같은 항목의 수치를 한 줄에서 비교하세요.</p>
+        </div>
+        <span class="feature-volume">18개 지표 × 4개 모델</span>
+    </div>
+    <div class="workspace-toolbar">
+        <div class="workspace-controls" aria-label="비교 모델 선택">
+            <label><input type="checkbox" data-model="aster" checked onchange="changeModels(this)" /> ASTER 32B</label>
+            <label><input type="checkbox" data-model="orbit" checked onchange="changeModels(this)" /> ORBIT 70B</label>
+            <label><input type="checkbox" data-model="pico" checked onchange="changeModels(this)" /> PICO 8B</label>
+            <label><input type="checkbox" data-model="nova" checked onchange="changeModels(this)" /> NOVA 14B</label>
+        </div>
+        <div class="workspace-controls">
+            <button type="button" class="btn" onclick="exportReport('xlsx')">Excel 내보내기</button>
+            <button type="button" class="btn" onclick="exportReport('pdf')">PDF 내보내기</button>
+        </div>
+    </div>
+    <div class="comparison-caption">
+        <span>셀 템플릿 / 세로 병합 / 칼럼 표시 전환</span><span class="benchmark-key">최고값 강조 (동점 포함)</span>
+    </div>
+    <div id="grid_wrap"></div>
+    <!-- 실제 사용한 기능의 공식 API 설명으로 연결합니다. -->
+    <p class="showcase-api-links" aria-label="사용 기능과 API">
+        <strong>관련 API</strong>
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/DataGrid/Properties.html#enableCellMerge"
+            target="_blank"
+            rel="noopener"
+            >세로 셀 병합</a
+        >
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/ColumnLayout/TemplateRenderer.html"
+            target="_blank"
+            rel="noopener"
+            >셀 템플릿</a
+        >
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/DataGrid/Methods.html#hideColumnByDataField"
+            target="_blank"
+            rel="noopener"
+            >칼럼 숨기기</a
+        >
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/ColumnLayout/TemplateRenderer.html#aliasFunction"
+            target="_blank"
+            rel="noopener"
+            >내보내기 값 지정</a
+        >
+    </p>
+    <div class="workspace-note">
+        <span id="benchmark-status" role="status">18개 지표 / 4개 모델 비교</span
+        ><span>모델과 측정값은 기능 설명을 위한 가상 데이터입니다.</span>
+    </div>
+</div>
 <div id="footer">
-     <div class="copyright">
+    <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>

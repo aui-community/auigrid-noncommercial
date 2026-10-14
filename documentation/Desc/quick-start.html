@@ -1,58 +1,58 @@
 <!doctype html>
 <html lang="ko">
-
 <head>
-  <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta charset="utf-8">
-  <meta content="text/javascript" http-equiv="Content-Script-Type">
-  <meta content="text/css" http-equiv="Content-Style-Type">
-  <meta content="IE=edge" http-equiv="X-UA-Compatible">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="-1">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
-  <meta content="AUIGrid API Documentation" property="og:title">
-  <meta content="https://www.auisoft.net/documentation/auigrid" property="og:url">
-  <meta content="AUIGrid API Documentation" property="og:description">
-  <meta content="AUIGrid API Documentation" name="keywords">
-  <title> AUIGrid Documentation</title>
-  
-  <link rel="stylesheet" href="../static/prism.css">
-<link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen">
-<link rel="stylesheet" href="../static/typography.css">
-<link rel="stylesheet" href="../static/code-examples.css">
-  <!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
-  <script src="../static/prism.js" data-manual></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta charset="utf-8" />
+<meta content="text/javascript" http-equiv="Content-Script-Type" />
+<meta content="text/css" http-equiv="Content-Style-Type" />
+<meta content="IE=edge" http-equiv="X-UA-Compatible" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title" />
+<meta content="AUIGrid API Documentation" property="og:title" />
+<meta content="https://www.auisoft.net/documentation/auigrid" property="og:url" />
+<meta content="AUIGrid API Documentation" property="og:description" />
+<meta content="AUIGrid API Documentation" name="keywords" />
+<title>AUIGrid Documentation</title>
+
+<link rel="stylesheet" href="../static/prism.css" />
+<link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen" />
+<link rel="stylesheet" href="../static/typography.css" />
+<link rel="stylesheet" href="../static/code-examples.css" />
+<!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
+<script src="../static/prism.js" data-manual></script>
 <script src="../static/code-examples.js"></script>
 
-<link rel="icon" href="../static/favicon.ico" sizes="any">
-<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
-<meta name="theme-color" content="#222729">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="../static/docs-brand.css">
+<link rel="icon" href="../static/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png" />
+<meta name="theme-color" content="#222729" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+/>
+<link rel="stylesheet" href="../static/docs-brand.css" />
 </head>
 
 <body class="demo-typography docs-site">
-  <header class="docs-header"><div class="docs-header-inner">
-    <a id="logo-bar" class="docs-brand docs-package-brand" href="../index.html" aria-label="AUIGrid 문서 홈">
-      <img src="../static/favicon.svg" width="40" height="40" alt="">
-      <span id="title" class="docs-package-title">AUIGrid v3.0.19 Documentation</span>
-    </a>
-  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">3. 간단하게 그리드 생성해 보기(Quick Start)</span></nav>
-  <div class="MainContent">
-
+<nav class="docs-breadcrumb" aria-label="현재 위치">
+    <a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span
+    ><span aria-hidden="true">/</span><span aria-current="page">3. 간단하게 그리드 생성해 보기(Quick Start)</span>
+</nav>
+<div class="MainContent">
     <h1>3. 간단하게 그리드 생성해 보기(Quick Start)</h1>
 
     <p>
-      이 문서는 AUIGrid를 처음 사용하는 개발자를 위한 가장 간단하면서도 완성된 형태의 사용 예제입니다.
-      HTML 구조 작성부터, 그리드 출력, JSON 데이터 로딩까지 순차적으로 작성합니다.
+        이 문서는 AUIGrid를 처음 사용하는 개발자를 위한 가장 간단하면서도 완성된 형태의 사용 예제입니다. HTML 구조
+        작성부터, 그리드 출력, JSON 데이터 로딩까지 순차적으로 작성합니다.
     </p>
 
-    <p><strong>처음 시작한다면:</strong> <a href="noncommercial.html">비상업용 CDN 시작 안내</a>의 HTML 예제로
-      라이브러리를 직접 배치하지 않고 로컬에서 그리드를 실행해 볼 수 있습니다.
-      아래 설명은 제품 파일을 프로젝트에 배치하여 사용하는 흐름입니다.</p>
+    <p>
+        <strong>처음 시작한다면:</strong> <a href="noncommercial.html">비상업용 CDN 시작 안내</a>의 HTML 예제로
+        라이브러리를 직접 배치하지 않고 로컬에서 그리드를 실행해 볼 수 있습니다. 아래 설명은 제품 파일을 프로젝트에
+        배치하여 사용하는 흐름입니다.
+    </p>
 
     <h2>3.1 기본 HTML 구조</h2>
     <pre><code class="language-html">&lt;!DOCTYPE html&gt;
@@ -125,53 +125,65 @@
 
     <h2>3.2 주요 요소 설명</h2>
     <table>
-      <tr>
-        <th>구성</th>
-        <th>설명</th>
-      </tr>
-      <tr>
-        <td><code class="language-html">AUIGridLicense.js</code></td>
-        <td>AUIGrid 라이선스 등록 파일 (필수)</td>
-      </tr>
-      <tr>
-        <td><code class="language-html">AUIGrid.js</code></td>
-        <td>AUIGrid 라이브러리 메인 파일 (필수)</td>
-      </tr>
-      <tr>
-        <td><code class="language-html">AUIGrid_style.css</code></td>
-        <td>AUIGrid 테마 CSS 파일 (원하는 테마가 있을 때 해당 파일로 변경 가능) (필수)</td>
-      </tr>
-      <tr>
-        <td><code class="language-html">columnLayout</code></td>
-        <td>그리드 컬럼 레이아웃 정의 배열 (필수). 구체적 칼럼 작성에 대한 내용은 <a href="../ColumnLayout/package-detail.html">여기 문서</a>를 클릭하세요.</td>
-      </tr>
-      <tr>
-        <td><code class="language-html">gridProps</code></td>
-        <td>그리드 속성 정의 객체 (선택). 자세한 속성에 대한 내용은 <a href="../DataGrid/Properties.html">여기 문서</a>를 클릭하세요.</td>
-      </tr>
-      <tr>
-        <td><code class="language-html">AUIGrid.setGridData()</code></td>
-        <td>그리드 데이터 삽입 메소드 (필수). 구체적 메소드에 대한 내용은 <a href="../DataGrid/Methods.html">여기 문서</a>를 클릭하세요.</td>
-      </tr>
-      <tr>
-        <td><code class="language-html">AUIGrid.bind()</code></td>
-        <td>그리드 이벤트 정의 바인딩 메소드 (선택). 구체적 이벤트에 대한 내용은 <a href="../DataGrid/Events.html">여기 문서</a>를 클릭하세요.</td>
-      </tr>
-      <tr>
-        <td><code class="language-html">AUIGrid.create()</code></td>
-        <td>실제 그리드 생성 함수 (필수)</td>
-      </tr>
-      <tr>
-        <td><code class="language-html">fetch().then()</code></td>
-        <td>외부 JSON 파일로부터 비동기 데이터 로딩</td>
-      </tr>
+        <tr>
+            <th>구성</th>
+            <th>설명</th>
+        </tr>
+        <tr>
+            <td><code class="language-html">AUIGridLicense.js</code></td>
+            <td>AUIGrid 라이선스 등록 파일 (필수)</td>
+        </tr>
+        <tr>
+            <td><code class="language-html">AUIGrid.js</code></td>
+            <td>AUIGrid 라이브러리 메인 파일 (필수)</td>
+        </tr>
+        <tr>
+            <td><code class="language-html">AUIGrid_style.css</code></td>
+            <td>AUIGrid 테마 CSS 파일 (원하는 테마가 있을 때 해당 파일로 변경 가능) (필수)</td>
+        </tr>
+        <tr>
+            <td><code class="language-html">columnLayout</code></td>
+            <td>
+                그리드 컬럼 레이아웃 정의 배열 (필수). 구체적 칼럼 작성에 대한 내용은
+                <a href="../ColumnLayout/package-detail.html">여기 문서</a>를 클릭하세요.
+            </td>
+        </tr>
+        <tr>
+            <td><code class="language-html">gridProps</code></td>
+            <td>
+                그리드 속성 정의 객체 (선택). 자세한 속성에 대한 내용은
+                <a href="../DataGrid/Properties.html">여기 문서</a>를 클릭하세요.
+            </td>
+        </tr>
+        <tr>
+            <td><code class="language-html">AUIGrid.setGridData()</code></td>
+            <td>
+                그리드 데이터 삽입 메소드 (필수). 구체적 메소드에 대한 내용은
+                <a href="../DataGrid/Methods.html">여기 문서</a>를 클릭하세요.
+            </td>
+        </tr>
+        <tr>
+            <td><code class="language-html">AUIGrid.bind()</code></td>
+            <td>
+                그리드 이벤트 정의 바인딩 메소드 (선택). 구체적 이벤트에 대한 내용은
+                <a href="../DataGrid/Events.html">여기 문서</a>를 클릭하세요.
+            </td>
+        </tr>
+        <tr>
+            <td><code class="language-html">AUIGrid.create()</code></td>
+            <td>실제 그리드 생성 함수 (필수)</td>
+        </tr>
+        <tr>
+            <td><code class="language-html">fetch().then()</code></td>
+            <td>외부 JSON 파일로부터 비동기 데이터 로딩</td>
+        </tr>
     </table>
 
     <h2>3.3 생성 완료 후 판단</h2>
     <ul>
-      <li>단일 HTML 파일로 빠르게 테스트 가능</li>
-      <li>외부 프레임워크 없이 기본적인 AUIGrid 실행 확인</li>
-      <li>JSON 데이터는 <code class="language-html">./data/normal_100.json</code>에 존재해야 함</li>
+        <li>단일 HTML 파일로 빠르게 테스트 가능</li>
+        <li>외부 프레임워크 없이 기본적인 AUIGrid 실행 확인</li>
+        <li>JSON 데이터는 <code class="language-html">./data/normal_100.json</code>에 존재해야 함</li>
     </ul>
 
     <h2>3.4 설치 후 테스트</h2>
@@ -179,13 +191,18 @@
 
     <h2>3.5 최종 확인 라이브 샘플</h2>
     <p>다음 링크에서 확인 가능합니다.</p>
-    <a href="https://www.auisoft.net/blog/auigrid/quick_start.html" target="_blank">https://www.auisoft.net/blog/auigrid/quick_start.html</a>
+    <a href="https://www.auisoft.net/blog/auigrid/quick_start.html" target="_blank"
+        >https://www.auisoft.net/blog/auigrid/quick_start.html</a
+    >
 
     <div class="warn">
-      ⚠️ <strong>주의:</strong> 이 예제는 복사하여 바로 실행할 수 있는 구조이지만, fetch 경로에 맞는 JSON 파일이 반드시 존재해야 합니다.
+        ⚠️ <strong>주의:</strong> 이 예제는 복사하여 바로 실행할 수 있는 구조이지만, fetch 경로에 맞는 JSON 파일이
+        반드시 존재해야 합니다.
     </div>
-
-  </div>
-<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
-
+</div>
+<footer class="docs-footer">
+    <div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div>
+    <span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span>
+</footer>
+</body>
 </html>

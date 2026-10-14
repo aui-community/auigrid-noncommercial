@@ -1,7 +1,40 @@
-/* eslint-disable */
-/*
- * AUIGrid 사용자 정의 렌더러
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Client renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
  */
+/*
+ * AUIGrid 사용자 정의 렌더러 - 고객 정보 표시
+ *
+ * 국기 이미지, 고객 이름과 제품명을 한 셀에 표시합니다.
+ * 행의 여러 필드를 조합하여 출력하는 예제로 별도 편집 기능은 없습니다.
+ *
+ * 연결 파일
+ *   AUIGrid.js 다음에 AUIGrid.MyClientRenderer.js를 연결합니다.
+ *   배치는 WebDemo renderer_custom_2.html의 .my-img, .my-child1, .my-child2 CSS를 함께 적용합니다.
+ *   국기 이미지는 페이지 기준 ./assets/ 폴더에서 읽습니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "country",
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: AUIGrid.MyClientRenderer
+ *     }
+ *   }
+ *   행 데이터 예: { country: "한국", flag: "korea.png", name: "홍길동", product: "모니터" }
+ *
+ * 데이터와 표시
+ *   flag는 준비한 이미지 파일명, country는 이미지 툴팁, name과 product는 출력할 내용입니다.
+ *   이 필드명은 구현에 고정되어 있으며, 이름과 제품명은 HTML 문자열에 넣어 표시합니다.
+ *   데모의 rowHeight는 45입니다. 이 예제에는 extraProps 옵션이 없습니다.
+ */
+/* eslint-disable */
 window.AUIGrid.MyClientRenderer = window.AUIGrid.Class({
 	/****************************************************************
 	 *

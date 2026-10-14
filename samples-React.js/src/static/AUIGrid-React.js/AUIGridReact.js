@@ -1,6 +1,6 @@
 /**
- * AUIGridReact.js for React.js v1.7.20261008
- * Based on AUIGrid v3.0.19.2
+ * AUIGridReact.js for React.js v1.7.20261014
+ * Based on AUIGrid v3.0.20.0
  * Copyright © AUISoft Co., Ltd.
  * www.auisoft.net
  */
@@ -339,7 +339,8 @@ class AUIGrid extends React.Component {
 		$ag.exportToXml.call($ag, this.pid, arguments[0]);
 	}
 	forceEditingComplete(value, cancel) {
-		$ag.forceEditingComplete.call($ag, this.pid, arguments[0], arguments[1]);
+		// 비동기 cellEditEndBefore가 있으면 완료 Promise도 호출자에게 전달합니다.
+		return $ag.forceEditingComplete.call($ag, this.pid, arguments[0], arguments[1]);
 	}
 	getAddedColumnFields() {
 		return $ag.getAddedColumnFields.call($ag, this.pid);
@@ -716,19 +717,19 @@ class AUIGrid extends React.Component {
 		$ag.removeAjaxLoader.call($ag, this.pid);
 	}
 	removeCheckedRows() {
-		$ag.removeCheckedRows.call($ag, this.pid);
+		return $ag.removeCheckedRows.call($ag, this.pid);
 	}
 	removeColumn(columnIndex) {
-		$ag.removeColumn.call($ag, this.pid, arguments[0]);
+		return $ag.removeColumn.call($ag, this.pid, arguments[0]);
 	}
 	removeInfoMessage() {
 		$ag.removeInfoMessage.call($ag, this.pid);
 	}
 	removeRow(rowIndex) {
-		$ag.removeRow.call($ag, this.pid, arguments[0]);
+		return $ag.removeRow.call($ag, this.pid, arguments[0]);
 	}
 	removeRowByRowId(rowIds) {
-		$ag.removeRowByRowId.call($ag, this.pid, arguments[0]);
+		return $ag.removeRowByRowId.call($ag, this.pid, arguments[0]);
 	}
 	removeSoftRows(ids) {
 		return $ag.removeSoftRows.call($ag, this.pid, arguments[0]);
@@ -822,6 +823,10 @@ class AUIGrid extends React.Component {
 	}
 	setFixedColumnCount(count) {
 		$ag.setFixedColumnCount.call($ag, this.pid, arguments[0]);
+	}
+	// 오른쪽 요청은 변환 없이 엔진에 전달하여 입력 오류와 적용 계약을 유지합니다.
+	setFixedRightColumnCount(count) {
+		return $ag.setFixedRightColumnCount.call($ag, this.pid, arguments[0]);
 	}
 	setFixedRowCount(count) {
 		$ag.setFixedRowCount.call($ag, this.pid, arguments[0]);
@@ -1011,8 +1016,6 @@ export default AUIGrid;
 
 export const agUtils = {
 	isCreated: $ag.isCreated,
-	// Grid ID 없이 엔진의 진입점을 그대로 전달합니다. 제공 보류 엔진의 DISABLED 오류도 유지합니다.
-	getPluginRuntime: $ag.getPluginRuntime,
 	formatDate: $ag.formatDate,
 	formatNumber: $ag.formatNumber,
 	getActiveGrid: $ag.getActiveGrid,

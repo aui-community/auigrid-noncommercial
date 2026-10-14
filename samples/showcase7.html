@@ -1,1003 +1,1018 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
-<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="https://www.auisoft.net/">
-<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
 <title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<link rel="stylesheet" href="./static/prism.css">
-<link href="./demo.css" rel="stylesheet">
-
-<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
-<link rel="stylesheet" href="./style/demo-typography.css">
-<link rel="stylesheet" href="./static/code-examples.css">
-<script src="./static/prism.js" data-manual></script>
-<script src="./static/code-examples.js" data-source-viewer></script>
-
-
-<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<script type="text/javascript" src="./common.js"></script>
+<link href="./demo.css" rel="stylesheet" />
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+<!-- PDF 내보내기 필수 JS 추가 -->
+<script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
 
-        <!-- PDF 내보내기 필수 JS 추가 -->
-        <script type="text/javascript" src="../pdfkit/AUIGrid.pdfkit.js"></script>
+<!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
+<script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
 
-        <!-- 브라우저 다운로딩 할 수 있는 JS 추가 -->
-        <script type="text/javascript" src="../export_server_samples/FileSaver.min.js"></script>
+<!-- 구매 요청의 사용자 정의 렌더러. 공통 DOM 도구를 먼저 읽습니다. -->
+<script type="text/javascript" src="../AUIGrid/renderers/purchase_approval/cell-utils.js"></script>
+<script type="text/javascript" src="../AUIGrid/renderers/purchase_approval/RequesterRenderer.js"></script>
+<script type="text/javascript" src="../AUIGrid/renderers/purchase_approval/ApprovalStepsRenderer.js"></script>
+<script type="text/javascript" src="../AUIGrid/renderers/purchase_approval/AttachmentRenderer.js"></script>
+<script type="text/javascript" src="../AUIGrid/renderers/purchase_approval/DueDateRenderer.js"></script>
+<script type="text/javascript" src="../AUIGrid/renderers/purchase_approval/ApprovalActionsRenderer.js"></script>
 
-        <!-- 구매 요청의 사용자 정의 렌더러. 공통 DOM 도구를 먼저 읽습니다. -->
-        <script type="text/javascript" src="./js/renderers/purchase_approval/cell-utils.js"></script>
-        <script type="text/javascript" src="./js/renderers/purchase_approval/RequesterRenderer.js"></script>
-        <script type="text/javascript" src="./js/renderers/purchase_approval/ApprovalStepsRenderer.js"></script>
-        <script type="text/javascript" src="./js/renderers/purchase_approval/AttachmentRenderer.js"></script>
-        <script type="text/javascript" src="./js/renderers/purchase_approval/DueDateRenderer.js"></script>
-        <script type="text/javascript" src="./js/renderers/purchase_approval/ApprovalActionsRenderer.js"></script>
+<style>
+    /* 본문만 구매 요청 디자인으로 구성합니다. 헤더와 페이지 버튼은 공용 테마를 유지합니다. */
+    #grid_wrap .aui-grid-row-background,
+    #grid_wrap .aui-grid-alternative-row-background {
+        background: #fff;
+    }
+    #grid_wrap .request-title-cell {
+        background: #f5f6f8;
+        color: #20252c;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: left;
+        padding-left: 16px;
+    }
+    #grid_wrap .request-id {
+        color: #596270;
+        font-size: 12px;
+        font-weight: 500;
+        margin-right: 12px;
+    }
+    #grid_wrap .amount-cell {
+        color: #20252c;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: right;
+        padding-right: 16px;
+    }
+    #grid_wrap .requester-text-cell {
+        text-align: left;
+    }
 
-        <style>
-            /* 본문만 구매 요청 디자인으로 구성합니다. 헤더와 페이지 버튼은 공용 테마를 유지합니다. */
-            #grid_wrap .aui-grid-row-background,
-            #grid_wrap .aui-grid-alternative-row-background {
-                background: #fff;
-            }
-            #grid_wrap .request-title-cell {
-                background: #f5f6f8;
-                color: #20252c;
-                font-size: 14px;
-                font-weight: 600;
-                text-align: left;
-                padding-left: 16px;
-            }
-            #grid_wrap .request-id {
-                color: #596270;
-                font-size: 12px;
-                font-weight: 500;
-                margin-right: 12px;
-            }
-            #grid_wrap .amount-cell {
-                color: #20252c;
-                font-size: 14px;
-                font-weight: 600;
-                text-align: right;
-                padding-right: 16px;
-            }
-            #grid_wrap .requester-text-cell {
-                text-align: left;
-            }
+    /* 셀 내부 버튼에만 적용하여 상단 기능 버튼 및 다른 그리드와 분리합니다. */
+    #grid_wrap .purchase-cell {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        text-align: left;
+        white-space: normal;
+        line-height: 1.5;
+        color: #20252c;
+    }
+    #grid_wrap .purchase-cell * {
+        box-sizing: border-box;
+    }
+    #grid_wrap .purchase-cell :where(button) {
+        appearance: none;
+        font-family: inherit;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 0;
+        text-transform: none;
+        cursor: pointer;
+    }
+    #grid_wrap .purchase-cell button:disabled {
+        cursor: default;
+    }
+    #grid_wrap .purchase-cell [hidden] {
+        display: none !important;
+    }
+    #grid_wrap .purchase-cell button:focus-visible {
+        outline: 2px solid #ce4108;
+        outline-offset: 3px;
+    }
 
-            /* 셀 내부 버튼에만 적용하여 상단 기능 버튼 및 다른 그리드와 분리합니다. */
-            #grid_wrap .purchase-cell {
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-sizing: border-box;
-                text-align: left;
-                white-space: normal;
-                line-height: 1.5;
-                color: #20252c;
-            }
-            #grid_wrap .purchase-cell * {
-                box-sizing: border-box;
-            }
-            #grid_wrap .purchase-cell :where(button) {
-                appearance: none;
-                font-family: inherit;
-                font-weight: 400;
-                line-height: 1.5;
-                margin: 0;
-                text-transform: none;
-                cursor: pointer;
-            }
-            #grid_wrap .purchase-cell button:disabled {
-                cursor: default;
-            }
-            #grid_wrap .purchase-cell [hidden] {
-                display: none !important;
-            }
-            #grid_wrap .purchase-cell button:focus-visible {
-                outline: 2px solid #ce4108;
-                outline-offset: 3px;
-            }
+    /* 기존 SVG 아바타는 그대로 두고 요청자 이름과 소속의 크기 및 간격을 맞춥니다. */
+    #grid_wrap .requester-cell {
+        padding: 0 16px;
+    }
+    #grid_wrap .requester-button {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        text-align: left;
+    }
+    #grid_wrap .requester-avatar {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        display: block;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        border-radius: 2px;
+    }
+    #grid_wrap .requester-text {
+        overflow: hidden;
+    }
+    #grid_wrap .requester-name {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    #grid_wrap .requester-team {
+        display: block;
+        margin-top: 2px;
+        color: #596270;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+    #grid_wrap .requester-button:hover .requester-name {
+        text-decoration: underline;
+    }
 
-            /* 기존 SVG 아바타는 그대로 두고 요청자 이름과 소속의 크기 및 간격을 맞춥니다. */
-            #grid_wrap .requester-cell {
-                padding: 0 16px;
-            }
-            #grid_wrap .requester-button {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                width: 100%;
-                padding: 0;
-                border: 0;
-                background: transparent;
-                color: inherit;
-                text-align: left;
-            }
-            #grid_wrap .requester-avatar {
-                width: 36px;
-                height: 36px;
-                flex-shrink: 0;
-                display: block;
-                object-fit: cover;
-                border: 1px solid #ddd;
-                border-radius: 2px;
-            }
-            #grid_wrap .requester-text {
-                overflow: hidden;
-            }
-            #grid_wrap .requester-name {
-                display: block;
-                font-size: 14px;
-                font-weight: 600;
-                white-space: nowrap;
-            }
-            #grid_wrap .requester-team {
-                display: block;
-                margin-top: 2px;
-                color: #596270;
-                font-size: 12px;
-                white-space: nowrap;
-            }
-            #grid_wrap .requester-button:hover .requester-name {
-                text-decoration: underline;
-            }
+    /* 진행선과 상태 설명을 나란히 놓습니다. 최소 칼럼 폭으로 네 단계의 읽기 공간을 보장합니다. */
+    #grid_wrap .approval-cell {
+        gap: 16px;
+        padding: 12px 16px;
+    }
+    #grid_wrap .approval-track {
+        display: flex;
+        align-items: flex-start;
+        flex: 1;
+        min-width: 0;
+    }
+    #grid_wrap .approval-step {
+        flex: 1;
+        min-width: 0;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #697381;
+        font-size: 12px;
+    }
+    #grid_wrap .approval-step:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: 13px;
+        left: calc(50% + 14px);
+        right: calc(-50% + 14px);
+        height: 2px;
+        background: #dce0e5;
+    }
+    #grid_wrap .approval-step[data-state="done"]::after {
+        background: #272b31;
+    }
+    #grid_wrap .approval-marker {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border: 1px solid #c4cad2;
+        border-radius: 50%;
+        background: #fff;
+        color: #697381;
+        font-size: 13px;
+    }
+    #grid_wrap .approval-step[data-state="done"] .approval-marker {
+        background: #272b31;
+        border-color: #272b31;
+        color: #fff;
+        font-weight: 700;
+    }
+    #grid_wrap .approval-step[data-state="current"] .approval-marker {
+        background: #d94308;
+        border-color: #d94308;
+        color: #fff;
+        font-weight: 700;
+    }
+    #grid_wrap .approval-step[data-state="rejected"] .approval-marker {
+        background: #fff;
+        border: 2px solid #d82028;
+        color: #d82028;
+        font-weight: 700;
+    }
+    #grid_wrap .approval-step[data-state="done"] .approval-label {
+        color: #20252c;
+    }
+    #grid_wrap .approval-step[data-state="current"] .approval-label {
+        color: #20252c;
+        font-weight: 700;
+    }
+    #grid_wrap .approval-step[data-state="rejected"] .approval-label {
+        color: #d82028;
+        font-weight: 700;
+    }
+    #grid_wrap .approval-step:hover .approval-marker {
+        outline: 2px solid #e2e5e9;
+        outline-offset: 2px;
+    }
+    #grid_wrap .approval-caption {
+        flex: 0 0 36%;
+        min-width: 106px;
+        padding-left: 16px;
+        border-left: 1px solid #e3e6eb;
+        text-align: left;
+    }
+    #grid_wrap .approval-status {
+        position: relative;
+        display: block;
+        padding-left: 14px;
+        color: #20252c;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    #grid_wrap .approval-status::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 7px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #d94308;
+    }
+    #grid_wrap .approval-progress {
+        display: block;
+        margin-top: 4px;
+        padding-left: 14px;
+        color: #697381;
+        font-size: 12px;
+    }
+    #grid_wrap .approval-caption[data-state="rejected"] .approval-status {
+        color: #d82028;
+    }
+    #grid_wrap .approval-caption[data-state="rejected"] .approval-status::before {
+        background: #d82028;
+    }
+    #grid_wrap .approval-caption[data-state="done"] .approval-status::before {
+        background: #272b31;
+    }
 
-            /* 진행선과 상태 설명을 나란히 놓습니다. 최소 칼럼 폭으로 네 단계의 읽기 공간을 보장합니다. */
-            #grid_wrap .approval-cell {
-                gap: 16px;
-                padding: 12px 16px;
-            }
-            #grid_wrap .approval-track {
-                display: flex;
-                align-items: flex-start;
-                flex: 1;
-                min-width: 0;
-            }
-            #grid_wrap .approval-step {
-                flex: 1;
-                min-width: 0;
-                position: relative;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 7px;
-                padding: 0;
-                border: 0;
-                background: transparent;
-                color: #697381;
-                font-size: 12px;
-            }
-            #grid_wrap .approval-step:not(:last-child)::after {
-                content: "";
-                position: absolute;
-                top: 13px;
-                left: calc(50% + 14px);
-                right: calc(-50% + 14px);
-                height: 2px;
-                background: #dce0e5;
-            }
-            #grid_wrap .approval-step[data-state="done"]::after {
-                background: #272b31;
-            }
-            #grid_wrap .approval-marker {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 28px;
-                height: 28px;
-                border: 1px solid #c4cad2;
-                border-radius: 50%;
-                background: #fff;
-                color: #697381;
-                font-size: 13px;
-            }
-            #grid_wrap .approval-step[data-state="done"] .approval-marker {
-                background: #272b31;
-                border-color: #272b31;
-                color: #fff;
-                font-weight: 700;
-            }
-            #grid_wrap .approval-step[data-state="current"] .approval-marker {
-                background: #d94308;
-                border-color: #d94308;
-                color: #fff;
-                font-weight: 700;
-            }
-            #grid_wrap .approval-step[data-state="rejected"] .approval-marker {
-                background: #fff;
-                border: 2px solid #d82028;
-                color: #d82028;
-                font-weight: 700;
-            }
-            #grid_wrap .approval-step[data-state="done"] .approval-label {
-                color: #20252c;
-            }
-            #grid_wrap .approval-step[data-state="current"] .approval-label {
-                color: #20252c;
-                font-weight: 700;
-            }
-            #grid_wrap .approval-step[data-state="rejected"] .approval-label {
-                color: #d82028;
-                font-weight: 700;
-            }
-            #grid_wrap .approval-step:hover .approval-marker {
-                outline: 2px solid #e2e5e9;
-                outline-offset: 2px;
-            }
-            #grid_wrap .approval-caption {
-                flex: 0 0 36%;
-                min-width: 106px;
-                padding-left: 16px;
-                border-left: 1px solid #e3e6eb;
-                text-align: left;
-            }
-            #grid_wrap .approval-status {
-                position: relative;
-                display: block;
-                padding-left: 14px;
-                color: #20252c;
-                font-size: 13px;
-                font-weight: 600;
-            }
-            #grid_wrap .approval-status::before {
-                content: "";
-                position: absolute;
-                left: 0;
-                top: 7px;
-                width: 7px;
-                height: 7px;
-                border-radius: 50%;
-                background: #d94308;
-            }
-            #grid_wrap .approval-progress {
-                display: block;
-                margin-top: 4px;
-                padding-left: 14px;
-                color: #697381;
-                font-size: 12px;
-            }
-            #grid_wrap .approval-caption[data-state="rejected"] .approval-status {
-                color: #d82028;
-            }
-            #grid_wrap .approval-caption[data-state="rejected"] .approval-status::before {
-                background: #d82028;
-            }
-            #grid_wrap .approval-caption[data-state="done"] .approval-status::before {
-                background: #272b31;
-            }
+    /* 첨부파일은 문서 아이콘과 밑줄 링크로, 나머지 파일은 보조 문구로 구분합니다. */
+    #grid_wrap .attachment-cell {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 12px 16px;
+    }
+    #grid_wrap .attachment-file {
+        max-width: 100%;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #20252c;
+        font-size: 14px;
+        text-align: left;
+        text-decoration: underline;
+        text-decoration-color: #c4cad2;
+        text-underline-offset: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #grid_wrap .attachment-file::before {
+        content: "";
+        display: inline-block;
+        width: 12px;
+        height: 15px;
+        margin-right: 8px;
+        vertical-align: -2px;
+        background: center / contain no-repeat
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 15'%3E%3Cpath d='M2 1h5l3 3v10H2zM7 1v4h3' fill='none' stroke='%23636b75' stroke-width='1.3'/%3E%3C/svg%3E");
+    }
+    #grid_wrap .attachment-file:hover {
+        color: #a73509;
+    }
+    #grid_wrap .attachment-more {
+        margin-left: 20px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #697381;
+        font-size: 12px;
+    }
+    #grid_wrap .attachment-more:hover {
+        text-decoration: underline;
+    }
+    #grid_wrap .muted {
+        color: #697381;
+        font-size: 12px;
+    }
 
-            /* 첨부파일은 문서 아이콘과 밑줄 링크로, 나머지 파일은 보조 문구로 구분합니다. */
-            #grid_wrap .attachment-cell {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-                padding: 12px 16px;
-            }
-            #grid_wrap .attachment-file {
-                max-width: 100%;
-                padding: 0;
-                border: 0;
-                background: transparent;
-                color: #20252c;
-                font-size: 14px;
-                text-align: left;
-                text-decoration: underline;
-                text-decoration-color: #c4cad2;
-                text-underline-offset: 4px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            #grid_wrap .attachment-file::before {
-                content: "";
-                display: inline-block;
-                width: 12px;
-                height: 15px;
-                margin-right: 8px;
-                vertical-align: -2px;
-                background: center / contain no-repeat
-                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 15'%3E%3Cpath d='M2 1h5l3 3v10H2zM7 1v4h3' fill='none' stroke='%23636b75' stroke-width='1.3'/%3E%3C/svg%3E");
-            }
-            #grid_wrap .attachment-file:hover {
-                color: #a73509;
-            }
-            #grid_wrap .attachment-more {
-                margin-left: 20px;
-                padding: 0;
-                border: 0;
-                background: transparent;
-                color: #697381;
-                font-size: 12px;
-            }
-            #grid_wrap .attachment-more:hover {
-                text-decoration: underline;
-            }
-            #grid_wrap .muted {
-                color: #697381;
-                font-size: 12px;
-            }
+    #grid_wrap .due-cell {
+        flex-direction: column;
+        gap: 7px;
+        padding: 8px;
+    }
+    #grid_wrap .due-date {
+        color: #20252c;
+        font-size: 14px;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+    #grid_wrap .due-badge {
+        padding: 2px 9px;
+        border: 1px solid transparent;
+        border-radius: 2px;
+        background: #eceef1;
+        color: #55606f;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+    #grid_wrap .due-badge[data-kind="late"] {
+        background: #d82028;
+        color: #fff;
+        font-weight: 700;
+    }
+    #grid_wrap .due-badge[data-kind="soon"] {
+        background: #fff0e8;
+        color: #b43b08;
+        font-weight: 600;
+    }
+    #grid_wrap .due-badge[data-kind="done"] {
+        background: #fff;
+        color: #272b31;
+        border-color: #737a83;
+    }
+    #grid_wrap .due-badge[data-kind="done"]::before {
+        content: "✓";
+        margin-right: 5px;
+        font-weight: 700;
+    }
 
-            #grid_wrap .due-cell {
-                flex-direction: column;
-                gap: 7px;
-                padding: 8px;
-            }
-            #grid_wrap .due-date {
-                color: #20252c;
-                font-size: 14px;
-                font-weight: 600;
-                font-variant-numeric: tabular-nums;
-            }
-            #grid_wrap .due-badge {
-                padding: 2px 9px;
-                border: 1px solid transparent;
-                border-radius: 2px;
-                background: #eceef1;
-                color: #55606f;
-                font-size: 12px;
-                white-space: nowrap;
-            }
-            #grid_wrap .due-badge[data-kind="late"] {
-                background: #d82028;
-                color: #fff;
-                font-weight: 700;
-            }
-            #grid_wrap .due-badge[data-kind="soon"] {
-                background: #fff0e8;
-                color: #b43b08;
-                font-weight: 600;
-            }
-            #grid_wrap .due-badge[data-kind="done"] {
-                background: #fff;
-                color: #272b31;
-                border-color: #737a83;
-            }
-            #grid_wrap .due-badge[data-kind="done"]::before {
-                content: "✓";
-                margin-right: 5px;
-                font-weight: 700;
-            }
+    /* 실행 버튼과 상세 버튼을 같은 줄에 표시하고 완료된 요청은 상세만 표시합니다. */
+    #grid_wrap .actions-cell {
+        gap: 8px;
+        padding: 8px;
+    }
+    #grid_wrap .approval-action,
+    #grid_wrap .approval-detail {
+        flex-shrink: 0;
+        padding: 7px 10px;
+        border-radius: 0;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+    #grid_wrap .approval-action {
+        min-width: 62px;
+        border: 1px solid #272b31;
+        background: #272b31;
+        color: #fff;
+        font-weight: 700;
+    }
+    #grid_wrap .approval-action:hover {
+        background: #454a52;
+    }
+    #grid_wrap .approval-detail {
+        min-width: 48px;
+        border: 1px solid #c8cdd5;
+        background: #fff;
+        color: #20252c;
+    }
+    #grid_wrap .approval-detail:hover {
+        background: #f5f6f8;
+        border-color: #737a83;
+    }
 
-            /* 실행 버튼과 상세 버튼을 같은 줄에 표시하고 완료된 요청은 상세만 표시합니다. */
-            #grid_wrap .actions-cell {
-                gap: 8px;
-                padding: 8px;
-            }
-            #grid_wrap .approval-action,
-            #grid_wrap .approval-detail {
-                flex-shrink: 0;
-                padding: 7px 10px;
-                border-radius: 0;
-                font-size: 12px;
-                white-space: nowrap;
-            }
-            #grid_wrap .approval-action {
-                min-width: 62px;
-                border: 1px solid #272b31;
-                background: #272b31;
-                color: #fff;
-                font-weight: 700;
-            }
-            #grid_wrap .approval-action:hover {
-                background: #454a52;
-            }
-            #grid_wrap .approval-detail {
-                min-width: 48px;
-                border: 1px solid #c8cdd5;
-                background: #fff;
-                color: #20252c;
-            }
-            #grid_wrap .approval-detail:hover {
-                background: #f5f6f8;
-                border-color: #737a83;
-            }
+    /* 색상만으로 상태를 구분하지 않도록 단계 기호의 의미를 함께 안내합니다. */
+    .purchase-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+        padding-top: 10px;
+        color: #697381;
+        font-size: 12px;
+    }
+    .purchase-legend {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+    }
+    .purchase-legend > span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .purchase-legend-marker {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        box-sizing: border-box;
+        border: 1px solid #c4cad2;
+        border-radius: 50%;
+        background: #fff;
+        font-size: 11px;
+        font-weight: 700;
+    }
+    .purchase-legend-marker[data-state="done"] {
+        background: #272b31;
+        border-color: #272b31;
+        color: #fff;
+    }
+    .purchase-legend-marker[data-state="current"] {
+        background: #d94308;
+        border-color: #d94308;
+    }
+    .purchase-legend-marker[data-state="rejected"] {
+        border: 2px solid #d82028;
+        color: #d82028;
+    }
+    .purchase-layout-note {
+        margin-left: auto;
+    }
 
-            /* 색상만으로 상태를 구분하지 않도록 단계 기호의 의미를 함께 안내합니다. */
-            .purchase-summary {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                flex-wrap: wrap;
-                gap: 8px 20px;
-                padding-top: 10px;
-                color: #697381;
-                font-size: 12px;
-            }
-            .purchase-legend {
-                display: flex;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 18px;
-            }
-            .purchase-legend > span {
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-            }
-            .purchase-legend-marker {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 16px;
-                height: 16px;
-                box-sizing: border-box;
-                border: 1px solid #c4cad2;
-                border-radius: 50%;
-                background: #fff;
-                font-size: 11px;
-                font-weight: 700;
-            }
-            .purchase-legend-marker[data-state="done"] {
-                background: #272b31;
-                border-color: #272b31;
-                color: #fff;
-            }
-            .purchase-legend-marker[data-state="current"] {
-                background: #d94308;
-                border-color: #d94308;
-            }
-            .purchase-legend-marker[data-state="rejected"] {
-                border: 2px solid #d82028;
-                color: #d82028;
-            }
-            .purchase-layout-note {
-                margin-left: auto;
-            }
+    /* 상세 창과 페이지 버튼은 기존 WebDemo 형식을 유지합니다. */
+    #request_dialog {
+        width: 480px;
+        max-width: 90vw;
+        max-height: 80vh;
+        padding: 20px;
+        border: 1px solid #ccc;
+    }
+    #request_dialog::backdrop {
+        background: rgba(0, 0, 0, 0.3);
+    }
+    #request_dialog [hidden] {
+        display: none !important;
+    }
+</style>
 
-            /* 상세 창과 페이지 버튼은 기존 WebDemo 형식을 유지합니다. */
-            #request_dialog {
-                width: 480px;
-                max-width: 90vw;
-                max-height: 80vh;
-                padding: 20px;
-                border: 1px solid #ccc;
-            }
-            #request_dialog::backdrop {
-                background: rgba(0, 0, 0, 0.3);
-            }
-            #request_dialog [hidden] {
-                display: none !important;
-            }
-        </style>
+<script>
+    // AUIGrid 생성 후 반환 ID
+    var myGridID;
 
-        <script>
-            // AUIGrid 생성 후 반환 ID
-            var myGridID;
+    // 상태 필터를 바꿔도 처리한 결재 내용을 보존할 원본 데이터입니다.
+    var purchaseRows = [];
+    var dialogRequestId = null;
+    var stageNames = ["접수", "검토", "결재", "발주"];
+    var statusLabels = { all: "전체 요청", active: "진행 중", done: "발주 완료", rejected: "반려" };
+    var controller = new AbortController();
 
-            // 상태 필터를 바꿔도 처리한 결재 내용을 보존할 원본 데이터입니다.
-            var purchaseRows = [];
-            var dialogRequestId = null;
-            var stageNames = ["접수", "검토", "결재", "발주"];
-            var statusLabels = { all: "전체 요청", active: "진행 중", done: "발주 완료", rejected: "반려" };
-            var controller = new AbortController();
+    // 시작점. 공용 demo.js에서 호출합니다.
+    function init() {
+        createAUIGrid();
+        loadGridData();
+    }
 
-            // 시작점. 공용 demo.js에서 호출합니다.
-            function init() {
-                createAUIGrid();
-                loadGridData();
-            }
+    // AUIGrid를 생성합니다.
+    function createAUIGrid() {
+        var columnLayout = createColumnLayout();
+        var gridProps = createGridProps();
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+        bindGridEvents();
+    }
 
-            // AUIGrid를 생성합니다.
-            function createAUIGrid() {
-                var columnLayout = createColumnLayout();
-                var gridProps = createGridProps();
-                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-                bindGridEvents();
-            }
-
-            // 밴드형 상위 셀과 하위 셀에 사용할 칼럼 레이아웃입니다.
-            function createColumnLayout() {
-                var columnLayout = [
+    // 밴드형 상위 셀과 하위 셀에 사용할 칼럼 레이아웃입니다.
+    function createColumnLayout() {
+        var columnLayout = [
+            {
+                dataField: "title",
+                headerText: "구매 요청",
+                bodyCell: true,
+                bodyCellHeight: "34%",
+                width: 260,
+                style: "request-title-cell",
+                filter: { showIcon: true, useExMenu: true },
+                renderer: {
+                    type: "TemplateRenderer",
+                    aliasFunction: function (rowIndex, columnIndex, value, headerText, item) {
+                        return item.id + "\n" + value;
+                    }
+                },
+                labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+                    return '<span class="request-id">' + escapeLabel(item.id) + "</span>" + escapeLabel(value);
+                },
+                children: [
                     {
-                        dataField: "title",
-                        headerText: "구매 요청",
-                        bodyCell: true,
-                        bodyCellHeight: "34%",
-                        width: 260,
-                        style: "request-title-cell",
-                        filter: { showIcon: true, useExMenu: true },
-                        renderer: {
-                            type: "TemplateRenderer",
-                            aliasFunction: function (rowIndex, columnIndex, value, headerText, item) {
-                                return item.id + "\n" + value;
-                            }
-                        },
-                        labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-                            return '<span class="request-id">' + escapeLabel(item.id) + "</span>" + escapeLabel(value);
-                        },
-                        children: [
-                            {
-                                dataField: "requester",
-                                headerText: "요청자",
-                                style: "requester-text-cell",
-                                width: "22%",
-                                minWidth: 150,
-                                filter: { showIcon: true, useExMenu: true },
-                                renderer: createCustomRenderer(
-                                    AUIGrid.RequesterRenderer,
-                                    function (rowIndex, columnIndex, value, headerText, item) {
-                                        return value + "\n" + item.team;
-                                    }
-                                )
-                            },
-                            {
-                                dataField: "amount",
-                                headerText: "요청 금액",
-                                width: "12%",
-                                minWidth: 116,
-                                dataType: "numeric",
-                                formatString: "#,##0",
-                                style: "amount-cell",
-                                // Excel에서도 원래 숫자 값과 천 단위 표시 서식을 유지합니다.
-                                xlsxNumeric: true,
-                                filter: { showIcon: true, useExMenu: true }
-                            }
-                        ]
-                    },
-                    {
-                        dataField: "approvalStatus",
-                        headerText: "결재 진행",
-                        width: "32%",
-                        minWidth: 360,
-                        filter: { showIcon: true },
-                        renderer: createCustomRenderer(
-                            AUIGrid.ApprovalStepsRenderer,
-                            function (rowIndex, columnIndex, value, headerText, item) {
-                                return getApprovalExportText(item);
-                            }
-                        )
-                    },
-                    {
-                        dataField: "files",
-                        headerText: "첨부파일",
-                        width: "12%",
-                        minWidth: 136,
-                        sortable: false,
-                        renderer: createCustomRenderer(
-                            AUIGrid.AttachmentRenderer,
-                            function (rowIndex, columnIndex, value) {
-                                return value.length
-                                    ? value
-                                          .map(function (file) {
-                                              return file.name;
-                                          })
-                                          .join("\n")
-                                    : "없음";
-                            }
-                        )
-                    },
-                    {
-                        dataField: "dueDate",
-                        headerText: "납기",
-                        width: "9%",
-                        minWidth: 100,
-                        dataType: "date",
-                        dateInputFormat: "yyyy-mm-dd",
-                        formatString: "yyyy-mm-dd",
-                        // 날짜 필터를 열 때 연, 월, 일을 모두 펼쳐 표시합니다.
-                        filter: { showIcon: true, type: "date", expandAll: true },
-                        renderer: createCustomRenderer(
-                            AUIGrid.PurchaseDueRenderer,
-                            function (rowIndex, columnIndex, value, headerText, item) {
-                                var status =
-                                    item.stage === 4
-                                        ? "발주 완료"
-                                        : item.daysLeft < 0
-                                          ? -item.daysLeft + "일 지연"
-                                          : item.daysLeft === 0
-                                            ? "오늘 납기"
-                                            : item.daysLeft + "일 남음";
-                                return value + "\n" + status;
-                            }
-                        )
-                    },
-                    {
-                        dataField: "actions",
-                        headerText: "작업",
-                        width: "13%",
+                        dataField: "requester",
+                        headerText: "요청자",
+                        style: "requester-text-cell",
+                        width: "22%",
                         minWidth: 150,
-                        sortable: false,
+                        filter: { showIcon: true, useExMenu: true },
                         renderer: createCustomRenderer(
-                            AUIGrid.ApprovalActionsRenderer,
+                            AUIGrid.RequesterRenderer,
                             function (rowIndex, columnIndex, value, headerText, item) {
-                                return getActionLabel(item);
+                                return value + "\n" + item.team;
                             }
                         )
+                    },
+                    {
+                        dataField: "amount",
+                        headerText: "요청 금액",
+                        width: "12%",
+                        minWidth: 116,
+                        dataType: "numeric",
+                        formatString: "#,##0",
+                        style: "amount-cell",
+                        // Excel에서도 원래 숫자 값과 천 단위 표시 서식을 유지합니다.
+                        xlsxNumeric: true,
+                        filter: { showIcon: true, useExMenu: true }
                     }
-                ];
-                return columnLayout;
-            }
-
-            // 렌더러의 클릭 동작을 연결하고 Excel, PDF에 기록할 문자열을 지정합니다.
-            function createCustomRenderer(jsClass, aliasFunction) {
-                return {
-                    type: "CustomRenderer",
-                    jsClass: jsClass,
-                    aliasFunction: aliasFunction,
-                    extraProps: { onAction: cellActionHandler }
-                };
-            }
-
-            // 그리드 속성을 정의합니다.
-            function createGridProps() {
-                var gridProps = {
-                    bodyLayoutMode: "band",
-                    rowHeight: 120,
-                    headerHeight: 29,
-                    rowIdField: "id",
-                    showRowNumColumn: true,
-                    showStateColumn: false,
-                    selectionMode: "singleRow",
-                    enableSorting: true,
-                    enableFilter: true,
-                    editable: false,
-                    applyRestPercentWidth: true,
-                    noDataMessage: "이 상태에 해당하는 요청이 없습니다."
-                };
-                return gridProps;
-            }
-
-            // 이벤트 연결은 그리드를 생성할 때 한 번만 실행합니다.
-            function bindGridEvents() {
-                AUIGrid.bind(myGridID, "filtering", updateRowCount);
-            }
-
-            // 데이터 요청 후 원본과 그리드를 갱신합니다. 페이지 종료 후 응답은 적용하지 않습니다.
-            async function loadGridData() {
-                AUIGrid.showAjaxLoader(myGridID);
-                try {
-                    var response = await fetch("./data/purchase_approval.json", { signal: controller.signal });
-                    if (!response.ok) throw new Error("데이터 요청 실패");
-                    var data = await response.json();
-                    if (controller.signal.aborted) return;
-                    // 예제의 지연, 오늘 납기, 임박 상태를 항상 비교하도록 오늘 기준 날짜를 만듭니다.
-                    data.forEach(function (item) {
-                        var due = new Date();
-                        due.setDate(due.getDate() + item.daysLeft);
-                        item.dueDate =
-                            due.getFullYear() +
-                            "-" +
-                            String(due.getMonth() + 1).padStart(2, "0") +
-                            "-" +
-                            String(due.getDate()).padStart(2, "0");
-                        item.actions = "";
-                        updateRequestStatus(item);
-                    });
-                    purchaseRows = data;
-                    statusChangeHandler();
-                } catch (error) {
-                    if (!controller.signal.aborted) console.error("데이터 로딩 오류:", error);
-                } finally {
-                    if (!controller.signal.aborted) AUIGrid.removeAjaxLoader(myGridID);
-                }
-            }
-
-            // 상태 선택과 칼럼 필터는 함께 적용합니다. 원본은 별도로 보관하여 결재 변경을 유지합니다.
-            function getVisibleRows() {
-                var status = document.getElementById("statusSelect").value;
-                return purchaseRows.filter(function (item) {
-                    return status === "all" || item.status === status;
-                });
-            }
-
-            function statusChangeHandler() {
-                AUIGrid.setGridData(myGridID, structuredClone(getVisibleRows()));
-                updateRowCount();
-            }
-
-            function updateRowCount() {
-                var status = document.getElementById("statusSelect").value;
-                var count = AUIGrid.getRowCount(myGridID);
-                document.getElementById("row_count").textContent =
-                    statusLabels[status] + " " + count + "건 / " + getVisibleRows().length + "건";
-                document.getElementById("export_excel").disabled = count === 0;
-                document.getElementById("export_pdf").disabled = count === 0;
-            }
-
-            // 데이터와 정렬은 유지하고 화면의 바디 레이아웃만 전환합니다.
-            function layoutChangeHandler() {
-                var mode = document.getElementById("layoutSelect").value;
-                AUIGrid.setProp(myGridID, { bodyLayoutMode: mode, rowHeight: mode === "band" ? 120 : 94 });
-                AUIGrid.refresh(myGridID);
-            }
-
-            function clearGridView() {
-                AUIGrid.clearSortingAll(myGridID);
-                AUIGrid.clearFilterAll(myGridID);
-                updateRowCount();
-            }
-
-            // 엑셀 내보내기. 화면의 바디 레이아웃과 필터, 정렬 순서를 그대로 사용합니다.
-            function exportClick() {
-                if (!AUIGrid.getRowCount(myGridID)) return;
-                AUIGrid.exportToXlsx(myGridID, {
-                    fileName: "구매_요청_및_결재_현황",
-                    sheetName: "구매 요청 및 결재 현황",
-                    exceptColumnFields: ["actions"], // 업무 실행용 버튼은 Excel에서 제외합니다.
-                    useExportStyle: true,
-                    // 화면과 동일하게 구매 요청과 요청자는 왼쪽, 요청 금액은 오른쪽 정렬합니다.
-                    exportStyle: {
-                        "request-title-cell": { backgroundColor: "#f3f3f3", color: "#222222", textAlign: "left" },
-                        "requester-text-cell": { textAlign: "left" },
-                        "amount-cell": { textAlign: "right" }
+                ]
+            },
+            {
+                dataField: "approvalStatus",
+                headerText: "결재 진행",
+                width: "32%",
+                minWidth: 360,
+                filter: { showIcon: true },
+                renderer: createCustomRenderer(
+                    AUIGrid.ApprovalStepsRenderer,
+                    function (rowIndex, columnIndex, value, headerText, item) {
+                        return getApprovalExportText(item);
                     }
-                });
-            }
-
-            // PDF 내보내기. 여러 줄 상태 요약이 잘리지 않도록 현재 행 높이를 전달합니다.
-            function exportPdfClick() {
-                if (!AUIGrid.getRowCount(myGridID)) return;
-                AUIGrid.exportToPdf(myGridID, {
-                    fileName: "구매_요청_및_결재_현황",
-                    fontPath: "../pdfkit/nyjgothic-medium.ttf",
-                    rowHeight: AUIGrid.getProp(myGridID, "rowHeight"),
-                    useExportStyle: true,
-                    // 화면과 동일하게 구매 요청과 요청자는 왼쪽, 요청 금액은 오른쪽 정렬합니다.
-                    exportStyle: {
-                        "request-title-cell": { backgroundColor: "#f3f3f3", color: "#222222", textAlign: "left" },
-                        "requester-text-cell": { textAlign: "left" },
-                        "amount-cell": { textAlign: "right" }
+                )
+            },
+            {
+                dataField: "files",
+                headerText: "첨부파일",
+                width: "12%",
+                minWidth: 136,
+                sortable: false,
+                renderer: createCustomRenderer(AUIGrid.AttachmentRenderer, function (rowIndex, columnIndex, value) {
+                    return value.length
+                        ? value
+                              .map(function (file) {
+                                  return file.name;
+                              })
+                              .join("\n")
+                        : "없음";
+                })
+            },
+            {
+                dataField: "dueDate",
+                headerText: "납기",
+                width: "9%",
+                minWidth: 100,
+                dataType: "date",
+                dateInputFormat: "yyyy-mm-dd",
+                formatString: "yyyy-mm-dd",
+                // 날짜 필터를 열 때 연, 월, 일을 모두 펼쳐 표시합니다.
+                filter: { showIcon: true, type: "date", expandAll: true },
+                renderer: createCustomRenderer(
+                    AUIGrid.PurchaseDueRenderer,
+                    function (rowIndex, columnIndex, value, headerText, item) {
+                        var status =
+                            item.stage === 4
+                                ? "발주 완료"
+                                : item.daysLeft < 0
+                                  ? -item.daysLeft + "일 지연"
+                                  : item.daysLeft === 0
+                                    ? "오늘 납기"
+                                    : item.daysLeft + "일 남음";
+                        return value + "\n" + status;
                     }
-                });
+                )
+            },
+            {
+                dataField: "actions",
+                headerText: "작업",
+                width: "13%",
+                minWidth: 150,
+                sortable: false,
+                renderer: createCustomRenderer(
+                    AUIGrid.ApprovalActionsRenderer,
+                    function (rowIndex, columnIndex, value, headerText, item) {
+                        return getActionLabel(item);
+                    }
+                )
             }
+        ];
+        return columnLayout;
+    }
 
-            // 정렬하거나 스크롤한 뒤에도 요청 ID로 현재 데이터를 찾습니다.
-            function cellActionHandler(event) {
-                var item = purchaseRows.find(function (row) {
-                    return row.id === event.id;
-                });
-                if (!item) return;
-                if (event.action === "advance") changeRequest(item.id, event.action);
-                else showRequestDialog(item, event.action, event.value);
-            }
+    // 렌더러의 클릭 동작을 연결하고 Excel, PDF에 기록할 문자열을 지정합니다.
+    function createCustomRenderer(jsClass, aliasFunction) {
+        return {
+            type: "CustomRenderer",
+            jsClass: jsClass,
+            aliasFunction: aliasFunction,
+            extraProps: { onAction: cellActionHandler }
+        };
+    }
 
-            function getStageStatus(item, index) {
-                if (index < item.stage) return "완료";
-                if (index === item.stage) return item.rejected ? "반려" : "진행 중";
-                return "대기";
-            }
+    // 그리드 속성을 정의합니다.
+    function createGridProps() {
+        var gridProps = {
+            bodyLayoutMode: "band",
+            rowHeight: 120,
+            headerHeight: 29,
+            rowIdField: "id",
+            showRowNumColumn: true,
+            showStateColumn: false,
+            selectionMode: "singleRow",
+            enableSorting: true,
+            enableFilter: true,
+            editable: false,
+            applyRestPercentWidth: true,
+            noDataMessage: "이 상태에 해당하는 요청이 없습니다."
+        };
+        return gridProps;
+    }
 
-            // Excel과 PDF에서는 현재 상태를 먼저 읽고 완료/대기 단계를 확인할 수 있게 요약합니다.
-            function getApprovalExportText(item) {
-                var status = item.rejected
-                    ? stageNames[item.stage] + " 반려"
-                    : item.stage === 4
-                      ? "발주 완료"
-                      : ["구매 접수 중", "구매 담당 검토 중", "팀장 결재 중", "발주 준비 중"][item.stage];
-                var lines = [status + " (" + Math.min(item.stage + 1, 4) + " / 4 단계)"];
-                var completed = stageNames.slice(0, item.stage);
-                var waiting = stageNames.slice(item.stage + 1);
-                if (item.rejected) lines.push("요청 내용 보완 필요");
-                if (completed.length) lines.push("완료: " + completed.join(", "));
-                if (waiting.length) lines.push("대기: " + waiting.join(", "));
-                return lines.join("\n");
-            }
+    // 이벤트 연결은 그리드를 생성할 때 한 번만 실행합니다.
+    function bindGridEvents() {
+        AUIGrid.bind(myGridID, "filtering", updateRowCount);
+    }
 
-            function getActionLabel(item) {
-                return item.rejected ? "재상신" : ["검토 시작", "검토 완료", "승인", "발주 완료", "완료"][item.stage];
-            }
-
-            function updateRequestStatus(item) {
-                item.approvalStatus =
-                    item.stage === 4
-                        ? "발주 완료"
-                        : stageNames[item.stage] + " " + (item.rejected ? "반려" : "진행 중");
-                item.status = item.rejected ? "rejected" : item.stage === 4 ? "done" : "active";
-            }
-
-            // 실제 서비스에서는 이 위치에서 서버에 처리 결과를 저장합니다. 예제는 원본 데이터만 변경합니다.
-            function changeRequest(id, action) {
-                var item = purchaseRows.find(function (row) {
-                    return row.id === id;
-                });
-                if (!item || item.stage === 4) return;
-                if (action === "reject") {
-                    if (item.rejected) return;
-                    item.rejected = true;
-                } else if (item.rejected) {
-                    item.rejected = false;
-                    item.stage = 1;
-                } else {
-                    item.stage += 1;
-                }
+    // 데이터 요청 후 원본과 그리드를 갱신합니다. 페이지 종료 후 응답은 적용하지 않습니다.
+    async function loadGridData() {
+        AUIGrid.showAjaxLoader(myGridID);
+        try {
+            var response = await fetch("./data/purchase_approval.json", { signal: controller.signal });
+            if (!response.ok) throw new Error("데이터 요청 실패");
+            var data = await response.json();
+            if (controller.signal.aborted) return;
+            // 예제의 지연, 오늘 납기, 임박 상태를 항상 비교하도록 오늘 기준 날짜를 만듭니다.
+            data.forEach(function (item) {
+                var due = new Date();
+                due.setDate(due.getDate() + item.daysLeft);
+                item.dueDate =
+                    due.getFullYear() +
+                    "-" +
+                    String(due.getMonth() + 1).padStart(2, "0") +
+                    "-" +
+                    String(due.getDate()).padStart(2, "0");
+                item.actions = "";
                 updateRequestStatus(item);
-                if (document.getElementById("statusSelect").value === "all") {
-                    AUIGrid.updateRowsById(myGridID, structuredClone(item));
-                    updateRowCount();
-                } else {
-                    statusChangeHandler();
-                }
-            }
+            });
+            purchaseRows = data;
+            statusChangeHandler();
+        } catch (error) {
+            if (!controller.signal.aborted) console.error("데이터 로딩 오류:", error);
+        } finally {
+            if (!controller.signal.aborted) AUIGrid.removeAjaxLoader(myGridID);
+        }
+    }
 
-            // 상세 창에는 텍스트로 값을 넣어 요청 내용이 HTML로 해석되지 않게 합니다.
-            function appendDialogInfo(label, value) {
-                var paragraph = document.createElement("p");
-                paragraph.textContent = label + " : " + value;
-                document.getElementById("request_info").appendChild(paragraph);
-            }
+    // 상태 선택과 칼럼 필터는 함께 적용합니다. 원본은 별도로 보관하여 결재 변경을 유지합니다.
+    function getVisibleRows() {
+        var status = document.getElementById("statusSelect").value;
+        return purchaseRows.filter(function (item) {
+            return status === "all" || item.status === status;
+        });
+    }
 
-            function showRequestDialog(item, action, value) {
-                var dialog = document.getElementById("request_dialog");
-                var content = document.getElementById("request_info");
-                var title = document.getElementById("request_title");
-                dialogRequestId = item.id;
-                content.replaceChildren();
-                title.textContent = item.id + " / " + item.title;
-                if (action === "requester") {
-                    title.textContent = item.requester;
-                    appendDialogInfo("소속", item.team);
-                    appendDialogInfo("구매 요청", item.id + " / " + item.title);
-                } else if (action === "files" || action === "file") {
-                    title.textContent = "첨부파일";
-                    if (action === "files") {
-                        item.files.forEach(function (file, index) {
-                            var button = document.createElement("button");
-                            button.type = "button";
-                            button.className = "btn";
-                            button.textContent = file.name;
-                            button.onclick = function () {
-                                showRequestDialog(item, "file", index);
-                            };
-                            content.appendChild(button);
-                        });
-                    } else {
-                        var file = item.files[value];
-                        if (!file) return;
-                        title.textContent = file.name;
-                        appendDialogInfo("파일 크기", file.size);
-                        appendDialogInfo("품목", item.description);
-                    }
-                    appendDialogInfo("안내", "첨부파일 미리보기 예시이며 실제 파일은 다운로드하지 않습니다.");
-                } else {
-                    if (action === "step")
-                        title.textContent = stageNames[value] + " 단계 / " + getStageStatus(item, value);
-                    appendDialogInfo("구매 요청", item.title);
-                    appendDialogInfo("요청자", item.requester + " / " + item.team);
-                    appendDialogInfo("요청 금액", item.amount.toLocaleString("ko-KR") + "원");
-                    appendDialogInfo("희망 납기", item.dueDate);
-                    appendDialogInfo("현재 상태", item.approvalStatus);
-                    appendDialogInfo("품목", item.description);
-                }
-                var editableView = action === "step" || action === "detail";
-                document.getElementById("advance_request").hidden = !editableView;
-                document.getElementById("reject_request").hidden = !editableView;
-                document.getElementById("advance_request").disabled = item.stage === 4;
-                document.getElementById("reject_request").disabled = item.stage === 4 || item.rejected;
-                document.getElementById("advance_request").textContent = getActionLabel(item);
-                if (!dialog.open) dialog.showModal();
-            }
+    function statusChangeHandler() {
+        AUIGrid.setGridData(myGridID, structuredClone(getVisibleRows()));
+        updateRowCount();
+    }
 
-            function closeRequestDialog() {
-                document.getElementById("request_dialog").close();
-            }
+    function updateRowCount() {
+        var status = document.getElementById("statusSelect").value;
+        var count = AUIGrid.getRowCount(myGridID);
+        document.getElementById("row_count").textContent =
+            statusLabels[status] + " " + count + "건 / " + getVisibleRows().length + "건";
+        document.getElementById("export_excel").disabled = count === 0;
+        document.getElementById("export_pdf").disabled = count === 0;
+    }
 
-            function dialogActionHandler(action) {
-                // 행을 갱신하기 전에 닫아 사라진 셀 버튼으로 포커스가 복귀하지 않게 합니다.
-                closeRequestDialog();
-                changeRequest(dialogRequestId, action);
-            }
+    // 데이터와 정렬은 유지하고 화면의 바디 레이아웃만 전환합니다.
+    function layoutChangeHandler() {
+        var mode = document.getElementById("layoutSelect").value;
+        AUIGrid.setProp(myGridID, { bodyLayoutMode: mode, rowHeight: mode === "band" ? 120 : 94 });
+        AUIGrid.refresh(myGridID);
+    }
 
-            function escapeLabel(value) {
-                var escapes = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
-                return String(value).replace(/[&<>"']/g, function (character) {
-                    return escapes[character];
+    function clearGridView() {
+        AUIGrid.clearSortingAll(myGridID);
+        AUIGrid.clearFilterAll(myGridID);
+        updateRowCount();
+    }
+
+    // 엑셀 내보내기. 화면의 바디 레이아웃과 필터, 정렬 순서를 그대로 사용합니다.
+    function exportClick() {
+        if (!AUIGrid.getRowCount(myGridID)) return;
+        AUIGrid.exportToXlsx(myGridID, {
+            fileName: "구매_요청_및_결재_현황",
+            sheetName: "구매 요청 및 결재 현황",
+            exceptColumnFields: ["actions"], // 업무 실행용 버튼은 Excel에서 제외합니다.
+            useExportStyle: true,
+            // 화면과 동일하게 구매 요청과 요청자는 왼쪽, 요청 금액은 오른쪽 정렬합니다.
+            exportStyle: {
+                "request-title-cell": { backgroundColor: "#f3f3f3", color: "#222222", textAlign: "left" },
+                "requester-text-cell": { textAlign: "left" },
+                "amount-cell": { textAlign: "right" }
+            }
+        });
+    }
+
+    // PDF 내보내기. 여러 줄 상태 요약이 잘리지 않도록 현재 행 높이를 전달합니다.
+    function exportPdfClick() {
+        if (!AUIGrid.getRowCount(myGridID)) return;
+        AUIGrid.exportToPdf(myGridID, {
+            fileName: "구매_요청_및_결재_현황",
+            fontPath: "../pdfkit/nyjgothic-medium.ttf",
+            rowHeight: AUIGrid.getProp(myGridID, "rowHeight"),
+            useExportStyle: true,
+            // 화면과 동일하게 구매 요청과 요청자는 왼쪽, 요청 금액은 오른쪽 정렬합니다.
+            exportStyle: {
+                "request-title-cell": { backgroundColor: "#f3f3f3", color: "#222222", textAlign: "left" },
+                "requester-text-cell": { textAlign: "left" },
+                "amount-cell": { textAlign: "right" }
+            }
+        });
+    }
+
+    // 정렬하거나 스크롤한 뒤에도 요청 ID로 현재 데이터를 찾습니다.
+    function cellActionHandler(event) {
+        var item = purchaseRows.find(function (row) {
+            return row.id === event.id;
+        });
+        if (!item) return;
+        if (event.action === "advance") changeRequest(item.id, event.action);
+        else showRequestDialog(item, event.action, event.value);
+    }
+
+    function getStageStatus(item, index) {
+        if (index < item.stage) return "완료";
+        if (index === item.stage) return item.rejected ? "반려" : "진행 중";
+        return "대기";
+    }
+
+    // Excel과 PDF에서는 현재 상태를 먼저 읽고 완료/대기 단계를 확인할 수 있게 요약합니다.
+    function getApprovalExportText(item) {
+        var status = item.rejected
+            ? stageNames[item.stage] + " 반려"
+            : item.stage === 4
+              ? "발주 완료"
+              : ["구매 접수 중", "구매 담당 검토 중", "팀장 결재 중", "발주 준비 중"][item.stage];
+        var lines = [status + " (" + Math.min(item.stage + 1, 4) + " / 4 단계)"];
+        var completed = stageNames.slice(0, item.stage);
+        var waiting = stageNames.slice(item.stage + 1);
+        if (item.rejected) lines.push("요청 내용 보완 필요");
+        if (completed.length) lines.push("완료: " + completed.join(", "));
+        if (waiting.length) lines.push("대기: " + waiting.join(", "));
+        return lines.join("\n");
+    }
+
+    function getActionLabel(item) {
+        return item.rejected ? "재상신" : ["검토 시작", "검토 완료", "승인", "발주 완료", "완료"][item.stage];
+    }
+
+    function updateRequestStatus(item) {
+        item.approvalStatus =
+            item.stage === 4 ? "발주 완료" : stageNames[item.stage] + " " + (item.rejected ? "반려" : "진행 중");
+        item.status = item.rejected ? "rejected" : item.stage === 4 ? "done" : "active";
+    }
+
+    // 실제 서비스에서는 이 위치에서 서버에 처리 결과를 저장합니다. 예제는 원본 데이터만 변경합니다.
+    function changeRequest(id, action) {
+        var item = purchaseRows.find(function (row) {
+            return row.id === id;
+        });
+        if (!item || item.stage === 4) return;
+        if (action === "reject") {
+            if (item.rejected) return;
+            item.rejected = true;
+        } else if (item.rejected) {
+            item.rejected = false;
+            item.stage = 1;
+        } else {
+            item.stage += 1;
+        }
+        updateRequestStatus(item);
+        if (document.getElementById("statusSelect").value === "all") {
+            AUIGrid.updateRowsById(myGridID, structuredClone(item));
+            updateRowCount();
+        } else {
+            statusChangeHandler();
+        }
+    }
+
+    // 상세 창에는 텍스트로 값을 넣어 요청 내용이 HTML로 해석되지 않게 합니다.
+    function appendDialogInfo(label, value) {
+        var paragraph = document.createElement("p");
+        paragraph.textContent = label + " : " + value;
+        document.getElementById("request_info").appendChild(paragraph);
+    }
+
+    function showRequestDialog(item, action, value) {
+        var dialog = document.getElementById("request_dialog");
+        var content = document.getElementById("request_info");
+        var title = document.getElementById("request_title");
+        dialogRequestId = item.id;
+        content.replaceChildren();
+        title.textContent = item.id + " / " + item.title;
+        if (action === "requester") {
+            title.textContent = item.requester;
+            appendDialogInfo("소속", item.team);
+            appendDialogInfo("구매 요청", item.id + " / " + item.title);
+        } else if (action === "files" || action === "file") {
+            title.textContent = "첨부파일";
+            if (action === "files") {
+                item.files.forEach(function (file, index) {
+                    var button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "btn";
+                    button.textContent = file.name;
+                    button.onclick = function () {
+                        showRequestDialog(item, "file", index);
+                    };
+                    content.appendChild(button);
                 });
+            } else {
+                var file = item.files[value];
+                if (!file) return;
+                title.textContent = file.name;
+                appendDialogInfo("파일 크기", file.size);
+                appendDialogInfo("품목", item.description);
             }
+            appendDialogInfo("안내", "첨부파일 미리보기 예시이며 실제 파일은 다운로드하지 않습니다.");
+        } else {
+            if (action === "step") title.textContent = stageNames[value] + " 단계 / " + getStageStatus(item, value);
+            appendDialogInfo("구매 요청", item.title);
+            appendDialogInfo("요청자", item.requester + " / " + item.team);
+            appendDialogInfo("요청 금액", item.amount.toLocaleString("ko-KR") + "원");
+            appendDialogInfo("희망 납기", item.dueDate);
+            appendDialogInfo("현재 상태", item.approvalStatus);
+            appendDialogInfo("품목", item.description);
+        }
+        var editableView = action === "step" || action === "detail";
+        document.getElementById("advance_request").hidden = !editableView;
+        document.getElementById("reject_request").hidden = !editableView;
+        document.getElementById("advance_request").disabled = item.stage === 4;
+        document.getElementById("reject_request").disabled = item.stage === 4 || item.rejected;
+        document.getElementById("advance_request").textContent = getActionLabel(item);
+        if (!dialog.open) dialog.showModal();
+    }
 
-            // 뒤로 가기 캐시에 보관되는 페이지는 유지하고 실제 종료에서만 정리합니다.
-            function disposeDemo(event) {
-                if (event.persisted) return;
-                controller.abort();
-                if (myGridID) AUIGrid.destroy(myGridID);
-                myGridID = null;
-                window.removeEventListener("pagehide", disposeDemo);
-            }
-            window.addEventListener("pagehide", disposeDemo);
-        </script>
-    </head>
-<body class="demo-typography">
+    function closeRequestDialog() {
+        document.getElementById("request_dialog").close();
+    }
 
-            <div id="main">
-                <div class="desc">
-                    <p>
-                        밴드형 바디 레이아웃과 사용자 정의 렌더러(CustomRenderer)로 요청자, 결재 단계, 첨부파일과 납기
-                        상태를 표시합니다.
-                    </p>
-                    <p>헤더를 눌러 정렬하고 필터 아이콘으로 검색할 수 있습니다.</p>
-                    <!-- 조회 설정과 파일 저장을 한 영역에 배치하여 조작 순서를 구분합니다. -->
-                    <div class="demo-options">
-                        <div class="demo-option-row demo-option-row--split">
-                            <div class="demo-option-group">
-                                <label for="statusSelect"
-                                    ><span class="demo-option-label">진행 상태</span>
-                                    <select id="statusSelect" onchange="statusChangeHandler()">
-                                        <option value="all">전체 요청</option>
-                                        <option value="active">진행 중</option>
-                                        <option value="done">발주 완료</option>
-                                        <option value="rejected">반려</option>
-                                    </select>
-                                </label>
-                                <label for="layoutSelect"
-                                    ><span class="demo-option-label">셀 배치</span>
-                                    <select id="layoutSelect" onchange="layoutChangeHandler()">
-                                        <option value="band">밴드형</option>
-                                        <option value="flatAll">일반형</option>
-                                    </select>
-                                </label>
-                                <button type="button" class="btn" onclick="clearGridView()">정렬 및 필터 해제</button>
-                            </div>
-                            <div class="demo-option-group" role="group" aria-label="내보내기">
-                                <button type="button" id="export_excel" class="btn" onclick="exportClick()">
-                                    엑셀(xlsx)로 저장
-                                </button>
-                                <button type="button" id="export_pdf" class="btn" onclick="exportPdfClick()">
-                                    PDF로 저장
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+    function dialogActionHandler(action) {
+        // 행을 갱신하기 전에 닫아 사라진 셀 버튼으로 포커스가 복귀하지 않게 합니다.
+        closeRequestDialog();
+        changeRequest(dialogRequestId, action);
+    }
+
+    function escapeLabel(value) {
+        var escapes = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+        return String(value).replace(/[&<>"']/g, function (character) {
+            return escapes[character];
+        });
+    }
+
+    // 뒤로 가기 캐시에 보관되는 페이지는 유지하고 실제 종료에서만 정리합니다.
+    function disposeDemo(event) {
+        if (event.persisted) return;
+        controller.abort();
+        if (myGridID) AUIGrid.destroy(myGridID);
+        myGridID = null;
+        window.removeEventListener("pagehide", disposeDemo);
+    }
+    window.addEventListener("pagehide", disposeDemo);
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+
+<div id="main">
+    <div class="desc">
+        <p>
+            밴드형 바디 레이아웃과 사용자 정의 렌더러(CustomRenderer)로 요청자, 결재 단계, 첨부파일과 납기 상태를
+            표시합니다.
+        </p>
+        <p>헤더를 눌러 정렬하고 필터 아이콘으로 검색할 수 있습니다.</p>
+        <!-- 조회 설정과 파일 저장을 한 영역에 배치하여 조작 순서를 구분합니다. -->
+        <div class="demo-options">
+            <div class="demo-option-row demo-option-row--split">
+                <div class="demo-option-group">
+                    <label for="statusSelect"
+                        ><span class="demo-option-label">진행 상태</span>
+                        <select id="statusSelect" onchange="statusChangeHandler()">
+                            <option value="all">전체 요청</option>
+                            <option value="active">진행 중</option>
+                            <option value="done">발주 완료</option>
+                            <option value="rejected">반려</option>
+                        </select>
+                    </label>
+                    <label for="layoutSelect"
+                        ><span class="demo-option-label">셀 배치</span>
+                        <select id="layoutSelect" onchange="layoutChangeHandler()">
+                            <option value="band">밴드형</option>
+                            <option value="flatAll">일반형</option>
+                        </select>
+                    </label>
+                    <button type="button" class="btn" onclick="clearGridView()">정렬 및 필터 해제</button>
                 </div>
-                <div>
-                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-                    <div id="grid_wrap" style="width: 100%; height: 540px; margin: 0 auto"></div>
+                <div class="demo-option-group" role="group" aria-label="내보내기">
+                    <button type="button" id="export_excel" class="btn" onclick="exportClick()">
+                        엑셀(xlsx)로 저장
+                    </button>
+                    <button type="button" id="export_pdf" class="btn" onclick="exportPdfClick()">PDF로 저장</button>
                 </div>
-                <div class="desc_bottom">
-                    <div class="purchase-summary">
-                        <div class="purchase-legend" aria-label="결재 단계 안내">
-                            <span
-                                ><span class="purchase-legend-marker" data-state="done" aria-hidden="true">✓</span
-                                >완료</span
-                            >
-                            <span
-                                ><span class="purchase-legend-marker" data-state="current" aria-hidden="true"></span
-                                >현재 단계</span
-                            >
-                            <span
-                                ><span class="purchase-legend-marker" data-state="rejected" aria-hidden="true">!</span
-                                >반려</span
-                            >
-                            <span><span class="purchase-legend-marker" aria-hidden="true"></span>대기</span>
-                        </div>
-                        <span class="purchase-layout-note">일반형과 밴드형에 같은 렌더러를 사용합니다.</span>
-                    </div>
-                    <p id="row_count" aria-live="polite"></p>
-                </div>
-                <!-- 렌더러의 상세 정보와 결재 처리. 버튼은 다른 데모와 같은 공용 스타일입니다. -->
-                <dialog id="request_dialog" aria-labelledby="request_title">
-                    <p><strong id="request_title"></strong></p>
-                    <div id="request_info"></div>
-                    <p style="text-align: right">
-                        <button type="button" id="reject_request" class="btn" onclick="dialogActionHandler('reject')">
-                            반려 처리
-                        </button>
-                        <button type="button" id="advance_request" class="btn" onclick="dialogActionHandler('advance')">
-                            다음 단계
-                        </button>
-                        <button type="button" class="btn" onclick="closeRequestDialog()">닫기</button>
-                    </p>
-                </dialog>
             </div>
+        </div>
+    </div>
+    <div>
+        <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+        <div id="grid_wrap" style="width: 100%; height: 540px; margin: 0 auto"></div>
+        <!-- 실제 사용한 기능의 공식 API 설명으로 연결합니다. -->
+        <p class="showcase-api-links" aria-label="사용 기능과 API">
+            <strong>관련 API</strong>
+            <a
+                href="https://www.auisoft.net/documentation/auigrid/DataGrid/Properties.html#bodyLayoutMode"
+                target="_blank"
+                rel="noopener"
+                >밴드형 레이아웃</a
+            >
+            <a
+                href="https://www.auisoft.net/documentation/auigrid/ColumnLayout/CustomRenderer.html"
+                target="_blank"
+                rel="noopener"
+                >사용자 정의 렌더러</a
+            >
+            <a
+                href="https://www.auisoft.net/documentation/auigrid/DataGrid/Methods.html#updateRowsById"
+                target="_blank"
+                rel="noopener"
+                >상태 변경</a
+            >
+            <a
+                href="https://www.auisoft.net/documentation/auigrid/DataGrid/Methods.html#clearFilterAll"
+                target="_blank"
+                rel="noopener"
+                >필터 초기화</a
+            >
+        </p>
+    </div>
+    <div class="desc_bottom">
+        <div class="purchase-summary">
+            <div class="purchase-legend" aria-label="결재 단계 안내">
+                <span><span class="purchase-legend-marker" data-state="done" aria-hidden="true">✓</span>완료</span>
+                <span
+                    ><span class="purchase-legend-marker" data-state="current" aria-hidden="true"></span>현재 단계</span
+                >
+                <span><span class="purchase-legend-marker" data-state="rejected" aria-hidden="true">!</span>반려</span>
+                <span><span class="purchase-legend-marker" aria-hidden="true"></span>대기</span>
+            </div>
+            <span class="purchase-layout-note">일반형과 밴드형에 같은 렌더러를 사용합니다.</span>
+        </div>
+        <p id="row_count" aria-live="polite"></p>
+    </div>
+    <!-- 렌더러의 상세 정보와 결재 처리. 버튼은 다른 데모와 같은 공용 스타일입니다. -->
+    <dialog id="request_dialog" aria-labelledby="request_title">
+        <p><strong id="request_title"></strong></p>
+        <div id="request_info"></div>
+        <p style="text-align: right">
+            <button type="button" id="reject_request" class="btn" onclick="dialogActionHandler('reject')">
+                반려 처리
+            </button>
+            <button type="button" id="advance_request" class="btn" onclick="dialogActionHandler('advance')">
+                다음 단계
+            </button>
+            <button type="button" class="btn" onclick="closeRequestDialog()">닫기</button>
+        </p>
+    </dialog>
+</div>
 <div id="footer">
-     <div class="copyright">
+    <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>

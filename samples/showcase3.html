@@ -1,511 +1,532 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
-<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="https://www.auisoft.net/">
-<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
 <title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<link rel="stylesheet" href="./static/prism.css">
-<link href="./demo.css" rel="stylesheet">
-
-<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
-<link rel="stylesheet" href="./style/demo-typography.css">
-<link rel="stylesheet" href="./static/code-examples.css">
-<script src="./static/prism.js" data-manual></script>
-<script src="./static/code-examples.js" data-source-viewer></script>
-
-
-<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<script type="text/javascript" src="./common.js"></script>
+<link href="./demo.css" rel="stylesheet" />
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-        <!-- 페이지별 구조는 구분하고 기본 글꼴과 조작 UI만 공유합니다. -->
-        <link href="./style/showcase-workspaces.css?v=20261006-3" rel="stylesheet" />
-        <script src="../pdfkit/AUIGrid.pdfkit.js"></script>
-        <script src="../export_server_samples/FileSaver.min.js"></script>
-        <script>
-            const sites = [
-                {
-                    id: "E01",
-                    name: "해남 솔라파크",
-                    region: "호남",
-                    source: "태양광",
-                    capacity: 12,
-                    target: 1450,
-                    ratio: 1.04
-                },
-                {
-                    id: "E02",
-                    name: "영암 에너지팜",
-                    region: "호남",
-                    source: "태양광",
-                    capacity: 8,
-                    target: 960,
-                    ratio: 0.92
-                },
-                {
-                    id: "E03",
-                    name: "신안 윈드파크",
-                    region: "호남",
-                    source: "풍력",
-                    capacity: 24,
-                    target: 4900,
-                    ratio: 1.08
-                },
-                {
-                    id: "E04",
-                    name: "김제 솔라루프",
-                    region: "호남",
-                    source: "태양광",
-                    capacity: 5,
-                    target: 610,
-                    ratio: 0.98
-                },
-                {
-                    id: "E05",
-                    name: "영덕 윈드힐",
-                    region: "영남",
-                    source: "풍력",
-                    capacity: 18,
-                    target: 3650,
-                    ratio: 0.88
-                },
-                {
-                    id: "E06",
-                    name: "울산 솔라루프",
-                    region: "영남",
-                    source: "태양광",
-                    capacity: 6,
-                    target: 730,
-                    ratio: 1.03
-                },
-                {
-                    id: "E07",
-                    name: "합천 에너지팜",
-                    region: "영남",
-                    source: "태양광",
-                    capacity: 9,
-                    target: 1100,
-                    ratio: 0.94
-                },
-                {
-                    id: "E08",
-                    name: "태백 윈드릿지",
-                    region: "강원",
-                    source: "풍력",
-                    capacity: 30,
-                    target: 6150,
-                    ratio: 1.12
-                },
-                {
-                    id: "E09",
-                    name: "평창 윈드밸리",
-                    region: "강원",
-                    source: "풍력",
-                    capacity: 16,
-                    target: 3280,
-                    ratio: 0.96
-                },
-                {
-                    id: "E10",
-                    name: "원주 솔라루프",
-                    region: "강원",
-                    source: "태양광",
-                    capacity: 4,
-                    target: 490,
-                    ratio: 1.01
-                },
-                {
-                    id: "E11",
-                    name: "제주 윈드코스트",
-                    region: "제주",
-                    source: "풍력",
-                    capacity: 22,
-                    target: 4500,
-                    ratio: 1.07
-                },
-                {
-                    id: "E12",
-                    name: "서귀포 솔라팜",
-                    region: "제주",
-                    source: "태양광",
-                    capacity: 7,
-                    target: 850,
-                    ratio: 0.91
-                },
-                {
-                    id: "E13",
-                    name: "군산 솔라파크",
-                    region: "호남",
-                    source: "태양광",
-                    capacity: 10,
-                    target: 1210,
-                    ratio: 1.02
-                },
-                {
-                    id: "E14",
-                    name: "무안 에너지팜",
-                    region: "호남",
-                    source: "태양광",
-                    capacity: 7,
-                    target: 860,
-                    ratio: 0.97
-                },
-                {
-                    id: "E15",
-                    name: "고흥 윈드베이",
-                    region: "호남",
-                    source: "풍력",
-                    capacity: 20,
-                    target: 4080,
-                    ratio: 1.05
-                },
-                {
-                    id: "E16",
-                    name: "장흥 솔라루프",
-                    region: "호남",
-                    source: "태양광",
-                    capacity: 6,
-                    target: 740,
-                    ratio: 0.93
-                },
-                {
-                    id: "E17",
-                    name: "포항 윈드팜",
-                    region: "영남",
-                    source: "풍력",
-                    capacity: 26,
-                    target: 5320,
-                    ratio: 1.09
-                },
-                {
-                    id: "E18",
-                    name: "밀양 솔라파크",
-                    region: "영남",
-                    source: "태양광",
-                    capacity: 11,
-                    target: 1330,
-                    ratio: 0.96
-                },
-                {
-                    id: "E19",
-                    name: "경주 에너지팜",
-                    region: "영남",
-                    source: "태양광",
-                    capacity: 8,
-                    target: 970,
-                    ratio: 1.01
-                },
-                {
-                    id: "E20",
-                    name: "정선 윈드릿지",
-                    region: "강원",
-                    source: "풍력",
-                    capacity: 28,
-                    target: 5740,
-                    ratio: 1.06
-                },
-                {
-                    id: "E21",
-                    name: "삼척 윈드밸리",
-                    region: "강원",
-                    source: "풍력",
-                    capacity: 18,
-                    target: 3670,
-                    ratio: 0.91
-                },
-                {
-                    id: "E22",
-                    name: "횡성 솔라루프",
-                    region: "강원",
-                    source: "태양광",
-                    capacity: 5,
-                    target: 600,
-                    ratio: 0.99
-                },
-                {
-                    id: "E23",
-                    name: "한림 윈드코스트",
-                    region: "제주",
-                    source: "풍력",
-                    capacity: 24,
-                    target: 4920,
-                    ratio: 1.1
-                },
-                {
-                    id: "E24",
-                    name: "성산 솔라팜",
-                    region: "제주",
-                    source: "태양광",
-                    capacity: 9,
-                    target: 1080,
-                    ratio: 0.95
-                }
-            ];
+<!-- 페이지별 구조는 구분하고 기본 글꼴과 조작 UI만 공유합니다. -->
+<link href="./style/showcase-workspaces.css?v=20261006-3" rel="stylesheet" />
+<script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+<script src="../export_server_samples/FileSaver.min.js"></script>
+<script>
+    const sites = [
+        {
+            id: "E01",
+            name: "해남 솔라파크",
+            region: "호남",
+            source: "태양광",
+            capacity: 12,
+            target: 1450,
+            ratio: 1.04
+        },
+        {
+            id: "E02",
+            name: "영암 에너지팜",
+            region: "호남",
+            source: "태양광",
+            capacity: 8,
+            target: 960,
+            ratio: 0.92
+        },
+        {
+            id: "E03",
+            name: "신안 윈드파크",
+            region: "호남",
+            source: "풍력",
+            capacity: 24,
+            target: 4900,
+            ratio: 1.08
+        },
+        {
+            id: "E04",
+            name: "김제 솔라루프",
+            region: "호남",
+            source: "태양광",
+            capacity: 5,
+            target: 610,
+            ratio: 0.98
+        },
+        {
+            id: "E05",
+            name: "영덕 윈드힐",
+            region: "영남",
+            source: "풍력",
+            capacity: 18,
+            target: 3650,
+            ratio: 0.88
+        },
+        {
+            id: "E06",
+            name: "울산 솔라루프",
+            region: "영남",
+            source: "태양광",
+            capacity: 6,
+            target: 730,
+            ratio: 1.03
+        },
+        {
+            id: "E07",
+            name: "합천 에너지팜",
+            region: "영남",
+            source: "태양광",
+            capacity: 9,
+            target: 1100,
+            ratio: 0.94
+        },
+        {
+            id: "E08",
+            name: "태백 윈드릿지",
+            region: "강원",
+            source: "풍력",
+            capacity: 30,
+            target: 6150,
+            ratio: 1.12
+        },
+        {
+            id: "E09",
+            name: "평창 윈드밸리",
+            region: "강원",
+            source: "풍력",
+            capacity: 16,
+            target: 3280,
+            ratio: 0.96
+        },
+        {
+            id: "E10",
+            name: "원주 솔라루프",
+            region: "강원",
+            source: "태양광",
+            capacity: 4,
+            target: 490,
+            ratio: 1.01
+        },
+        {
+            id: "E11",
+            name: "제주 윈드코스트",
+            region: "제주",
+            source: "풍력",
+            capacity: 22,
+            target: 4500,
+            ratio: 1.07
+        },
+        {
+            id: "E12",
+            name: "서귀포 솔라팜",
+            region: "제주",
+            source: "태양광",
+            capacity: 7,
+            target: 850,
+            ratio: 0.91
+        },
+        {
+            id: "E13",
+            name: "군산 솔라파크",
+            region: "호남",
+            source: "태양광",
+            capacity: 10,
+            target: 1210,
+            ratio: 1.02
+        },
+        {
+            id: "E14",
+            name: "무안 에너지팜",
+            region: "호남",
+            source: "태양광",
+            capacity: 7,
+            target: 860,
+            ratio: 0.97
+        },
+        {
+            id: "E15",
+            name: "고흥 윈드베이",
+            region: "호남",
+            source: "풍력",
+            capacity: 20,
+            target: 4080,
+            ratio: 1.05
+        },
+        {
+            id: "E16",
+            name: "장흥 솔라루프",
+            region: "호남",
+            source: "태양광",
+            capacity: 6,
+            target: 740,
+            ratio: 0.93
+        },
+        {
+            id: "E17",
+            name: "포항 윈드팜",
+            region: "영남",
+            source: "풍력",
+            capacity: 26,
+            target: 5320,
+            ratio: 1.09
+        },
+        {
+            id: "E18",
+            name: "밀양 솔라파크",
+            region: "영남",
+            source: "태양광",
+            capacity: 11,
+            target: 1330,
+            ratio: 0.96
+        },
+        {
+            id: "E19",
+            name: "경주 에너지팜",
+            region: "영남",
+            source: "태양광",
+            capacity: 8,
+            target: 970,
+            ratio: 1.01
+        },
+        {
+            id: "E20",
+            name: "정선 윈드릿지",
+            region: "강원",
+            source: "풍력",
+            capacity: 28,
+            target: 5740,
+            ratio: 1.06
+        },
+        {
+            id: "E21",
+            name: "삼척 윈드밸리",
+            region: "강원",
+            source: "풍력",
+            capacity: 18,
+            target: 3670,
+            ratio: 0.91
+        },
+        {
+            id: "E22",
+            name: "횡성 솔라루프",
+            region: "강원",
+            source: "태양광",
+            capacity: 5,
+            target: 600,
+            ratio: 0.99
+        },
+        {
+            id: "E23",
+            name: "한림 윈드코스트",
+            region: "제주",
+            source: "풍력",
+            capacity: 24,
+            target: 4920,
+            ratio: 1.1
+        },
+        {
+            id: "E24",
+            name: "성산 솔라팜",
+            region: "제주",
+            source: "태양광",
+            capacity: 9,
+            target: 1080,
+            ratio: 0.95
+        }
+    ];
 
-            // 추가한 발전소도 기존 권역의 바로 뒤에 배치하여 세로 병합을 유지합니다.
-            sites.sort(
-                (a, b) =>
-                    ["호남", "영남", "강원", "제주"].indexOf(a.region) -
-                    ["호남", "영남", "강원", "제주"].indexOf(b.region)
-            );
-            let myGridID;
-            let rateOnly = false;
-            let firstMonth = 4;
-            const numberFormat = new Intl.NumberFormat("ko-KR");
-            // 월별 목표와 실적은 같은 원천 자료에서 생성하며 화면과 내보내기에 함께 사용합니다.
-            function monthly(site, month) {
-                const seasonal = [0.78, 0.82, 0.96, 1.05, 1.14, 1.08, 1.03, 1.02, 0.94, 0.86, 0.76, 0.72][month - 1];
-                const target = Math.round(site.target * seasonal);
-                // 목록 순서가 바뀌어도 기존 발전소의 실적이 달라지지 않도록 고유 번호를 사용합니다.
-                const actual = Math.round(
-                    target * (site.ratio + (((month + Number(site.id.slice(1)) - 1) % 5) - 2) * 0.035)
-                );
-                return { target, actual };
+    // 추가한 발전소도 기존 권역의 바로 뒤에 배치하여 세로 병합을 유지합니다.
+    sites.sort(
+        (a, b) =>
+            ["호남", "영남", "강원", "제주"].indexOf(a.region) - ["호남", "영남", "강원", "제주"].indexOf(b.region)
+    );
+    let myGridID;
+    let rateOnly = false;
+    let firstMonth = 4;
+    const numberFormat = new Intl.NumberFormat("ko-KR");
+    // 월별 목표와 실적은 같은 원천 자료에서 생성하며 화면과 내보내기에 함께 사용합니다.
+    function monthly(site, month) {
+        const seasonal = [0.78, 0.82, 0.96, 1.05, 1.14, 1.08, 1.03, 1.02, 0.94, 0.86, 0.76, 0.72][month - 1];
+        const target = Math.round(site.target * seasonal);
+        // 목록 순서가 바뀌어도 기존 발전소의 실적이 달라지지 않도록 고유 번호를 사용합니다.
+        const actual = Math.round(target * (site.ratio + (((month + Number(site.id.slice(1)) - 1) % 5) - 2) * 0.035));
+        return { target, actual };
+    }
+    function valueLabel(row, col, value, header, item) {
+        return item.metric === "rate" ? Number(value).toFixed(1) : numberFormat.format(value);
+    }
+    function valueStyle(row, col, value, header, item) {
+        if (item.metric === "rate")
+            return value < 95 ? "energy-rate-low" : value < 100 ? "energy-rate-mid" : "energy-rate-high";
+        return item.metric === "target" ? "energy-target-row workspace-number" : "workspace-number";
+    }
+    function reportLayout() {
+        const layout = [
+            {
+                dataField: "region",
+                headerText: "권역",
+                width: "5.5%",
+                minWidth: 65,
+                cellMerge: true,
+                style: "energy-region"
+            },
+            {
+                dataField: "name",
+                headerText: "발전소",
+                width: "13%",
+                minWidth: 145,
+                cellMerge: true,
+                mergePolicy: "restrict",
+                mergeRef: "region",
+                style: "energy-site"
+            },
+            {
+                dataField: "label",
+                headerText: "지표 / 단위",
+                width: "10%",
+                minWidth: 110,
+                style: "workspace-left"
             }
-            function valueLabel(row, col, value, header, item) {
-                return item.metric === "rate" ? Number(value).toFixed(1) : numberFormat.format(value);
-            }
-            function valueStyle(row, col, value, header, item) {
-                if (item.metric === "rate")
-                    return value < 95 ? "energy-rate-low" : value < 100 ? "energy-rate-mid" : "energy-rate-high";
-                return item.metric === "target" ? "energy-target-row workspace-number" : "workspace-number";
-            }
-            function reportLayout() {
-                const layout = [
-                    {
-                        dataField: "region",
-                        headerText: "권역",
-                        width: "5.5%",
-                        minWidth: 65,
-                        cellMerge: true,
-                        style: "energy-region"
-                    },
-                    {
-                        dataField: "name",
-                        headerText: "발전소",
-                        width: "13%",
-                        minWidth: 145,
-                        cellMerge: true,
-                        mergePolicy: "restrict",
-                        mergeRef: "region",
-                        style: "energy-site"
-                    },
-                    {
-                        dataField: "label",
-                        headerText: "지표 / 단위",
-                        width: "10%",
-                        minWidth: 110,
-                        style: "workspace-left"
-                    }
-                ];
-                // 분기 헤더 아래의 월별 칼럼을 만들고 누계는 비율 합계가 아닌 실적/목표 합계로 계산합니다.
-                for (let quarter = 0; quarter < 2; quarter++) {
-                    const start = firstMonth + quarter * 3;
-                    layout.push({
-                        headerText: Math.ceil(start / 3) + "분기",
-                        children: Array.from({ length: 3 }, (_, index) => ({
-                            dataField: "m" + (start + index),
-                            headerText: start + index + "월",
-                            width: "10%",
-                            minWidth: 78,
-                            dataType: "numeric",
-                            labelFunction: valueLabel,
-                            styleFunction: valueStyle
-                        }))
-                    });
-                }
-                layout.push({
-                    dataField: "total",
-                    headerText: "기간 누계",
-                    width: "11.5%",
-                    minWidth: 105,
+        ];
+        // 분기 헤더 아래의 월별 칼럼을 만들고 누계는 비율 합계가 아닌 실적/목표 합계로 계산합니다.
+        for (let quarter = 0; quarter < 2; quarter++) {
+            const start = firstMonth + quarter * 3;
+            layout.push({
+                headerText: Math.ceil(start / 3) + "분기",
+                children: Array.from({ length: 3 }, (_, index) => ({
+                    dataField: "m" + (start + index),
+                    headerText: start + index + "월",
+                    width: "10%",
+                    minWidth: 78,
                     dataType: "numeric",
-                    style: "energy-cumulative",
                     labelFunction: valueLabel,
                     styleFunction: valueStyle
-                });
-                return layout;
+                }))
+            });
+        }
+        layout.push({
+            dataField: "total",
+            headerText: "기간 누계",
+            width: "11.5%",
+            minWidth: 105,
+            dataType: "numeric",
+            style: "energy-cumulative",
+            labelFunction: valueLabel,
+            styleFunction: valueStyle
+        });
+        return layout;
+    }
+    function init() {
+        myGridID = AUIGrid.create("#grid_wrap", reportLayout(), {
+            rowIdField: "id",
+            rowIdTrustMode: true,
+            showRowNumColumn: false,
+            showStateColumn: false,
+            rowHeight: 28,
+            headerHeight: 28,
+            enableCellMerge: true,
+            cellMergeRowSpan: true,
+            selectionMode: "multipleCells",
+            enableSorting: false
+        });
+        refreshReport();
+    }
+    function refreshReport() {
+        const region = document.getElementById("energy-region").value,
+            source = document.getElementById("energy-source").value;
+        const nextMonth = Number(document.getElementById("energy-period").value);
+        if (nextMonth !== firstMonth) {
+            firstMonth = nextMonth;
+            AUIGrid.changeColumnLayout(myGridID, reportLayout());
+        }
+        const data = [],
+            total = { actual: 0, target: 0 };
+        let count = 0;
+        sites.forEach((site) => {
+            if ((region !== "전체" && region !== site.region) || (source !== "전체" && source !== site.source)) return;
+            count++;
+            const base = { region: site.region, name: site.name, source: site.source, siteId: site.id };
+            const actual = {
+                ...base,
+                id: site.id + "-actual",
+                metric: "actual",
+                label: "발전량 (MWh)",
+                total: 0
+            };
+            const target = {
+                ...base,
+                id: site.id + "-target",
+                metric: "target",
+                label: "목표 (MWh)",
+                total: 0
+            };
+            const rate = { ...base, id: site.id + "-rate", metric: "rate", label: "달성률 (%)" };
+            for (let month = firstMonth; month < firstMonth + 6; month++) {
+                const values = monthly(site, month),
+                    field = "m" + month;
+                actual[field] = values.actual;
+                target[field] = values.target;
+                rate[field] = (values.actual / values.target) * 100;
+                actual.total += values.actual;
+                target.total += values.target;
             }
-            function init() {
-                myGridID = AUIGrid.create("#grid_wrap", reportLayout(), {
-                    rowIdField: "id",
-                    rowIdTrustMode: true,
-                    showRowNumColumn: false,
-                    showStateColumn: false,
-                    rowHeight: 28,
-                    headerHeight: 28,
-                    enableCellMerge: true,
-                    cellMergeRowSpan: true,
-                    selectionMode: "multipleCells",
-                    enableSorting: false
-                });
-                refreshReport();
-            }
-            function refreshReport() {
-                const region = document.getElementById("energy-region").value,
-                    source = document.getElementById("energy-source").value;
-                const nextMonth = Number(document.getElementById("energy-period").value);
-                if (nextMonth !== firstMonth) {
-                    firstMonth = nextMonth;
-                    AUIGrid.changeColumnLayout(myGridID, reportLayout());
-                }
-                const data = [],
-                    total = { actual: 0, target: 0 };
-                let count = 0;
-                sites.forEach((site) => {
-                    if ((region !== "전체" && region !== site.region) || (source !== "전체" && source !== site.source))
-                        return;
-                    count++;
-                    const base = { region: site.region, name: site.name, source: site.source, siteId: site.id };
-                    const actual = {
-                        ...base,
-                        id: site.id + "-actual",
-                        metric: "actual",
-                        label: "발전량 (MWh)",
-                        total: 0
-                    };
-                    const target = {
-                        ...base,
-                        id: site.id + "-target",
-                        metric: "target",
-                        label: "목표 (MWh)",
-                        total: 0
-                    };
-                    const rate = { ...base, id: site.id + "-rate", metric: "rate", label: "달성률 (%)" };
-                    for (let month = firstMonth; month < firstMonth + 6; month++) {
-                        const values = monthly(site, month),
-                            field = "m" + month;
-                        actual[field] = values.actual;
-                        target[field] = values.target;
-                        rate[field] = (values.actual / values.target) * 100;
-                        actual.total += values.actual;
-                        target.total += values.target;
-                    }
-                    rate.total = (actual.total / target.total) * 100;
-                    total.actual += actual.total;
-                    total.target += target.total;
-                    data.push(...(rateOnly ? [rate] : [actual, target, rate]));
-                });
-                AUIGrid.setGridData(myGridID, data);
-                document.getElementById("energy-total").textContent = numberFormat.format(total.actual) + " MWh";
-                document.getElementById("energy-achievement").textContent =
-                    "목표 대비 " + (total.target ? (total.actual / total.target) * 100 : 0).toFixed(1) + "%";
-                document.getElementById("energy-report-period").textContent =
-                    "2026년 " + firstMonth + "월 — " + (firstMonth + 5) + "월 운영 보고서";
-                document.getElementById("energy-count").textContent =
-                    count + "개 발전소 / " + (rateOnly ? "달성률 비교" : "발전량, 목표, 달성률 비교");
-            }
-            function setReportView(value) {
-                rateOnly = value;
-                document
-                    .querySelectorAll("[data-report-view]")
-                    .forEach((button) =>
-                        button.setAttribute("aria-pressed", String((button.dataset.reportView === "rate") === rateOnly))
-                    );
-                refreshReport();
-            }
-            function exportReport(format) {
-                const props = { fileName: "재생에너지_2026_" + firstMonth + "-" + (firstMonth + 5) };
-                if (format === "pdf")
-                    AUIGrid.exportToPdf(myGridID, { ...props, fontPath: "../pdfkit/nyjgothic-medium.ttf" });
-                else AUIGrid.exportToXlsx(myGridID, props);
-            }
-            function disposeDemo(event) {
-                if (event.persisted) return;
-                AUIGrid.destroy(myGridID);
-                myGridID = null;
-                window.removeEventListener("pagehide", disposeDemo);
-            }
-            window.addEventListener("pagehide", disposeDemo);
-        </script>
-    </head>
-<body class="demo-typography">
+            rate.total = (actual.total / target.total) * 100;
+            total.actual += actual.total;
+            total.target += target.total;
+            data.push(...(rateOnly ? [rate] : [actual, target, rate]));
+        });
+        AUIGrid.setGridData(myGridID, data);
+        document.getElementById("energy-total").textContent = numberFormat.format(total.actual) + " MWh";
+        document.getElementById("energy-achievement").textContent =
+            "목표 대비 " + (total.target ? (total.actual / total.target) * 100 : 0).toFixed(1) + "%";
+        document.getElementById("energy-report-period").textContent =
+            "2026년 " + firstMonth + "월 — " + (firstMonth + 5) + "월 운영 보고서";
+        document.getElementById("energy-count").textContent =
+            count + "개 발전소 / " + (rateOnly ? "달성률 비교" : "발전량, 목표, 달성률 비교");
+    }
+    function setReportView(value) {
+        rateOnly = value;
+        document
+            .querySelectorAll("[data-report-view]")
+            .forEach((button) =>
+                button.setAttribute("aria-pressed", String((button.dataset.reportView === "rate") === rateOnly))
+            );
+        refreshReport();
+    }
+    function exportReport(format) {
+        const props = { fileName: "재생에너지_2026_" + firstMonth + "-" + (firstMonth + 5) };
+        if (format === "pdf") AUIGrid.exportToPdf(myGridID, { ...props, fontPath: "../pdfkit/nyjgothic-medium.ttf" });
+        else AUIGrid.exportToXlsx(myGridID, props);
+    }
+    function disposeDemo(event) {
+        if (event.persisted) return;
+        AUIGrid.destroy(myGridID);
+        myGridID = null;
+        window.removeEventListener("pagehide", disposeDemo);
+    }
+    window.addEventListener("pagehide", disposeDemo);
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
 
-            <div id="main" class="workspace-demo energy-report">
-                <div class="energy-masthead">
-                    <div>
-                        <div id="energy-report-period" class="energy-period"></div>
-                        <h2>재생에너지 월별 성과 리포트</h2>
-                        <p>발전량과 목표를 함께 읽고, 색상으로 월별 달성률을 비교하세요.</p>
-                    </div>
-                    <div class="energy-total">
-                        기간 발전량<strong id="energy-total"></strong><small id="energy-achievement"></small>
-                    </div>
-                </div>
-                <div class="workspace-toolbar">
-                    <div class="workspace-controls">
-                        <label
-                            >기간<select id="energy-period" onchange="refreshReport()">
-                                <option value="1">1~6월</option>
-                                <option value="4" selected>4~9월</option>
-                            </select></label
-                        ><label
-                            >권역<select id="energy-region" onchange="refreshReport()">
-                                <option>전체</option>
-                                <option>호남</option>
-                                <option>영남</option>
-                                <option>강원</option>
-                                <option>제주</option>
-                            </select></label
-                        ><label
-                            >발전원<select id="energy-source" onchange="refreshReport()">
-                                <option>전체</option>
-                                <option>태양광</option>
-                                <option>풍력</option>
-                            </select></label
-                        >
-                    </div>
-                    <div class="workspace-controls">
-                        <button class="btn" type="button" onclick="exportReport('xlsx')">Excel 내보내기</button
-                        ><button class="btn" type="button" onclick="exportReport('pdf')">PDF 내보내기</button>
-                    </div>
-                </div>
-                <div class="energy-options">
-                    <span id="energy-count"></span>
-                    <div class="energy-views" aria-label="리포트 표시 지표">
-                        <button type="button" data-report-view="all" aria-pressed="true" onclick="setReportView(false)">
-                            전체 지표</button
-                        ><button
-                            type="button"
-                            data-report-view="rate"
-                            aria-pressed="false"
-                            onclick="setReportView(true)"
-                        >
-                            달성률만
-                        </button>
-                    </div>
-                </div>
-                <div class="energy-legend">
-                    <span>달성률</span><span><i style="background: #fcf0dd"></i>95% 미만</span
-                    ><span><i style="background: #edf4fb"></i>95~100% 미만</span
-                    ><span><i style="background: #def1ea"></i>100% 이상</span>
-                </div>
-                <div id="grid_wrap"></div>
-                <div class="workspace-note">
-                    <p>누계 달성률 = 기간 발전량 합계 ÷ 기간 목표 합계 × 100</p>
-                    <p>가상 발전 데이터 / MWh, %</p>
-                </div>
-            </div>
+<div id="main" class="workspace-demo energy-report">
+    <div class="energy-masthead">
+        <div>
+            <div id="energy-report-period" class="energy-period"></div>
+            <h2>재생에너지 월별 성과 리포트</h2>
+            <p>발전량과 목표를 함께 읽고, 색상으로 월별 달성률을 비교하세요.</p>
+        </div>
+        <div class="energy-total">
+            기간 발전량<strong id="energy-total"></strong><small id="energy-achievement"></small>
+        </div>
+    </div>
+    <div class="workspace-toolbar">
+        <div class="workspace-controls">
+            <label
+                >기간<select id="energy-period" onchange="refreshReport()">
+                    <option value="1">1~6월</option>
+                    <option value="4" selected>4~9월</option>
+                </select></label
+            ><label
+                >권역<select id="energy-region" onchange="refreshReport()">
+                    <option>전체</option>
+                    <option>호남</option>
+                    <option>영남</option>
+                    <option>강원</option>
+                    <option>제주</option>
+                </select></label
+            ><label
+                >발전원<select id="energy-source" onchange="refreshReport()">
+                    <option>전체</option>
+                    <option>태양광</option>
+                    <option>풍력</option>
+                </select></label
+            >
+        </div>
+        <div class="workspace-controls">
+            <button class="btn" type="button" onclick="exportReport('xlsx')">Excel 내보내기</button
+            ><button class="btn" type="button" onclick="exportReport('pdf')">PDF 내보내기</button>
+        </div>
+    </div>
+    <div class="energy-options">
+        <span id="energy-count"></span>
+        <div class="energy-views" aria-label="리포트 표시 지표">
+            <button type="button" data-report-view="all" aria-pressed="true" onclick="setReportView(false)">
+                전체 지표</button
+            ><button type="button" data-report-view="rate" aria-pressed="false" onclick="setReportView(true)">
+                달성률만
+            </button>
+        </div>
+    </div>
+    <div class="energy-legend">
+        <span>달성률</span><span><i style="background: #fcf0dd"></i>95% 미만</span
+        ><span><i style="background: #edf4fb"></i>95~100% 미만</span
+        ><span><i style="background: #def1ea"></i>100% 이상</span>
+    </div>
+    <div id="grid_wrap"></div>
+    <!-- 실제 사용한 기능의 공식 API 설명으로 연결합니다. -->
+    <p class="showcase-api-links" aria-label="사용 기능과 API">
+        <strong>관련 API</strong>
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/ColumnLayout/Column.html#children"
+            target="_blank"
+            rel="noopener"
+            >헤더 구성</a
+        >
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/DataGrid/Properties.html#enableCellMerge"
+            target="_blank"
+            rel="noopener"
+            >세로 셀 병합</a
+        >
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/ColumnLayout/Column.html#styleFunction"
+            target="_blank"
+            rel="noopener"
+            >셀 색상 지정</a
+        >
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/DataGrid/Methods.html#changeColumnLayout"
+            target="_blank"
+            rel="noopener"
+            >칼럼 구성 변경</a
+        >
+    </p>
+    <div class="workspace-note">
+        <p>누계 달성률 = 기간 발전량 합계 ÷ 기간 목표 합계 × 100</p>
+        <p>가상 발전 데이터 / MWh, %</p>
+    </div>
+</div>
 <div id="footer">
-     <div class="copyright">
+    <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>

@@ -1,11 +1,33 @@
+/*
+ * AUIGrid 사용자 정의 렌더러 - ECharts 원형 차트
+ *
+ * 행의 분기별 값을 ECharts 원형 차트로 표시합니다.
+ * 차트 높이는 100px이며, 그리드 rowHeight도 차트를 담을 수 있게 설정합니다. 데모는 102입니다.
+ *
+ * 연결 파일
+ *   그리드 래퍼로 AUIGrid를 로드한 뒤 이 모듈을 import합니다. echarts 패키지를 사용합니다.
+ *   import EChartsRenderer from "../renderers/AUIGrid.EChartsRenderer";
+ *   별도 렌더러 CSS는 없습니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "chartField", // 차트를 배치할 칼럼의 고유 필드명
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: EChartsRenderer
+ *     }
+ *   }
+ *   행 데이터 예: { region: "서울", q1: 10, q2: 20, q3: 30, q4: 40 }
+ *
+ * 데이터와 설정
+ *   region은 시리즈 이름, q1~q4는 숫자 값입니다. chartField의 값 대신 이 필드들을 읽습니다.
+ *   차트 모양은 __drawChart()의 option에서 바꿉니다. 이 예제에는 extraProps 옵션이 없습니다.
+ */
 // Apache ECharts is licensed under Apache License 2.0.
 // https://echarts.apache.org/en/download.html
 import * as echarts from 'echarts';
 
 /* eslint-disable */
-/*
- * AUIGrid 사용자 정의 렌더러
- */
 export default window.AUIGrid.Class({
 	/****************************************************************
 	 *

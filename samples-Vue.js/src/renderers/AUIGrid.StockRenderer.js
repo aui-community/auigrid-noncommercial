@@ -1,10 +1,29 @@
+/*
+ * AUIGrid 사용자 정의 렌더러 - Vue 주가 컴포넌트
+ *
+ * 행의 현재가(close), 등락률(vars)과 등락 차이(gap)를 Vue 컴포넌트에 전달하여 한 셀에 표시합니다.
+ * 값이 바뀌면 컴포넌트를 갱신하고, 렌더러가 제거될 때 컴포넌트도 해제합니다.
+ *
+ * 연결 파일
+ *   그리드 래퍼로 AUIGrid를 로드한 뒤 이 모듈을 import합니다.
+ *   import StockRenderer from "../renderers/AUIGrid.StockRenderer";
+ *   src/components/StockView.vue와 해당 CSS를 함께 제공합니다.
+ *   상승 및 하락 아이콘은 페이지 기준 ./assets/ico_up.gif와 ./assets/ico_down.gif를 사용합니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "close",
+ *     renderer: { type: "CustomRenderer", jsClass: StockRenderer }
+ *   }
+ *   행 데이터 예: { close: "72,000", vars: "1.5", gap: "1,000" }
+ *
+ * 설정 변경
+ *   표시 모양은 StockView 컴포넌트와 CSS에서 바꿉니다. 이 예제에는 extraProps 옵션이 없습니다.
+ */
 import { h, render } from 'vue';
 import StockView from '../components/StockView.vue';
 
 /* eslint-disable */
-/*
- * AUIGrid 사용자 정의 렌더러
- */
 export default window.AUIGrid.Class({
 	/****************************************************************
 	 *

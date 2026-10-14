@@ -6,7 +6,7 @@
     "owner": "김서연",
     "due": "2026-10-12",
     "status": "진행중",
-    "progress": 72,
+    "progress": 0.72,
     "budget": 480,
     "id": "PRJ-2026-001"
   },
@@ -17,7 +17,7 @@
     "owner": "박지훈",
     "due": "2026-10-20",
     "status": "진행중",
-    "progress": 48,
+    "progress": 0.48,
     "budget": 620,
     "id": "PRJ-2026-002"
   },
@@ -28,7 +28,7 @@
     "owner": "이수민",
     "due": "2026-10-05",
     "status": "검토중",
-    "progress": 92,
+    "progress": 0.92,
     "budget": 850,
     "id": "PRJ-2026-003"
   },
@@ -39,7 +39,7 @@
     "owner": "최민준",
     "due": "2026-09-30",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 180,
     "id": "PRJ-2026-004"
   },
@@ -50,7 +50,7 @@
     "owner": "정하린",
     "due": "2026-11-08",
     "status": "진행중",
-    "progress": 35,
+    "progress": 0.35,
     "budget": 340,
     "id": "PRJ-2026-005"
   },
@@ -61,7 +61,7 @@
     "owner": "윤도현",
     "due": "2026-10-28",
     "status": "진행중",
-    "progress": 61,
+    "progress": 0.61,
     "budget": 420,
     "id": "PRJ-2026-006"
   },
@@ -72,7 +72,7 @@
     "owner": "강지우",
     "due": "2026-11-15",
     "status": "진행중",
-    "progress": 28,
+    "progress": 0.28,
     "budget": 760,
     "id": "PRJ-2026-007"
   },
@@ -83,7 +83,7 @@
     "owner": "김서연",
     "due": "2026-10-09",
     "status": "검토중",
-    "progress": 88,
+    "progress": 0.88,
     "budget": 260,
     "id": "PRJ-2026-008"
   },
@@ -94,7 +94,7 @@
     "owner": "한유진",
     "due": "2026-09-25",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 390,
     "id": "PRJ-2026-009"
   },
@@ -105,7 +105,7 @@
     "owner": "박지훈",
     "due": "2026-11-02",
     "status": "진행중",
-    "progress": 56,
+    "progress": 0.56,
     "budget": 510,
     "id": "PRJ-2026-010"
   },
@@ -116,7 +116,7 @@
     "owner": "이수민",
     "due": "2026-10-16",
     "status": "검토중",
-    "progress": 84,
+    "progress": 0.84,
     "budget": 230,
     "id": "PRJ-2026-011"
   },
@@ -127,7 +127,7 @@
     "owner": "최민준",
     "due": "2026-11-22",
     "status": "진행중",
-    "progress": 19,
+    "progress": 0.19,
     "budget": 310,
     "id": "PRJ-2026-012"
   },
@@ -138,7 +138,7 @@
     "owner": "김서연",
     "due": "2026-09-01",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 150,
     "id": "PRJ-2026-013"
   },
@@ -149,7 +149,7 @@
     "owner": "박지훈",
     "due": "2026-10-08",
     "status": "검토중",
-    "progress": 86,
+    "progress": 0.86,
     "budget": 520,
     "id": "PRJ-2026-014"
   },
@@ -160,7 +160,7 @@
     "owner": "이수민",
     "due": "2026-12-15",
     "status": "진행중",
-    "progress": 36,
+    "progress": 0.36,
     "budget": 890,
     "id": "PRJ-2026-015"
   },
@@ -171,7 +171,7 @@
     "owner": "최민준",
     "due": "2026-10-22",
     "status": "진행중",
-    "progress": 49,
+    "progress": 0.49,
     "budget": 500,
     "id": "PRJ-2026-016"
   },
@@ -182,7 +182,7 @@
     "owner": "정하린",
     "due": "2026-11-01",
     "status": "진행중",
-    "progress": 62,
+    "progress": 0.62,
     "budget": 870,
     "id": "PRJ-2026-017"
   },
@@ -193,7 +193,7 @@
     "owner": "윤도현",
     "due": "2026-12-08",
     "status": "진행중",
-    "progress": 75,
+    "progress": 0.75,
     "budget": 480,
     "id": "PRJ-2026-018"
   },
@@ -204,7 +204,7 @@
     "owner": "강지우",
     "due": "2026-09-15",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 850,
     "id": "PRJ-2026-019"
   },
@@ -215,7 +215,7 @@
     "owner": "한유진",
     "due": "2026-10-22",
     "status": "검토중",
-    "progress": 92,
+    "progress": 0.92,
     "budget": 460,
     "id": "PRJ-2026-020"
   },
@@ -226,7 +226,7 @@
     "owner": "박지훈",
     "due": "2026-12-01",
     "status": "진행중",
-    "progress": 40,
+    "progress": 0.4,
     "budget": 830,
     "id": "PRJ-2026-021"
   },
@@ -237,7 +237,7 @@
     "owner": "이수민",
     "due": "2026-10-08",
     "status": "진행중",
-    "progress": 53,
+    "progress": 0.53,
     "budget": 440,
     "id": "PRJ-2026-022"
   },
@@ -248,7 +248,7 @@
     "owner": "최민준",
     "due": "2026-11-15",
     "status": "진행중",
-    "progress": 66,
+    "progress": 0.66,
     "budget": 810,
     "id": "PRJ-2026-023"
   },
@@ -259,7 +259,7 @@
     "owner": "김서연",
     "due": "2026-12-22",
     "status": "진행중",
-    "progress": 79,
+    "progress": 0.79,
     "budget": 420,
     "id": "PRJ-2026-024"
   },
@@ -270,7 +270,7 @@
     "owner": "박지훈",
     "due": "2026-09-01",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 790,
     "id": "PRJ-2026-025"
   },
@@ -281,7 +281,7 @@
     "owner": "이수민",
     "due": "2026-10-08",
     "status": "검토중",
-    "progress": 98,
+    "progress": 0.98,
     "budget": 400,
     "id": "PRJ-2026-026"
   },
@@ -292,7 +292,7 @@
     "owner": "최민준",
     "due": "2026-12-15",
     "status": "진행중",
-    "progress": 44,
+    "progress": 0.44,
     "budget": 770,
     "id": "PRJ-2026-027"
   },
@@ -303,7 +303,7 @@
     "owner": "정하린",
     "due": "2026-10-22",
     "status": "진행중",
-    "progress": 57,
+    "progress": 0.57,
     "budget": 380,
     "id": "PRJ-2026-028"
   },
@@ -314,7 +314,7 @@
     "owner": "윤도현",
     "due": "2026-11-01",
     "status": "진행중",
-    "progress": 70,
+    "progress": 0.7,
     "budget": 750,
     "id": "PRJ-2026-029"
   },
@@ -325,7 +325,7 @@
     "owner": "강지우",
     "due": "2026-12-08",
     "status": "진행중",
-    "progress": 83,
+    "progress": 0.83,
     "budget": 360,
     "id": "PRJ-2026-030"
   },
@@ -336,7 +336,7 @@
     "owner": "한유진",
     "due": "2026-09-15",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 730,
     "id": "PRJ-2026-031"
   },
@@ -347,7 +347,7 @@
     "owner": "박지훈",
     "due": "2026-10-22",
     "status": "검토중",
-    "progress": 90,
+    "progress": 0.9,
     "budget": 340,
     "id": "PRJ-2026-032"
   },
@@ -358,7 +358,7 @@
     "owner": "이수민",
     "due": "2026-12-01",
     "status": "진행중",
-    "progress": 48,
+    "progress": 0.48,
     "budget": 710,
     "id": "PRJ-2026-033"
   },
@@ -369,7 +369,7 @@
     "owner": "최민준",
     "due": "2026-10-08",
     "status": "진행중",
-    "progress": 61,
+    "progress": 0.61,
     "budget": 320,
     "id": "PRJ-2026-034"
   },
@@ -380,7 +380,7 @@
     "owner": "김서연",
     "due": "2026-11-15",
     "status": "진행중",
-    "progress": 74,
+    "progress": 0.74,
     "budget": 690,
     "id": "PRJ-2026-035"
   },
@@ -391,7 +391,7 @@
     "owner": "박지훈",
     "due": "2026-12-22",
     "status": "진행중",
-    "progress": 13,
+    "progress": 0.13,
     "budget": 300,
     "id": "PRJ-2026-036"
   },
@@ -402,7 +402,7 @@
     "owner": "이수민",
     "due": "2026-09-01",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 670,
     "id": "PRJ-2026-037"
   },
@@ -413,7 +413,7 @@
     "owner": "최민준",
     "due": "2026-10-08",
     "status": "검토중",
-    "progress": 96,
+    "progress": 0.96,
     "budget": 280,
     "id": "PRJ-2026-038"
   },
@@ -424,7 +424,7 @@
     "owner": "정하린",
     "due": "2026-12-15",
     "status": "진행중",
-    "progress": 52,
+    "progress": 0.52,
     "budget": 650,
     "id": "PRJ-2026-039"
   },
@@ -435,7 +435,7 @@
     "owner": "윤도현",
     "due": "2026-10-22",
     "status": "진행중",
-    "progress": 65,
+    "progress": 0.65,
     "budget": 260,
     "id": "PRJ-2026-040"
   },
@@ -446,7 +446,7 @@
     "owner": "강지우",
     "due": "2026-11-01",
     "status": "진행중",
-    "progress": 78,
+    "progress": 0.78,
     "budget": 630,
     "id": "PRJ-2026-041"
   },
@@ -457,7 +457,7 @@
     "owner": "한유진",
     "due": "2026-12-08",
     "status": "진행중",
-    "progress": 17,
+    "progress": 0.17,
     "budget": 240,
     "id": "PRJ-2026-042"
   },
@@ -468,7 +468,7 @@
     "owner": "박지훈",
     "due": "2026-09-15",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 610,
     "id": "PRJ-2026-043"
   },
@@ -479,7 +479,7 @@
     "owner": "이수민",
     "due": "2026-10-22",
     "status": "검토중",
-    "progress": 88,
+    "progress": 0.88,
     "budget": 220,
     "id": "PRJ-2026-044"
   },
@@ -490,7 +490,7 @@
     "owner": "최민준",
     "due": "2026-12-01",
     "status": "진행중",
-    "progress": 56,
+    "progress": 0.56,
     "budget": 590,
     "id": "PRJ-2026-045"
   },
@@ -501,7 +501,7 @@
     "owner": "김서연",
     "due": "2026-10-08",
     "status": "진행중",
-    "progress": 69,
+    "progress": 0.69,
     "budget": 200,
     "id": "PRJ-2026-046"
   },
@@ -512,7 +512,7 @@
     "owner": "박지훈",
     "due": "2026-11-15",
     "status": "진행중",
-    "progress": 82,
+    "progress": 0.82,
     "budget": 570,
     "id": "PRJ-2026-047"
   },
@@ -523,7 +523,7 @@
     "owner": "이수민",
     "due": "2026-12-22",
     "status": "진행중",
-    "progress": 21,
+    "progress": 0.21,
     "budget": 180,
     "id": "PRJ-2026-048"
   },
@@ -534,7 +534,7 @@
     "owner": "최민준",
     "due": "2026-09-01",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 550,
     "id": "PRJ-2026-049"
   },
@@ -545,7 +545,7 @@
     "owner": "정하린",
     "due": "2026-10-08",
     "status": "검토중",
-    "progress": 94,
+    "progress": 0.94,
     "budget": 160,
     "id": "PRJ-2026-050"
   },
@@ -556,7 +556,7 @@
     "owner": "윤도현",
     "due": "2026-12-15",
     "status": "진행중",
-    "progress": 60,
+    "progress": 0.6,
     "budget": 530,
     "id": "PRJ-2026-051"
   },
@@ -567,7 +567,7 @@
     "owner": "강지우",
     "due": "2026-10-22",
     "status": "진행중",
-    "progress": 73,
+    "progress": 0.73,
     "budget": 900,
     "id": "PRJ-2026-052"
   },
@@ -578,7 +578,7 @@
     "owner": "한유진",
     "due": "2026-11-01",
     "status": "진행중",
-    "progress": 12,
+    "progress": 0.12,
     "budget": 510,
     "id": "PRJ-2026-053"
   },
@@ -589,7 +589,7 @@
     "owner": "박지훈",
     "due": "2026-12-08",
     "status": "진행중",
-    "progress": 25,
+    "progress": 0.25,
     "budget": 880,
     "id": "PRJ-2026-054"
   },
@@ -600,7 +600,7 @@
     "owner": "이수민",
     "due": "2026-09-15",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 490,
     "id": "PRJ-2026-055"
   },
@@ -611,7 +611,7 @@
     "owner": "최민준",
     "due": "2026-10-22",
     "status": "검토중",
-    "progress": 86,
+    "progress": 0.86,
     "budget": 860,
     "id": "PRJ-2026-056"
   },
@@ -622,7 +622,7 @@
     "owner": "김서연",
     "due": "2026-12-01",
     "status": "진행중",
-    "progress": 64,
+    "progress": 0.64,
     "budget": 470,
     "id": "PRJ-2026-057"
   },
@@ -633,7 +633,7 @@
     "owner": "박지훈",
     "due": "2026-10-08",
     "status": "진행중",
-    "progress": 77,
+    "progress": 0.77,
     "budget": 840,
     "id": "PRJ-2026-058"
   },
@@ -644,7 +644,7 @@
     "owner": "이수민",
     "due": "2026-11-15",
     "status": "진행중",
-    "progress": 16,
+    "progress": 0.16,
     "budget": 450,
     "id": "PRJ-2026-059"
   },
@@ -655,7 +655,7 @@
     "owner": "최민준",
     "due": "2026-12-22",
     "status": "진행중",
-    "progress": 29,
+    "progress": 0.29,
     "budget": 820,
     "id": "PRJ-2026-060"
   },
@@ -666,7 +666,7 @@
     "owner": "정하린",
     "due": "2026-09-01",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 430,
     "id": "PRJ-2026-061"
   },
@@ -677,7 +677,7 @@
     "owner": "윤도현",
     "due": "2026-10-08",
     "status": "검토중",
-    "progress": 92,
+    "progress": 0.92,
     "budget": 800,
     "id": "PRJ-2026-062"
   },
@@ -688,7 +688,7 @@
     "owner": "강지우",
     "due": "2026-12-15",
     "status": "진행중",
-    "progress": 68,
+    "progress": 0.68,
     "budget": 410,
     "id": "PRJ-2026-063"
   },
@@ -699,7 +699,7 @@
     "owner": "한유진",
     "due": "2026-10-22",
     "status": "진행중",
-    "progress": 81,
+    "progress": 0.81,
     "budget": 780,
     "id": "PRJ-2026-064"
   },
@@ -710,7 +710,7 @@
     "owner": "박지훈",
     "due": "2026-11-01",
     "status": "진행중",
-    "progress": 20,
+    "progress": 0.2,
     "budget": 390,
     "id": "PRJ-2026-065"
   },
@@ -721,7 +721,7 @@
     "owner": "이수민",
     "due": "2026-12-08",
     "status": "진행중",
-    "progress": 33,
+    "progress": 0.33,
     "budget": 760,
     "id": "PRJ-2026-066"
   },
@@ -732,7 +732,7 @@
     "owner": "최민준",
     "due": "2026-09-15",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 370,
     "id": "PRJ-2026-067"
   },
@@ -743,7 +743,7 @@
     "owner": "김서연",
     "due": "2026-10-22",
     "status": "검토중",
-    "progress": 98,
+    "progress": 0.98,
     "budget": 740,
     "id": "PRJ-2026-068"
   },
@@ -754,7 +754,7 @@
     "owner": "박지훈",
     "due": "2026-12-01",
     "status": "진행중",
-    "progress": 72,
+    "progress": 0.72,
     "budget": 350,
     "id": "PRJ-2026-069"
   },
@@ -765,7 +765,7 @@
     "owner": "이수민",
     "due": "2026-10-08",
     "status": "진행중",
-    "progress": 11,
+    "progress": 0.11,
     "budget": 720,
     "id": "PRJ-2026-070"
   },
@@ -776,7 +776,7 @@
     "owner": "최민준",
     "due": "2026-11-15",
     "status": "진행중",
-    "progress": 24,
+    "progress": 0.24,
     "budget": 330,
     "id": "PRJ-2026-071"
   },
@@ -787,7 +787,7 @@
     "owner": "정하린",
     "due": "2026-12-22",
     "status": "진행중",
-    "progress": 37,
+    "progress": 0.37,
     "budget": 700,
     "id": "PRJ-2026-072"
   },
@@ -798,7 +798,7 @@
     "owner": "윤도현",
     "due": "2026-09-01",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 310,
     "id": "PRJ-2026-073"
   },
@@ -809,7 +809,7 @@
     "owner": "강지우",
     "due": "2026-10-08",
     "status": "검토중",
-    "progress": 90,
+    "progress": 0.9,
     "budget": 680,
     "id": "PRJ-2026-074"
   },
@@ -820,7 +820,7 @@
     "owner": "한유진",
     "due": "2026-12-15",
     "status": "진행중",
-    "progress": 76,
+    "progress": 0.76,
     "budget": 290,
     "id": "PRJ-2026-075"
   },
@@ -831,7 +831,7 @@
     "owner": "박지훈",
     "due": "2026-10-22",
     "status": "진행중",
-    "progress": 15,
+    "progress": 0.15,
     "budget": 660,
     "id": "PRJ-2026-076"
   },
@@ -842,7 +842,7 @@
     "owner": "이수민",
     "due": "2026-11-01",
     "status": "진행중",
-    "progress": 28,
+    "progress": 0.28,
     "budget": 270,
     "id": "PRJ-2026-077"
   },
@@ -853,7 +853,7 @@
     "owner": "최민준",
     "due": "2026-12-08",
     "status": "진행중",
-    "progress": 41,
+    "progress": 0.41,
     "budget": 640,
     "id": "PRJ-2026-078"
   },
@@ -864,7 +864,7 @@
     "owner": "김서연",
     "due": "2026-09-15",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 250,
     "id": "PRJ-2026-079"
   },
@@ -875,7 +875,7 @@
     "owner": "박지훈",
     "due": "2026-10-22",
     "status": "검토중",
-    "progress": 96,
+    "progress": 0.96,
     "budget": 620,
     "id": "PRJ-2026-080"
   },
@@ -886,7 +886,7 @@
     "owner": "이수민",
     "due": "2026-12-01",
     "status": "진행중",
-    "progress": 80,
+    "progress": 0.8,
     "budget": 230,
     "id": "PRJ-2026-081"
   },
@@ -897,7 +897,7 @@
     "owner": "최민준",
     "due": "2026-10-08",
     "status": "진행중",
-    "progress": 19,
+    "progress": 0.19,
     "budget": 600,
     "id": "PRJ-2026-082"
   },
@@ -908,7 +908,7 @@
     "owner": "정하린",
     "due": "2026-11-15",
     "status": "진행중",
-    "progress": 32,
+    "progress": 0.32,
     "budget": 210,
     "id": "PRJ-2026-083"
   },
@@ -919,7 +919,7 @@
     "owner": "윤도현",
     "due": "2026-12-22",
     "status": "진행중",
-    "progress": 45,
+    "progress": 0.45,
     "budget": 580,
     "id": "PRJ-2026-084"
   },
@@ -930,7 +930,7 @@
     "owner": "강지우",
     "due": "2026-09-01",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 190,
     "id": "PRJ-2026-085"
   },
@@ -941,7 +941,7 @@
     "owner": "한유진",
     "due": "2026-10-08",
     "status": "검토중",
-    "progress": 88,
+    "progress": 0.88,
     "budget": 560,
     "id": "PRJ-2026-086"
   },
@@ -952,7 +952,7 @@
     "owner": "박지훈",
     "due": "2026-12-15",
     "status": "진행중",
-    "progress": 10,
+    "progress": 0.1,
     "budget": 170,
     "id": "PRJ-2026-087"
   },
@@ -963,7 +963,7 @@
     "owner": "이수민",
     "due": "2026-10-22",
     "status": "진행중",
-    "progress": 23,
+    "progress": 0.23,
     "budget": 540,
     "id": "PRJ-2026-088"
   },
@@ -974,7 +974,7 @@
     "owner": "최민준",
     "due": "2026-11-01",
     "status": "진행중",
-    "progress": 36,
+    "progress": 0.36,
     "budget": 150,
     "id": "PRJ-2026-089"
   },
@@ -985,7 +985,7 @@
     "owner": "김서연",
     "due": "2026-12-08",
     "status": "진행중",
-    "progress": 49,
+    "progress": 0.49,
     "budget": 520,
     "id": "PRJ-2026-090"
   },
@@ -996,7 +996,7 @@
     "owner": "박지훈",
     "due": "2026-09-15",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 890,
     "id": "PRJ-2026-091"
   },
@@ -1007,7 +1007,7 @@
     "owner": "이수민",
     "due": "2026-10-22",
     "status": "검토중",
-    "progress": 94,
+    "progress": 0.94,
     "budget": 500,
     "id": "PRJ-2026-092"
   },
@@ -1018,7 +1018,7 @@
     "owner": "최민준",
     "due": "2026-12-01",
     "status": "진행중",
-    "progress": 14,
+    "progress": 0.14,
     "budget": 870,
     "id": "PRJ-2026-093"
   },
@@ -1029,7 +1029,7 @@
     "owner": "정하린",
     "due": "2026-10-08",
     "status": "진행중",
-    "progress": 27,
+    "progress": 0.27,
     "budget": 480,
     "id": "PRJ-2026-094"
   },
@@ -1040,7 +1040,7 @@
     "owner": "윤도현",
     "due": "2026-11-15",
     "status": "진행중",
-    "progress": 40,
+    "progress": 0.4,
     "budget": 850,
     "id": "PRJ-2026-095"
   },
@@ -1051,7 +1051,7 @@
     "owner": "강지우",
     "due": "2026-12-22",
     "status": "진행중",
-    "progress": 53,
+    "progress": 0.53,
     "budget": 460,
     "id": "PRJ-2026-096"
   },
@@ -1062,7 +1062,7 @@
     "owner": "한유진",
     "due": "2026-09-01",
     "status": "완료",
-    "progress": 100,
+    "progress": 1,
     "budget": 830,
     "id": "PRJ-2026-097"
   },
@@ -1073,7 +1073,7 @@
     "owner": "박지훈",
     "due": "2026-10-08",
     "status": "검토중",
-    "progress": 86,
+    "progress": 0.86,
     "budget": 440,
     "id": "PRJ-2026-098"
   },
@@ -1084,7 +1084,7 @@
     "owner": "이수민",
     "due": "2026-12-15",
     "status": "진행중",
-    "progress": 18,
+    "progress": 0.18,
     "budget": 810,
     "id": "PRJ-2026-099"
   },
@@ -1095,7 +1095,7 @@
     "owner": "최민준",
     "due": "2026-10-22",
     "status": "진행중",
-    "progress": 31,
+    "progress": 0.31,
     "budget": 420,
     "id": "PRJ-2026-100"
   }

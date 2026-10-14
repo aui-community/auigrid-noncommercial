@@ -1,107 +1,114 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
-<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="https://www.auisoft.net/">
-<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
 <title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<link rel="stylesheet" href="./static/prism.css">
-<link href="./demo.css" rel="stylesheet">
-
-<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
-<link rel="stylesheet" href="./style/demo-typography.css">
-<link rel="stylesheet" href="./static/code-examples.css">
-<script src="./static/prism.js" data-manual></script>
-<script src="./static/code-examples.js" data-source-viewer></script>
-
-
-<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<script type="text/javascript" src="./common.js"></script>
+<link href="./demo.css" rel="stylesheet" />
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-        <style>
-            pre {
-                font-size: 12px;
-                font-family: "Malgun Gothic", "맑은 고딕", AppleSDGothicNeo-Light, sans-serif;
-                font-size: 14px;
-                line-height: 1.267em;
-            }
+<style>
+    pre {
+        font-size: 12px;
+        font-family: "Malgun Gothic", "맑은 고딕", AppleSDGothicNeo-Light, sans-serif;
+        font-size: 14px;
+        line-height: 1.267em;
+    }
 
-            .desc_my_strong {
-                font-weight: bold;
-                padding-top: 10px;
-            }
+    .desc_my_strong {
+        font-weight: bold;
+        padding-top: 10px;
+    }
 
-            .desc_my_ul {
-                list-style: disc;
-                list-style-position: inside;
-                line-height: 1.5em;
-            }
-        </style>
-        <script>
-            function init() {}
-        </script>
-    </head>
-<body class="demo-typography">
+    .desc_my_ul {
+        list-style: disc;
+        list-style-position: inside;
+        line-height: 1.5em;
+    }
+</style>
+<script>
+    function init() {}
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
 
-            <div id="main">
-                <div class="desc">
-                    <p>
-                        사용자 정의 에디트렌더러(CustomEditRenderer)는 그리드에서 제공되는 기본 에디트렌더러가 아닌
-                        사용자(개발자)가 직접 작성한 에디터를 그리드의 editRenderer 로 정의하여 셀 수정 방식을 결정할 수
-                        있는 에디트렌더러 입니다.
-                    </p>
-                    <p>사용자 정의 에디트렌더러 작성에는 기본 이상의 자바스크립트, CSS, HTML 스킬이 필요합니다.</p>
-                    <p>
-                        심화된 개발자의 심화된 에디터 작성을 위해 제공하는 기능으로 사용자 정의 에디트렌더러는
-                        사용자(개발자)가 직접 개발하는 영역입니다.
-                    </p>
-                    <p>
-                        이에 대한 기술지원은 제공하지 않으니 참고하여 해당 기능 개발/이용하시길 바랍니다. 전적으로
-                        개발자 영역입니다.
-                    </p>
-                    <p>
-                        사용자 에디트렌더러 작성은 <strong>AUIGrid.EditRendererBase 클래스를 확장(extend)</strong>하여
-                        작성합니다.
-                    </p>
-                    <p>
-                        (사용자 렌더러와 에디트렌더러는 각각 AUIGrid.RendererBase 와 AUIGrid.EditRendererBase 클래스를
-                        확장하니 혼동하지 않도록 주의하십시오.)
-                    </p>
-                    <p class="desc_my_strong">사용자 정의 에디트렌더러 사용의 장점</p>
-                    <ul class="desc_my_ul">
-                        <li>
-                            AUIGrid 에서 제공하는 에디트렌더러의 한계를 넘어 원하는 형태의 셀 수정 방식을 개발자가 직접
-                            결정, 개발 할 수 있습니다.
-                        </li>
-                    </ul>
-                    <p class="desc_my_strong">사용자 정의 에디트렌더러 사용의 단점</p>
-                    <ul class="desc_my_ul">
-                        <li>
-                            editingOnKeyDown (키보드 입력으로 바로 편집할 수 있는지 여부) 속성 사용에 제한이 있습니다.
-                            키보드 F2, 스페이스바 키만 에디팅 진입을 하게 됩니다.
-                        </li>
-                    </ul>
-                    <p>다음은 실제로 작성한 사용자 에디트렌더러 예제입니다.</p>
-                    <div class="src_cover" style="max-height: 800px">
-                        <pre>
+<div id="main">
+    <div class="desc">
+        <p>
+            사용자 정의 에디트렌더러(CustomEditRenderer)는 그리드에서 제공되는 기본 에디트렌더러가 아닌 사용자(개발자)가
+            직접 작성한 에디터를 그리드의 editRenderer 로 정의하여 셀 수정 방식을 결정할 수 있는 에디트렌더러 입니다.
+        </p>
+        <!-- 실제 연결 파일과 같은 경로를 안내하여 그대로 복사할 수 있게 합니다. -->
+        <p>아래 예제의 편집기는 AUIGrid.js 다음에 jQuery, Spectrum JS와 CSS, 편집기 JS를 연결합니다.</p>
+        <pre><code class="language-html">&lt;script src="https://code.jquery.com/jquery-3.7.1.min.js"&gt;&lt;/script&gt;
+&lt;script src="./external/spectrum/spectrum.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="./external/spectrum/spectrum.css" /&gt;
+&lt;script src="../AUIGrid/editRenderers/AUIGrid.SpectrumEditor.js"&gt;&lt;/script&gt;</code></pre>
+        <p>사용자 정의 에디트렌더러 작성에는 기본 이상의 자바스크립트, CSS, HTML 스킬이 필요합니다.</p>
+        <p>
+            심화된 개발자의 심화된 에디터 작성을 위해 제공하는 기능으로 사용자 정의 에디트렌더러는 사용자(개발자)가 직접
+            개발하는 영역입니다.
+        </p>
+        <p>
+            이에 대한 기술지원은 제공하지 않으니 참고하여 해당 기능 개발/이용하시길 바랍니다. 전적으로 개발자
+            영역입니다.
+        </p>
+        <p>
+            사용자 에디트렌더러 작성은 <strong>AUIGrid.EditRendererBase 클래스를 확장(extend)</strong>하여 작성합니다.
+        </p>
+        <p>
+            (사용자 렌더러와 에디트렌더러는 각각 AUIGrid.RendererBase 와 AUIGrid.EditRendererBase 클래스를 확장하니
+            혼동하지 않도록 주의하십시오.)
+        </p>
+        <p class="desc_my_strong">사용자 정의 에디트렌더러 사용의 장점</p>
+        <ul class="desc_my_ul">
+            <li>
+                AUIGrid 에서 제공하는 에디트렌더러의 한계를 넘어 원하는 형태의 셀 수정 방식을 개발자가 직접 결정, 개발
+                할 수 있습니다.
+            </li>
+        </ul>
+        <p class="desc_my_strong">사용자 정의 에디트렌더러 사용의 단점</p>
+        <ul class="desc_my_ul">
+            <li>
+                editingOnKeyDown (키보드 입력으로 바로 편집할 수 있는지 여부) 속성 사용에 제한이 있습니다. 키보드 F2,
+                스페이스바 키만 에디팅 진입을 하게 됩니다.
+            </li>
+        </ul>
+        <p>다음은 실제로 작성한 사용자 에디트렌더러 예제입니다.</p>
+        <div class="src_cover" style="max-height: 800px">
+            <pre>
 /* eslint-disable */
 /*
  * AUIGrid 사용자 정의 에디트 렌더러
@@ -203,7 +210,7 @@ window.AUIGrid.SpectrumEditor = window.AUIGrid.Class({
 			}.bind(this)
 		});
 
-		// 스펙트럼 취소 버턴 클릭
+		// 스펙트럼 취소 버튼 클릭
 		$(this.__inputEle)
 			.spectrum('container')
 			.find('.sp-cancel')
@@ -239,7 +246,7 @@ window.AUIGrid.SpectrumEditor = window.AUIGrid.Class({
 
 	/*
 	 * @Overriden public injectValue
-	 * @ value {obejct} 새로운 값
+	 * @ value {object} 새로운 값
 	 *
 	 * 외부에 의해 에디팅이 완료될 경우를 위해 값을 주입 시켜 놓습니다.
 	 * 에디트렌더러의 정상적인 종료가 아닌 외부 특정 요인에 의해 수정 완료 처리될 때 여기서 주입시켜 놓은 값이 적용됩니다.
@@ -265,14 +272,14 @@ window.AUIGrid.SpectrumEditor = window.AUIGrid.Class({
 }).extend(window.AUIGrid.EditRendererBase);
 		
 		</pre>
-                    </div>
-                </div>
-                <div class="desc_bottom">
-                    <p id="elapse"></p>
-                </div>
-            </div>
+        </div>
+    </div>
+    <div class="desc_bottom">
+        <p id="elapse"></p>
+    </div>
+</div>
 <div id="footer">
-     <div class="copyright">
+    <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>

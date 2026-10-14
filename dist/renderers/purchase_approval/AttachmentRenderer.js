@@ -1,4 +1,42 @@
-/* 첫 첨부와 추가 파일 수를 표시합니다. 미리보기는 페이지 콜백에서 처리합니다. */
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Purchase approval showcase renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
+ */
+/*
+ * AUIGrid 사용자 정의 렌더러 - 구매 첨부파일 표시
+ *
+ * 첫 첨부파일 이름과 추가 파일 수를 표시합니다. 파일이 없으면 "첨부 없음"을 표시합니다.
+ *
+ * 연결 파일
+ *   AUIGrid.js 다음에 js/renderers/purchase_approval/cell-utils.js와 AttachmentRenderer.js 파일을 순서대로 연결합니다.
+ *   showcase7.html의 purchase-cell 및 관련 자식 클래스 CSS를 함께 적용합니다. 별도 렌더러 CSS 파일은 없습니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "files",
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: AUIGrid.AttachmentRenderer,
+ *       extraProps: {
+ *         onAction: function (event) {
+ *           // event.id로 행을 찾고 event.action과 event.value에 맞게 화면 또는 데이터를 처리합니다.
+ *         }
+ *       }
+ *     }
+ *   }
+ *   행 데이터 예: { id: "P01", files: [{ name: "견적서.pdf" }, { name: "사양서.pdf" }] }
+ *
+ * 데이터와 동작
+ *   files는 파일 객체 배열이며 name을 표시합니다. 파일 주소와 실제 미리보기 처리는 페이지에서 관리합니다.
+ *   첫 파일 클릭은 action: "file", value: 0이며, 추가 파일 클릭은 action: "files"입니다.
+ *   onAction은 { id, action, value }를 받습니다. 렌더러가 데이터를 직접 변경하지 않습니다.
+ */
 window.AUIGrid.AttachmentRenderer = window.AUIGrid.Class({
 	tagName: 'div',
 	cssClass: 'aui-grid-renderer-base aui-grid-renderer-custom purchase-cell attachment-cell',

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet" />
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<style>
+    /* 체험 안내만 배치하며 그리드의 셀과 대기 표시는 제품 스타일을 사용합니다. */
+    .async-guide {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin: 16px 0;
+    }
+    .async-guide > div {
+        padding: 12px 16px;
+        border: 1px solid #dce4ec;
+        border-radius: 6px;
+        background: #f7f9fb;
+    }
+    .async-guide h4 {
+        margin-top: 0;
+    }
+    .async-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 16px 0;
+    }
+    #async-result {
+        min-height: 21px;
+    }
+    @media (max-width: 800px) {
+        .async-guide {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+    }
+</style>
+<script>
+    let myGridID;
+
+    // 서버 연결 없이 1초 뒤 응답하는 모의 조회입니다. 실제 서비스에서는 fetch 등으로 대체합니다.
+    // 여기서는 값을 검사하기만 하며 서버 저장을 흉내 내지는 않습니다.
+    function mockResponse(result) {
+        return new Promise((resolve) => setTimeout(() => resolve(result), 1000));
+    }
+    const demoServer = {
+        normalizeCode(value) {
+            return mockResponse(String(value).trim().toUpperCase());
+        },
+        checkQuantity(value, stock) {
+            const quantity = Number(value);
+            return mockResponse({
+                validate: Number.isInteger(quantity) && quantity >= 1 && quantity <= stock,
+                message: "수량은 1부터 " + stock + "까지의 정수로 입력하십시오."
+            });
+        },
+        canRemove(items) {
+            return mockResponse(items.every((item) => item.status === "작성 중"));
+        }
+    };
+
+    // 지원 이벤트와 validator가 반환하는 Promise를 기다리도록 생성 시 명시합니다.
+    function init() {
+        const columnLayout = [
+            { dataField: "id", headerText: "주문 번호", width: 110, editable: false },
+            { dataField: "code", headerText: "상품 코드", width: 180 },
+            { dataField: "name", headerText: "상품명", width: 180, editable: false },
+            {
+                dataField: "quantity",
+                headerText: "주문 수량",
+                dataType: "numeric",
+                width: 120,
+                editRenderer: {
+                    type: "InputEditRenderer",
+                    onlyNumeric: true,
+                    validator: async function (oldValue, newValue, item) {
+                        // 검증 실패 시 기본 편집기가 안내를 표시하고 입력을 유지합니다.
+                        return await demoServer.checkQuantity(newValue, item.stock);
+                    }
+                }
+            },
+            {
+                dataField: "stock",
+                headerText: "주문 가능 수량",
+                dataType: "numeric",
+                width: 130,
+                editable: false
+            },
+            { dataField: "status", headerText: "상태", width: 110, editable: false }
+        ];
+        const gridProps = {
+            useAsyncHandler: true,
+            editable: true,
+            enableUndoRedo: true,
+            rowIdField: "id",
+            selectionMode: "singleCell",
+            softRemoveRowMode: false,
+            rowHeight: 36
+        };
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+        AUIGrid.bind(myGridID, "cellEditEndBefore", async function (event) {
+            if (event.dataField === "code") {
+                // 응답값을 반환하면 그리드가 최종 값과 실행 취소 기록을 함께 반영합니다.
+                return await demoServer.normalizeCode(event.value);
+            }
+            return event.value;
+        });
+        AUIGrid.bind(myGridID, "beforeRemoveRow", async function (event) {
+            // false를 반환하면 행을 삭제하지 않습니다.
+            return await demoServer.canRemove(event.items);
+        });
+
+        // 응답 도착이 아니라 실제 적용 또는 취소 이벤트를 기준으로 결과를 안내합니다.
+        AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+            showResult(event.item.id + " / " + event.headerText + ": " + event.oldValue + " → " + event.value);
+        });
+        AUIGrid.bind(myGridID, "cellEditCancel", function () {
+            showResult("편집을 취소했습니다. 이전 값을 유지합니다.");
+        });
+        AUIGrid.bind(myGridID, "removeRow", function (event) {
+            showResult(event.items.map((item) => item.id).join(", ") + " 주문을 삭제했습니다.");
+        });
+        resetData();
+    }
+
+    function showResult(message) {
+        document.getElementById("async-result").textContent = message;
+    }
+
+    // 기존 인스턴스의 데이터만 복원합니다. 진행 중인 확인도 그리드가 취소합니다.
+    function resetData() {
+        AUIGrid.setGridData(myGridID, [
+            { id: "O-101", code: "KB-100", name: "무선 키보드", quantity: 2, stock: 12, status: "작성 중" },
+            { id: "O-102", code: "MS-200", name: "무선 마우스", quantity: 3, stock: 8, status: "확정" },
+            { id: "O-103", code: "HB-300", name: "USB 허브", quantity: 1, stock: 5, status: "작성 중" },
+            { id: "O-104", code: "MN-400", name: "모니터", quantity: 2, stock: 4, status: "확정" },
+            { id: "O-105", code: "ST-500", name: "노트북 거치대", quantity: 1, stock: 10, status: "작성 중" }
+        ]);
+        AUIGrid.setSelectionByDataField(myGridID, 0, "code");
+        showResult("");
+    }
+
+    async function removeSelected() {
+        const selected = AUIGrid.getSelectedItems(myGridID);
+        if (!selected.length) {
+            showResult("삭제할 주문의 셀을 먼저 선택하십시오.");
+            return;
+        }
+        const id = selected[0].item.id;
+        const button = document.getElementById("async-remove");
+        button.disabled = true;
+        showResult(id + " 주문의 삭제 가능 여부를 확인합니다.");
+        try {
+            // 메소드의 완료는 승인 또는 취소 모두에 해당하므로 실제 데이터로 구분합니다.
+            await AUIGrid.removeRow(myGridID, "selectedIndex");
+            if (AUIGrid.getGridData(myGridID).some((item) => item.id === id)) {
+                showResult(
+                    id + " 주문을 삭제하지 않았습니다. 확정 주문은 삭제할 수 없으며, 대기 중 Esc로 취소할 수 있습니다."
+                );
+            }
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+    function undoChange() {
+        AUIGrid.undo(myGridID);
+        showResult("실행 취소를 요청했습니다. 적용된 편집 또는 삭제가 있으면 되돌립니다.");
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+
+<div id="main">
+    <div class="desc">
+        <p>
+            <strong>useAsyncHandler</strong>를 true로 설정하면 지원 이벤트와 validator의 비동기 결과를 기다린 뒤 작업을
+            적용합니다. 기본값은 false입니다.
+        </p>
+        <p>
+            이 데모는 서버 응답을 기다리며 "확인 중.."이 표시되어, 응답 후 적용 시킵니다. 응답 전 취소는 Esc 키로
+            가능합니다.
+        </p>
+        <p>
+            기본 편집기를 사용합니다. 아래 demoServer는 모의 조회 함수이며, 실제 서비스에서는 서버 조회로 대체하십시오.
+        </p>
+        <div class="src_cover">
+            <pre><code class="language-javascript">// 1. 응답값으로 상품 코드를 보정합니다.
+AUIGrid.bind(myGridID, "cellEditEndBefore", async function (event) {
+    if (event.dataField === "code") {
+        return await demoServer.normalizeCode(event.value);
+    }
+    return event.value;
+});
+
+// 2. 주문 수량 칼럼의 editRenderer에 지정합니다.
+editRenderer: {
+    type: "InputEditRenderer",
+    onlyNumeric: true,
+    validator: async function (oldValue, newValue, item) {
+        // { validate: true 또는 false, message: "검증 안내" }를 반환합니다.
+        return await demoServer.checkQuantity(newValue, item.stock);
+    }
+}
+
+// 3. 삭제를 허용하면 true, 거부하면 false를 반환합니다.
+AUIGrid.bind(myGridID, "beforeRemoveRow", async function (event) {
+    return await demoServer.canRemove(event.items);
+});</code></pre>
+        </div>
+        <p>Esc는 그리드의 적용 대기를 취소합니다. 이미 시작한 서버 요청 자체를 중단하지는 않습니다.</p>
+    </div>
+
+    <div class="async-guide">
+        <div>
+            <h4>1. 상품 코드 보정</h4>
+            <p>
+                상품 코드에 <code>kb-101</code>을 입력하십시오. 확인 후 <code>KB-101</code>로
+                바뀝니다.
+            </p>
+            <p><code>cellEditEndBefore</code></p>
+        </div>
+        <div>
+            <h4>2. 주문 수량 검증</h4>
+            <p>주문 가능 수량보다 큰 값을 입력하십시오. 검증 안내가 표시되면 수량을 다시 입력할 수 있습니다.</p>
+            <p><code>editRenderer.validator</code></p>
+        </div>
+        <div>
+            <h4>3. 삭제 승인</h4>
+            <p>주문을 선택하고 삭제 버튼을 누르십시오. “작성 중” 주문만 삭제하고 “확정” 주문은 유지합니다.</p>
+            <p><code>beforeRemoveRow</code></p>
+        </div>
+    </div>
+    <div class="async-actions">
+        <button type="button" class="btn" id="async-remove" onclick="removeSelected()">선택 행 삭제</button>
+        <button type="button" class="btn" onclick="undoChange()">실행 취소</button>
+        <button type="button" class="btn" onclick="resetData()">초기 데이터</button>
+    </div>
+    <div id="grid_wrap" style="width: 100%; height: 270px; margin: 0 auto"></div>
+    <p id="async-result" role="status" aria-live="polite"></p>
+    <div class="desc_bottom">
+        <p><strong>비동기 지원 이벤트</strong> (<code>useAsyncHandler: true</code>)</p>
+        <p>
+            <code>cellEditBegin</code>, <code>cellEditEndBefore</code>, <code>pasteBegin</code>,
+            <code>beforeInsertRow</code>, <code>beforeRemoveRow</code>, <code>beforeRemoveSoftRows</code>,
+            <code>beforeRemoveColumn</code>, <code>treeLazyRequest</code>,
+            <code>rowStateCellClick</code>
+        </p>
+    </div>
+</div>
+<div id="footer">
+    <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

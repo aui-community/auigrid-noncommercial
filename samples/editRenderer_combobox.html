@@ -1,398 +1,465 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
-<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="https://www.auisoft.net/">
-<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
 <title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<link rel="stylesheet" href="./static/prism.css">
-<link href="./demo.css" rel="stylesheet">
-
-<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
-<link rel="stylesheet" href="./style/demo-typography.css">
-<link rel="stylesheet" href="./static/code-examples.css">
-<script src="./static/prism.js" data-manual></script>
-<script src="./static/code-examples.js" data-source-viewer></script>
-
-
-<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<script type="text/javascript" src="./common.js"></script>
+<link href="./demo.css" rel="stylesheet" />
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+<style>
+    /* 커스텀 칼럼 스타일 정의 */
+    .my-color {
+        color: #00aa00;
+    }
+</style>
 
-        <style>
-            /* 커스텀 칼럼 스타일 정의 */
-            .my-color {
-                color: #00aa00;
-            }
-        </style>
+<script>
+    // AUIGrid 생성 후 반환 ID
+    let myGridID;
 
-        <script>
-            // AUIGrid 생성 후 반환 ID
-            let myGridID;
+    //-- 드롭다운리스트에 출력할 리스트들...서버 사이드(PHP, JSP, ASP 등)에서 해당 리스트를 매핑하십시오.
+    const groupList = ["A", "B", "C"];
+    const groupAList = ["A-1", "A-2", "A-3", "A-4"];
+    const groupBList = ["B-1", "B-2", "B-3", "B-4", "B-5"];
+    const groupCList = ["C-1", "C-2", "C-3", "C-4", "C-5"];
+    const posList = [
+        "회장",
+        "사장",
+        "부사장",
+        "상무",
+        "전무",
+        "이사",
+        "부장",
+        "차장",
+        "과장",
+        "대리",
+        "사원",
+        "인턴",
+        "임시1",
+        "임시2",
+        "임시3",
+        "임시4",
+        "임시5"
+    ];
+    const colorList = ["Black", "White", "Red", "Blue"];
+    // key-value 를 갖는 구조
+    const keyValueList = [
+        { "code": "001", "value": "경영기획본부" },
+        { "code": "002", "value": "경영본부" },
+        { "code": "003", "value": "인사부" },
+        { "code": "004", "value": "영업본부" }
+    ];
+    // 콤보 박스 리스트로 출력할 데이터
+    const myList = [
+        {
+            "id": "#Cust0",
+            "date": "2024/10/01",
+            "name": "Steve",
+            "country": "USA",
+            "flag": "usa.png",
+            "product": "IPhone 16 Pro",
+            "color": "Green"
+        },
+        {
+            "id": "#Cust1",
+            "date": "2024/09/30",
+            "name": "홍길동",
+            "country": "Korea",
+            "flag": "korea.png",
+            "product": "Galaxy S25 Ultra",
+            "color": "Pink"
+        },
+        {
+            "id": "#Cust2",
+            "date": "2024/09/29",
+            "name": "Yamaha",
+            "country": "Japan",
+            "flag": "japan.png",
+            "product": "IPhone 16 Pro",
+            "color": "Yellow"
+        },
+        {
+            "id": "#Cust3",
+            "date": "2024/09/28",
+            "name": "Natasha",
+            "country": "UK",
+            "flag": "uk.png",
+            "product": "Galaxy Note21",
+            "color": "Orange"
+        },
+        {
+            "id": "#Cust4",
+            "date": "2024/09/27",
+            "name": "Thuwai",
+            "country": "China",
+            "flag": "china.png",
+            "product": "Galaxy S25 Ultra",
+            "color": "Violet"
+        },
+        {
+            "id": "#Cust5",
+            "date": "2024/09/26",
+            "name": "Anna",
+            "country": "USA",
+            "flag": "usa.png",
+            "product": "Galaxy S25",
+            "color": "Gray"
+        }
+    ];
 
-            //-- 드랍다운리스트에 출력할 리스트들...서버 사이드(PHP, JSP, ASP 등)에서 해당 리스트를 매핑하십시오.
-            const groupList = ["A", "B", "C"];
-            const groupAList = ["A-1", "A-2", "A-3", "A-4"];
-            const groupBList = ["B-1", "B-2", "B-3", "B-4", "B-5"];
-            const groupCList = ["C-1", "C-2", "C-3", "C-4", "C-5"];
-            const posList = [
-                "회장",
-                "사장",
-                "부사장",
-                "상무",
-                "전무",
-                "이사",
-                "부장",
-                "차장",
-                "과장",
-                "대리",
-                "사원",
-                "인턴",
-                "임시1",
-                "임시2",
-                "임시3",
-                "임시4",
-                "임시5"
-            ];
-            const colorList = ["Black", "White", "Red", "Blue"];
-            // key-value 를 갖는 구조
-            const keyValueList = [
-                { "code": "001", "value": "경영기획본부" },
-                { "code": "002", "value": "경영본부" },
-                { "code": "003", "value": "인사부" },
-                { "code": "004", "value": "영업본부" }
-            ];
-            // 콤보 박스 리스트로 출력할 데이터
-            const myList = [
-                {
-                    "id": "#Cust0",
-                    "date": "2024/10/01",
-                    "name": "Steve",
-                    "country": "USA",
-                    "flag": "usa.png",
-                    "product": "IPhone 16 Pro",
-                    "color": "Green"
-                },
-                {
-                    "id": "#Cust1",
-                    "date": "2024/09/30",
-                    "name": "홍길동",
-                    "country": "Korea",
-                    "flag": "korea.png",
-                    "product": "Galaxy S25 Ultra",
-                    "color": "Pink"
-                },
-                {
-                    "id": "#Cust2",
-                    "date": "2024/09/29",
-                    "name": "Yamaha",
-                    "country": "Japan",
-                    "flag": "japan.png",
-                    "product": "IPhone 16 Pro",
-                    "color": "Yellow"
-                },
-                {
-                    "id": "#Cust3",
-                    "date": "2024/09/28",
-                    "name": "Natasha",
-                    "country": "UK",
-                    "flag": "uk.png",
-                    "product": "Galaxy Note21",
-                    "color": "Orange"
-                },
-                {
-                    "id": "#Cust4",
-                    "date": "2024/09/27",
-                    "name": "Thuwai",
-                    "country": "China",
-                    "flag": "china.png",
-                    "product": "Galaxy S25 Ultra",
-                    "color": "Violet"
-                },
-                {
-                    "id": "#Cust5",
-                    "date": "2024/09/26",
-                    "name": "Anna",
-                    "country": "USA",
-                    "flag": "usa.png",
-                    "product": "Galaxy S25",
-                    "color": "Gray"
+    let asyncRequestCount = 0;
+
+    // 실제 서버 조회를 대신하는 0.6초 지연 응답입니다. 서비스에서는 fetch 등으로 대체합니다.
+    async function requestDepartments(value) {
+        asyncRequestCount++;
+        const input = value === undefined ? "" : ", 입력값: " + value;
+        document.getElementById("async-request").textContent = "비동기 목록 조회 " + asyncRequestCount + "회" + input;
+        await new Promise((resolve) => setTimeout(resolve, 600));
+        return keyValueList.map((entry) => ({ ...entry }));
+    }
+
+    // 시작점
+    function init() {
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+        // 랜덤 데이터 생성하여 그리드에 데이터 삽입
+        AUIGrid.setGridData(myGridID, genRandomData());
+    }
+
+    // AUIGrid 를 생성합니다.
+    function createAUIGrid() {
+        // 그리드 칼럼 레이아웃 설정
+        const columnLayout = [
+            {
+                dataField: "position",
+                headerText: "직급",
+                width: 140,
+                editRenderer: {
+                    type: "ComboBoxRenderer",
+                    showEditorBtnOver: true, // 마우스 오버 시 에디터버튼 보이기
+                    list: posList
                 }
-            ];
-
-            // 시작점
-            function init() {
-                // AUIGrid 그리드를 생성합니다.
-                createAUIGrid();
-                // 랜덤 데이터 생성하여 그리드에 데이터 삽입
-                AUIGrid.setGridData(myGridID, genRandomData());
-            }
-
-            // AUIGrid 를 생성합니다.
-            function createAUIGrid() {
-                // 그리드 칼럼 레이아웃 설정
-                const columnLayout = [
-                    {
-                        dataField: "position",
-                        headerText: "직급",
-                        width: 140,
-                        editRenderer: {
-                            type: "ComboBoxRenderer",
-                            showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-                            list: posList
-                        }
-                    },
-                    {
-                        dataField: "id",
-                        headerText: "이름",
-                        headerTooltip: {
-                            show: true,
-                            tooltipHtml: "출력 리스트를 사용자 정의 하여 복잡한 구조로 작성. key-value 모드)"
-                        },
-                        width: 140,
-                        labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-                            const keyField = this.editRenderer.keyField;
-                            const valueField = this.editRenderer.valueField;
-                            const list = this.editRenderer.list;
-                            const result = list.find((v) => v[keyField] === value); // editRenderer 리스트에서 key-value 에 맞는 값 찾아 반환.
-                            if (result === undefined) return "";
-                            return result[valueField]; // key 값이 아닌 value 값으로 출력 시키기
-                        },
-                        editRenderer: {
-                            type: "ComboBoxRenderer",
-                            showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-                            keyField: "id",
-                            valueField: "name",
-                            list: myList,
-                            // 드랍 리스트의 개별 아이템에 대하여 출력할 양식을 HTML 로 작성하여 반환하면 리스트로 출력됩니다.
-                            listTemplateFunction: function (rowIndex, columnIndex, text, item, dataField, listItem) {
-                                const spans = Object.entries(listItem)
-                                    .filter(([key]) => key !== "flag")
-                                    .map(
-                                        ([key, value]) =>
-                                            `<span style="display:inline-block;width:80px;overflow:hidden;text-overflow:ellipsis;">${value}</span>`
-                                    )
-                                    .join("");
-                                return `<div style="display:block;text-align:left;white-space:nowrap">
+            },
+            {
+                dataField: "id",
+                headerText: "이름",
+                headerTooltip: {
+                    show: true,
+                    tooltipHtml: "출력 리스트를 사용자 정의 하여 복잡한 구조로 작성. key-value 모드)"
+                },
+                width: 140,
+                labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+                    const keyField = this.editRenderer.keyField;
+                    const valueField = this.editRenderer.valueField;
+                    const list = this.editRenderer.list;
+                    const result = list.find((v) => v[keyField] === value); // editRenderer 리스트에서 key-value 에 맞는 값 찾아 반환.
+                    if (result === undefined) return "";
+                    return result[valueField]; // key 값이 아닌 value 값으로 출력 시키기
+                },
+                editRenderer: {
+                    type: "ComboBoxRenderer",
+                    showEditorBtnOver: true, // 마우스 오버 시 에디터버튼 보이기
+                    keyField: "id",
+                    valueField: "name",
+                    list: myList,
+                    // 드랍 리스트의 개별 아이템에 대하여 출력할 양식을 HTML 로 작성하여 반환하면 리스트로 출력됩니다.
+                    listTemplateFunction: function (rowIndex, columnIndex, text, item, dataField, listItem) {
+                        const spans = Object.entries(listItem)
+                            .filter(([key]) => key !== "flag")
+                            .map(
+                                ([key, value]) =>
+                                    `<span style="display:inline-block;width:80px;overflow:hidden;text-overflow:ellipsis;">${value}</span>`
+                            )
+                            .join("");
+                        return `<div style="display:block;text-align:left;white-space:nowrap">
 								<img src="./assets/${listItem.flag}" width="30" height="20" style="padding-right:10px;"/>
 								${spans}
 							</div>`;
-                            }
-                        }
-                    },
-                    {
-                        dataField: "color",
-                        headerText: "컬러",
-                        headerTooltip: {
-                            show: true,
-                            tooltipHtml: "Black, White, Red, Blue 이외 입력 시 유효성 검사 하여 메세지 띄움"
-                        },
-                        width: 140,
-                        editRenderer: {
-                            type: "ComboBoxRenderer",
-                            showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-                            list: colorList,
-                            // 에디팅 유효성 검사
-                            validator: function (oldValue, newValue, item) {
-                                let isValid = true;
-                                if (!colorList.includes(newValue)) {
-                                    isValid = false;
-                                }
-                                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                                return {
-                                    "validate": isValid,
-                                    "message": "Black, White, Red, Blue 만 입력 가능합니다."
-                                };
-                            }
-                        }
-                    },
-                    {
-                        dataField: "color2",
-                        headerText: "조건 리스트",
-                        width: 140,
-                        headerTooltip: {
-                            show: true,
-                            tooltipHtml:
-                                "특정 조건에 따라 다르게 리스트 출력<br>컬러 값에 따라 리스트가 다르게 나옵니다."
-                        },
-                        editRenderer: {
-                            type: "ComboBoxRenderer",
-                            showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-                            // 같은 행의 color 값을 보고 출력시킬 list 를 결정함.
-                            listFunction: function (rowIndex, columnIndex, item, dataField) {
-                                if (item.color === "Black") {
-                                    return ["어두움", "단순함", "악함", "더러움"];
-                                } else if (item.color === "White") {
-                                    return ["밝음", "순수함", "선함", "깨끗함"];
-                                } else if (item.color === "Red") {
-                                    return ["강렬함", "열정적임"];
-                                }
-                                return ["차분함", "시원함", "희망적임"];
-                            }
-                        }
-                    },
-                    {
-                        dataField: "dept",
-                        headerText: "부서명",
-                        width: 140,
-                        headerTooltip: {
-                            show: true,
-                            tooltipHtml: "key-value 형태의 수정 예제. 실제 데이터는 001, 002 와 같이 구성됨."
-                        },
-                        labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-                            const keyField = this.editRenderer.keyField;
-                            const valueField = this.editRenderer.valueField;
-                            const list = this.editRenderer.list;
-                            const result = list.find((v) => v[keyField] === value); // editRenderer 리스트에서 key-value 에 맞는 값 찾아 반환.
-                            if (result === undefined) return "";
-                            return result[valueField]; // key 값이 아닌 value 값으로 출력 시키기
-                        },
-                        editRenderer: {
-                            type: "ComboBoxRenderer",
-                            list: keyValueList, //key-value Object 로 구성된 리스트
-                            keyField: "code", // key 에 해당되는 필드명
-                            valueField: "value" // value 에 해당되는 필드명
-                        }
-                    },
-                    {
-                        dataField: "group",
-                        headerText: "그룹",
-                        width: 140,
-                        editRenderer: {
-                            type: "ComboBoxRenderer",
-                            descendants: ["leaf"], // 자손 필드들
-                            descendantDefaultValues: ["-"], // 변경 시 자손들에게 기본값 지정
-                            list: groupList
-                        }
-                    },
-                    {
-                        dataField: "leaf",
-                        headerText: "그룹 하위",
-                        width: 140,
-                        editRenderer: {
-                            type: "ComboBoxRenderer",
-                            listFunction: function (rowIndex, columnIndex, item, dataField) {
-                                if (item.group === "A") {
-                                    // 그룹 필드에서 선택된 값 비교
-                                    return groupAList;
-                                } else if (item.group === "B") {
-                                    return groupBList;
-                                }
-                                return groupCList;
-                            }
-                        }
                     }
-                ];
-
-                // 그리드 속성 설정
-                const gridProps = {
-                    rowIdField: "index", // 각 행의 고유 ID 필드
-                    editable: true, // 편집 가능 여부
-                    showRowCheckColumn: true, // 체크박스 열 표시
-                    showStateColumn: true, // 상태 열 표시
-                    rowCheckToRadio: true, // 체크박스 대신 라디오 버튼 출력
-                    enableSorting: true, // 정렬 기능 활성화
-                    sortableByFormatValue: true // 뷰(view)적 정렬 기능 활성화
-                };
-
-                // 실제로 #grid_wrap 에 그리드 생성
-                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-                // 에디팅 정상 종료 이벤트 바인딩
-                AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
-                    const logEle = document.getElementById("elapse");
-                    logEle.textContent = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-                });
-            }
-
-            //체크된 아이템 얻기
-            function getCheckedRowItems() {
-                const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-                if (checkedItems.length <= 0) {
-                    alert("체크된 항목 없음!!");
-                    return;
                 }
-                let str = "";
-                for (let i = 0, len = checkedItems.length; i < len; i++) {
-                    const rowItem = checkedItems[i];
-                    str += Object.entries(rowItem.item)
-                        .map(([key, value]) => `${key} : ${value}`)
-                        .join(", ");
+            },
+            {
+                dataField: "color",
+                headerText: "컬러",
+                headerTooltip: {
+                    show: true,
+                    tooltipHtml: "Black, White, Red, Blue 이외 입력 시 유효성 검사 하여 메시지 띄움"
+                },
+                width: 140,
+                editRenderer: {
+                    type: "ComboBoxRenderer",
+                    showEditorBtnOver: true, // 마우스 오버 시 에디터버튼 보이기
+                    list: colorList,
+                    // 에디팅 유효성 검사
+                    validator: function (oldValue, newValue, item) {
+                        let isValid = true;
+                        if (!colorList.includes(newValue)) {
+                            isValid = false;
+                        }
+                        // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                        return {
+                            "validate": isValid,
+                            "message": "Black, White, Red, Blue 만 입력 가능합니다."
+                        };
+                    }
                 }
-                alert(str);
-            }
-
-            // 그리드에 삽입할 데이터 생성
-            function genRandomData() {
-                const data = [];
-                for (let i = 1; i <= 100; i++) {
-                    data.push({
-                        index: i,
-                        id: "#Cust" + (i % myList.length),
-                        color: colorList[i % colorList.length],
-                        color2: "None",
-                        dept: "00" + ((i % 4) + 1),
-                        position: posList[i % posList.length],
-                        group: "A",
-                        leaf: "A-1"
-                    });
+            },
+            {
+                dataField: "color2",
+                // useAsyncHandler와 listFunction 조합에는 표시 필드를 지정합니다. 기존 문자열 값을 그대로 표시합니다.
+                displayField: "color2",
+                headerText: "조건 리스트",
+                width: 140,
+                headerTooltip: {
+                    show: true,
+                    tooltipHtml: "특정 조건에 따라 다르게 리스트 출력<br>컬러 값에 따라 리스트가 다르게 나옵니다."
+                },
+                editRenderer: {
+                    type: "ComboBoxRenderer",
+                    showEditorBtnOver: true, // 마우스 오버 시 에디터버튼 보이기
+                    // 같은 행의 color 값을 보고 출력시킬 list 를 결정함.
+                    listFunction: function (rowIndex, columnIndex, item, dataField) {
+                        if (item.color === "Black") {
+                            return ["어두움", "단순함", "악함", "더러움"];
+                        } else if (item.color === "White") {
+                            return ["밝음", "순수함", "선함", "깨끗함"];
+                        } else if (item.color === "Red") {
+                            return ["강렬함", "열정적임"];
+                        }
+                        return ["차분함", "시원함", "희망적임"];
+                    }
                 }
-                //console.log(JSON.stringify(data));
-                return data;
+            },
+            {
+                dataField: "dept",
+                headerText: "부서명",
+                width: 140,
+                headerTooltip: {
+                    show: true,
+                    tooltipHtml: "key-value 형태의 수정 예제. 실제 데이터는 001, 002 와 같이 구성됨."
+                },
+                labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+                    const keyField = this.editRenderer.keyField;
+                    const valueField = this.editRenderer.valueField;
+                    const list = this.editRenderer.list;
+                    const result = list.find((v) => v[keyField] === value); // editRenderer 리스트에서 key-value 에 맞는 값 찾아 반환.
+                    if (result === undefined) return "";
+                    return result[valueField]; // key 값이 아닌 value 값으로 출력 시키기
+                },
+                editRenderer: {
+                    type: "ComboBoxRenderer",
+                    list: keyValueList, //key-value Object 로 구성된 리스트
+                    keyField: "code", // key 에 해당되는 필드명
+                    valueField: "value" // value 에 해당되는 필드명
+                }
+            },
+            {
+                dataField: "asyncDept",
+                displayField: "asyncDeptName", // useAsyncHandler: true에서 listFunction 사용 시 필수
+                headerText: "부서명(비동기)",
+                width: 200,
+                editableByPaste: false,
+                editRenderer: {
+                    type: "ComboBoxRenderer",
+                    showEditorBtnOver: true,
+                    keyField: "code",
+                    valueField: "value",
+                    listFunction: async function (rowIndex, columnIndex, item, dataField, value) {
+                        // 입력 확정 또는 목록 열기 시 현재 입력값을 전달합니다.
+                        return await requestDepartments(value);
+                    }
+                }
+            },
+            {
+                dataField: "group",
+                headerText: "그룹",
+                width: 140,
+                editRenderer: {
+                    type: "ComboBoxRenderer",
+                    descendants: ["leaf"], // 자손 필드들
+                    descendantDefaultValues: ["-"], // 변경 시 자손들에게 기본값 지정
+                    list: groupList
+                }
+            },
+            {
+                dataField: "leaf",
+                // useAsyncHandler와 listFunction 조합에는 표시 필드를 지정합니다. 기존 문자열 값을 그대로 표시합니다.
+                displayField: "leaf",
+                headerText: "그룹 하위",
+                width: 140,
+                editRenderer: {
+                    type: "ComboBoxRenderer",
+                    listFunction: function (rowIndex, columnIndex, item, dataField) {
+                        if (item.group === "A") {
+                            // 그룹 필드에서 선택된 값 비교
+                            return groupAList;
+                        } else if (item.group === "B") {
+                            return groupBList;
+                        }
+                        return groupCList;
+                    }
+                }
             }
-        </script>
-    </head>
-<body class="demo-typography">
+        ];
 
-            <div id="main">
-                <div class="desc">
-                    <p>
-                        <strong>콤보박스와 드랍다운리스트의 차이점</strong>은 드랍다운리스트는 출력된 리스트 중 하나를
-                        선택하는 반면 콤보박스는 출력된 리스트 중 하나를 선택하거나 직접 사용자가 다른 값을 입력 할 수
-                        있습니다.
-                    </p>
-                    <p>
-                        그룹과 하위 그룹 단계형 리스트를 작성해 상위 단계에 맞는 하위 단계 리스트를 지정할 수 있습니다.
-                    </p>
-                    <p>■ Alt + 아래 화살표 키 : 리스트 열기</p>
-                    <p>
-                        ■ 아래 화살표 키 : 사용자가 글씨를 쓴 경우(또는 F2, 더블클릭 등의 편집 상태)에는 아래 화살표
-                        키만 눌러도 리스트 열림
-                    </p>
-                    <p>
-                        ■ 위 또는 아래 화살표 키 : 리스트가 열린 경우, 위 아래로 선택 이동합니다. (Enter 적용, Esc 취소)
-                    </p>
-                    <p>■ showEditorBtnOver 를 true 로 설정하면 마우스 오버 셀에 에디터 버턴이 따라 다닙니다.</p>
-                    <span onclick="getCheckedRowItems()" class="btn">체크 항목 얻기</span>
-                </div>
-                <div>
-                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
-                </div>
-                <div class="desc_bottom">
-                    <p id="elapse"></p>
-                </div>
-            </div>
+        // 그리드 속성 설정
+        const gridProps = {
+            rowIdField: "index", // 각 행의 고유 ID 필드
+            editable: true, // 편집 가능 여부
+            useAsyncHandler: true, // listFunction의 Promise 응답을 기다립니다.
+            showRowCheckColumn: true, // 체크박스 열 표시
+            showStateColumn: true, // 상태 열 표시
+            rowCheckToRadio: true, // 체크박스 대신 라디오 버튼 출력
+            enableSorting: true, // 정렬 기능 활성화
+            sortableByFormatValue: true // 뷰(view)적 정렬 기능 활성화
+        };
+
+        // 실제로 #grid_wrap 에 그리드 생성
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+        // 에디팅 정상 종료 이벤트 바인딩
+        AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+            if (event.dataField === "asyncDept") {
+                // 편집기는 코드만 저장하므로 표시 이름은 데모의 업무 코드에서 별도로 갱신합니다.
+                const selected = keyValueList.find((entry) => entry.code === event.value);
+                const name = selected ? selected.value : String(event.value == null ? "" : event.value);
+                AUIGrid.updateRow(myGridID, { asyncDeptName: name }, event.rowIndex);
+                document.getElementById("async-result").textContent =
+                    "저장 코드(asyncDept): " + event.value + " / 표시 이름(asyncDeptName): " + name;
+            }
+            const logEle = document.getElementById("elapse");
+            logEle.textContent = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+        });
+    }
+
+    //체크된 아이템 얻기
+    function getCheckedRowItems() {
+        const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+        if (checkedItems.length <= 0) {
+            alert("체크된 항목 없음!!");
+            return;
+        }
+        let str = "";
+        for (let i = 0, len = checkedItems.length; i < len; i++) {
+            const rowItem = checkedItems[i];
+            str += Object.entries(rowItem.item)
+                .map(([key, value]) => `${key} : ${value}`)
+                .join(", ");
+        }
+        alert(str);
+    }
+
+    // 그리드에 삽입할 데이터 생성
+    function genRandomData() {
+        const data = [];
+        for (let i = 1; i <= 100; i++) {
+            data.push({
+                index: i,
+                id: "#Cust" + (i % myList.length),
+                color: colorList[i % colorList.length],
+                color2: "None",
+                dept: "00" + ((i % 4) + 1),
+                asyncDept: keyValueList[i % keyValueList.length].code,
+                asyncDeptName: keyValueList[i % keyValueList.length].value,
+                position: posList[i % posList.length],
+                group: "A",
+                leaf: "A-1"
+            });
+        }
+        //console.log(JSON.stringify(data));
+        return data;
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+
+<div id="main">
+    <div class="desc">
+        <p>
+            <strong>콤보박스와 드롭다운리스트의 차이점</strong>은 드롭다운리스트는 출력된 리스트 중 하나를 선택하는 반면
+            콤보박스는 출력된 리스트 중 하나를 선택하거나 직접 사용자가 다른 값을 입력 할 수 있습니다.
+        </p>
+        <p>그룹과 하위 그룹 단계형 리스트를 작성해 상위 단계에 맞는 하위 단계 리스트를 지정할 수 있습니다.</p>
+        <p>■ Alt + 아래 화살표 키 : 리스트 열기</p>
+        <p>
+            ■ 아래 화살표 키 : 사용자가 글씨를 쓴 경우(또는 F2, 더블클릭 등의 편집 상태)에는 아래 화살표 키만 눌러도
+            리스트 열림
+        </p>
+        <p>■ 위 또는 아래 화살표 키 : 리스트가 열린 경우, 위 아래로 선택 이동합니다. (Enter 적용, Esc 취소)</p>
+        <p>■ showEditorBtnOver 를 true 로 설정하면 마우스 오버 셀에 에디터 버튼이 따라 다닙니다.</p>
+        <p>
+            "부서명(비동기)"에 <strong>인사부</strong>를 입력하고 Enter 또는 Tab으로 확정해 보십시오. 입력 중에는
+            조회하지 않으며 목록 버튼으로 열 때도 조회합니다. 비동기 목록은 자동완성을 지원하지 않습니다.
+        </p>
+        <p>
+            useAsyncHandler를 true로 설정하고 서버 응답을 0.6초 지연으로 모의 처리합니다. 대기 중 Esc로 취소할 수
+            있습니다.
+        </p>
+        <details>
+            <summary>비동기 칼럼 설정 코드 보기</summary>
+            <pre><code class="language-javascript">// 그리드 생성 속성: { editable: true, useAsyncHandler: true }
+// 최초 데이터: { asyncDept: "002", asyncDeptName: "경영본부" }
+{
+    dataField: "asyncDept",
+    displayField: "asyncDeptName", // useAsyncHandler: true에서 listFunction 사용 시 필수
+    editRenderer: {
+        type: "ComboBoxRenderer",
+        keyField: "code",
+        valueField: "value",
+        listFunction: async function (rowIndex, columnIndex, item, dataField, value) {
+            return await requestDepartments(value);
+        }
+    }
+}</code></pre>
+            <p>편집기는 코드만 저장합니다. 이 데모에서는 cellEditEnd 이후 updateRow로 표시 이름도 갱신합니다.</p>
+        </details>
+        <p id="async-request" role="status">비동기 목록 조회 0회</p>
+        <span onclick="getCheckedRowItems()" class="btn">체크 항목 얻기</span>
+    </div>
+    <div>
+        <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+        <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+    </div>
+    <div class="desc_bottom">
+        <p id="async-result" role="status"></p>
+        <p id="elapse"></p>
+    </div>
+</div>
 <div id="footer">
-     <div class="copyright">
+    <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>

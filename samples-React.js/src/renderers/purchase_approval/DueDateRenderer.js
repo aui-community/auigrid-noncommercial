@@ -1,5 +1,28 @@
+/*
+ * AUIGrid 사용자 정의 렌더러 - 구매 납기 표시
+ *
+ * 납기와 남은 일수를 표시합니다. 지연, 임박, 일반 상태를 구분하고 발주 완료 시 완료 문구를 표시합니다.
+ *
+ * 연결 파일
+ *   그리드 래퍼로 AUIGrid를 로드한 뒤 이 모듈을 import합니다.
+ *   import PurchaseDueRenderer from "../renderers/purchase_approval/DueDateRenderer";
+ *   cell-utils.js는 이 모듈이 가져옵니다. src/showcases/Showcase07.css의 관련 스타일도 적용합니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "dueDate",
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: PurchaseDueRenderer
+ *     }
+ *   }
+ *   행 데이터 예: { dueDate: "2026-10-20", daysLeft: 6, stage: 1 }
+ *
+ * 데이터와 동작
+ *   dueDate는 "YYYY-MM-DD" 문자열입니다. daysLeft는 페이지에서 계산한 남은 일수이며 음수는 지연입니다.
+ *   stage가 4이면 "발주 완료"를 표시합니다. 이 렌더러는 클릭 콜백이나 extraProps 옵션이 없습니다.
+ */
 import PurchaseCellUtils from './cell-utils';
-/* 납기와 남은 날짜를 함께 표시합니다. 오늘 기준 값은 페이지에서 계산해 전달합니다. */
 var PurchaseDueRenderer = window.AUIGrid.Class({
 	tagName: 'div',
 	cssClass: 'aui-grid-renderer-base aui-grid-renderer-custom purchase-cell due-cell',

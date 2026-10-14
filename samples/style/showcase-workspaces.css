@@ -52,8 +52,9 @@
     margin: 0;
 }
 body.demo-typography #main.workspace-demo .btn.workspace-primary {
-    background: #246fac;
-    border-color: #246fac;
+    /* 쇼케이스의 주요 실행 버튼도 공통 데모 버튼과 같은 파란색을 사용합니다. */
+    background: #337ab7;
+    border-color: #337ab7;
     color: #fff !important;
 }
 .workspace-demo .workspace-note {

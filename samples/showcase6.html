@@ -1,303 +1,306 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
-<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="https://www.auisoft.net/">
-<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
 <title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<link rel="stylesheet" href="./static/prism.css">
-<link href="./demo.css" rel="stylesheet">
-
-<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
-<link rel="stylesheet" href="./style/demo-typography.css">
-<link rel="stylesheet" href="./static/code-examples.css">
-<script src="./static/prism.js" data-manual></script>
-<script src="./static/code-examples.js" data-source-viewer></script>
-
-
-<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<script type="text/javascript" src="./common.js"></script>
+<link href="./demo.css" rel="stylesheet" />
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-        <!-- 공용 화면은 유지하고 비교표와 변경 대조표의 셀 표현만 별도로 정의합니다. -->
-        <link href="./style/showcase-workspaces.css?v=20261006-3" rel="stylesheet" />
-        <link href="./style/showcase-grid-features.css?v=20261006-2" rel="stylesheet" />
-        <script src="../export_server_samples/FileSaver.min.js"></script>
-        <script src="../pdfkit/AUIGrid.pdfkit.js"></script>
-        <script>
-            let myGridID;
-            let compact = window.innerWidth <= 700;
-            const partNames = [
-                "배터리 하우징",
-                "냉각 플레이트",
-                "센서 브래킷",
-                "커넥터 커버",
-                "모터 마운트",
-                "차폐 패널"
-            ];
-            // 부품 75개에 네 가지 변경 항목을 배치합니다. 같은 부품은 세로, 동일한 전후 값은 가로로 병합합니다.
-            const revisionRows = Array.from({ length: 75 }, (_, index) => {
-                const thickness = 2 + (index % 5) * 0.5;
-                const weight = 1200 + (index % 9) * 80;
-                const entries = [
-                    [
-                        "재질",
-                        "AL 6061-T6",
-                        index % 3 === 0 ? "AL 7075-T6" : "AL 6061-T6",
-                        index % 3 === 0 ? "재질 변경" : "동일"
-                    ],
-                    [
-                        "두께",
-                        thickness.toFixed(1) + " mm",
-                        (thickness - (index % 4 === 1 ? 0 : 0.2)).toFixed(1) + " mm",
-                        index % 4 === 1 ? "동일" : "−0.2 mm"
-                    ],
-                    [
-                        "중량",
-                        weight + " g",
-                        weight - (index % 4 === 1 ? 0 : 80) + " g",
-                        index % 4 === 1 ? "동일" : "−80 g"
-                    ],
-                    [
-                        "표면 처리",
-                        "아노다이징",
-                        index % 5 === 2 ? "전도성 피막" : "아노다이징",
-                        index % 5 === 2 ? "공법 변경" : "동일"
-                    ]
-                ];
-                return entries.map(([attribute, before, after, difference], offset) => ({
-                    id: "PART-" + index + "-" + offset,
-                    partNo: "EV-" + String(1001 + index),
-                    partName:
-                        partNames[index % partNames.length] + " " + String(Math.floor(index / 6) + 1).padStart(2, "0"),
-                    attribute,
-                    before,
-                    after,
-                    difference,
-                    changed: before !== after,
-                    reviewed: false,
-                    stripe: index % 2
-                }));
-            }).flat();
-            function init() {
-                const columns = [
+<!-- 공용 화면은 유지하고 비교표와 변경 대조표의 셀 표현만 별도로 정의합니다. -->
+<link href="./style/showcase-workspaces.css?v=20261006-3" rel="stylesheet" />
+<link href="./style/showcase-grid-features.css?v=20261006-2" rel="stylesheet" />
+<script src="../export_server_samples/FileSaver.min.js"></script>
+<script src="../pdfkit/AUIGrid.pdfkit.js"></script>
+<script>
+    let myGridID;
+    const partNames = ["배터리 하우징", "냉각 플레이트", "센서 브래킷", "커넥터 커버", "모터 마운트", "차폐 패널"];
+    // 부품 75개에 네 가지 변경 항목을 배치합니다. 같은 부품은 세로, 동일한 전후 값은 가로로 병합합니다.
+    const revisionRows = Array.from({ length: 75 }, (_, index) => {
+        const thickness = 2 + (index % 5) * 0.5;
+        const weight = 1200 + (index % 9) * 80;
+        const entries = [
+            [
+                "재질",
+                "AL 6061-T6",
+                index % 3 === 0 ? "AL 7075-T6" : "AL 6061-T6",
+                index % 3 === 0 ? "재질 변경" : "동일"
+            ],
+            [
+                "두께",
+                thickness.toFixed(1) + " mm",
+                (thickness - (index % 4 === 1 ? 0 : 0.2)).toFixed(1) + " mm",
+                index % 4 === 1 ? "동일" : "−0.2 mm"
+            ],
+            ["중량", weight + " g", weight - (index % 4 === 1 ? 0 : 80) + " g", index % 4 === 1 ? "동일" : "−80 g"],
+            [
+                "표면 처리",
+                "아노다이징",
+                index % 5 === 2 ? "전도성 피막" : "아노다이징",
+                index % 5 === 2 ? "공법 변경" : "동일"
+            ]
+        ];
+        return entries.map(([attribute, before, after, difference], offset) => ({
+            id: "PART-" + index + "-" + offset,
+            partNo: "EV-" + String(1001 + index),
+            partName: partNames[index % partNames.length] + " " + String(Math.floor(index / 6) + 1).padStart(2, "0"),
+            attribute,
+            before,
+            after,
+            difference,
+            changed: before !== after,
+            reviewed: false,
+            stripe: index % 2
+        }));
+    }).flat();
+    function init() {
+        const columns = [
+            {
+                headerText: "부품 정보",
+                children: [
                     {
-                        headerText: "부품 정보",
-                        children: [
-                            {
-                                dataField: "partNo",
-                                headerText: "부품 번호",
-                                width: 112,
-                                cellMerge: true,
-                                style: "revision-part-no",
-                                editable: false
-                            },
-                            {
-                                dataField: "partName",
-                                headerText: "부품명",
-                                width: 154,
-                                cellMerge: true,
-                                mergeRef: "partNo",
-                                mergePolicy: "restrict",
-                                style: "revision-part-name",
-                                editable: false
-                            }
-                        ]
+                        dataField: "partNo",
+                        headerText: "부품 번호",
+                        width: 112,
+                        cellMerge: true,
+                        style: "revision-part-no",
+                        editable: false
                     },
                     {
-                        dataField: "attribute",
-                        headerText: "비교 항목",
-                        width: 96,
-                        editable: false,
-                        style: "revision-attribute"
-                    },
-                    {
-                        dataField: "before",
-                        headerText: "REV. A / 변경 전",
-                        minWidth: 168,
-                        cellColMerge: true,
-                        cellColSpan: 2,
-                        editable: false,
-                        headerStyle: "revision-before-header",
-                        styleFunction: (row, col, value, header, item) =>
-                            item.changed ? "revision-before" : "revision-same"
-                    },
-                    {
-                        dataField: "after",
-                        headerText: "REV. B / 변경 후",
-                        minWidth: 168,
-                        editable: false,
-                        headerStyle: "revision-after-header",
-                        styleFunction: (row, col, value, header, item) =>
-                            item.changed ? "revision-after" : "revision-same"
-                    },
-                    {
-                        dataField: "difference",
-                        headerText: "변경 내용",
-                        width: 104,
-                        editable: false,
-                        styleFunction: (row, col, value, header, item) =>
-                            item.changed ? "revision-difference" : "revision-same"
-                    },
-                    {
-                        dataField: "reviewed",
-                        headerText: "검토",
-                        width: 64,
-                        renderer: {
-                            type: "CheckBoxEditRenderer",
-                            editable: true,
-                            visibleFunction: (row, col, value, checked, item) => item.changed,
-                            checkableFunction: (row, col, value, checked, item) => item.changed
-                        },
-                        labelFunction: (row, col, value, header, item) =>
-                            item.changed ? (value ? "완료" : "대기") : "—"
+                        dataField: "partName",
+                        headerText: "부품명",
+                        width: 154,
+                        cellMerge: true,
+                        mergeRef: "partNo",
+                        mergePolicy: "restrict",
+                        style: "revision-part-name",
+                        editable: false
                     }
-                ];
-                myGridID = AUIGrid.create("#grid_wrap", columns, {
-                    rowIdField: "id",
-                    rowIdTrustMode: true,
-                    rowHeight: 34,
-                    headerHeight: 29,
-                    showRowNumColumn: false,
-                    showStateColumn: false,
+                ]
+            },
+            {
+                dataField: "attribute",
+                headerText: "비교 항목",
+                width: 96,
+                editable: false,
+                style: "revision-attribute"
+            },
+            {
+                dataField: "before",
+                headerText: "REV. A / 변경 전",
+                minWidth: 168,
+                cellColMerge: true,
+                cellColSpan: 2,
+                editable: false,
+                headerStyle: "revision-before-header",
+                styleFunction: (row, col, value, header, item) => (item.changed ? "revision-before" : "revision-same")
+            },
+            {
+                dataField: "after",
+                headerText: "REV. B / 변경 후",
+                minWidth: 168,
+                editable: false,
+                headerStyle: "revision-after-header",
+                styleFunction: (row, col, value, header, item) => (item.changed ? "revision-after" : "revision-same")
+            },
+            {
+                dataField: "difference",
+                headerText: "변경 내용",
+                width: 104,
+                editable: false,
+                styleFunction: (row, col, value, header, item) =>
+                    item.changed ? "revision-difference" : "revision-same"
+            },
+            {
+                dataField: "reviewed",
+                headerText: "검토",
+                width: 64,
+                renderer: {
+                    type: "CheckBoxEditRenderer",
                     editable: true,
-                    enableClipboard: false,
-                    enableSorting: false,
-                    enableFilter: true,
-                    enableCellMerge: true,
-                    cellMergeRowSpan: true,
-                    fixedColumnCount: compact ? 0 : 2,
-                    selectionMode: "multipleCells",
-                    rowStyleFunction: (row, item) => (item.stripe ? "revision-alternate" : "revision-base")
-                });
-                // 체크의 실행 취소와 다시 실행도 하단 검토 건수에 함께 반영합니다.
-                AUIGrid.bind(myGridID, ["cellEditEnd", "filtering", "undoRedoChange"], updateRevisionStatus);
-                AUIGrid.setGridData(myGridID, revisionRows);
-                updateRevisionStatus();
+                    visibleFunction: (row, col, value, checked, item) => item.changed,
+                    checkableFunction: (row, col, value, checked, item) => item.changed
+                },
+                labelFunction: (row, col, value, header, item) => (item.changed ? (value ? "완료" : "대기") : "—")
             }
-            // 필터는 제품의 원본 데이터에 적용하므로 검토 상태가 검색과 필터 전환 후에도 유지됩니다.
-            function filterRevisions() {
-                const query = document.getElementById("revision-search").value.trim().toLowerCase();
-                const changesOnly = document.getElementById("changes-only").checked;
-                AUIGrid.setFilter(
-                    myGridID,
-                    "partNo",
-                    (field, value, item) =>
-                        (!changesOnly || item.changed) &&
-                        (item.partNo + " " + item.partName).toLowerCase().includes(query)
-                );
-                updateRevisionStatus();
-            }
-            function updateRevisionStatus() {
-                const rows = AUIGrid.getGridData(myGridID);
-                const changes = rows.filter((item) => item.changed);
-                document.getElementById("revision-status").textContent =
-                    "조회 " +
-                    new Set(rows.map((item) => item.partNo)).size +
-                    "개 부품 / " +
-                    rows.length +
-                    "개 항목 / 변경 " +
-                    changes.length +
-                    "건 중 검토 완료 " +
-                    changes.filter((item) => item.reviewed).length +
-                    "건";
-            }
-            function resizeComparison() {
-                const next = window.innerWidth <= 700;
-                if (!myGridID || compact === next) return;
-                compact = next;
-                AUIGrid.setFixedColumnCount(myGridID, compact ? 0 : 2);
-            }
-            function exportReport(format) {
-                const props = {
-                    fileName: "설계_변경_대조표",
-                    headers: [{ text: "설계 변경 대조표 / REV. A → REV. B", height: 28 }]
-                };
-                if (format === "pdf")
-                    AUIGrid.exportToPdf(myGridID, { ...props, fontPath: "../pdfkit/nyjgothic-medium.ttf" });
-                else AUIGrid.exportToXlsx(myGridID, props);
-            }
-            // 페이지를 떠나면 제품 인스턴스와 이 데모가 등록한 이벤트를 정리합니다.
-            function disposeDemo(event) {
-                if (event.persisted) return;
-                AUIGrid.destroy(myGridID);
-                myGridID = null;
-                window.removeEventListener("resize", resizeComparison);
-                window.removeEventListener("pagehide", disposeDemo);
-            }
-            window.addEventListener("resize", resizeComparison);
-            window.addEventListener("pagehide", disposeDemo);
-        </script>
-    </head>
-<body class="demo-typography">
+        ];
+        myGridID = AUIGrid.create("#grid_wrap", columns, {
+            rowIdField: "id",
+            rowIdTrustMode: true,
+            rowHeight: 34,
+            headerHeight: 29,
+            showRowNumColumn: false,
+            showStateColumn: false,
+            editable: true,
+            enableClipboard: false,
+            enableSorting: false,
+            enableFilter: true,
+            enableCellMerge: true,
+            cellMergeRowSpan: true,
+            // 모든 칼럼이 함께 가로 스크롤되도록 고정을 해제합니다.
+            fixedColumnCount: 0,
+            selectionMode: "multipleCells",
+            rowStyleFunction: (row, item) => (item.stripe ? "revision-alternate" : "revision-base")
+        });
+        // 체크의 실행 취소와 다시 실행도 하단 검토 건수에 함께 반영합니다.
+        AUIGrid.bind(myGridID, ["cellEditEnd", "filtering", "undoRedoChange"], updateRevisionStatus);
+        AUIGrid.setGridData(myGridID, revisionRows);
+        updateRevisionStatus();
+    }
+    // 필터는 제품의 원본 데이터에 적용하므로 검토 상태가 검색과 필터 전환 후에도 유지됩니다.
+    function filterRevisions() {
+        const query = document.getElementById("revision-search").value.trim().toLowerCase();
+        const changesOnly = document.getElementById("changes-only").checked;
+        AUIGrid.setFilter(
+            myGridID,
+            "partNo",
+            (field, value, item) =>
+                (!changesOnly || item.changed) && (item.partNo + " " + item.partName).toLowerCase().includes(query)
+        );
+        updateRevisionStatus();
+    }
+    function updateRevisionStatus() {
+        const rows = AUIGrid.getGridData(myGridID);
+        const changes = rows.filter((item) => item.changed);
+        document.getElementById("revision-status").textContent =
+            "조회 " +
+            new Set(rows.map((item) => item.partNo)).size +
+            "개 부품 / " +
+            rows.length +
+            "개 항목 / 변경 " +
+            changes.length +
+            "건 중 검토 완료 " +
+            changes.filter((item) => item.reviewed).length +
+            "건";
+    }
+    function exportReport(format) {
+        const props = {
+            fileName: "설계_변경_대조표",
+            headers: [{ text: "설계 변경 대조표 / REV. A → REV. B", height: 28 }]
+        };
+        if (format === "pdf") AUIGrid.exportToPdf(myGridID, { ...props, fontPath: "../pdfkit/nyjgothic-medium.ttf" });
+        else AUIGrid.exportToXlsx(myGridID, props);
+    }
+    // 페이지를 떠나면 제품 인스턴스와 이 데모가 등록한 이벤트를 정리합니다.
+    function disposeDemo(event) {
+        if (event.persisted) return;
+        AUIGrid.destroy(myGridID);
+        myGridID = null;
+        window.removeEventListener("pagehide", disposeDemo);
+    }
+    window.addEventListener("pagehide", disposeDemo);
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
 
-            <div id="main" class="workspace-demo grid-feature-showcase revision-showcase">
-                <div class="workspace-heading">
-                    <div>
-                        <h2>설계 변경 전후 대조표</h2>
-                        <p>부품은 세로로 묶고, 바뀌지 않은 값은 가로로 합쳐 변경 지점만 선명하게 보여줍니다.</p>
-                    </div>
-                    <span class="feature-volume">75개 부품 / 300개 비교 항목</span>
-                </div>
-                <div class="workspace-toolbar">
-                    <div class="workspace-controls">
-                        <input
-                            id="revision-search"
-                            class="workspace-search"
-                            type="search"
-                            placeholder="부품 번호 또는 이름 검색"
-                            aria-label="부품 검색"
-                            oninput="filterRevisions()"
-                        />
-                        <label
-                            ><input id="changes-only" type="checkbox" onchange="filterRevisions()" /> 변경 항목만</label
-                        >
-                        <label
-                            ><input
-                                id="merge-cells"
-                                type="checkbox"
-                                checked
-                                onchange="AUIGrid.setCellMerge(myGridID, this.checked)"
-                            />
-                            셀 병합</label
-                        >
-                    </div>
-                    <div class="workspace-controls">
-                        <button type="button" class="btn" onclick="exportReport('xlsx')">Excel 내보내기</button>
-                        <button type="button" class="btn" onclick="exportReport('pdf')">PDF 내보내기</button>
-                    </div>
-                </div>
-                <div class="comparison-caption">
-                    <span>가로 및 세로 병합 / 조건부 서식 / 필터 / 체크박스</span
-                    ><span class="revision-legend"
-                        ><i class="revision-before-key"></i>변경 전<i class="revision-after-key"></i>변경 후</span
-                    >
-                </div>
-                <div id="grid_wrap"></div>
-                <div class="workspace-note">
-                    <span id="revision-status" role="status"></span
-                    ><span>가상의 설계 변경 자료입니다. 검토 체크는 현재 페이지에서만 유지됩니다.</span>
-                </div>
-            </div>
+<div id="main" class="workspace-demo grid-feature-showcase revision-showcase">
+    <div class="workspace-heading">
+        <div>
+            <h2>설계 변경 전후 대조표</h2>
+            <p>부품은 세로로 묶고, 바뀌지 않은 값은 가로로 합쳐 변경 지점만 선명하게 보여줍니다.</p>
+        </div>
+        <span class="feature-volume">75개 부품 / 300개 비교 항목</span>
+    </div>
+    <div class="workspace-toolbar">
+        <div class="workspace-controls">
+            <input
+                id="revision-search"
+                class="workspace-search"
+                type="search"
+                placeholder="부품 번호 또는 이름 검색"
+                aria-label="부품 검색"
+                oninput="filterRevisions()"
+            />
+            <label><input id="changes-only" type="checkbox" onchange="filterRevisions()" /> 변경 항목만</label>
+            <label
+                ><input
+                    id="merge-cells"
+                    type="checkbox"
+                    checked
+                    onchange="AUIGrid.setCellMerge(myGridID, this.checked)"
+                />
+                셀 병합</label
+            >
+        </div>
+        <div class="workspace-controls">
+            <button type="button" class="btn" onclick="exportReport('xlsx')">Excel 내보내기</button>
+            <button type="button" class="btn" onclick="exportReport('pdf')">PDF 내보내기</button>
+        </div>
+    </div>
+    <div class="comparison-caption">
+        <span>가로 및 세로 병합 / 조건부 서식 / 필터 / 체크박스</span
+        ><span class="revision-legend"
+            ><i class="revision-before-key"></i>변경 전<i class="revision-after-key"></i>변경 후</span
+        >
+    </div>
+    <div id="grid_wrap"></div>
+    <!-- 실제 사용한 기능의 공식 API 설명으로 연결합니다. -->
+    <p class="showcase-api-links" aria-label="사용 기능과 API">
+        <strong>관련 API</strong>
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/DataGrid/Methods.html#setCellMerge"
+            target="_blank"
+            rel="noopener"
+            >셀 병합 전환</a
+        >
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/ColumnLayout/Column.html#cellColMerge"
+            target="_blank"
+            rel="noopener"
+            >가로 셀 병합</a
+        >
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/DataGrid/Methods.html#setFilter"
+            target="_blank"
+            rel="noopener"
+            >변경 항목 필터</a
+        >
+        <a
+            href="https://www.auisoft.net/documentation/auigrid/ColumnLayout/CheckBoxEditRenderer.html"
+            target="_blank"
+            rel="noopener"
+            >검토 체크</a
+        >
+    </p>
+    <div class="workspace-note">
+        <span id="revision-status" role="status"></span
+        ><span>가상의 설계 변경 자료입니다. 검토 체크는 현재 페이지에서만 유지됩니다.</span>
+    </div>
+</div>
 <div id="footer">
-     <div class="copyright">
+    <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>

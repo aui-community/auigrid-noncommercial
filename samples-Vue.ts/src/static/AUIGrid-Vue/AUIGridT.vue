@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
-	 * AUIGrid.vue for Vue.js + Typescript v1.7.20261008
-	 * Based on AUIGrid v3.0.19.2
+	 * AUIGrid.vue for Vue.js + Typescript v1.7.20261014
+	 * Based on AUIGrid v3.0.20.0
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */
@@ -269,7 +269,8 @@
 					'selectionChange',
 					'ready',
 					'sorting',
-					'treeLazyRequest',
+					// 서버 정렬 요청도 원본 이벤트와 정렬 조건을 그대로 전달합니다.
+					'customSorting',
 					'treeOpenChange',
 					'undoRedoChange',
 					'updateRow',
@@ -277,6 +278,8 @@
 					'vScrollChange'
 				];
 				const invokers = [
+					// 자식 배열을 반환하는 Promise도 엔진에 전달합니다.
+					'treeLazyRequest',
 					'beforeInsertRow',
 					'beforeRemoveColumn',
 					'beforeRemoveRow',
@@ -527,8 +530,9 @@
 			exportToXml(props?: any) {
 				$ag.exportToXml.call($ag, this.state.pid, arguments[0]);
 			},
-			forceEditingComplete(value: any, cancel?: boolean) {
-				$ag.forceEditingComplete.call($ag, this.state.pid, arguments[0], arguments[1]);
+			forceEditingComplete(value?: any, cancel?: boolean): void | Promise<void> {
+				// 비동기 cellEditEndBefore가 있으면 완료 Promise도 호출자에게 전달합니다.
+				return $ag.forceEditingComplete.call($ag, this.state.pid, arguments[0], arguments[1]);
 			},
 			getAddedColumnFields(): string[] {
 				return $ag.getAddedColumnFields.call($ag, this.state.pid);
@@ -905,19 +909,19 @@
 				$ag.removeAjaxLoader.call($ag, this.state.pid);
 			},
 			removeCheckedRows() {
-				$ag.removeCheckedRows.call($ag, this.state.pid);
+				return $ag.removeCheckedRows.call($ag, this.state.pid);
 			},
 			removeColumn(columnIndex: number | number[] | 'selectedIndex') {
-				$ag.removeColumn.call($ag, this.state.pid, arguments[0]);
+				return $ag.removeColumn.call($ag, this.state.pid, arguments[0]);
 			},
 			removeInfoMessage() {
 				$ag.removeInfoMessage.call($ag, this.state.pid);
 			},
 			removeRow(rowIndex: number | number[] | 'selectedIndex') {
-				$ag.removeRow.call($ag, this.state.pid, arguments[0]);
+				return $ag.removeRow.call($ag, this.state.pid, arguments[0]);
 			},
 			removeRowByRowId(rowIds: string | number | string[] | number[]) {
-				$ag.removeRowByRowId.call($ag, this.state.pid, arguments[0]);
+				return $ag.removeRowByRowId.call($ag, this.state.pid, arguments[0]);
 			},
 			removeSoftRows(ids?: any) {
 				return $ag.removeSoftRows.call($ag, this.state.pid, arguments[0]);
@@ -1011,6 +1015,10 @@
 			},
 			setFixedColumnCount(count: number) {
 				$ag.setFixedColumnCount.call($ag, this.state.pid, arguments[0]);
+			},
+			// 오른쪽 요청은 변환 없이 엔진에 전달하여 입력 오류와 적용 계약을 유지합니다.
+			setFixedRightColumnCount(count: number): void {
+				return $ag.setFixedRightColumnCount.call($ag, this.state.pid, arguments[0]);
 			},
 			setFixedRowCount(count: number) {
 				$ag.setFixedRowCount.call($ag, this.state.pid, arguments[0]);
@@ -1178,8 +1186,6 @@
 		readonly version: string;
 		readonly releaseDate: string;
 		isCreated: () => boolean;
-		// 제공 보류 중에는 항상 오류를 던지므로 반환값이 없습니다. 재개 시 npm의 공용 런타임 타입도 함께 연결합니다.
-		getPluginRuntime: (apiVersion: 1) => never;
 		formatDate: (date: string | Date, formatString: string) => string;
 		formatNumber: (number: number, formatString: string, rounding?: 'round' | 'ceil' | 'floor' | 'rounding') => string;
 		getActiveGrid: () => string | null;
@@ -1190,8 +1196,6 @@
 		releaseDate: $ag.releaseDate,
 		version: $ag.version,
 		isCreated: $ag.isCreated,
-		// Grid ID 없이 엔진의 진입점을 그대로 전달합니다. 제공 보류 엔진의 DISABLED 오류도 유지합니다.
-		getPluginRuntime: $ag.getPluginRuntime,
 		formatDate: $ag.formatDate,
 		formatNumber: $ag.formatNumber,
 		getActiveGrid: $ag.getActiveGrid,

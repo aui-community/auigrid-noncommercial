@@ -1,5 +1,34 @@
+/*
+ * AUIGrid 사용자 정의 렌더러 - 구매 결재 단계 표시
+ *
+ * 접수, 검토, 결재, 발주 단계를 표시하고 각 단계를 누르면 상세 조회를 페이지에 요청합니다.
+ *
+ * 연결 파일
+ *   그리드 래퍼로 AUIGrid를 로드한 뒤 이 모듈을 import합니다.
+ *   import ApprovalStepsRenderer from "../renderers/purchase_approval/ApprovalStepsRenderer";
+ *   cell-utils.js는 이 모듈이 가져옵니다. src/showcases/Showcase07.css의 관련 스타일도 적용합니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "stage",
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: ApprovalStepsRenderer,
+ *       extraProps: {
+ *         onAction: function (event) {
+ *           // event.id로 행을 찾고 event.action과 event.value에 맞게 화면 또는 데이터를 처리합니다.
+ *         }
+ *       }
+ *     }
+ *   }
+ *   행 데이터 예: { id: "P01", stage: 1, rejected: false }
+ *
+ * 데이터와 동작
+ *   stage는 현재 단계 0~3, 4는 전체 완료입니다. rejected: true이면 현재 단계를 반려 상태로 표시합니다.
+ *   단계 클릭: action은 "step", value는 클릭한 단계 번호 0~3입니다.
+ *   onAction은 { id, action, value }를 받습니다. 렌더러가 데이터를 직접 변경하지 않습니다.
+ */
 import PurchaseCellUtils from './cell-utils';
-/* 접수 → 검토 → 결재 → 발주의 상태와 단계별 상세 보기를 표현합니다. */
 var ApprovalStepsRenderer = window.AUIGrid.Class({
 	tagName: 'div',
 	cssClass: 'aui-grid-renderer-base aui-grid-renderer-custom purchase-cell approval-cell',

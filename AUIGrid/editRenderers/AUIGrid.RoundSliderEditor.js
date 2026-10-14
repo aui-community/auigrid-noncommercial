@@ -1,9 +1,43 @@
-/* eslint-disable */
-/*
- * AUIGrid 사용자 정의 에디트 렌더러
- * 라운드 슬라이더 에디트 렌더러
- * roundSlider A Free jQuery Plugin :https://roundsliderui.com/
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Round slider edit renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * Uses roundSlider (MIT, https://roundsliderui.com) and jQuery (MIT), loaded separately.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
  */
+/*
+ * AUIGrid 사용자 정의 에디트 렌더러 - 원형 범위 슬라이더 편집기
+ *
+ * jQuery roundSlider의 두 손잡이로 숫자 범위를 편집합니다.
+ * 슬라이더에서 변경한 값을 injectValue()로 보관하고, 그리드가 편집을 완료할 때 적용합니다.
+ *
+ * 연결 파일
+ *   AUIGrid.js, jQuery와 roundslider.min.js 및 roundslider.min.css가 필요합니다.
+ *   AUIGrid.js 다음에 AUIGrid.RoundSliderEditor.js를 연결하고 편집 시작 전에 roundSlider를 로드합니다.
+ *   WebDemo의 roundSlider 파일은 external/round-slider/에 있습니다.
+ *
+ * 사용법 (그리드 속성 editable: true)
+ *   {
+ *     dataField: "range", // 예: "100,300"
+ *     editRenderer: {
+ *       type: "CustomEditRenderer",
+ *       jsClass: AUIGrid.RoundSliderEditor,
+ *       vPosition: "bottom",
+ *       extraProps: { min: 0, max: 1000, step: 50 }
+ *     }
+ *   }
+ *
+ * 데이터와 옵션
+ *   기본 sliderType은 "range"이며 값은 "시작값,끝값" 형태로 주고받습니다.
+ *   extraProps는 roundSlider 옵션에 전달되어 기본 설정을 덮어씁니다.
+ *   change 콜백을 바꾸면 기존 injectValue() 호출도 유지해야 변경값을 저장할 수 있습니다.
+ *   별도 렌더러 CSS 없이 roundSlider의 CSS를 사용합니다. 외부 라이브러리: https://roundsliderui.com/
+ */
+/* eslint-disable */
 window.AUIGrid.RoundSliderEditor = window.AUIGrid.Class({
 	/****************************************************************
 	 *

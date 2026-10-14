@@ -1,3 +1,32 @@
+/*
+ * AUIGrid 사용자 정의 에디트 렌더러 - Vue 날짜 선택기
+ *
+ * @vuepic/vue-datepicker 컴포넌트를 셀 편집기로 연결합니다.
+ * 컴포넌트가 선택값을 전달하면 칼럼 dateInputFormat에 맞춘 문자열로 저장합니다.
+ *
+ * 연결 파일
+ *   그리드 래퍼로 AUIGrid를 로드한 뒤 이 모듈을 import합니다.
+ *   import DateEditor from "../editRenderers/AUIGrid.VueDatepicker";
+ *   @vuepic/vue-datepicker와 해당 패키지 CSS를 가져오며, 날짜 변환에는 래퍼의 agUtils를 사용합니다.
+ *
+ * 사용법 (그리드 속성 editable: true)
+ *   {
+ *     dataField: "date",
+ *     dataType: "date", dateInputFormat: "yyyy/mm/dd",
+ *     editRenderer: {
+ *       type: "CustomEditRenderer",
+ *       jsClass: DateEditor,
+ *       vPosition: "bottom",
+ *       extraProps: { locale: "ko", enableTimePicker: false }
+ *     }
+ *   }
+ *
+ * 데이터와 옵션
+ *   기존 값은 Date로 해석할 수 있는 날짜를 전달합니다. 저장 형식은 칼럼의 dateInputFormat을 따릅니다.
+ *   extraProps는 날짜 선택기 컴포넌트에 전달되며 inline은 항상 true로 설정합니다.
+ *   extraProps.timePicker: true이면 기존 날짜를 유지하고 선택한 시각을 반영합니다.
+ *   컴포넌트의 값 변경 콜백을 덮어쓰면 편집 완료 연결도 유지해야 합니다.
+ */
 import { h, render } from 'vue';
 import { agUtils } from '@/static/AUIGrid-Vue.js/AUIGrid.vue';
 // Vue datepicker is licensed under the MIT License.
@@ -6,9 +35,6 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
 /* eslint-disable */
-/*
- * AUIGrid 사용자 정의 에디트 렌더러
- */
 export default window.AUIGrid.Class({
 	/****************************************************************
 	 *

@@ -1,70 +1,173 @@
-AUI Non-Commercial License
+AUI Non-Commercial License (AUIGrid)
+버전 2.0 · 시행일 2026-10-14
 
-중요: 소프트웨어를 다운로드 및 사용하기 전에 본 계약서를 주의 깊게 읽어 주십시오.
-본 계약서는 주식회사 에이유아이소프트(이하 "당사")(www.auisoft.net)와 소프트웨어 사용자(개인 또는 단체, 이하 "귀하") 간의 법적 구속력을 가지는 계약입니다.
-소프트웨어를 다운로드하거나 사용함으로써 귀하는 본 계약의 조건에 동의한 것으로 간주됩니다.
-동의하지 않는 경우, 소프트웨어를 다운로드하거나 설치하지 마시고, 이미 다운로드한 경우 즉시 삭제하여 주십시오.
-________________________________________________________________________________________________________________________________________________________________________________________________________
+중요: 소프트웨어를 다운로드하거나 사용하기 전에 본 계약서를 주의 깊게 읽어 주십시오.
+본 계약서는 주식회사 에이유아이소프트(AUISoft Co., Ltd., 이하 "당사", www.auisoft.net)와 소프트웨어 사용자(개인 또는 단체, 이하 "귀하") 간의 법적 구속력이 있는 계약입니다.
+소프트웨어를 다운로드, 설치, 복제 또는 사용하면 귀하는 본 계약의 모든 조건에 동의한 것으로 간주됩니다.
+동의하지 않는 경우 소프트웨어를 다운로드하거나 설치하지 마시고, 이미 받은 경우 즉시 삭제하여 주십시오.
+영문 번역은 본 문서 하단에 있으며, 한국어 본문과 영문 번역의 내용이 다를 경우 한국어 본문이 우선합니다.
+
+________________________________________________________________________________
 
 1. 정의
-•	AUI 제품: 당사가 개발하고 저작권을 소유한 소프트웨어(예: AUIGrid, AUIGantt, AUIPivot) 및 당사가 제공하는 모든 업데이트, 패치, 기능 개선 사항을 포함합니다.
-•	소프트웨어: AUI 제품에 포함된 모든 프로그램, 문서, 스크립트 및 관련 자료를 의미하며, 형식과 관계없이 적용됩니다.
-•	비상용 라이선스(Non-Commercial License): 평가, 테스트 및 개인적인 용도로만 사용 가능한 제한된 기능과 사용 조건이 적용된 비상업적 라이선스입니다.
-•	도메인(Domain): 도메인 네임 시스템(DNS)에서 특정 인터넷 자원을 식별하는 최상위 도메인(예: domain.com 또는 www.domain.com)을 의미합니다.
-•	서브-도메인(Sub-Domain): 주 도메인에서 파생된 하위 도메인(예: a.domain.com, b.domain.com)으로, 조직적 목적에 사용됩니다.
-•	로컬호스트(Localhost): 외부 접근 없이 테스트 및 개발 목적으로만 사용되는 로컬 서버 환경(예: 127.0.0.1) 입니다.
-•	접속 도메인(Access Domain): 사용자가 소프트웨어에 접근하기 위해 등록된 도메인 또는 서브-도메인을 의미하며, 특정 라이선스 조건을 따릅니다.
-•	접속 IP(Access IP): 사용자가 소프트웨어에 접근할 수 있도록 허가된 정적(Static) 또는 동적(Dynamic) IP 주소를 의미합니다. 접속 IP가 있는 경우, 해당 IP를 통해서만 사용이 가능합니다.
-•	상업적 이용(Commercial Use): 기업 운영, 수익 창출, 또는 제품 및 서비스를 고객에게 제공하는 조직 내에서 소프트웨어를 사용하는 행위입니다.
-•	정부 기관 사용(Governmental Use): 국가, 지방자치단체 또는 공공기관 및 관련 조직에서의 사용입니다.
-•	수정(Modification): 소프트웨어의 원본 코드 변경, 통합, 확장 또는 개작 등을 포함한 모든 형태의 수정 행위입니다.
-________________________________________________________________________________________________________________________________________________________________________________________________________
 
-2. 무료 라이선스 사용권 부여 및 제한
-•	원칙적으로 당사의 허가 없는 소프트웨어의 수정은 금지합니다.
-2.1 라이선스 부여
-본 계약의 조건에 따라, 주식회사 에이유아이소프트(이하 "라이선스 제공자")는 귀하에게 AUI 제품(이하 "소프트웨어")을 비상업적 목적으로만 사용할 수 있는 영구적이고, 전 세계적으로 유효하며, 비독점적이고, 로열티 없는, 양도 불가능한 라이선스를 부여합니다.
-2.2 허용된 사용
-귀하는 다음과 같은 비상업적 목적으로 소프트웨어를 사용할 수 있습니다:
-•	교육, 학술 및 연구 목적
-•	개인적 용도
-•	테스트, 개발 및 데모 목적으로 사용
-•	로컬호스트(localhost, 127.0.0.1) 환경에서의 사용
-2.3 금지된 사용
-귀하는 다음과 같은 상업적 용도로 소프트웨어를 사용할 수 없습니다:
-•	비즈니스 또는 전문적인 운영 목적
-•	소프트웨어 또는 그 수정본을 라이선스, 임대, 교환, 판매하는 행위
-•	상업 제품 또는 서비스에 소프트웨어를 포함하는 행위
-•	정부 기관 또는 국제 기구에서의 사용
-2.4 비상업적 평가 목적
-기업 직원은 상업적 환경이 아닌 환경에서 평가, 개발 및 테스트 목적으로만 소프트웨어를 사용할 수 있습니다.
-2.5 상업적 이용 안내
-소프트웨어를 상업적 목적으로 사용하려면 라이선스 제공자와 협의하여 적절한 라이선스를 구매해야 합니다.
-상업적 사용이 필요한 경우 당사(aui@auisoft.net)에 문의해 주시기 바랍니다.
-상세한 상업 라이선스에 대한 내용은 https://www.auisoft.net 에서 확인 가능합니다.
-2.6 로컬호스트 사용 제한
-본 소프트웨어는 로컬호스트(localhost, 127.0.0.1) 환경에서만 사용이 허용됩니다.
-외부 웹 서버에 업로드하여 별도의 접속 도메인이나 접속 IP가 존재하는 경우, 유효한 상업용 라이선스를 구매해야 합니다.
-________________________________________________________________________________________________________________________________________________________________________________________________________
+1.1 소프트웨어: 본 저장소 또는 당사가 지정한 배포 경로(예: jsDelivr CDN)를 통해 제공되는 AUIGrid 비상업판으로, 프로그램, 스크립트, 스타일시트, 이미지, 문서, 예제 및 관련 자료와 그 업데이트를 형식과 관계없이 모두 포함합니다.
+1.2 비상업판: 상용(Enterprise) 라이선스와 기능은 같으나, 본 계약에 정한 목적과 환경에서만 사용할 수 있는 무료 사용권이 적용되는 소프트웨어입니다.
+1.3 로컬호스트: 외부에서 접속할 수 없는 귀하의 컴퓨터 안의 실행 환경으로, 주소가 localhost 또는 127.0.0.1 인 경우를 말합니다.
+1.4 접속 도메인 · 접속 IP: 로컬호스트가 아닌 도메인, 서브도메인 또는 IP 주소로서, 소프트웨어가 포함된 웹 페이지나 애플리케이션에 다른 사람이나 다른 장치가 접속할 수 있게 되는 주소를 말합니다.
+1.5 상업적 이용: 기업 또는 조직의 업무 운영, 수익 창출, 고객에게 제품이나 서비스를 제공하는 활동에 소프트웨어를 사용하는 행위를 말합니다.
+1.6 수정: 소프트웨어의 원본 코드를 변경, 확장, 개작하거나 다른 코드와 결합하여 원본을 변형하는 모든 행위를 말합니다. 소프트웨어가 공개한 API(속성, 메소드, 이벤트, 사용자 정의 렌더러 등)를 문서에 따라 사용하는 것은 수정에 해당하지 않습니다.
 
-3. 기술 지원 및 유지보수 제한
-•	기술 지원: 무료 라이선스 사용자는 공식적인 기술 지원을 받을 수 없습니다.
-•	업데이트 및 유지보수:
-o	당사는 무료 라이선스 사용자를 위한 소프트웨어 업데이트를 제공할 의무가 없습니다.
-o	무료 사용자의 유지보수 및 보안 패치는 당사의 재량에 따라 제공될 수 있습니다.
-________________________________________________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________
 
-4. 계약 종료 및 위반 시 조치
-•	계약 종료:
-o	귀하가 본 계약의 조건을 위반할 경우, 당사는 사전 통보 없이 귀하의 무료 라이선스를 종료할 수 있습니다.
-o	계약 종료 시 귀하는 즉시 소프트웨어 사용을 중단하고, 모든 사본을 삭제해야 합니다.
-________________________________________________________________________________________________________________________________________________________________________________________________________
+2. 사용권 부여
 
-5. 준거법 및 관할
-•	본 계약은 대한민국 법률에 따라 해석되며, 관련 분쟁은 대한민국 법원의 관할에 따릅니다.
-________________________________________________________________________________________________________________________________________________________________________________________________________
+2.1 당사는 귀하가 본 계약을 지키는 동안, 귀하에게 소프트웨어를 비상업적 목적으로 로컬호스트에서 사용할 수 있는 영구적이고 전 세계적으로 유효하며 비독점적이고 로열티 없는 양도 불가능한 사용권을 부여합니다.
+2.2 허용되는 목적: 다음 목적의 사용은 로컬호스트에서 할 수 있습니다.
+    - 교육, 학술 및 연구
+    - 개인적 학습 및 개인 프로젝트
+    - 테스트, 개발 및 데모
+2.3 기업 · 기관의 평가: 기업이나 기관의 직원은 도입 검토를 위한 평가, 개발 및 테스트 목적으로 로컬호스트에서 소프트웨어를 사용할 수 있습니다. 이 경우에도 실제 업무 운영이나 고객 서비스에 사용할 수 없습니다.
+2.4 로컬호스트 밖의 평가: 로컬호스트가 아닌 접속 도메인이나 접속 IP 에서 평가하려면 당사의 30일 평가판(https://www.auisoft.net/dcenter.html)을 이용하여야 합니다.
 
-[서명란]
-귀하가 본 계약의 모든 조건에 동의함을 확인합니다.
-소프트웨어 설치 및 사용을 통해 본 계약이 체결되었음을 인정합니다.
+________________________________________________________________________________
 
+3. 사용 제한
+
+귀하는 다음 행위를 할 수 없습니다.
+3.1 로컬호스트가 아닌 접속 도메인이나 접속 IP 에서 소프트웨어를 사용하는 행위(외부 웹 서버, 사내 서버, 클라우드에 올려 사용하는 경우를 포함합니다)
+3.2 상업적 이용, 또는 비즈니스나 전문적 운영 목적의 사용
+3.3 소프트웨어나 그 수정본을 라이선스, 임대, 교환, 판매하거나, 대가를 받고 제공하는 행위
+3.4 소프트웨어를 상업 제품이나 서비스에 포함하거나 함께 배포하는 행위
+3.5 정부 기관, 지방자치단체, 공공기관 또는 국제기구에서의 사용
+3.6 당사의 서면 허가 없이 소프트웨어를 수정하는 행위
+3.7 사용권 검사, 사용 환경 제한 등 소프트웨어의 기술적 보호 조치를 제거, 우회 또는 무력화하는 행위
+3.8 관련 법령이 명시적으로 허용하는 경우를 제외하고, 소프트웨어를 역분해, 디컴파일, 디스어셈블, 리버스 엔지니어링하거나 소스코드를 추출하려고 시도하는 행위
+3.9 소프트웨어에 포함된 저작권 표시, 라이선스 표시 및 머리 주석을 제거하거나 변경하는 행위
+
+상업적 목적으로 사용하거나 로컬호스트 밖에서 사용하려면 상용 라이선스를 구매하여야 합니다.
+상용 라이선스: https://www.auisoft.net/price.html · 문의: aui@auisoft.net
+
+________________________________________________________________________________
+
+4. 지적재산권
+
+4.1 소프트웨어와 그 구성요소(코드, 이미지, 문서)에 대한 모든 지적재산권은 당사에 있으며, 귀하에게는 본 계약에 따른 사용권만 부여됩니다. 소프트웨어는 판매되는 것이 아닙니다.
+4.2 본 계약에서 명시적으로 부여하지 않은 모든 권리는 당사에 귀속됩니다.
+4.3 소프트웨어에 포함된 오픈소스 구성요소는 각 오픈소스 라이선스를 따르며, 본 계약은 해당 라이선스가 귀하에게 부여하는 권리를 제한하지 않습니다.
+
+________________________________________________________________________________
+
+5. 기술 지원 및 업데이트
+
+5.1 비상업판 사용자는 공식 기술 지원을 받을 수 없습니다.
+5.2 당사는 비상업판의 업데이트, 유지보수 또는 보안 패치를 제공할 의무가 없으며, 이를 제공할지는 당사의 재량에 따릅니다.
+
+________________________________________________________________________________
+
+6. 보증의 부인 및 책임의 제한
+
+6.1 소프트웨어는 "있는 그대로(As-Is)" 제공되며, 당사는 상품성, 특정 목적에의 적합성, 권리 비침해를 포함한 어떠한 명시적 또는 묵시적 보증도 하지 않습니다.
+6.2 관련 법령이 허용하는 최대 범위에서, 당사는 소프트웨어의 사용 또는 사용 불능으로 발생한 직접적, 간접적, 부수적, 특별, 결과적 또는 징벌적 손해에 대하여 책임을 지지 않습니다.
+
+________________________________________________________________________________
+
+7. 계약 종료
+
+7.1 귀하가 본 계약의 조건을 위반하면, 귀하의 사용권은 당사의 별도 통지 없이 즉시 종료됩니다.
+7.2 계약이 종료되면 귀하는 즉시 소프트웨어 사용을 중단하고 보유한 모든 사본을 삭제하여야 합니다.
+7.3 제4조, 제6조, 제8조는 계약 종료 후에도 효력을 가집니다.
+
+________________________________________________________________________________
+
+8. 준거법 및 관할
+
+본 계약은 대한민국 법률에 따라 해석되며, 본 계약과 관련한 분쟁은 대한민국 법원의 관할에 따릅니다.
+
+________________________________________________________________________________
+
+9. 계약의 변경
+
+당사는 본 계약을 변경할 수 있으며, 변경된 계약은 본 저장소에 게시한 날부터 그 이후에 다운로드하거나 사용하는 소프트웨어에 적용됩니다.
+
+Copyright (c) AUISoft Co., Ltd. All rights reserved.
+
+
+================================================================================
+English Translation (for reference; the Korean text prevails)
+================================================================================
+
+AUI Non-Commercial License (AUIGrid)
+Version 2.0 · Effective 2026-10-14
+
+IMPORTANT: Please read this agreement carefully before downloading or using the software.
+This agreement is a legally binding agreement between AUISoft Co., Ltd. ("the Company", www.auisoft.net) and the user of the software (an individual or an entity, "you").
+By downloading, installing, copying, or using the software, you agree to all terms of this agreement.
+If you do not agree, do not download or install the software, and delete it immediately if you have already obtained it.
+
+1. Definitions
+
+1.1 Software: the AUIGrid Non-Commercial edition provided through this repository or a distribution channel designated by the Company (e.g., the jsDelivr CDN), including programs, scripts, stylesheets, images, documents, samples, related materials, and their updates, in any form.
+1.2 Non-Commercial edition: software with the same features as the commercial (Enterprise) license, under a free license that permits use only for the purposes and in the environment defined in this agreement.
+1.3 Localhost: an execution environment on your own computer that cannot be accessed from outside, with the address localhost or 127.0.0.1.
+1.4 Access domain / access IP: any domain, subdomain, or IP address other than localhost through which other people or devices can access a web page or application that includes the software.
+1.5 Commercial use: use of the software in business or organizational operations, revenue generation, or activities that provide products or services to customers.
+1.6 Modification: any act of changing, extending, or adapting the original code of the software, or combining it with other code in a way that alters the original. Using the software's published API (properties, methods, events, custom renderers, etc.) as documented is not a modification.
+
+2. License Grant
+
+2.1 As long as you comply with this agreement, the Company grants you a perpetual, worldwide, non-exclusive, royalty-free, non-transferable license to use the software on localhost for non-commercial purposes.
+2.2 Permitted purposes, on localhost:
+    - education, academic work, and research
+    - personal learning and personal projects
+    - testing, development, and demos
+2.3 Evaluation by companies and institutions: employees of a company or institution may use the software on localhost to evaluate, develop, and test it for adoption. Even then, it may not be used in actual business operations or customer services.
+2.4 Evaluation outside localhost: to evaluate the software on an access domain or access IP other than localhost, use the Company's 30-day trial (https://www.auisoft.net/dcenter.html).
+
+3. Restrictions
+
+You may not:
+3.1 use the software on any access domain or access IP other than localhost (including external web servers, internal company servers, and the cloud);
+3.2 use the software commercially or for business or professional operations;
+3.3 license, rent, exchange, or sell the software or its modifications, or provide them for consideration;
+3.4 include the software in, or distribute it with, commercial products or services;
+3.5 use the software in government agencies, local governments, public institutions, or international organizations;
+3.6 modify the software without the Company's written permission;
+3.7 remove, bypass, or disable technical protection measures of the software, such as license checks and environment restrictions;
+3.8 except to the extent expressly permitted by applicable law, reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code of the software;
+3.9 remove or alter copyright notices, license notices, or header comments included in the software.
+
+To use the software commercially or outside localhost, you must purchase a commercial license.
+Commercial license: https://www.auisoft.net/price.html · Contact: aui@auisoft.net
+
+4. Intellectual Property
+
+4.1 All intellectual property rights in the software and its components (code, images, documents) are owned by the Company, and only a license to use is granted to you under this agreement. The software is licensed, not sold.
+4.2 All rights not expressly granted in this agreement are reserved by the Company.
+4.3 Open-source components included in the software are subject to their own open-source licenses, and this agreement does not limit the rights those licenses grant you.
+
+5. Technical Support and Updates
+
+5.1 Users of the Non-Commercial edition are not eligible for official technical support.
+5.2 The Company has no obligation to provide updates, maintenance, or security patches for the Non-Commercial edition; whether to provide them is at the Company's discretion.
+
+6. Disclaimer of Warranty and Limitation of Liability
+
+6.1 The software is provided "as is", and the Company makes no express or implied warranties of any kind, including merchantability, fitness for a particular purpose, and non-infringement.
+6.2 To the maximum extent permitted by applicable law, the Company is not liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from the use of or inability to use the software.
+
+7. Termination
+
+7.1 If you breach any term of this agreement, your license terminates immediately without separate notice from the Company.
+7.2 Upon termination, you must immediately stop using the software and delete all copies in your possession.
+7.3 Sections 4, 6, and 8 survive termination.
+
+8. Governing Law and Jurisdiction
+
+This agreement is governed by the laws of the Republic of Korea, and any dispute relating to it is subject to the jurisdiction of the courts of the Republic of Korea.
+
+9. Changes to This Agreement
+
+The Company may change this agreement. The changed agreement applies to software downloaded or used on or after the date it is published in this repository.
+
+Copyright (c) AUISoft Co., Ltd. All rights reserved.

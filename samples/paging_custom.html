@@ -1,206 +1,427 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="Content-Script-Type" content="text/javascript">
-	<meta http-equiv="Content-Style-Type" content="text/css">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=800">
-	<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-	<meta name="og:url" content="https://www.auisoft.net/">
-	<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
-	<title>AUIGrid 데모, HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
-	<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
-	<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-	<link href="./demo.css" rel="stylesheet">
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet" />
 
-	<!-- 공용 스크립트. 여기에 공통적인 스크립트가 존재합니다.  -->
-	<script type="text/javascript" src="./common.js"></script>
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
-	<!-- AUIGrid 컴포넌트의 CSS 파일입니다. 원하는 테마 스타일 CSS를 선언하십시오.-->
-	<link href="./style/AUIGrid_style.css" rel="stylesheet">
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-	<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
-	<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-	<!-- 실제적인 AUIGrid 라이브러리입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
-	<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+<style>
+    /* 검색 및 페이지 이동 UI만 배치합니다. 제품의 셀과 테마 스타일은 변경하지 않습니다. */
+    .server-paging-form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 12px;
+        margin: 20px 0 12px;
+    }
+    .server-paging-form label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .server-paging-form input,
+    .server-paging-form select {
+        box-sizing: border-box;
+        min-height: 36px;
+        max-width: 100%;
+        padding: 6px 8px;
+        border: 1px solid #b9c2cc;
+        border-radius: 4px;
+        font: inherit;
+        background: #fff;
+        color: #263238;
+    }
+    #server-search {
+        width: 220px;
+    }
+    #server-min-price {
+        width: 140px;
+    }
+    .server-paging-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+        padding: 14px 0;
+    }
+    .server-paging-nav button {
+        min-width: 34px;
+        min-height: 34px;
+        padding: 4px 10px;
+        border: 1px solid #bbc5cf;
+        border-radius: 4px;
+        background: #fff;
+        color: #263238;
+        cursor: pointer;
+        font: inherit;
+    }
+    .server-paging-nav button[aria-current="page"] {
+        background: #263238;
+        border-color: #263238;
+        color: #fff;
+        font-weight: bold;
+    }
+    .server-paging-nav button:disabled {
+        opacity: 0.45;
+        cursor: default;
+    }
+    .server-paging-nav button:focus-visible {
+        outline: 2px solid #3278b6;
+        outline-offset: 2px;
+    }
+    #server-message {
+        min-height: 21px;
+    }
+    #server-message[data-error="true"] {
+        color: #a11e22;
+    }
+    /* 공통 버튼 스타일보다 우선하여 성공 화면에서는 재시도 버튼을 숨깁니다. */
+    #main #server-retry[hidden] {
+        display: none;
+    }
+    #grid_wrap {
+        width: 100%;
+        height: 550px;
+        margin: 0 auto;
+    }
+</style>
+<script>
+    let myGridID;
+    const pageSize = 20;
+    // query는 진행 중인 요청, displayed는 마지막으로 성공한 화면의 조건입니다.
+    let query = { page: 1, sort: [], search: "", country: "", minPrice: "" };
+    let displayed = null;
+    let failedQuery = null;
+    let activeRequest = null;
+    let requestSequence = 0;
 
-	<style>
-		/* 커스텀 페이징 패널 정의 */
-		.my-grid-paging-panel {
-			width: 100%;
-			margin: 4px auto;
-			font-size: 12px;
-			height: 34px;
-			border: 1px solid #ccc;
-		}
+    function init() {
+        const columnLayout = [
+            { dataField: "id", headerText: "주문 번호", width: 115 },
+            { dataField: "name", headerText: "고객명", width: 110 },
+            { dataField: "country", headerText: "국가", width: 110 },
+            { dataField: "product", headerText: "제품", width: 170 },
+            { dataField: "quantity", headerText: "수량", dataType: "numeric", width: 85 },
+            { dataField: "price", headerText: "금액", dataType: "numeric", formatString: "#,##0", width: 120 },
+            {
+                dataField: "date",
+                headerText: "주문일",
+                dataType: "date",
+                dateInputFormat: "yyyy-mm-dd",
+                formatString: "yyyy-mm-dd",
+                width: 120
+            }
+        ];
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, {
+            rowIdField: "id",
+            showRowNumColumn: false,
+            rowHeight: 26,
+            usePaging: false,
+            editable: false,
+            // 헤더의 정렬 표시만 갱신합니다. 실제 정렬은 서버가 전체 검색 결과에 적용합니다.
+            useCustomSorting: true,
+            // 기본 필터 메뉴는 로드된 20건만 알 수 있으므로 서버 검색 폼을 사용합니다.
+            enableFilter: false
+        });
+        AUIGrid.bind(myGridID, "customSorting", function (event) {
+            const sort = event.sortingFields.map(function (field) {
+                return { dataField: field.dataField, sortType: field.sortType };
+            });
+            // 오류 복원과 정렬 해제 시 setSorting이 다시 발생시킨 이벤트는 중복 요청하지 않습니다.
+            if (JSON.stringify(sort) === JSON.stringify(query.sort)) return;
+            requestPage({ ...query, page: 1, sort: sort });
+        });
+        document.getElementById("server-filter").addEventListener("submit", function (event) {
+            event.preventDefault();
+            requestPage({
+                ...query,
+                page: 1,
+                search: document.getElementById("server-search").value.trim(),
+                country: document.getElementById("server-country").value,
+                minPrice: document.getElementById("server-min-price").value
+            });
+        });
+        document.getElementById("server-reset").addEventListener("click", function () {
+            document.getElementById("server-filter").reset();
+            requestPage({ ...query, page: 1, search: "", country: "", minPrice: "" });
+        });
+        document.getElementById("server-sort-reset").addEventListener("click", function () {
+            requestPage({ ...query, page: 1, sort: [] });
+            AUIGrid.setSorting(myGridID, []);
+        });
+        document.getElementById("server-retry").addEventListener("click", function () {
+            if (!failedQuery) return;
+            const retry = failedQuery;
+            requestPage(retry);
+            restoreControls(retry);
+        });
+        document.getElementById("grid_paging").addEventListener("click", function (event) {
+            const button = event.target.closest("button[data-page]");
+            if (button && !button.disabled) requestPage({ ...query, page: Number(button.dataset.page) });
+        });
+        // 페이지를 떠나면 미완료 요청과 후속 화면 반영을 함께 중단합니다.
+        window.addEventListener("pagehide", function () {
+            requestSequence++;
+            if (activeRequest) activeRequest.abort();
+        });
+        requestPage(query);
+    }
 
-		/* aui-grid-paging-number 클래스 재정의*/
-		.aui-grid-paging-panel .aui-grid-paging-number {
-			border-radius: 4px;
-		}
-	</style>
-	<script>
-		// AUIGrid 생성 후 반환 ID
-		let myGridID;
+    // 서버 응답의 페이지와 건수로만 탐색 버튼을 만듭니다. 전체 건수를 브라우저에서 추측하지 않습니다.
+    function renderPaging(result) {
+        const nav = document.getElementById("grid_paging");
+        nav.replaceChildren();
+        const start = Math.floor((result.page - 1) / 5) * 5 + 1;
+        function add(label, page, disabled, current) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = label;
+            button.dataset.page = page;
+            button.disabled = disabled;
+            if (current) button.setAttribute("aria-current", "page");
+            nav.appendChild(button);
+        }
+        add("처음", 1, result.totalPages === 0 || result.page === 1);
+        add("이전", result.page - 1, result.totalPages === 0 || result.page === 1);
+        for (let page = start; page <= Math.min(start + 4, result.totalPages); page++) {
+            add(String(page), page, page === result.page, page === result.page);
+        }
+        add("다음", result.page + 1, result.page >= result.totalPages);
+        add("마지막", result.totalPages, result.page >= result.totalPages);
+    }
 
-		// 시작점
-		function init() {
-			// AUIGrid 그리드를 생성합니다.
-			createAUIGrid();
-			// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-			prerequestGridData(rowCount, currentPage);
-		}
+    function restoreControls(state) {
+        document.getElementById("server-search").value = state.search;
+        document.getElementById("server-country").value = state.country;
+        document.getElementById("server-min-price").value = state.minPrice;
+        AUIGrid.setSorting(myGridID, state.sort);
+    }
 
-		// AUIGrid 를 생성합니다.
-		function createAUIGrid() {
-			// 그리드 칼럼 레이아웃 설정
-			const columnLayout = [{
-				dataField: "id",
-				headerText: "ID",
-				width: 100
-			}, {
-				dataField: "name",
-				headerText: "Name",
-				width: 140
-			}, {
-				dataField: "country",
-				headerText: "Country",
-				width: 120
-			}, {
-				dataField: "flag",
-				headerText: "Flag",
-				prefix: "./assets/",
-				enableGrouping: false,
-				width: 100,
-				disableGrouping: true,
-				renderer: {
-					type: "ImageRenderer",
-					imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
-					altField: "country" // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
-				}
-			}, {
-				dataField: "product",
-				headerText: "Product",
-				width: 140
-			}, {
-				dataField: "quantity",
-				headerText: "Quantity",
-				dataType: "numeric",
-				width: 100
-			}, {
-				dataField: "price",
-				headerText: "Price",
-				dataType: "numeric",
-				width: 120
-			}, {
-				dataField: "date",
-				headerText: "Date",
-				width: 120
-			}];
-
-			// 그리드 속성 설정
-			const gridProps = {
-				showRowNumColumn: false,
-			};
-
-			// 실제로 #grid_wrap 에 그리드 생성
-			myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-			// 그리드 페이징 네비게이터 생성
-			createPagingNavigator(1);
-		}
-
-		const totalRowCount = 500; // 전체 데이터 건수
-		const rowCount = 20;	// 1 페이지에서 보여줄 행 수
-		const pageButtonCount = 10;		// 페이지 네비게이션에서 보여줄 페이지의 수
-		const totalPage = Math.ceil(totalRowCount / rowCount);	// 전체 페이지 계산
-		let currentPage = 1;	// 현재 페이지
-
-		// 페이징 네비게이터를 동적 생성합니다.
-		function createPagingNavigator(goPage) {
-			let prevPage = parseInt((goPage - 1) / pageButtonCount) * pageButtonCount;
-			let nextPage = ((parseInt((goPage - 1) / pageButtonCount)) * pageButtonCount) + pageButtonCount + 1;
-			let retStr = "";
-
-			prevPage = Math.max(0, prevPage);
-			nextPage = Math.min(nextPage, totalPage);
-
-			if (goPage !== 1) {
-				// 처음
-				retStr += "<a href='javascript:moveToPage(1)'><span class='aui-grid-paging-number aui-grid-paging-first'>first</span></a>";
-				// 이전
-				retStr += "<a href='javascript:moveToPage(" + Math.max(1, prevPage) + ")'><span class='aui-grid-paging-number aui-grid-paging-prev'>prev</span></a>";
-			}
-
-			for (let i = (prevPage + 1), len = (pageButtonCount + prevPage); i <= len; i++) {
-				if (goPage === i) {
-					retStr += "<span class='aui-grid-paging-number aui-grid-paging-number-selected'>" + i + "</span>";
-				} else {
-					retStr += "<a href='javascript:moveToPage(" + i + ")'><span class='aui-grid-paging-number'>";
-					retStr += i;
-					retStr += "</span></a>";
-				}
-				if (i >= totalPage) {
-					break;
-				}
-			}
-
-			if (goPage !== totalPage) {
-				// 다음
-				retStr += "<a href='javascript:moveToPage(" + nextPage + ")'><span class='aui-grid-paging-number aui-grid-paging-next'>next</span></a>";
-				// 마지막
-				retStr += "<a href='javascript:moveToPage(" + totalPage + ")'><span class='aui-grid-paging-number aui-grid-paging-last'>last</span></a>";
-			}
-
-			document.getElementById("grid_paging").innerHTML = retStr;
-		}
-
-		function moveToPage(goPage) {
-			// 페이징 네비게이터 업데이트
-			createPagingNavigator(goPage);
-			// 현재 페이지 보관
-			currentPage = goPage;
-			// rowCount 만큼 데이터 요청
-			prerequestGridData(rowCount, goPage);
-		}
-
-		// 데이터 요청
-		function prerequestGridData(count, goPage) {
-			requestGridData("./data/normal_100.json");
-		}
-	</script>
+    async function requestPage(next) {
+        query = {
+            ...next,
+            sort: next.sort.map(function (entry) {
+                return { ...entry };
+            })
+        };
+        const sent = query;
+        const sequence = ++requestSequence;
+        if (activeRequest) activeRequest.abort();
+        activeRequest = new AbortController();
+        failedQuery = null;
+        const message = document.getElementById("server-message");
+        message.dataset.error = "false";
+        message.textContent = "서버에서 조회하고 있습니다…";
+        document.getElementById("server-retry").hidden = true;
+        document.getElementById("grid_wrap").setAttribute("aria-busy", "true");
+        AUIGrid.showAjaxLoader(myGridID);
+        const parameters = new URLSearchParams({
+            page: sent.page,
+            pageSize: pageSize,
+            sort: JSON.stringify(sent.sort),
+            search: sent.search,
+            country: sent.country,
+            minPrice: sent.minPrice
+        });
+        try {
+            const response = await AUIGridPackageData.fetch("./data/getServerPaging.php?" + parameters, {
+                signal: activeRequest.signal,
+                cache: "no-store"
+            });
+            if (!response.ok) throw new Error("서버 응답 오류");
+            const result = await response.json();
+            // 잘못된 응답을 화면에 부분 적용하지 않습니다. 정적 서버에서 PHP 원문이 반환돼도 실패로 처리합니다.
+            if (
+                !Array.isArray(result.items) ||
+                result.pageSize !== pageSize ||
+                !Number.isSafeInteger(result.total) ||
+                result.total < 0 ||
+                !Number.isSafeInteger(result.totalRows) ||
+                result.totalRows < result.total ||
+                result.totalPages !== Math.ceil(result.total / pageSize) ||
+                result.page !== Math.min(sent.page, Math.max(1, result.totalPages)) ||
+                result.items.length !== Math.min(pageSize, Math.max(0, result.total - (result.page - 1) * pageSize))
+            ) {
+                throw new Error("조회 응답 형식 오류");
+            }
+            // abort가 서버 실행을 취소하지 못하거나 이전 응답이 늦게 도착해도 마지막 요청만 반영합니다.
+            if (sequence !== requestSequence) return;
+            AUIGrid.setGridData(myGridID, result.items);
+            query = { ...sent, page: result.page };
+            displayed = query;
+            renderPaging(result);
+            const first = result.total === 0 ? 0 : (result.page - 1) * pageSize + 1;
+            const last = first === 0 ? 0 : first + result.items.length - 1;
+            const number = function (value) {
+                return value.toLocaleString("ko-KR");
+            };
+            document.getElementById("server-status").textContent =
+                "전체 " +
+                number(result.totalRows) +
+                "건 / 검색 결과 " +
+                number(result.total) +
+                "건 / " +
+                number(first) +
+                "–" +
+                number(last) +
+                "번째 표시 (그리드 " +
+                result.items.length +
+                "건) / " +
+                (result.totalPages === 0 ? 0 : result.page) +
+                " / " +
+                result.totalPages +
+                " 페이지";
+            message.textContent = result.total === 0 ? "검색 조건에 맞는 데이터가 없습니다." : "조회가 완료되었습니다.";
+        } catch (error) {
+            if (sequence !== requestSequence || error.name === "AbortError") return;
+            failedQuery = sent;
+            // 마지막 성공 데이터에 맞춰 검색 조건과 정렬 표시도 되돌려 화면의 의미를 유지합니다.
+            query = displayed || { page: 1, sort: [], search: "", country: "", minPrice: "" };
+            restoreControls(query);
+            message.dataset.error = "true";
+            message.textContent =
+                "조회하지 못했습니다. " +
+                (displayed ? "이전 조회 결과를 유지합니다. " : "") +
+                "연결 상태와 PHP 서버 실행 여부를 확인한 뒤 다시 시도하십시오.";
+            document.getElementById("server-retry").hidden = false;
+        } finally {
+            if (sequence === requestSequence) {
+                AUIGrid.removeAjaxLoader(myGridID);
+                document.getElementById("grid_wrap").setAttribute("aria-busy", "false");
+            }
+        }
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
 </head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+<p class="package-data-note">
+    이 패키지는 별도의 데이터 서버 없이 포함된 예제 데이터로 조회, 검색 및 페이지 이동을 시연합니다. 웹 서버의 HTTP(S)
+    주소로 실행하고, 실제 프로젝트에서는 데이터 요청 부분을 서버 API에 연결하십시오.
+</p>
 
-<body>
-
-	<div id="main">
-		<div class="desc">
-			<p>그리드의 페이징은 기본적으로 많은 수의 데이터 삽입 시 그리드가 자체적으로 페이징을 만듭니다.</p>
-			<p>그러나 사용자(개발자)가 서버에서 10개 또는 20개 행의 데이터 단위로 페이징을 직접 구현할 수 있습니다.</p>
-			<p>엄밀히 말하면 사용자 정의 페이징은 그리드의 페이징 기능이 아닙니다. 데이터 리프레쉬(갱신) 과 같습니다.</p>
-			<p>즉, 하단 버턴 클릭 시 다른 데이터를 삽입하는 것과 같습니다.</p>
-			<p>따라서 현재 페이지의 데이터만 그리드가 필터링, 그룹핑, 소팅 등을 처리합니다.</p>
-			<p style="color:red;">페이징 시 요청 주소를 바꿔 주십시오. 이 샘플은 같은 데이터를 요청하여 출력시키고 있습니다. 따라서 변경이 되지 않는 것 처럼 보입니다.</p>
-		</div>
-		<div>
-			<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-			<div id="grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
-			<!-- 그리드 페이징 네비게이터 -->
-			<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
-		</div>
-		<div class="desc_bottom">
-			<p id="elapse"></p>
-		</div>
-	</div>
-	<div id="footer">
-		<div class="copyright">
-			<p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net </p>
-		</div>
-	</div>
+<div id="main">
+    <div class="desc">
+        <p>
+            서버의 전체 데이터에서 필요한 페이지 20건만 조회할 수 있습니다. 페이지를 이동할 때마다 해당 데이터만 받아
+            그리드에 표시합니다.
+        </p>
+        <p>
+            칼럼 헤더를 클릭하면 전체 검색 결과를 기준으로 정렬합니다. Shift를 누른 채 다른 헤더를 클릭하면 다중 정렬할
+            수 있습니다. 검색 조건이나 정렬을 바꾸면 첫 페이지로 이동합니다.
+        </p>
+    </div>
+    <form id="server-filter" class="server-paging-form">
+        <label
+            >고객명 또는 제품명<input id="server-search" type="search" maxlength="80" placeholder="예: Emma, Galaxy"
+        /></label>
+        <label
+            >국가<select id="server-country" aria-label="국가">
+                <option value="">전체</option>
+                <option>Korea</option>
+                <option>USA</option>
+                <option>UK</option>
+                <option>Japan</option>
+                <option>China</option>
+                <option>France</option>
+                <option>Italy</option>
+                <option>Singapore</option>
+                <option>Ireland</option>
+                <option>Taiwan</option>
+            </select></label
+        >
+        <label
+            >최소 금액<input
+                id="server-min-price"
+                type="number"
+                min="0"
+                max="10000000"
+                step="1"
+                placeholder="제한 없음"
+        /></label>
+        <button type="submit" class="btn">서버 조회</button>
+        <button type="button" id="server-reset" class="btn">조건 초기화</button>
+        <button type="button" id="server-sort-reset" class="btn">정렬 해제</button>
+    </form>
+    <p id="server-status" role="status">한 페이지에 20건씩 조회합니다.</p>
+    <p id="server-message" role="status" aria-live="polite"></p>
+    <button type="button" id="server-retry" class="btn" hidden>다시 시도</button>
+    <div id="grid_wrap"></div>
+    <nav id="grid_paging" class="server-paging-nav" aria-label="서버 조회 페이지"></nav>
+    <div class="desc_bottom">
+        <details>
+            <summary>서버 페이징의 정렬, 필터 및 연동 방법</summary>
+            <p>
+                이 예제의 PHP 서버는 고정된 예제 자료를 10,003건으로 확장하여 사용합니다. 브라우저에 전체 자료를 보내지
+                않으며, 응답에는 요청한 페이지의 최대 20건과 전체 건수, 검색 결과 건수만 담습니다.
+            </p>
+            <p>
+                서버에서 <strong>필터 → 정렬 → 페이지 추출</strong> 순서로 처리합니다. 같은 정렬값에는 고유 주문 번호를
+                추가 기준으로 사용합니다. 고객명과 제품명은 부분 검색, 국가는 일치 검색, 금액은 최솟값 조건이며 조건
+                사이는 AND로 결합합니다.
+            </p>
+            <p>
+                기본 그리드 필터 메뉴는 현재 로드된 데이터만 알 수 있으므로 이 예제는 별도의 서버 검색 영역을
+                사용합니다. 헤더 필터 메뉴까지 연동하려면 서버에서 전체 값 목록과 검색 조건을 제공하는 별도 UI가
+                필요합니다.
+            </p>
+            <pre><code class="language-javascript">// 헤더 정렬은 표시만 하고, 이벤트의 모든 정렬 조건을 서버에 전달합니다.
+const gridProps = { usePaging: false, useCustomSorting: true, enableFilter: false };
+// GET ./data/getServerPaging.php
+// page=1&amp;pageSize=20&amp;sort=[{"dataField":"price","sortType":-1}]&amp;country=Korea
+// 응답: { items: [...최대 20행], totalRows: 10003, total: 검색결과건수,
+//         page: 1, pageSize: 20, totalPages: 검색결과페이지수 }
+AUIGrid.setGridData(myGridID, response.items);</code></pre>
+            <p>
+                실서비스에서는 PHP의 예제 배열 처리를 DB 조회로 바꾸십시오. 동일한 WHERE 조건으로 COUNT와 데이터 조회를
+                수행하고, 허용한 필드로만 ORDER BY를 구성한 뒤 LIMIT/OFFSET을 적용합니다. 데이터 변경이 잦다면 일관된
+                조회 시점 또는 커서 기반 페이지 이동도 검토하십시오.
+            </p>
+            <p>
+                이 예제는 조회 전용입니다. 페이지를 바꾸면 선택 상태가 초기화되며, 그리드의 복사와 내보내기는 현재
+                로드된 페이지에 한정됩니다. 전체 결과 내보내기와 편집 내용 저장은 같은 검색 조건을 사용하는 별도 서버
+                기능으로 구성하십시오.
+            </p>
+        </details>
+    </div>
+</div>
+<div id="footer">
+    <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
 </body>
-
 </html>

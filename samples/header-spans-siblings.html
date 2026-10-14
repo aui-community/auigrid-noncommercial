@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet" />
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<style>
+    /* 병합 방식별 헤더만 구분하며 제품의 데이터 셀 및 선택 스타일은 유지합니다. */
+    .header-merge-block {
+        background: #deecd7;
+        color: #263f25;
+    }
+    .header-merge-vertical {
+        background: #e0edf8;
+        color: #234965;
+    }
+    .header-merge-horizontal {
+        background: #fff0d2;
+        color: #614719;
+    }
+</style>
+<script>
+    let myGridID;
+    // 명시한 병합만 켜고 끄며 children의 기본 그룹 계층은 그대로 유지합니다.
+    function getColumnLayout(merge) {
+        const columns = [
+            {
+                // 자신의 자식 A, B와 다음 형제 그룹의 C, D까지 네 칼럼을 병합합니다.
+                headerText: "형제 그룹 블럭 병합 (4 × 2)",
+                colSpan: 4,
+                rowSpan: 2,
+                headerStyle: "header-merge-block",
+                children: [
+                    { dataField: "A", headerText: "A", width: 150 },
+                    { dataField: "B", headerText: "B", width: 150 }
+                ]
+            },
+            {
+                // 병합 중에도 자식 데이터 칼럼 C와 D는 그대로 출력됩니다.
+                headerText: "두 번째 형제 그룹",
+                children: [
+                    { dataField: "C", headerText: "C", width: 150, dataType: "numeric" },
+                    { dataField: "D", headerText: "D", width: 150, dataType: "numeric" }
+                ]
+            },
+            {
+                headerText: "일반 그룹",
+                children: [{ headerText: "중간 그룹", children: [{ dataField: "E", headerText: "E", width: 150 }] }]
+            }
+        ];
+        if (!merge) {
+            function clearSpans(items) {
+                items.forEach(function (item) {
+                    delete item.colSpan;
+                    delete item.rowSpan;
+                    if (item.children) clearSpans(item.children);
+                });
+            }
+            clearSpans(columns);
+        }
+        return columns;
+    }
+    // 최초 생성과 데이터 등록을 옵션 변경 처리에서 분리합니다.
+    function init() {
+        myGridID = AUIGrid.create("#grid_wrap", getColumnLayout(true), {
+            bodyLayoutMode: "flat",
+            rowHeight: 48,
+            headerHeights: [34, 34, 34],
+            rowIdField: "id",
+            enableMovingColumn: true,
+            selectionMode: "multipleCells"
+        });
+        const data = Array.from({ length: 12 }, function (_, index) {
+            const number = index + 1;
+            return {
+                id: number,
+                A: "데이터1-" + number,
+                B: "데이터2-" + number,
+                C: number,
+                D: number * 10,
+                E: "E-" + number,
+                F: "F-" + number,
+                G: "G-" + number,
+                H: number * 100,
+                I: number * 200,
+                upperGroup: "분류 " + number,
+                lowerGroup: "실적 " + number,
+                singleGroup: "요청 " + number,
+                verticalGroup: "부서 " + number,
+                horizontalGroup: "기간 " + number
+            };
+        });
+        AUIGrid.setGridData(myGridID, data);
+    }
+    // colSpan과 rowSpan은 칼럼 레이아웃 속성입니다. 그리드를 재생성하지 않고
+    // 공개 레이아웃 변경 API로 교체하여 기존 데이터와 이벤트를 유지합니다.
+    function applyHeaderMerge(checked) {
+        AUIGrid.changeColumnLayout(myGridID, getColumnLayout(checked));
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+
+<div id="main">
+    <div class="desc">
+        <p>
+            연속된 형제 그룹의 헤더를 <code>colSpan: 4, rowSpan: 2</code>로 하나의 블럭으로 병합합니다. 두 그룹의 자식 칼럼
+            A~D는 같은 위치에 유지됩니다.
+        </p>
+        <p>
+            <code>colSpan</code>은 그룹 개수가 아닌 최하위 칼럼 수입니다. 자신의 자식 전체를 포함하고 같은
+            부모 아래의 연속된 형제 그룹 경계에서 끝나도록 지정합니다.
+        </p>
+        <div class="src_cover">
+            <pre><code class="language-javascript">// 두 형제 그룹에 속한 A~D 헤더 영역을 하나로 병합합니다.
+{ headerText: "형제 그룹 블럭 병합", colSpan: 4, rowSpan: 2,
+  children: [{ dataField: "A" }, { dataField: "B" }] },
+{ headerText: "두 번째 형제 그룹",
+  children: [{ dataField: "C" }, { dataField: "D" }] }</code></pre>
+        </div>
+        <p>
+            체크를 해제하면 명시한 <code>colSpan</code>과 <code>rowSpan</code>만 제거하며
+            <code>children</code>으로 구성한 기본 그룹 헤더는 유지합니다.
+        </p>
+    </div>
+    <div class="demo-options">
+        <label class="demo-check"
+            ><input id="merge_spans" type="checkbox" checked onchange="applyHeaderMerge(this.checked)" />병합
+            속성(colSpan, rowSpan) 적용</label
+        >
+    </div>
+    <p><a href="./header-spans.html?hspans" data-demo-link>헤더 가로, 세로 및 블럭 병합 데모로 돌아가기</a></p>
+    <div><div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div></div>
+</div>
+<div id="footer">
+    <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

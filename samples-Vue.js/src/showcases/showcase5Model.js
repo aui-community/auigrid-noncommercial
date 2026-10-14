@@ -10,7 +10,6 @@ export function createDemo(onChange, baseUrl) {
     function publish() {
         if (instance) onChange({ ...view });
     }
-    let compact = window.innerWidth <= 700;
     const models = [
         { field: 'aster', name: 'ASTER 32B', family: '균형형' },
         { field: 'orbit', name: 'ORBIT 70B', family: '고성능' },
@@ -131,12 +130,6 @@ export function createDemo(onChange, baseUrl) {
         view.status = '18개 지표 / ' + visibleModels.length + '개 모델 비교';
         publish();
     }
-    function resizeComparison() {
-        const next = window.innerWidth <= 700;
-        if (!instance || compact === next) return;
-        compact = next;
-        grid().setFixedColumnCount(compact ? 0 : 2);
-    }
     function exportReport(format) {
         const props = {
             fileName: 'AI_모델_벤치마크',
@@ -195,7 +188,8 @@ export function createDemo(onChange, baseUrl) {
         showStateColumn: false,
         enableCellMerge: true,
         enableSorting: false,
-        fixedColumnCount: compact ? 0 : 2,
+        // 모든 칼럼이 함께 가로 스크롤되도록 고정을 해제합니다.
+        fixedColumnCount: 0,
         selectionMode: 'multipleCells'
     };
     function initialize() {
@@ -208,14 +202,11 @@ export function createDemo(onChange, baseUrl) {
     }
     function attach(api) {
         instance = api;
-        resizeComparison();
-        window.addEventListener('resize', resizeComparison);
         initialize();
         publish();
     }
-    // 인스턴스 생성/파괴는 래퍼에 맡기고 이 모델의 이벤트와 타이머만 정리합니다.
+    // 인스턴스 생성/파괴는 래퍼에 맡기고 모델 참조만 해제합니다.
     function detach() {
-        window.removeEventListener('resize', resizeComparison);
         instance = null;
     }
     function pause() {}

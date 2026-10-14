@@ -1,68 +1,71 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
-<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="https://www.auisoft.net/">
-<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
 <title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<link rel="stylesheet" href="./static/prism.css">
-<link href="./demo.css" rel="stylesheet">
-
-<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
-<link rel="stylesheet" href="./style/demo-typography.css">
-<link rel="stylesheet" href="./static/code-examples.css">
-<script src="./static/prism.js" data-manual></script>
-<script src="./static/code-examples.js" data-source-viewer></script>
-
-
-<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<script type="text/javascript" src="./common.js"></script>
+<link href="./demo.css" rel="stylesheet" />
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-        <style>
-            .doc_list_ul > li {
-                font-size: 14px;
-                font-weight: bold;
-                margin-top: 14px;
-            }
+<style>
+    .doc_list_ul > li {
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 14px;
+    }
 
-            .doc_list_ul > li a {
-                font-weight: normal;
-            }
-        </style>
-        <script>
-            function init() {}
-        </script>
-    </head>
-<body class="demo-typography">
+    .doc_list_ul > li a {
+        font-weight: normal;
+    }
+</style>
+<script>
+    function init() {}
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
 
-        <div id="main">
-            <div class="desc">
-                <p>AUIGrid 에서 추가, 수정, 삭제 된 행에 대한 정보를 어떻게 서버로 보내는지에 대한 설명입니다.</p>
-                <p>서버 사이드 언어와 무관하게 추가, 수정, 삭제 된 행은 JSON 형태의 요청으로 서버로 전송합니다.</p>
-                <p>
-                    다음과 같이 추가, 수정, 삭제 된 행을 얻을 수 있습니다. 이를 다시 data 라는 Object 를 만들어 각각
-                    "add", "update", "remove" 라는 key 에 넣었습니다. (이는 자유롭게 변경 가능)
-                </p>
-                <div class="src_cover">
-                    <pre>
+<div id="main">
+    <div class="desc">
+        <p>AUIGrid 에서 추가, 수정, 삭제 된 행에 대한 정보를 어떻게 서버로 보내는지에 대한 설명입니다.</p>
+        <p>서버 사이드 언어와 무관하게 추가, 수정, 삭제 된 행은 JSON 형태의 요청으로 서버로 전송합니다.</p>
+        <p>
+            다음과 같이 추가, 수정, 삭제 된 행을 얻을 수 있습니다. 이를 다시 data 라는 Object 를 만들어 각각 "add",
+            "update", "remove" 라는 key 에 넣었습니다. (이는 자유롭게 변경 가능)
+        </p>
+        <div class="src_cover">
+            <pre>
 // 추가된 행 아이템들(배열)
 const addedRowItems = AUIGrid.getAddedRowItems(myGridID);
 
@@ -87,72 +90,72 @@ const data = {
 console.log(JSON.stringify(data));
 alert(JSON.stringify(data));
 </pre>
-                </div>
-                <p>실제로 서버로 보내게 될 data 객체는 Object - Array 의 복잡한 형태의 JSON 이 됩니다.</p>
-                <p>서버 사이드에 따라 원하는 샘플 및 문서를 다운로드하여 확인하십시오.</p>
-                <ul class="doc_list_ul">
+        </div>
+        <p>실제로 서버로 보내게 될 data 객체는 Object - Array 의 복잡한 형태의 JSON 이 됩니다.</p>
+        <p>서버 사이드에 따라 원하는 샘플 및 문서를 다운로드하여 확인하십시오.</p>
+        <ul class="doc_list_ul">
+            <li>
+                ◎ Java - 스프링프레임워크(전자정부프레임워크)
+                <ul style="margin-left: 60px">
                     <li>
-                        ◎ Java - 스프링프레임워크(전자정부프레임워크)
-                        <ul style="margin-left: 60px">
-                            <li>
-                                <a
-                                    href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=678&amp;no=0"
-                                    >설명 문서 다운로드</a
-                                >
-                                <a
-                                    href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=677&amp;no=0"
-                                    >샘플 소스 다운로드</a
-                                >
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        ◎ Java - 순수 JSP
-                        <ul style="margin-left: 60px">
-                            <li>
-                                <a
-                                    href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=682&amp;no=0"
-                                    >설명 문서 다운로드</a
-                                >
-                                <a
-                                    href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=681&amp;no=0"
-                                    >샘플 소스 다운로드</a
-                                >
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        ◎ PHP
-                        <ul style="margin-left: 60px">
-                            <li>
-                                <a
-                                    href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=684&amp;no=0"
-                                    >설명 문서 다운로드</a
-                                >
-                                <a
-                                    href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=683&amp;no=0"
-                                    >샘플 소스 다운로드</a
-                                >
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        ◎ ASP.NET C#
-                        <ul style="margin-left: 60px">
-                            <li>
-                                <a
-                                    href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=680&amp;no=0"
-                                    >설명 문서 다운로드</a
-                                >
-                                <a
-                                    href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=679&amp;no=0"
-                                    >샘플 소스 다운로드</a
-                                >
-                            </li>
-                        </ul>
+                        <a
+                            href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=678&amp;no=0"
+                            >설명 문서 다운로드</a
+                        >
+                        <a
+                            href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=677&amp;no=0"
+                            >샘플 소스 다운로드</a
+                        >
                     </li>
                 </ul>
-            </div>
-        </div>
-    </body>
+            </li>
+            <li>
+                ◎ Java - 순수 JSP
+                <ul style="margin-left: 60px">
+                    <li>
+                        <a
+                            href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=682&amp;no=0"
+                            >설명 문서 다운로드</a
+                        >
+                        <a
+                            href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=681&amp;no=0"
+                            >샘플 소스 다운로드</a
+                        >
+                    </li>
+                </ul>
+            </li>
+            <li>
+                ◎ PHP
+                <ul style="margin-left: 60px">
+                    <li>
+                        <a
+                            href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=684&amp;no=0"
+                            >설명 문서 다운로드</a
+                        >
+                        <a
+                            href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=683&amp;no=0"
+                            >샘플 소스 다운로드</a
+                        >
+                    </li>
+                </ul>
+            </li>
+            <li>
+                ◎ ASP.NET C#
+                <ul style="margin-left: 60px">
+                    <li>
+                        <a
+                            href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=680&amp;no=0"
+                            >설명 문서 다운로드</a
+                        >
+                        <a
+                            href="https://www.auisoft.net/board/bbs/download.php?bo_table=download_list&amp;wr_id=679&amp;no=0"
+                            >샘플 소스 다운로드</a
+                        >
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
 </html>

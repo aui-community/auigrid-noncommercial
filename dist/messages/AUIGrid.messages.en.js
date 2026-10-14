@@ -1,3 +1,11 @@
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Messages (English (US))
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 화면 메시지 파일입니다. AUIGrid 사용권 범위 안에서 번역하거나 수정하여 사용할 수 있습니다.
+ * This is an AUIGrid UI message file. You may translate or modify it within the scope of your AUIGrid license.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
+ */
 /* eslint-disable */
 /**
  * AUIGrid 에서 사용되는 메세지들을 정의합니다. - 미국 영어

@@ -1,93 +1,95 @@
 <!doctype html>
 <html lang="ko">
-
 <head>
-  <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta charset="utf-8">
-  <meta content="text/javascript" http-equiv="Content-Script-Type">
-  <meta content="text/css" http-equiv="Content-Style-Type">
-  <meta content="IE=edge" http-equiv="X-UA-Compatible">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="-1">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
-  <meta content="AUIGrid API Documentation" property="og:title">
-  <meta content="https://www.auisoft.net/documentation/auigrid" property="og:url">
-  <meta content="AUIGrid API Documentation" property="og:description">
-  <meta content="AUIGrid API Documentation" name="keywords">
-  <title> AUIGrid Documentation</title>
-  
-  <link rel="stylesheet" href="../static/prism.css">
-<link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen">
-<link rel="stylesheet" href="../static/typography.css">
-<link rel="stylesheet" href="../static/code-examples.css">
-  <!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
-  <script src="../static/prism.js" data-manual></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta charset="utf-8" />
+<meta content="text/javascript" http-equiv="Content-Script-Type" />
+<meta content="text/css" http-equiv="Content-Style-Type" />
+<meta content="IE=edge" http-equiv="X-UA-Compatible" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title" />
+<meta content="AUIGrid API Documentation" property="og:title" />
+<meta content="https://www.auisoft.net/documentation/auigrid" property="og:url" />
+<meta content="AUIGrid API Documentation" property="og:description" />
+<meta content="AUIGrid API Documentation" name="keywords" />
+<title>AUIGrid Documentation</title>
+
+<link rel="stylesheet" href="../static/prism.css" />
+<link rel="stylesheet" href="../static/style.css?v=2025" type="text/css" media="screen" />
+<link rel="stylesheet" href="../static/typography.css" />
+<link rel="stylesheet" href="../static/code-examples.css" />
+<!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
+<script src="../static/prism.js" data-manual></script>
 <script src="../static/code-examples.js"></script>
 
-<link rel="icon" href="../static/favicon.ico" sizes="any">
-<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
-<meta name="theme-color" content="#222729">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="../static/docs-brand.css">
+<link rel="icon" href="../static/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png" />
+<meta name="theme-color" content="#222729" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+/>
+<link rel="stylesheet" href="../static/docs-brand.css" />
 </head>
 
 <body class="demo-typography docs-site">
-  <header class="docs-header"><div class="docs-header-inner">
-    <a id="logo-bar" class="docs-brand docs-package-brand" href="../index.html" aria-label="AUIGrid 문서 홈">
-      <img src="../static/favicon.svg" width="40" height="40" alt="">
-      <span id="title" class="docs-package-title">AUIGrid v3.0.19 Documentation</span>
-    </a>
-  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">1. AUIGrid 소개 및 사용 방법</span></nav>
-  <div class="MainContent">
-
+<nav class="docs-breadcrumb" aria-label="현재 위치">
+    <a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span
+    ><span aria-hidden="true">/</span><span aria-current="page">1. AUIGrid 소개 및 사용 방법</span>
+</nav>
+<div class="MainContent">
     <h1>1. AUIGrid 소개 및 사용 방법</h1>
 
     <h2>1.1 AUIGrid 란?</h2>
-    <p>AUIGrid 는 순수 자바스크립트와 HTML, CSS 로 작성된 웹 데이터 그리드(DataGrid) 입니다.
+    <p>AUIGrid 는 순수 자바스크립트와 HTML, CSS 로 작성된 웹 데이터 그리드(DataGrid) 입니다.</p>
     <p>AUIGrid 는 다양한 형태의 데이터를 표현할 수 있는 고성능 데이터 그리드 컴포넌트입니다.</p>
 
     <h2>1.2 지원 브라우저</h2>
     <table class="browser_table">
-      <caption></caption>
-      <thead>
-        <tr>
-          <th scope="col" class="support_cr">Chrome</th>
-          <th scope="col" class="support_ie">Edge</th>
-          <th scope="col" class="support_ff">Firefox</th>
-          <th scope="col" class="support_sf">Safari</th>
-          <th scope="col" class="support_op">Opera</th>
-          <th scope="col" class="support_ad">Android</th>
-          <th scope="col" class="support_ios">iOS</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Yes</td>
-          <td>Yes<span class="ie_none">(IE 모드 지원 안함)</span></td>
-          <td>Yes</td>
-          <td>Yes</td>
-          <td>Yes</td>
-          <td>Yes</td>
-          <td>Yes</td>
-        </tr>
-      </tbody>
+        <caption></caption>
+        <thead>
+            <tr>
+                <th scope="col" class="support_cr">Chrome</th>
+                <th scope="col" class="support_ie">Edge</th>
+                <th scope="col" class="support_ff">Firefox</th>
+                <th scope="col" class="support_sf">Safari</th>
+                <th scope="col" class="support_op">Opera</th>
+                <th scope="col" class="support_ad">Android</th>
+                <th scope="col" class="support_ios">iOS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Yes</td>
+                <td>Yes<span class="ie_none">(IE 모드 지원 안함)</span></td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+            </tr>
+        </tbody>
     </table>
 
     <h2>1.3 지원 개발 환경</h2>
     <p>AUIGrid는 순수 JavaScript 컴포넌트로 다양한 프레임워크에서 쉽게 사용할 수 있습니다.</p>
     <ul>
-      <li>순수 JS(Vanilla JS)</li>
-      <li>jQuery</li>
-      <li>Vue</li>
-      <li>React</li>
+        <li>순수 JS(Vanilla JS)</li>
+        <li>jQuery</li>
+        <li>Vue</li>
+        <li>React</li>
     </ul>
     <h2>1.4 AUIGrid 사용 방법</h2>
     <ul>
-      <li><code class="language-html">AUIGridLicense.js</code>, <code class="language-html">AUIGrid.js</code>, <code class="language-html">AUIGrid_style.css</code> 포함</li>
-      <li>HTML에 다음과 같이 삽입</li>
+        <li>
+            <code class="language-html">AUIGridLicense.js</code>,
+            <code class="language-html">AUIGrid.js</code>,
+            <code class="language-html">AUIGrid_style.css</code> 포함
+        </li>
+        <li>HTML에 다음과 같이 삽입</li>
     </ul>
     <pre><code class="language-html">
 &lt;!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. --&gt;
@@ -98,91 +100,114 @@
 &lt;link rel="stylesheet" href="./AUIGrid/AUIGrid_style.css" /&gt;</code> </pre>
 
     <h3>비상업용 버전의 CDN으로 시작하기</h3>
-    <p>AUIGrid는 비상업용 버전의 CDN을 제공합니다. 정품은 CDN으로 제공하지 않습니다.
-      비상업용 목적의 <code>localhost</code> 또는 <code>127.0.0.1</code> 환경에서 무료로 시작할 수 있습니다.</p>
-    <p><a href="noncommercial.html">비상업용 CDN 시작 안내</a>에서 연결 코드와 데이터가 포함된 HTML 예제를 확인하십시오.
-      <a href="https://github.com/aui-community/auigrid-noncommercial">GitHub 저장소</a>에서 라이브러리와 React/Vue 샘플을 내려받을 수도 있습니다.</p>
+    <p>
+        AUIGrid는 비상업용 버전의 CDN을 제공합니다. 정품은 CDN으로 제공하지 않습니다. 비상업용 목적의
+        <code>localhost</code> 또는 <code>127.0.0.1</code> 환경에서 무료로 시작할 수 있습니다.
+    </p>
+    <p>
+        <a href="noncommercial.html">비상업용 CDN 시작 안내</a>에서 연결 코드와 데이터가 포함된 HTML 예제를
+        확인하십시오. <a href="https://github.com/aui-community/auigrid-noncommercial">GitHub 저장소</a>에서
+        라이브러리와 React/Vue 샘플을 내려받을 수도 있습니다.
+    </p>
 
-    <p>localhost 이외의 테스트 서버나 접속 도메인/IP에서 확인하려면 <a href="https://www.auisoft.net/dcenter.html">평가판을 내려받아</a> 사용할 수 있습니다.
-      <a href="noncommercial.html#trial">평가판 안내</a>에서 접속 주소 입력 방법과 실행 절차를 확인하십시오.</p>
+    <p>
+        localhost 이외의 테스트 서버나 접속 도메인/IP에서 확인하려면
+        <a href="https://www.auisoft.net/dcenter.html">평가판을 내려받아</a> 사용할 수 있습니다.
+        <a href="noncommercial.html#trial">평가판 안내</a>에서 접속 주소 입력 방법과 실행 절차를 확인하십시오.
+    </p>
 
     <h2>1.5 폴더 구조</h2>
     <p>제품 패키지를 압축을 해제하면 다음 디렉토리가 보입니다.</p>
     <ul>
-      <li><strong>AUIGrid</strong>: AUIGrid 라이브러리와 스타일(css)</li>
-      <li><strong>AUIGrid-React</strong>: React.js용 서브 컴포넌트</li>
-      <li><strong>AUIGrid-Vue</strong>: Vue.js용 서브 컴포넌트</li>
-      <li><strong>documentation</strong>: 공식 문서 (index.html 포함)</li>
-      <li><strong>export_server_samples</strong>: 서버 내보내기 샘플(PHP, JSP, ASP)</li>
-      <li><strong>pdfkit</strong>: PDF 출력용 라이브러리</li>
-      <li><strong>samples</strong>: JavaScript 샘플</li>
-      <li><strong>samples-React.js</strong>: React 샘플</li>
-      <li><strong>samples-React.tsx</strong>: React + TypeScript 샘플</li>
-      <li><strong>samples-Vue.js</strong>: Vue 샘플</li>
-      <li><strong>samples-Vue.ts</strong>: Vue + TypeScript 샘플</li>
+        <li><strong>AUIGrid</strong>: AUIGrid 라이브러리와 스타일(css)</li>
+        <li><strong>AUIGrid-React</strong>: React.js용 서브 컴포넌트</li>
+        <li><strong>AUIGrid-Vue</strong>: Vue.js용 서브 컴포넌트</li>
+        <li><strong>documentation</strong>: 공식 문서 (index.html 포함)</li>
+        <li><strong>export_server_samples</strong>: 서버 내보내기 샘플(PHP, JSP, ASP)</li>
+        <li><strong>pdfkit</strong>: PDF 출력용 라이브러리</li>
+        <li><strong>samples</strong>: JavaScript 샘플</li>
+        <li><strong>samples-React.js</strong>: React 샘플</li>
+        <li><strong>samples-React.tsx</strong>: React + TypeScript 샘플</li>
+        <li><strong>samples-Vue.js</strong>: Vue 샘플</li>
+        <li><strong>samples-Vue.ts</strong>: Vue + TypeScript 샘플</li>
     </ul>
 
     <h2>1.6 일반 JS 샘플 실행 방법</h2>
     <ol>
-      <li>제품 패키지를 압축 해제한 후 해당 라이선스가 허용하는 웹 서버에 배치합니다. 비상업용 배포본은 로컬 웹 서버에 배치합니다.</li>
-      <li><code class="language-html">/samples</code> 또는 <code class="language-html">/documentation</code> 폴더의 <code class="language-html">index.html</code>을 브라우저로 실행합니다.</li>
-      <li>AUIGrid 샘플 기능을 바로 확인하고 테스트할 수 있습니다.</li>
+        <li>
+            제품 패키지를 압축 해제한 후 해당 라이선스가 허용하는 웹 서버에 배치합니다. 비상업용 배포본은 로컬 웹 서버에
+            배치합니다.
+        </li>
+        <li>
+            <code class="language-html">/samples</code> 또는
+            <code class="language-html">/documentation</code> 폴더의
+            <code class="language-html">index.html</code>을 브라우저로 실행합니다.
+        </li>
+        <li>AUIGrid 샘플 기능을 바로 확인하고 테스트할 수 있습니다.</li>
     </ol>
 
     <h2 id="framework-samples">1.7 Vue, React 샘플 실행 방법</h2>
-    <p>컴포넌트 생성, TypeScript 예제, 이벤트와 속성은 <a href="frameworks.html">7. React, Vue 및 TypeScript에서 사용하기</a>에서 확인하십시오.</p>
+    <p>
+        컴포넌트 생성, TypeScript 예제, 이벤트와 속성은
+        <a href="frameworks.html">7. React, Vue 및 TypeScript에서 사용하기</a>에서 확인하십시오.
+    </p>
     <table class="browser_table">
-      <thead>
-        <tr>
-          <th>폴더명</th>
-          <th>프레임워크</th>
-          <th>빌드 도구</th>
-          <th>실행 명령어</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>samples-React.js</td>
-          <td>React (JS 기반)</td>
-          <td>Vite</td>
-          <td><code>npm install && npm run dev</code></td>
-        </tr>
-        <tr>
-          <td>samples-React.tsx</td>
-          <td>React + TypeScript</td>
-          <td>Vite</td>
-          <td><code>npm install && npm run dev</code></td>
-        </tr>
-        <tr>
-          <td>samples-Vue.js</td>
-          <td>Vue 3 (JS 기반)</td>
-          <td>Vite</td>
-          <td><code>npm install && npm run dev</code></td>
-        </tr>
-        <tr>
-          <td>samples-Vue.ts</td>
-          <td>Vue 3 + TypeScript</td>
-          <td>Vite</td>
-          <td><code>npm install && npm run dev</code></td>
-        </tr>
-      </tbody>
+        <thead>
+            <tr>
+                <th>폴더명</th>
+                <th>프레임워크</th>
+                <th>빌드 도구</th>
+                <th>실행 명령어</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>samples-React.js</td>
+                <td>React (JS 기반)</td>
+                <td>Vite</td>
+                <td><code>npm install && npm run dev</code></td>
+            </tr>
+            <tr>
+                <td>samples-React.tsx</td>
+                <td>React + TypeScript</td>
+                <td>Vite</td>
+                <td><code>npm install && npm run dev</code></td>
+            </tr>
+            <tr>
+                <td>samples-Vue.js</td>
+                <td>Vue 3 (JS 기반)</td>
+                <td>Vite</td>
+                <td><code>npm install && npm run dev</code></td>
+            </tr>
+            <tr>
+                <td>samples-Vue.ts</td>
+                <td>Vue 3 + TypeScript</td>
+                <td>Vite</td>
+                <td><code>npm install && npm run dev</code></td>
+            </tr>
+        </tbody>
     </table>
 
-	<p><strong>공통 실행 흐름:</strong></p>
-	<p>React 샘플(<code>samples-React.js</code>, <code>samples-React.tsx</code>)은 Node.js 20.19 이상(20.x) 또는 22.12 이상에서 실행합니다. 기존 <code>npm start</code>도 사용할 수 있습니다.</p>
-	<pre><code class="language-html">
+    <p><strong>공통 실행 흐름:</strong></p>
+    <p>
+        React 샘플(<code>samples-React.js</code>, <code>samples-React.tsx</code>)은 Node.js 20.19 이상(20.x) 또는
+        22.12 이상에서 실행합니다. 기존 <code>npm start</code>도 사용할 수 있습니다.
+    </p>
+    <pre><code class="language-html">
 	cd [샘플폴더]
 	npm install
 	npm run dev
 	</code></pre>
-	<p>Vue 샘플(<code>samples-Vue.js</code>, <code>samples-Vue.ts</code>)</p>
-	<pre><code class="language-html">
+    <p>Vue 샘플(<code>samples-Vue.js</code>, <code>samples-Vue.ts</code>)</p>
+    <pre><code class="language-html">
 	cd [샘플폴더]
 	npm install
 	npm run dev
 	</code></pre>
-
-  </div>
-<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
-
+</div>
+<footer class="docs-footer">
+    <div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div>
+    <span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span>
+</footer>
+</body>
 </html>

@@ -80,17 +80,8 @@ const columnLayout = [
                         width: '25%',
                         minWidth: 66,
                         dataType: 'numeric',
-                        renderer: { type: 'TemplateRenderer' },
-                        labelFunction: function (row, col, value) {
-                            const percent = Math.max(0, Math.min(100, Number(value) || 0));
-                            return (
-                                '<div class="sc-progress"><div class="sc-progress-track"><i style="width:' +
-                                percent +
-                                '%"></i></div><span>' +
-                                percent +
-                                '%</span></div>'
-                            );
-                        }
+                        // progress는 0~1 비율로 저장하며 0.72를 72%로 표시합니다.
+                        renderer: { type: 'PercentageRenderer', style: 'sc-progress', barHeight: 4, offset: 6 }
                     },
                     {
                         dataField: 'budget',

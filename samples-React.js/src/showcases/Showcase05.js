@@ -78,7 +78,7 @@ export default function Showcase05() {
                 </div>
             </div>
             <div className="comparison-caption">
-                <span>셀 템플릿 / 세로 병합 / 고정 칼럼 / 칼럼 표시 전환</span>
+                <span>셀 템플릿 / 세로 병합 / 칼럼 표시 전환</span>
                 <span className="benchmark-key">최고값 강조 (동점 포함)</span>
             </div>
             <div className="showcase-grid">

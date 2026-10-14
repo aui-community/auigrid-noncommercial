@@ -1,8 +1,45 @@
-/* eslint-disable */
-/*
- * AUIGrid 사용자 정의 렌더러
- * 구글 차트 https://developers.google.com/chart?hl=ko
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Google Charts renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * Uses Google Charts (https://developers.google.com/chart), loaded from Google under its terms.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
  */
+/*
+ * AUIGrid 사용자 정의 렌더러 - Google Charts 원형 차트
+ *
+ * 행의 분기별 값을 Google Charts 원형 차트로 표시합니다.
+ * 차트 높이는 100px이며, 그리드 rowHeight도 차트를 담을 수 있게 설정합니다. 데모는 102입니다.
+ *
+ * 연결 파일
+ *   AUIGrid.js 다음에 AUIGrid.GChartsRenderer.js를 연결합니다.
+ *   Google Charts의 https://www.gstatic.com/charts/loader.js도 연결한 뒤 다음 순서로 생성합니다.
+ *     google.charts.load("current", { packages: ["corechart"] });
+ *     google.charts.setOnLoadCallback(function () {
+ *       // 이 안에서 AUIGrid.create()와 AUIGrid.setGridData()를 호출합니다.
+ *     });
+ *   별도 렌더러 CSS는 없습니다. 외부 라이브러리: https://developers.google.com/chart?hl=ko
+ *
+ * 사용법
+ *   {
+ *     dataField: "chartField", // 차트를 배치할 칼럼의 고유 필드명
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: AUIGrid.ChartRenderer
+ *     }
+ *   }
+ *   행 데이터 예: { q1: 10, q2: 20, q3: 30, q4: 40 }
+ *
+ * 데이터와 설정
+ *   chartField의 값 대신 행의 q1~q4 숫자 값을 읽습니다.
+ *   차트 모양은 __drawChart()의 options에서 바꿉니다. 이 예제에는 extraProps 옵션이 없습니다.
+ *   ECharts 예제도 AUIGrid.ChartRenderer라는 이름을 사용하므로 두 렌더러 JS를 동시에 연결하지 않습니다.
+ */
+/* eslint-disable */
 window.AUIGrid.ChartRenderer = window.AUIGrid.Class({
 	/****************************************************************
 	 *

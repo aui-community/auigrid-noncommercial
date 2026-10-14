@@ -76,7 +76,7 @@ onBeforeUnmount(() => demo.detach());
             </div>
         </div>
         <div class="comparison-caption">
-            <span>셀 템플릿 / 세로 병합 / 고정 칼럼 / 칼럼 표시 전환</span
+            <span>셀 템플릿 / 세로 병합 / 칼럼 표시 전환</span
             ><span class="benchmark-key">최고값 강조 (동점 포함)</span>
         </div>
         <div class="showcase-grid">

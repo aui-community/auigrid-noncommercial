@@ -1,7 +1,40 @@
-/* eslint-disable */
-/*
- * AUIGrid 사용자 정의 렌더러
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Calendar renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
  */
+/*
+ * AUIGrid 사용자 정의 렌더러 - 날짜별 달성률 표시
+ *
+ * 날짜와 달성률을 한 셀에 표시하고, 상세 아이콘을 누르면 날짜와 값을 안내합니다.
+ * 달성률에 따라 막대 색상이 바뀌며 날짜 데이터가 없는 셀은 비워 둡니다.
+ *
+ * 연결 파일
+ *   AUIGrid.js 다음에 AUIGrid.MyCalendarRenderer.js와 AUIGrid.MyCalendarRenderer.css를 연결합니다.
+ *   별도 외부 라이브러리는 필요하지 않습니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "0", // 요일별 필드를 "0"~"6"으로 구성하는 예
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: AUIGrid.MyCalendarRenderer
+ *     }
+ *   }
+ *   행 데이터 예: { "0": { date: 1, value: 75, dateLabel: "2026년 10월 1일", isToday: false } }
+ *
+ * 데이터와 표시
+ *   dataField에 해당하는 값은 날짜 객체입니다. date는 일자, value는 0~100 기준 달성률입니다.
+ *   dateLabel은 상세 안내 문구, isToday는 오늘 날짜 강조에 사용하며 생략할 수 있습니다.
+ *   막대 색상은 20, 50, 75를 기준으로 구분합니다. 데모의 rowHeight는 112입니다.
+ *   클릭 동작은 initialize()의 아이콘 핸들러에서 바꿉니다. 이 예제에는 extraProps 옵션이 없습니다.
+ */
+/* eslint-disable */
 window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 	/****************************************************************
 	 *
@@ -15,8 +48,8 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 	/* 렌더러 HTML 엘리먼트 */
 	element: null,
 
-	/* CSS 스타일 클래스 */
-	cssClass: 'aui-grid-renderer-base aui-grid-renderer-custom',
+	/* 전용 CSS를 이 렌더러에만 적용하고 기존 공통 클래스는 유지합니다. */
+	cssClass: 'aui-grid-renderer-base aui-grid-renderer-custom aui-grid-renderer-custom-calendar',
 
 	/* 행 아이템 */
 	data: null,
@@ -200,7 +233,7 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 		const value = ownItem.date ?? '';
 
 		el.textContent = value;
-		// 표시 모양은 각 데모 CSS에서 결정하고 렌더러에는 날짜 상태만 전달합니다.
+		// 표시 모양은 전용 CSS에서 결정하고 렌더러에는 날짜 상태만 전달합니다.
 		el.dataset.today = String(ownItem.isToday === true);
 		this.__childEle2.setAttribute('aria-label', `${ownItem.dateLabel || value + '일'}, 달성률 ${ownItem.value}%, 상세 보기`);
 	},
@@ -244,7 +277,7 @@ window.AUIGrid.MyCalendarRenderer = window.AUIGrid.Class({
 		// % 텍스트 출력
 		labelEl.textContent = `${percent} %`;
 
-		// 기존 90px 막대와 반응형 막대 모두 CSS가 지정한 전체 너비를 기준으로 채웁니다.
+		// 전용 CSS가 지정한 막대 전체 너비를 기준으로 달성률만큼 채웁니다.
 		const width = `${percent}%`;
 
 		// 기본 색상을 유지하며 필요한 데모에서만 CSS 변수로 구간 색상을 지정합니다.

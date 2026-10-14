@@ -1,0 +1,205 @@
+@charset "UTF-8";
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Series bar edit renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
+ */
+
+/* ---------- 편집 : AUIGrid.SeriesBarEditor ---------- */
+.aui-grid-edit-renderer-custom-series {
+	box-sizing: border-box;
+	width: 600px;
+	padding: 12px 14px;
+	background: #fff;
+	border: 1px solid #b8c0cc;
+	border-radius: 6px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+	font-size: 12px;
+	color: #333;
+	text-align: left;
+	outline: none;
+	user-select: none;
+	white-space: normal;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 10px;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-title {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-summary {
+	color: #1e6fc4;
+	font: bold 12px Consolas, monospace;
+	white-space: pre;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-chart {
+	display: flex;
+	height: 190px;
+	padding-bottom: 20px;
+}
+
+/* 세로 눈금 */
+.aui-grid-edit-renderer-custom-series .sbe-axis {
+	position: relative;
+	flex: none;
+	width: 44px;
+	margin-right: 6px;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-tick {
+	position: absolute;
+	right: 0;
+	transform: translateY(50%);
+	color: #888;
+	font-size: 10px;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-plot {
+	position: relative;
+	flex: 1;
+	display: flex;
+	gap: 6px;
+	border-bottom: 1px solid #b8c0cc;
+	background: repeating-linear-gradient(to top, #eef1f5 0, #eef1f5 1px, transparent 1px, transparent 25%);
+	touch-action: none;
+	cursor: ns-resize;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-slot {
+	position: relative;
+	flex: 1;
+	min-width: 0;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-slot:hover {
+	background: rgba(30, 136, 229, 0.05);
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-slot.sbe-selected {
+	background: rgba(30, 136, 229, 0.1);
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-bar,
+.aui-grid-edit-renderer-custom-series .sbe-compare {
+	position: absolute;
+	bottom: 0;
+	border-radius: 3px 3px 0 0;
+	pointer-events: none;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-bar {
+	left: 22%;
+	right: 22%;
+	box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-compare {
+	left: 6%;
+	right: 6%;
+	background: #e1e5eb;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-value {
+	position: absolute;
+	left: 0;
+	right: 0;
+	text-align: center;
+	color: #333;
+	font-size: 10px;
+	pointer-events: none;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-label {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -18px;
+	text-align: center;
+	color: #666;
+	font-size: 11px;
+	pointer-events: none;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-selected .sbe-label {
+	color: #1e6fc4;
+	font-weight: bold;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-edit {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-weight: bold;
+	color: #1e6fc4;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-edit input {
+	box-sizing: border-box;
+	width: 84px;
+	height: 26px;
+	padding: 0 6px;
+	border: 1px solid #ccd2da;
+	border-radius: 3px;
+	font: 12px Consolas, monospace;
+	text-align: right;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-unit {
+	color: #888;
+	font-weight: normal;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-tools {
+	display: flex;
+	gap: 4px;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-btn {
+	height: 26px;
+	padding: 0 10px;
+	border: 1px solid #ccd2da;
+	border-radius: 3px;
+	background: #fff;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-btn:hover {
+	background: #f3f5f8;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-confirm {
+	margin-left: 8px;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-confirm {
+	border-color: #1e6fc4;
+	background: #1e88e5;
+	color: #fff;
+}
+
+.aui-grid-edit-renderer-custom-series .sbe-confirm:hover {
+	background: #1976d2;
+}

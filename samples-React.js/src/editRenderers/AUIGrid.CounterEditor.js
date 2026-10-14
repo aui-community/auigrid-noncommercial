@@ -1,10 +1,32 @@
+/*
+ * AUIGrid 사용자 정의 에디트 렌더러 - React 숫자 증감 편집기
+ *
+ * Counter 컴포넌트의 증가 및 감소 버튼으로 숫자를 1씩 바꾸고, 확인 버튼을 누르면 셀에 적용합니다.
+ * 확인 전의 값은 컴포넌트 내부에서 관리하며 편집 종료 시 React 컴포넌트를 해제합니다.
+ *
+ * 연결 파일
+ *   그리드 래퍼로 AUIGrid를 로드한 뒤 이 모듈을 import합니다.
+ *   import CounterEditor from "../editRenderers/AUIGrid.CounterEditor";
+ *   react-dom/client의 createRoot와 src/components/Counter.js를 사용합니다.
+ *   버튼에는 샘플의 공통 .btn 스타일을 사용하며 별도 편집기 CSS는 없습니다.
+ *
+ * 사용법 (그리드 속성 editable: true)
+ *   {
+ *     dataField: "quantity", // 숫자 값, 예: 3
+ *     editRenderer: {
+ *       type: "CustomEditRenderer",
+ *       jsClass: CounterEditor,
+ *       vPosition: "bottom"
+ *     }
+ *   }
+ *
+ * 설정 변경
+ *   버튼과 증감 단위는 Counter 컴포넌트에서 바꿉니다. 이 예제에는 extraProps 옵션이 없습니다.
+ */
 import { createRoot } from 'react-dom/client';
 import Counter from '../components/Counter';
 
 /* eslint-disable */
-/*
- * AUIGrid 사용자 정의 에디트 렌더러
- */
 export default window.AUIGrid.Class({
 	/****************************************************************
 	 *

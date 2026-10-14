@@ -1,0 +1,290 @@
+@charset "UTF-8";
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Calendar renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
+ */
+/* 달력 샘플에 필요한 셀과 화면 스타일을 이 파일에서 함께 설정합니다. */
+
+/* 날짜, 달성률 숫자와 막대 */
+.aui-grid-renderer-custom-calendar {
+    --calendar-low: #df6474;
+    --calendar-middle: #b88026;
+    --calendar-high: #4b85ce;
+    --calendar-top: #299579;
+    --calendar-inset: 14px;
+    box-sizing: border-box;
+    text-align: left;
+}
+.aui-grid-renderer-custom-calendar .my-child1 {
+    position: absolute;
+    top: 12px;
+    left: var(--calendar-inset);
+    min-width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+}
+.aui-grid-renderer-custom-calendar .my-child1[data-today="true"] {
+    border-radius: 8px;
+    background: #2563eb;
+    color: #fff;
+}
+.aui-grid-renderer-custom-calendar .my-child2 {
+    position: absolute;
+    top: 14px;
+    right: var(--calendar-inset);
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #94a3b8;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 0.65;
+}
+.aui-grid-renderer-custom-calendar .my-child2::before {
+    content: "i";
+}
+.aui-grid-renderer-custom-calendar .my-child2:hover {
+    opacity: 1;
+    background: #e8efff;
+    color: #1d4ed8;
+}
+.aui-grid-renderer-custom-calendar .my-child2:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    opacity: 1;
+}
+.aui-grid-renderer-custom-calendar .my-chart-label {
+    position: absolute;
+    top: 50px;
+    left: var(--calendar-inset);
+    font-size: 23px;
+    font-weight: 600;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--calendar-value-color);
+}
+.aui-grid-renderer-custom-calendar .my-chart-base {
+    position: absolute;
+    top: 88px;
+    left: var(--calendar-inset);
+    right: var(--calendar-inset);
+    height: 5px;
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.aui-grid-renderer-custom-calendar .my-chart {
+    height: 100%;
+    border-radius: inherit;
+}
+
+/* Nova 어두운 모드에서도 달성률을 읽을 수 있도록 밝기를 보정합니다. */
+html[data-aui-theme="dark"] .calendar-nova .aui-grid-renderer-custom-calendar .my-chart-label {
+    filter: brightness(1.4);
+}
+
+/* 좁은 화면에서는 셀 내부 여백과 숫자 크기를 함께 줄입니다. */
+@media (max-width: 700px) {
+    .aui-grid-renderer-custom-calendar {
+        --calendar-inset: 7px;
+    }
+    .aui-grid-renderer-custom-calendar .my-chart-label {
+        font-size: 20px;
+    }
+}
+
+/* 달력 카드, 월 이동 버튼과 범례 */
+.showcase-calendar .calendar-heading {
+    margin: 12px 0 24px;
+}
+
+.showcase-calendar .calendar-heading h1 {
+    margin: 0 0 10px;
+    color: #1e293b;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.showcase-calendar .calendar-heading p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.showcase-calendar .calendar-card {
+    border: 1px solid #dfe5ec;
+    border-radius: 14px;
+    background: #fff;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(30, 41, 59, 0.04);
+}
+
+.showcase-calendar .calendar-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+.showcase-calendar .calendar-month {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.showcase-calendar #dateText {
+    margin: 0;
+    min-width: 142px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* 전역 버튼 규칙 대신 이 화면의 월 이동 버튼에만 크기와 상태를 지정합니다. */
+#main.showcase-calendar .calendar-nav {
+    appearance: none;
+    margin: 0;
+    padding: 0 12px;
+    min-width: 36px;
+    height: 36px;
+    border: 1px solid #dfe5ec;
+    border-radius: 8px;
+    background: #fff;
+    color: #475569;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#main.showcase-calendar .calendar-nav:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+#main.showcase-calendar .calendar-nav:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 3px;
+}
+
+.showcase-calendar .calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.showcase-calendar .calendar-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.showcase-calendar .legend-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--goal-color);
+}
+
+.showcase-calendar #grid_wrap {
+    width: 100%;
+    height: 540px;
+}
+
+/* 내보내기 버튼의 모양은 다른 쇼케이스와 같은 공용 btn 스타일을 사용합니다. */
+.showcase-calendar .calendar-export {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.showcase-calendar .my-saturday-style {
+    color: #2563eb;
+}
+
+.showcase-calendar .my-sunday-style {
+    color: #dc5262;
+}
+
+/* Nova의 화면 모드 전환에 맞춰 달력 주변 안내와 탐색 영역도 함께 조정합니다. */
+html[data-aui-theme="dark"] .calendar-nova .calendar-heading h1,
+html[data-aui-theme="dark"] .calendar-nova #dateText {
+    color: #e2e8f0;
+}
+
+html[data-aui-theme="dark"] .calendar-nova .calendar-heading p,
+html[data-aui-theme="dark"] .calendar-nova .calendar-legend {
+    color: #a8b5c6;
+}
+
+html[data-aui-theme="dark"] .calendar-nova .calendar-card {
+    background: #1b1e24;
+    border-color: #343c48;
+}
+
+html[data-aui-theme="dark"] #main.calendar-nova .calendar-nav {
+    background: #252b35;
+    border-color: #465163;
+    color: #e2e8f0;
+}
+
+html[data-aui-theme="dark"] #main.calendar-nova .calendar-nav:hover {
+    background: #344155;
+}
+
+html[data-aui-theme="dark"] .calendar-nova .my-saturday-style {
+    color: #7caaff;
+}
+
+html[data-aui-theme="dark"] .calendar-nova .my-sunday-style {
+    color: #f58d9c;
+}
+
+@media (max-width: 700px) {
+    .showcase-calendar .calendar-card {
+        padding: 14px 10px;
+        border-radius: 10px;
+    }
+
+    .showcase-calendar .calendar-heading h1 {
+        font-size: 22px;
+    }
+
+    .showcase-calendar .calendar-toolbar {
+        gap: 16px;
+    }
+
+    .showcase-calendar .calendar-month {
+        gap: 5px;
+    }
+
+    .showcase-calendar #dateText {
+        min-width: 128px;
+        font-size: 20px;
+    }
+
+    .showcase-calendar .calendar-legend {
+        gap: 10px;
+    }
+}

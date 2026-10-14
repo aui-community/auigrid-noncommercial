@@ -1,5 +1,34 @@
+/*
+ * AUIGrid 사용자 정의 렌더러 - 구매 첨부파일 표시
+ *
+ * 첫 첨부파일 이름과 추가 파일 수를 표시합니다. 파일이 없으면 "첨부 없음"을 표시합니다.
+ *
+ * 연결 파일
+ *   그리드 래퍼로 AUIGrid를 로드한 뒤 이 모듈을 import합니다.
+ *   import AttachmentRenderer from "../renderers/purchase_approval/AttachmentRenderer";
+ *   cell-utils.js는 이 모듈이 가져옵니다. src/showcases/Showcase07.css의 관련 스타일도 적용합니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "files",
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: AttachmentRenderer,
+ *       extraProps: {
+ *         onAction: function (event) {
+ *           // event.id로 행을 찾고 event.action과 event.value에 맞게 화면 또는 데이터를 처리합니다.
+ *         }
+ *       }
+ *     }
+ *   }
+ *   행 데이터 예: { id: "P01", files: [{ name: "견적서.pdf" }, { name: "사양서.pdf" }] }
+ *
+ * 데이터와 동작
+ *   files는 파일 객체 배열이며 name을 표시합니다. 파일 주소와 실제 미리보기 처리는 페이지에서 관리합니다.
+ *   첫 파일 클릭은 action: "file", value: 0이며, 추가 파일 클릭은 action: "files"입니다.
+ *   onAction은 { id, action, value }를 받습니다. 렌더러가 데이터를 직접 변경하지 않습니다.
+ */
 import PurchaseCellUtils from './cell-utils';
-/* 첫 첨부와 추가 파일 수를 표시합니다. 미리보기는 페이지 콜백에서 처리합니다. */
 var AttachmentRenderer = window.AUIGrid.Class({
 	tagName: 'div',
 	cssClass: 'aui-grid-renderer-base aui-grid-renderer-custom purchase-cell attachment-cell',

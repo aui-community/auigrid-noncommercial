@@ -1,0 +1,157 @@
+@charset "UTF-8";
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - RGB color edit renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
+ */
+
+/* AUIGrid.RgbColorEditor : RGB 색상 선택 에디트 렌더러 */
+.aui-grid-edit-renderer-custom-rgb {
+	box-sizing: border-box;
+	width: 260px;
+	padding: 10px;
+	background: #fff;
+	border: 1px solid #b8c0cc;
+	border-radius: 6px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+	font-size: 12px;
+	color: #333;
+	text-align: left;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-top {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-preview {
+	flex: none;
+	width: 44px;
+	height: 44px;
+	border: 1px solid #ccd2da;
+	border-radius: 4px;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-hex {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-hex input {
+	box-sizing: border-box;
+	width: 96px;
+	height: 26px;
+	padding: 0 6px;
+	border: 1px solid #ccd2da;
+	font: 13px Consolas, monospace;
+	text-transform: lowercase;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-value {
+	margin: 6px 0 8px;
+	color: #6b7280;
+	font: 11px Consolas, monospace;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-label {
+	flex: none;
+	width: 28px;
+	font-weight: bold;
+	color: #555;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-channel {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 4px 0;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-channel input[type="range"] {
+	flex: 1;
+	min-width: 0;
+	height: 8px;
+	margin: 0;
+	border-radius: 4px;
+	appearance: none;
+	-webkit-appearance: none;
+	cursor: pointer;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-channel input[type="range"]::-webkit-slider-thumb {
+	width: 14px;
+	height: 14px;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	background: #333;
+	box-shadow: 0 0 0 1px #888;
+	-webkit-appearance: none;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-channel input[type="range"]::-moz-range-thumb {
+	width: 12px;
+	height: 12px;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	background: #333;
+	box-shadow: 0 0 0 1px #888;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-channel input[type="number"] {
+	box-sizing: border-box;
+	width: 52px;
+	height: 24px;
+	padding: 0 4px;
+	border: 1px solid #ccd2da;
+	font-size: 12px;
+	text-align: right;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-palette {
+	display: grid;
+	grid-template-columns: repeat(8, 1fr);
+	gap: 4px;
+	margin: 10px 0;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-swatch {
+	height: 20px;
+	padding: 0;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-swatch:hover {
+	outline: 2px solid #1e88e5;
+	outline-offset: 1px;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 6px;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-buttons button {
+	height: 26px;
+	padding: 0 14px;
+	border: 1px solid #ccd2da;
+	border-radius: 3px;
+	background: #fff;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.aui-grid-edit-renderer-custom-rgb .rgb-buttons .rgb-confirm {
+	border-color: #1e6fc4;
+	background: #1e88e5;
+	color: #fff;
+}

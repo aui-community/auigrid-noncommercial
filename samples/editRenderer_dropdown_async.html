@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex" />
+<title>드롭다운리스트 편집 렌더러로 이동</title>
+<script>
+    // 비동기 칼럼을 기존 데모에 통합했습니다. 이전 주소의 테마만 전달합니다.
+    const theme = new URLSearchParams(location.search).get("theme") || "default";
+    location.replace("./editRenderer_dropdownlist.html?erdrop&theme=" + encodeURIComponent(theme));
+</script>
+<link rel="stylesheet" href="./demo.css" />
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+<a href="./editRenderer_dropdownlist.html?erdrop&amp;theme=default">드롭다운리스트 편집 렌더러로 이동</a>
+</body>
+</html>

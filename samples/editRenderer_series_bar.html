@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet" />
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<script src="../AUIGrid/editRenderers/AUIGrid.SeriesBarEditor.js"></script>
+<link rel="stylesheet" href="../AUIGrid/editRenderers/AUIGrid.SeriesBarEditor.css" />
+<style>
+    /* 목표 칼럼만 편집할 수 있도록 배경으로 구분합니다. */
+    .series-demo-editable {
+        background: #fffdf2;
+        cursor: pointer;
+    }
+    .series-demo-left {
+        text-align: left;
+    }
+    .series-demo-up {
+        color: #2e7d32;
+        font-weight: bold;
+    }
+    .series-demo-down {
+        color: #c62828;
+        font-weight: bold;
+    }
+</style>
+<script>
+    // 그리드 생성 후 반환 ID입니다.
+    let myGridID;
+    const monthLabels = Array.from({ length: 12 }, (_, index) => `${index + 1}월`);
+    const targetFields = monthLabels.map((label, index) => `t${index + 1}`);
+    const previousFields = monthLabels.map((label, index) => `p${index + 1}`);
+    const targetField = targetFields.join(",");
+    const previousField = previousFields.join(",");
+
+    // 시작점: 그리드를 한 번 생성하고 월별 데이터를 삽입합니다.
+    function init() {
+        createAUIGrid();
+        resetData();
+    }
+
+    function createAUIGrid() {
+        const columnLayout = [
+            { dataField: "team", headerText: "팀", width: 100, editable: false },
+            {
+                dataField: "product",
+                headerText: "품목",
+                width: 140,
+                editable: false,
+                style: "series-demo-left"
+            },
+            {
+                dataField: targetField,
+                headerText: "2027 월별 목표 (편집)",
+                width: 320,
+                style: "series-demo-editable",
+                editableByPaste: false,
+                // 표시는 기본 렌더러, 편집은 첨부한 사용자 정의 편집기가 담당합니다.
+                renderer: {
+                    type: "SparkColumnRenderer",
+                    fillColor: "#5b8def",
+                    markMaxValue: true,
+                    maxColor: "#1e4fd8",
+                    markMinValue: false
+                },
+                editRenderer: {
+                    type: "CustomEditRenderer",
+                    jsClass: AUIGrid.SeriesBarEditor,
+                    vPosition: "bottom",
+                    extraProps: {
+                        labels: monthLabels,
+                        compareField: previousField,
+                        compareLabel: "전년 실적",
+                        step: 5,
+                        unit: "백만 원",
+                        color: "#5b8def",
+                        // 여러 월별 필드에 편집 결과를 적용할 그리드 ID입니다.
+                        gridID: "#grid_wrap",
+                        title: function (item) {
+                            return item.product + " 2027 목표";
+                        },
+                        confirm: "확인",
+                        cancel: "취소"
+                    }
+                }
+            },
+            {
+                dataField: previousField,
+                headerText: "2026 실적",
+                width: 240,
+                editable: false,
+                renderer: {
+                    type: "SparkColumnRenderer",
+                    fillColor: "#a0a7b1",
+                    markMaxValue: false,
+                    markMinValue: false
+                }
+            },
+            {
+                dataField: "rate",
+                headerText: "전년 대비",
+                width: 120,
+                editable: false,
+                // 목표를 수정하면 같은 행의 연간 합계로 증감률을 다시 표시합니다.
+                labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+                    const previous = sumFields(item, previousFields);
+                    if (!previous) return "";
+                    const rate = ((sumFields(item, targetFields) - previous) / previous) * 100;
+                    return (rate >= 0 ? "+" : "") + rate.toFixed(1) + "%";
+                },
+                styleFunction: function (rowIndex, columnIndex, value, headerText, item) {
+                    return sumFields(item, targetFields) >= sumFields(item, previousFields)
+                        ? "series-demo-up"
+                        : "series-demo-down";
+                }
+            }
+        ];
+        const gridProps = {
+            editable: true,
+            rowIdField: "id",
+            selectionMode: "singleCell",
+            rowHeight: 48,
+            showRowNumColumn: false,
+            showStateColumn: true
+        };
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+    }
+
+    // 화면과 증감률 계산에 쓰는 월별 필드의 합계입니다.
+    function sumFields(item, fields) {
+        return fields.reduce((sum, field) => sum + (Number(item[field]) || 0), 0);
+    }
+
+    function resetData() {
+        // 단위는 백만 원이며 target은 2027 목표, previous는 2026 실적입니다.
+        const plans = [
+            {
+                id: "P01",
+                team: "영업1팀",
+                product: "ERP 라이선스",
+                target: [120, 110, 135, 140, 150, 160, 130, 125, 170, 180, 190, 240],
+                previous: [100, 95, 120, 125, 130, 140, 110, 115, 150, 160, 170, 210]
+            },
+            {
+                id: "P02",
+                team: "영업1팀",
+                product: "유지보수",
+                target: [80, 80, 80, 85, 85, 85, 90, 90, 90, 95, 95, 95],
+                previous: [75, 75, 75, 78, 78, 78, 80, 80, 80, 82, 82, 82]
+            },
+            {
+                id: "P03",
+                team: "영업2팀",
+                product: "클라우드 구독",
+                target: [60, 65, 70, 75, 80, 90, 95, 100, 110, 120, 130, 140],
+                previous: [40, 42, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]
+            },
+            {
+                id: "P04",
+                team: "영업2팀",
+                product: "컨설팅",
+                target: [50, 40, 70, 60, 55, 90, 30, 35, 80, 75, 70, 120],
+                previous: [55, 45, 65, 60, 50, 85, 35, 30, 75, 80, 65, 110]
+            },
+            {
+                id: "P05",
+                team: "파트너",
+                product: "총판 공급",
+                target: [200, 180, 220, 210, 230, 250, 190, 200, 260, 270, 280, 320],
+                previous: [190, 170, 200, 205, 210, 230, 180, 185, 240, 250, 260, 300]
+            }
+        ];
+        // SparkColumnRenderer가 읽을 월별 필드를 만들고, 조합 dataField에는 빈값을 둡니다.
+        const gridData = plans.map(function (plan) {
+            const item = {
+                id: plan.id,
+                team: plan.team,
+                product: plan.product,
+                rate: "",
+                [targetField]: "",
+                [previousField]: ""
+            };
+            plan.target.forEach((value, index) => {
+                item[targetFields[index]] = value;
+            });
+            plan.previous.forEach((value, index) => {
+                item[previousFields[index]] = value;
+            });
+            return item;
+        });
+        AUIGrid.setGridData(myGridID, gridData);
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+
+<div id="main">
+    <div class="desc">
+        <p>
+            월별 목표 칼럼은 기본 제공 SparkColumnRenderer로 표시하고, 사용자 정의 편집기 AUIGrid.SeriesBarEditor로 값을
+            수정합니다.
+        </p>
+        <p>
+            목표 셀을 더블클릭하거나 선택 후 F2 / 스페이스바를 누르십시오. 막대를 위아래로 끌거나 숫자를 입력해 월별
+            목표를 변경합니다.
+        </p>
+        <p>
+            ← / → 키로 월을 선택하고 ↑ / ↓ 키로 5씩 조절합니다. Shift와 함께 누르면 50씩 조절합니다. Enter 또는 확인으로
+            적용하고 Esc 또는 취소로 닫습니다.
+        </p>
+        <p>
+            +10%, -10%는 전체 목표를 조절하고, 전년 실적 복사는 비교값을 목표에 반영합니다. 금액 단위는 백만 원입니다.
+        </p>
+        <p>AUIGrid.js 다음에 편집기 JS와 CSS를 연결하고 칼럼의 editRenderer를 지정합니다.</p>
+        <div class="src_cover">
+            <pre><code class="language-html">&lt;script src="../AUIGrid/editRenderers/AUIGrid.SeriesBarEditor.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="../AUIGrid/editRenderers/AUIGrid.SeriesBarEditor.css" /&gt;</code></pre>
+        </div>
+        <div class="src_cover">
+            <pre><code class="language-javascript">{
+    dataField: "t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12",
+    headerText: "2027 월별 목표 (편집)",
+    renderer: { type: "SparkColumnRenderer" },
+    editRenderer: {
+        type: "CustomEditRenderer",
+        jsClass: AUIGrid.SeriesBarEditor,
+        vPosition: "bottom",
+        extraProps: {
+            labels: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+            compareField: "p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12",
+            compareLabel: "전년 실적",
+            step: 5,
+            unit: "백만 원",
+            gridID: "#grid_wrap"
+        }
+    }
+}</code></pre>
+        </div>
+        <p>
+            이 예제의 값은 t1~t12, 비교값은 p1~p12 필드에 저장합니다. 편집기는 extraProps.gridID에 지정한 그리드의
+            updateRow()로 변경한 월별 값을 적용합니다.
+        </p>
+        <p>
+            쉼표로 묶은 dataField 이름의 필드는 초기 데이터에 빈 문자열로 넣습니다. 비교값은 선택 사항이며,
+            extraProps.max를 생략하면 세로 눈금의 최대값을 자동으로 정합니다.
+        </p>
+        <p><button class="btn" onclick="resetData()">초기 데이터로 되돌리기</button></p>
+    </div>
+    <div id="grid_wrap" style="width: 100%; height: 340px; margin: 0 auto"></div>
+</div>
+<div id="footer">
+    <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

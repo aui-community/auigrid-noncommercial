@@ -1,160 +1,162 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
-<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="https://www.auisoft.net/">
-<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
 <title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<link rel="stylesheet" href="./static/prism.css">
-<link href="./demo.css" rel="stylesheet">
-
-<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
-<link rel="stylesheet" href="./style/demo-typography.css">
-<link rel="stylesheet" href="./static/code-examples.css">
-<script src="./static/prism.js" data-manual></script>
-<script src="./static/code-examples.js" data-source-viewer></script>
-
-
-<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<script type="text/javascript" src="./common.js"></script>
+<link href="./demo.css" rel="stylesheet" />
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+<style>
+    /* 커스텀 스타일 */
+    .left {
+        text-align: left;
+    }
 
-        <style>
-            /* 커스텀 스타일 */
-            .left {
-                text-align: left;
+    .c-red {
+        color: #cc3d3d;
+        font-weight: bold;
+    }
+</style>
+<script>
+    // AUIGrid 생성 후 반환 ID
+    let myGridID;
+
+    // 시작점
+    function init() {
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+        // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+        requestGridData("./data/schedule_tree.json");
+    }
+
+    // AUIGrid 를 생성합니다.
+    function createAUIGrid() {
+        // 그리드 칼럼 레이아웃 설정
+        const columnLayout = [
+            {
+                dataField: "id",
+                headerText: "ID",
+                width: 140
+            },
+            {
+                dataField: "name",
+                headerText: "Task Name",
+                style: "left",
+                width: 360
+            },
+            {
+                dataField: "charge",
+                headerText: "Charge",
+                style: "left",
+                width: 140
+            },
+            {
+                dataField: "complete",
+                headerText: "Complete(%)",
+                postfix: "%",
+                width: 120
+            },
+            {
+                dataField: "start",
+                headerText: "Start Date"
+            },
+            {
+                dataField: "end",
+                headerText: "End Date"
             }
+        ];
 
-            .c-red {
-                color: #cc3d3d;
-                font-weight: bold;
-            }
-        </style>
-        <script>
-            // AUIGrid 생성 후 반환 ID
-            let myGridID;
-
-            // 시작점
-            function init() {
-                // AUIGrid 그리드를 생성합니다.
-                createAUIGrid();
-                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-                requestGridData("./data/schedule_tree.json");
-            }
-
-            // AUIGrid 를 생성합니다.
-            function createAUIGrid() {
-                // 그리드 칼럼 레이아웃 설정
-                const columnLayout = [
-                    {
-                        dataField: "id",
-                        headerText: "ID",
-                        width: 140
-                    },
-                    {
-                        dataField: "name",
-                        headerText: "Task Name",
-                        style: "left",
-                        width: 360
-                    },
-                    {
-                        dataField: "charge",
-                        headerText: "Charge",
-                        style: "left",
-                        width: 140
-                    },
-                    {
-                        dataField: "complete",
-                        headerText: "Complete(%)",
-                        postfix: "%",
-                        width: 120
-                    },
-                    {
-                        dataField: "start",
-                        headerText: "Start Date"
-                    },
-                    {
-                        dataField: "end",
-                        headerText: "End Date"
-                    }
-                ];
-
-                // 그리드 속성 설정
-                const gridProps = {
-                    // 편집 가능 여부
-                    editable: true,
-                    hoverMode: "singleRow",
-                    // 최초 보여질 때 모두 열린 상태로 출력 여부
-                    displayTreeOpen: true,
-                    // 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
-                    treeColumnIndex: 1,
-                    rowIdField: "id",
-                    // 체크박스 사용 안함
-                    showRowCheckColumn: false,
-                    showRowNumColumn: false,
-                    // 트리 아이콘을 바꿀 수 있는 트리 아이콘 펑션입니다.
-                    treeIconFunction: function (rowIndex, isBranch, isOpen, depth, item) {
-                        let imgSrc = null;
-                        if (item.charge === "Lawrence") {
+        // 그리드 속성 설정
+        const gridProps = {
+            // 편집 가능 여부
+            editable: true,
+            hoverMode: "singleRow",
+            // 최초 보여질 때 모두 열린 상태로 출력 여부
+            displayTreeOpen: true,
+            // 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
+            treeColumnIndex: 1,
+            rowIdField: "id",
+            // 체크박스 사용 안함
+            showRowCheckColumn: false,
+            showRowNumColumn: false,
+            // 트리 아이콘을 바꿀 수 있는 트리 아이콘 펑션입니다.
+            treeIconFunction: function (rowIndex, isBranch, isOpen, depth, item) {
+                let imgSrc = null;
+                if (item.charge === "Lawrence") {
+                    imgSrc = "./assets/man4.png";
+                } else {
+                    switch (depth) {
+                        case 1:
+                            imgSrc = "./assets/man1.png";
+                            break;
+                        case 2:
+                            imgSrc = "./assets/man2.png";
+                            break;
+                        case 3:
+                            imgSrc = "./assets/man3.png";
+                            break;
+                        default:
                             imgSrc = "./assets/man4.png";
-                        } else {
-                            switch (depth) {
-                                case 1:
-                                    imgSrc = "./assets/man1.png";
-                                    break;
-                                case 2:
-                                    imgSrc = "./assets/man2.png";
-                                    break;
-                                case 3:
-                                    imgSrc = "./assets/man3.png";
-                                    break;
-                                default:
-                                    imgSrc = "./assets/man4.png";
-                            }
-                        }
-                        return imgSrc;
                     }
-                };
-
-                // 실제로 #grid_wrap 에 그리드 생성
-                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+                }
+                return imgSrc;
             }
-        </script>
-    </head>
-<body class="demo-typography">
+        };
 
-            <div id="main">
-                <div class="desc">
-                    <p>계층 구조에서 트리 아이콘을 데이터에 맞게 동적으로 변경할 수 있습니다.</p>
-                    <p>
-                        예를 들면 트리 구조의 depth 에 따라 아이콘 설정, 책임자의 이름에 맞게 아이콘 설정 등 데이터를
-                        보고 동적으로 변경 가능합니다.
-                    </p>
-                    <p>treeIconFunction 을 정의 한 후 조건식에 따라 원하는 아이콘의 소스를 반환하면 됩니다.</p>
-                    <p>
-                        해당 예제는 Lawrence 라는 책임자의 아이콘을 따로 하고, 태스크(task)의 depth 에 따라 아이콘을
-                        설정한 모습입니다.
-                    </p>
-                    <div class="src_cover">
-                        <pre><xmp>// 트리 아이콘을 바꿀 수 있는 트리 아이콘 펑션입니다.
+        // 실제로 #grid_wrap 에 그리드 생성
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+
+<div id="main">
+    <div class="desc">
+        <p>계층 구조에서 트리 아이콘을 데이터에 맞게 동적으로 변경할 수 있습니다.</p>
+        <p>
+            예를 들면 트리 구조의 depth 에 따라 아이콘 설정, 책임자의 이름에 맞게 아이콘 설정 등 데이터를 보고 동적으로
+            변경 가능합니다.
+        </p>
+        <p>treeIconFunction 을 정의 한 후 조건식에 따라 원하는 아이콘의 소스를 반환하면 됩니다.</p>
+        <p>
+            해당 예제는 Lawrence 라는 책임자의 아이콘을 따로 하고, 태스크(task)의 depth 에 따라 아이콘을 설정한
+            모습입니다.
+        </p>
+        <div class="src_cover">
+            <pre><xmp>// 트리 아이콘을 바꿀 수 있는 트리 아이콘 펑션입니다.
 treeIconFunction: function (rowIndex, isBranch, isOpen, depth, item) {
 	let imgSrc = null;
 	if (item.charge === "Lawrence") {
@@ -177,16 +179,16 @@ treeIconFunction: function (rowIndex, isBranch, isOpen, depth, item) {
 	return imgSrc;
 }
 			</xmp></pre>
-                    </div>
-                </div>
-                <div>
-                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-                    <div id="grid_wrap" style="width: 100%; height: 400px; margin: 0 auto"></div>
-                </div>
-                <div class="desc_bottom"></div>
-            </div>
+        </div>
+    </div>
+    <div>
+        <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+        <div id="grid_wrap" style="width: 100%; height: 400px; margin: 0 auto"></div>
+    </div>
+    <div class="desc_bottom"></div>
+</div>
 <div id="footer">
-     <div class="copyright">
+    <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>

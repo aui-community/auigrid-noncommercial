@@ -1,5 +1,9 @@
+// 패키지는 기본 테마 CSS를 사용하며, 개별 테마 예제에서 지정한 값은 유지합니다.
+var theme = window.theme || 'default';
+
 document.addEventListener('DOMContentLoaded', function () {
 		document.removeEventListener('DOMContentLoaded', arguments.callee, false);
+		initializePackageDefaults();
 		if (typeof init === 'function') init();
 		// 배포 샘플도 홈페이지와 같이 창 크기 변경 후 공개 resize API로 표시 크기를 맞춥니다.
 		let resizeTimerId;
@@ -7,8 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			clearTimeout(resizeTimerId);
 			resizeTimerId = setTimeout(function () {
 				if (typeof AUIGrid === 'undefined') return;
-				if (typeof myGridID !== 'undefined') AUIGrid.resize(myGridID);
-				if (typeof myGridID2 !== 'undefined') AUIGrid.resize(myGridID2);
+				if (typeof myGridID !== 'undefined' && AUIGrid.isCreated(myGridID)) AUIGrid.resize(myGridID);
+				if (typeof myGridID2 !== 'undefined' && AUIGrid.isCreated(myGridID2)) AUIGrid.resize(myGridID2);
 			}, 200);
 		});
 }, false);
@@ -17,7 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
 // AUIGrid.defaultProps 설정은 AUIGrid.js 정의 이후 선언해야 합니다.
 // 선언하면 AUIGrid 를 생성 할 때 기본적으로 defaultProps 를 확장하여 생성합니다.
 // 따라서 매 페이지의 그리드를 생성할 때 공통적인 사항을 여기서 작성하십시오.
-if (typeof window !== 'undefined' && typeof window.AUIGrid !== 'undefined') {
+// 독립 HTML의 script 순서와 무관하게 엔진 로딩 후 init 직전에 공통값을 설정합니다.
+function initializePackageDefaults() {
+	if (typeof window.AUIGrid === 'undefined') return;
 	window.AUIGrid.defaultProps = {
 		// 모바일인 경우 자동으로 작은 사이즈의 스크롤을 표시할지 여부
 		// 여기서 생성했기 때문에 앞으로 모든 그리드는 autoScrollSize: true 를 상속 받아 적용됨.
@@ -33,7 +39,7 @@ if (typeof window !== 'undefined' && typeof window.AUIGrid !== 'undefined') {
 //데이터 요청하여 그리드에 데이터 삽입합니다.
 function requestGridData(url, gridId = '#grid_wrap') {
 	AUIGrid.showAjaxLoader(gridId);
-	fetch(url)
+	AUIGridPackageData.fetch(url)
 		.then((res) => {
 			if (!res.ok) throw new Error('데이터 요청 실패');
 			return res.json();

@@ -1,249 +1,297 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"> 
-<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-<meta name="og:url" content="https://www.auisoft.net/">
-<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
 <title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
 <link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
 <!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<link rel="stylesheet" href="./static/prism.css">
-<link href="./demo.css" rel="stylesheet">
-
-<!-- Prism.js 1.30.0, Tomorrow / MIT. 표시용 스타일은 제품 CSS와 분리합니다. -->
-<link rel="stylesheet" href="./style/demo-typography.css">
-<link rel="stylesheet" href="./static/code-examples.css">
-<script src="./static/prism.js" data-manual></script>
-<script src="./static/code-examples.js" data-source-viewer></script>
-
-
-<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-<script type="text/javascript" src="./common.js"></script>
+<link href="./demo.css" rel="stylesheet" />
 
 <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet">
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
 <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
 <script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
+<style>
+    /* 편집 방식 안내 표는 데모 설명에만 적용하며 제품 셀 스타일과 분리합니다. */
+    .renderer-guide {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+    }
+    .renderer-guide th,
+    .renderer-guide td {
+        border: 1px solid #dce3eb;
+        padding: 6px 10px;
+        text-align: left;
+    }
+    .renderer-guide th {
+        background: #f4f7fa;
+    }
+    /* 커스텀 칼럼 스타일 정의 */
+    .aui-grid-user-custom-left {
+        text-align: left;
+    }
 
-        <style>
-            /* 커스텀 칼럼 스타일 정의 */
-            .aui-grid-user-custom-left {
-                text-align: left;
-            }
+    .aui-grid-user-custom-right {
+        text-align: right;
+    }
+</style>
 
-            .aui-grid-user-custom-right {
-                text-align: right;
-            }
-        </style>
+<script>
+    // AUIGrid 생성 후 반환 ID
+    let myGridID;
 
-        <script>
-            // AUIGrid 생성 후 반환 ID
-            let myGridID;
+    // 시작점
+    function init() {
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+        // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+        requestGridData("./data/normal_100.json");
+    }
 
-            // 시작점
-            function init() {
-                // AUIGrid 그리드를 생성합니다.
-                createAUIGrid();
-                // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-                requestGridData("./data/normal_100.json");
-            }
-
-            // AUIGrid 를 생성합니다.
-            function createAUIGrid() {
-                // 그리드 칼럼 레이아웃 설정
-                const columnLayout = [
-                    {
-                        dataField: "name",
-                        headerText: "일반 Input",
-                        width: 140,
-                        style: "aui-grid-user-custom-left",
-                        renderer: {
-                            type: "IconRenderer",
-                            //iconWidth : 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-                            //iconHeight : 20,
-                            iconTableRef: {
-                                // icon 값 참조할 테이블 레퍼런스
-                                "default": "./assets/office_man.png" // default
-                            }
-                        }
-                    },
-                    {
-                        dataField: "country",
-                        headerText: "드랍 리스트",
-                        width: 140,
-                        prefix: "./assets/",
-                        renderer: {
-                            type: "ImageRenderer",
-                            imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
-                            altField: "country", // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
-                            imgTableRef: {
-                                // icon 값 참조할 테이블 레퍼런스
-                                "Korea": "./assets/korea.png",
-                                "USA": "./assets/usa.png",
-                                "UK": "./assets/uk.png",
-                                "Japan": "./assets/japan.png",
-                                "France": "./assets/france.png",
-                                "Italy": "./assets/italy.png",
-                                "China": "./assets/china.png",
-                                "Singapore": "./assets/singapore.png",
-                                "Ireland": "./assets/ireland.png",
-                                "Taiwan": "./assets/taiwan.png",
-                                "default": "./assets/glider.png" //default
-                            }
-                        },
-                        editRenderer: {
-                            type: "DropDownListRenderer",
-                            list: [
-                                "Korea",
-                                "USA",
-                                "UK",
-                                "Japan",
-                                "China",
-                                "France",
-                                "Italy",
-                                "Singapore",
-                                "Ireland",
-                                "Taiwan"
-                            ]
-                        }
-                    },
-                    {
-                        dataField: "color",
-                        headerText: "드랍 리스트",
-                        width: 140,
-                        renderer: {
-                            type: "IconRenderer",
-                            iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-                            iconHeight: 20,
-                            iconTableRef: {
-                                // icon 값 참조할 테이블 레퍼런스
-                                "Blue": "./assets/blue_circle.png",
-                                "Gray": "./assets/gray_circle.png",
-                                "Green": "./assets/green_circle.png",
-                                "Orange": "./assets/orange2_circle.png",
-                                "Pink": "./assets/pink_circle.png",
-                                "Violet": "./assets/violet_circle.png",
-                                "Yellow": "./assets/yellow_circle.png",
-                                "Red": "./assets/orange_circle.png",
-                                "default": "./assets/glider.png" //default
-                            }
-                        },
-                        editRenderer: {
-                            type: "DropDownListRenderer",
-                            list: ["Blue", "Gray", "Green", "Orange", "Pink", "Violet", "Yellow", "Red"]
-                        }
-                    },
-                    {
-                        dataField: "product",
-                        headerText: "일반 Input",
-                        width: 140
-                    },
-                    {
-                        dataField: "quantity",
-                        headerText: "Quantity",
-                        dataType: "numeric",
-                        width: 120,
-                        renderer: {
-                            type: "NumberStepRenderer",
-                            min: 0,
-                            max: 30,
-                            step: 1
-                        }
-                    },
-                    {
-                        dataField: "price",
-                        headerText: "넘버 스텝",
-                        style: "aui-grid-user-custom-right",
-                        dataType: "numeric",
-                        formatString: "#,##0",
-                        width: 140,
-                        editRenderer: {
-                            type: "NumberStepRenderer",
-                            min: 0,
-                            max: 1000000,
-                            step: 1000
-                        },
-                        dataType: "numeric"
-                    },
-                    {
-                        dataField: "date",
-                        headerText: "달력",
-                        width: 140,
-                        dataType: "date",
-                        formatString: "yyyy년 mm월 dd일",
-                        editRenderer: {
-                            type: "CalendarRenderer"
-                            //onlyMonthMode : true
-                        }
+    // AUIGrid 를 생성합니다.
+    function createAUIGrid() {
+        // 그리드 칼럼 레이아웃 설정
+        const columnLayout = [
+            {
+                dataField: "name",
+                headerText: "일반 Input",
+                width: 140,
+                style: "aui-grid-user-custom-left",
+                renderer: {
+                    type: "IconRenderer",
+                    //iconWidth : 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+                    //iconHeight : 20,
+                    iconTableRef: {
+                        // icon 값 참조할 테이블 레퍼런스
+                        "default": "./assets/office_man.png" // default
                     }
-                ];
-
-                // 그리드 속성 설정
-                const gridProps = {
-                    editable: true,
-                    enableSorting: false,
-                    showStateColumn: true,
-                    // 사용자가 추가한 새행은 softRemoveRowMode 적용 안함.
-                    // 즉, 바로 삭제함.
-                    softRemovePolicy: "exceptNew"
-                };
-
-                // 실제로 #grid_wrap 에 그리드 생성
-                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-                // 에디팅 시작 이벤트 바인딩
-                AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
-                    const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-                    document.getElementById("editBeginDesc").textContent = msg;
-                });
-
-                // 에디팅 정상 종료 이벤트 바인딩
-                AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
-                    const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
-                    document.getElementById("editBeginEnd").textContent = msg;
-                });
-
-                // 에디팅 취소 이벤트 바인딩
-                AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
-                    const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
-                    document.getElementById("editBeginEnd").textContent = msg;
-                });
+                }
+            },
+            {
+                dataField: "country",
+                headerText: "드랍 리스트",
+                width: 140,
+                prefix: "./assets/",
+                renderer: {
+                    type: "ImageRenderer",
+                    imgHeight: 24, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
+                    altField: "country", // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
+                    imgTableRef: {
+                        // icon 값 참조할 테이블 레퍼런스
+                        "Korea": "./assets/korea.png",
+                        "USA": "./assets/usa.png",
+                        "UK": "./assets/uk.png",
+                        "Japan": "./assets/japan.png",
+                        "France": "./assets/france.png",
+                        "Italy": "./assets/italy.png",
+                        "China": "./assets/china.png",
+                        "Singapore": "./assets/singapore.png",
+                        "Ireland": "./assets/ireland.png",
+                        "Taiwan": "./assets/taiwan.png",
+                        "default": "./assets/glider.png" //default
+                    }
+                },
+                editRenderer: {
+                    type: "DropDownListRenderer",
+                    list: ["Korea", "USA", "UK", "Japan", "China", "France", "Italy", "Singapore", "Ireland", "Taiwan"]
+                }
+            },
+            {
+                dataField: "color",
+                headerText: "드랍 리스트",
+                width: 140,
+                renderer: {
+                    type: "IconRenderer",
+                    iconWidth: 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+                    iconHeight: 20,
+                    iconTableRef: {
+                        // icon 값 참조할 테이블 레퍼런스
+                        "Blue": "./assets/blue_circle.png",
+                        "Gray": "./assets/gray_circle.png",
+                        "Green": "./assets/green_circle.png",
+                        "Orange": "./assets/orange2_circle.png",
+                        "Pink": "./assets/pink_circle.png",
+                        "Violet": "./assets/violet_circle.png",
+                        "Yellow": "./assets/yellow_circle.png",
+                        "Red": "./assets/orange_circle.png",
+                        "default": "./assets/glider.png" //default
+                    }
+                },
+                editRenderer: {
+                    type: "DropDownListRenderer",
+                    list: ["Blue", "Gray", "Green", "Orange", "Pink", "Violet", "Yellow", "Red"]
+                }
+            },
+            {
+                dataField: "product",
+                headerText: "일반 Input",
+                width: 140
+            },
+            {
+                dataField: "quantity",
+                headerText: "Quantity",
+                dataType: "numeric",
+                width: 120,
+                renderer: {
+                    type: "NumberStepRenderer",
+                    min: 0,
+                    max: 30,
+                    step: 1
+                }
+            },
+            {
+                dataField: "price",
+                headerText: "넘버 스텝",
+                style: "aui-grid-user-custom-right",
+                dataType: "numeric",
+                formatString: "#,##0",
+                width: 140,
+                editRenderer: {
+                    type: "NumberStepRenderer",
+                    min: 0,
+                    max: 1000000,
+                    step: 1000
+                },
+                dataType: "numeric"
+            },
+            {
+                dataField: "date",
+                headerText: "달력",
+                width: 140,
+                dataType: "date",
+                formatString: "yyyy년 mm월 dd일",
+                editRenderer: {
+                    type: "CalendarRenderer"
+                    //onlyMonthMode : true
+                }
             }
-        </script>
-    </head>
-<body class="demo-typography">
+        ];
 
-            <div id="main">
-                <div class="desc">
-                    <p>칼럼 별로 유형에 맞게 편집 렌더러를 지정한 데모입니다.</p>
-                    <p>
-                        칼럼 레이아웃을 작성 할 때 editRenderer 속성을 지정하면 개별 칼럼에 대하여 다른 편집 렌더러를
-                        사용 할 수 있습니다.
-                    </p>
-                </div>
-                <div>
-                    <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-                    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
-                </div>
-                <div class="desc_bottom">
-                    <p id="editBeginDesc"></p>
-                    <p id="editBeginEnd"></p>
-                </div>
-            </div>
+        // 그리드 속성 설정
+        const gridProps = {
+            editable: true,
+            enableSorting: false,
+            showStateColumn: true,
+            // 사용자가 추가한 새행은 softRemoveRowMode 적용 안함.
+            // 즉, 바로 삭제함.
+            softRemovePolicy: "exceptNew"
+        };
+
+        // 실제로 #grid_wrap 에 그리드 생성
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+
+        // 에디팅 시작 이벤트 바인딩
+        AUIGrid.bind(myGridID, "cellEditBegin", function (event) {
+            const msg = `에디팅 시작(cellEditBegin) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+            document.getElementById("editBeginDesc").textContent = msg;
+        });
+
+        // 에디팅 정상 종료 이벤트 바인딩
+        AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+            const msg = `에디팅 종료(cellEditEnd) : ( ${event.rowIndex}, ${event.columnIndex} ), value : ${event.value}, which : ${event.which}`;
+            document.getElementById("editBeginEnd").textContent = msg;
+        });
+
+        // 에디팅 취소 이벤트 바인딩
+        AUIGrid.bind(myGridID, "cellEditCancel", function (event) {
+            const msg = `에디팅 취소(cellEditCancel) : ( ${event.rowIndex}, ${event.columnIndex} ) ${event.headerText}, value : ${event.value}, which : ${event.which}`;
+            document.getElementById("editBeginEnd").textContent = msg;
+        });
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+
+<div id="main">
+    <div class="desc">
+        <p>칼럼 별로 유형에 맞게 편집 렌더러를 지정한 데모입니다.</p>
+        <p>
+            칼럼 레이아웃을 작성 할 때 editRenderer 속성을 지정하면 개별 칼럼에 대하여 다른 편집 렌더러를 사용 할 수
+            있습니다.
+        </p>
+        <p>
+            셀을 더블 클릭하거나 선택 후 F2를 눌러 편집하세요. 편집 시작, 완료와 취소 이벤트는 그리드 아래에 표시됩니다.
+        </p>
+        <table class="renderer-guide">
+            <caption>
+                칼럼별 입력 방식
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col">dataField</th>
+                    <th scope="col">편집 방식</th>
+                    <th scope="col">설정</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>name, product</td>
+                    <td>기본 텍스트 입력</td>
+                    <td>editRenderer 생략</td>
+                </tr>
+                <tr>
+                    <td>country, color</td>
+                    <td>목록에서 선택</td>
+                    <td>editRenderer: DropDownListRenderer</td>
+                </tr>
+                <tr>
+                    <td>quantity</td>
+                    <td>항상 표시되는 증감 버튼, 0~30, 1씩 변경</td>
+                    <td>renderer: NumberStepRenderer</td>
+                </tr>
+                <tr>
+                    <td>price</td>
+                    <td>편집 시 증감 버튼, 0~1,000,000, 1,000씩 변경</td>
+                    <td>editRenderer: NumberStepRenderer</td>
+                </tr>
+                <tr>
+                    <td>date</td>
+                    <td>달력에서 날짜 선택</td>
+                    <td>editRenderer: CalendarRenderer</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+        <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+    </div>
+    <div class="desc_bottom">
+        <p id="editBeginDesc"></p>
+        <p id="editBeginEnd"></p>
+    </div>
+</div>
 <div id="footer">
-     <div class="copyright">
+    <div class="copyright">
         <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
     </div>
 </div>

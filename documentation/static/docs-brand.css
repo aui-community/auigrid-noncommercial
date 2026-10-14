@@ -6,9 +6,11 @@ body.docs-site {
     --docs-line: #dde6ef; --docs-surface: #f4f8fb; --docs-charcoal: #222729; --docs-background: #fff;
     margin: 0; color: var(--docs-ink); background: var(--docs-background); font-family: var(--demo-font); line-height: 1.6;
 }
-.docs-site :is(.docs-header, .docs-header *, .docs-home-intro, .docs-chapters, .docs-chapters *, .docs-footer, .docs-breadcrumb) { box-sizing: border-box; }
-.docs-site a { color: var(--docs-blue-dark); }
-.docs-site a:hover { color: var(--docs-blue); }
+.docs-site :is(.docs-home-intro, .docs-chapters, .docs-chapters *, .docs-footer, .docs-breadcrumb) { box-sizing: border-box; }
+/* 실제 본문 링크만 파란색으로 구분합니다. 홈페이지 헤더는 전용 색상과 hover 규칙을 사용합니다. */
+.docs-site a:where([href]:not([href=""]):not(.auisoft-site-header *)) { color: var(--docs-blue-dark); }
+.docs-site a:where([href]:not([href=""]):not(.auisoft-site-header *)):hover { color: var(--docs-blue); }
+.docs-site a:not([href]), .docs-site a[href=""] { color: inherit; text-decoration: none; cursor: inherit; }
 .docs-site :is(a, button, summary, input):focus-visible { outline: 2px solid var(--docs-blue); outline-offset: 4px; }
 .docs-site :is(h1, h2, h3) { color: var(--docs-ink); }
 .docs-site :is(h1, h2, h3, tr[id], a[name]) { scroll-margin-top: 28px; }
@@ -16,24 +18,6 @@ body.docs-site {
 .docs-website :is(h1, h2, h3, tr[id], a[name]) { scroll-margin-top: 85px; }
 /* 웹 문서의 숨김 제목에는 이전 #title의 여백을 적용하지 않고 본문 배치에서도 제외합니다. */
 .docs-site #title.docs-site-context { position: absolute; width: 1px; height: 1px; margin: 0; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* 홈페이지의 흰색 헤더와 사각 로고를 사용하고 문서 제목이 함께 들어갈 여백을 둡니다. */
-.docs-header { border-bottom: 1px solid var(--docs-line); background: var(--docs-background); }
-.docs-header-inner { max-width: 1600px; min-height: 80px; margin: auto; padding: 16px 32px; display: flex; align-items: center; gap: 24px; }
-.docs-site #logo-bar.docs-brand { float: none; margin: 0; padding: 0; display: inline-flex; align-items: center; gap: 12px; color: var(--docs-charcoal); text-decoration: none; flex-shrink: 0; }
-.docs-brand img { display: block; width: 40px; height: 40px; }
-.docs-brand > span { display: flex; flex-direction: column; gap: 3px; font-size: 24px; font-weight: 800; line-height: 1.05; }
-.docs-brand small { color: var(--docs-muted); font-size: 12px; font-weight: 600; }
-/* 패키지 문서는 회사 메뉴 없이 로고와 제품 제목을 연결하고 좁은 화면에서는 제목만 줄바꿈합니다. */
-.docs-site #logo-bar.docs-package-brand { min-width: 0; max-width: 100%; }
-.docs-package-brand img { flex-shrink: 0; }
-.docs-site #title.docs-package-title { display: block; min-width: 0; padding: 0; color: var(--docs-charcoal); font-size: 26px; font-weight: 700; line-height: 1.25; }
-.docs-site #title.docs-context { padding: 0 0 0 24px; display: block; border-left: 1px solid var(--docs-line); font-size: 14px; color: var(--docs-muted); font-weight: 500; line-height: 1.5; }
-.docs-navigation { display: flex; align-items: center; gap: 4px; margin-left: auto; }
-.docs-navigation a, .docs-mobile-navigation a { padding: 9px 12px; border-radius: 6px; white-space: nowrap; font-size: 14px; font-weight: 600; color: var(--docs-ink); text-decoration: none; }
-.docs-navigation a:hover, .docs-navigation a[aria-current] { color: var(--docs-blue); background: var(--docs-surface); }
-.docs-site a.docs-download { background: #337ab7; color: #fff; margin-left: 8px; padding: 10px 16px; border-radius: 8px; }
-.docs-site a.docs-download:hover { background: #286090; }
-.docs-mobile-navigation { display: none; }
 .docs-breadcrumb { display: flex; flex-wrap: wrap; gap: 8px 12px; max-width: 1200px; padding: 28px 0 12px; margin: auto; color: var(--docs-muted); font-size: 14px; }
 .docs-breadcrumb [aria-current] { overflow-wrap: anywhere; }
 .docs-site :is(.MainContent, .classDescContent, .summarySection) { max-width: 1200px; margin-left: auto; margin-right: auto; }
@@ -46,7 +30,10 @@ body.docs-site {
 .docs-site .browser_table th:first-child, .docs-site .browser_table td:first-child { width: auto; }
 .docs-site .browser_table { width: 100%; }
 .docs-site .browser_table th { border-bottom: 1px solid var(--docs-line) !important; padding: 12px 8px !important; }
-.docs-site code:not(pre code) { background: var(--docs-surface); border-radius: 4px; padding: 2px 5px; color: var(--docs-blue-dark); }
+/* 본문의 파일명과 설정값은 주변 글자색을 따릅니다. 링크 안에서는 링크색을 그대로 상속합니다. */
+.docs-site code:not(pre code) { background: var(--docs-surface); border-radius: 4px; padding: 2px 5px; color: inherit; }
+/* 인라인 코드의 문법 토큰도 본문색을 사용하고 별도 코드 블록의 Prism 강조는 유지합니다. */
+.docs-site code:not(pre code) * { color: inherit; }
 .docs-site :is(pre, xmp) { border-radius: 8px; }
 /* API 검색과 표는 기존 필드 ID, 정렬 순서와 검색 동작을 그대로 사용합니다. */
 .docs-site .searchbox { border: 1px solid #bacddd; border-radius: 8px; background: var(--docs-surface); }
@@ -63,7 +50,8 @@ body.docs-site {
 .docs-site .summaryTable td { border-top: 1px solid var(--docs-line); padding: 24px 20px; vertical-align: top; overflow-wrap: anywhere; }
 .docs-site .summaryTable th:first-child, .docs-site .summaryTable td:first-child { width: 250px; }
 .docs-site .summarySignature { width: auto; margin: 0; padding: 12px; text-align: left; border-color: var(--docs-line); background: var(--docs-surface); border-radius: 8px; overflow-wrap: anywhere; }
-.docs-site .signatureLink { line-height: 1.6; font-weight: 700; color: var(--docs-blue-dark); }
+/* API 이름은 링크가 아니므로 색 대신 크기와 굵기로 강조합니다. */
+.docs-site .signatureLink { line-height: 1.6; font-size: 16px; font-weight: 700; color: inherit; }
 .docs-site .summaryTableDescription > .label { color: var(--docs-muted); }
 .docs-site .prop_table, .docs-site .prop_table td { border-color: var(--docs-line); background: var(--docs-surface); }
 .docs-site .mcp-status { background: var(--docs-surface); border: 1px solid var(--docs-line); border-left: 3px solid var(--docs-blue); border-radius: 8px; padding: 20px 24px; }
@@ -104,7 +92,7 @@ body.docs-home .docs-related p:last-child { margin: 0; }
 .docs-typedoc .tsd-page-toolbar { position: relative; top: auto; background: var(--docs-surface); border-color: var(--docs-line); }
 .docs-typedoc .docs-breadcrumb { padding: 20px 32px; max-width: 1600px; }
 .docs-typedoc > .docs-footer { margin-left: 32px; margin-right: 32px; max-width: none; }
-/* TypeDoc에서 이미 제공하는 테마 선택과 OS 설정은 새 헤더에도 반영합니다. */
+/* TypeDoc의 테마 선택과 OS 설정을 문서 외곽 색에도 반영합니다. */
 :root[data-theme="dark"] body.docs-typedoc {
     --docs-background: #1c2733; --docs-ink: #e5eff7; --docs-muted: #b2c2d3; --docs-charcoal: #e5eff7;
     --docs-line: #3b4b5a; --docs-surface: #273541; --docs-blue: #87bdeb; --docs-blue-dark: #a2cef2;
@@ -118,16 +106,8 @@ body.docs-home .docs-related p:last-child { margin: 0; }
 @media (max-width: 1264px) {
     .docs-site :is(.MainContent, .classDescContent, .summarySection, .docs-breadcrumb, .docs-footer) { margin-left: 32px; margin-right: 32px; }
     .docs-home-intro-inner { padding-left: 32px; padding-right: 32px; }
-    .docs-context { display: none !important; }
 }
 @media (max-width: 760px) {
-    .docs-header-inner { min-height: 72px; padding: 16px 20px; }
-    .docs-navigation { display: none; }
-    .docs-site details.docs-mobile-navigation { display: block; position: relative; margin: 0 0 0 auto; padding: 0; border: 0; }
-    .docs-mobile-navigation summary { list-style: none; border: 1px solid var(--docs-line); border-radius: 8px; padding: 9px 12px; cursor: pointer; }
-    .docs-mobile-navigation summary::-webkit-details-marker { display: none; }
-    .docs-mobile-navigation nav { position: absolute; z-index: 20; right: 0; top: calc(100% + 10px); min-width: 200px; display: flex; flex-direction: column; padding: 8px; border: 1px solid var(--docs-line); border-radius: 10px; background: var(--docs-background); box-shadow: 0 12px 32px #1f4e7914; }
-    .docs-site .docs-mobile-navigation .docs-download { margin: 4px 0 0; text-align: center; }
     body.docs-home .MainContent .main_ul { grid-template-columns: 1fr; }
     body.docs-site :is(.MainContent, .classDescContent, .summarySection, .docs-breadcrumb, .docs-footer) { margin-left: 20px; margin-right: 20px; padding-left: 0; padding-right: 0; }
     .docs-home-intro-inner { padding: 32px 20px 28px; }
@@ -141,7 +121,4 @@ body.docs-home .docs-related p:last-child { margin: 0; }
     /* 이전 표에 thead가 없는 경우에도 세로로 쌓인 API 카드 위의 열 제목을 숨깁니다. */
     .docs-site #summaryTableStyle tr:first-child:not([id]) { display: none; }
     .docs-site #summaryTableStyle td + td { border-top: 0; padding-top: 0; }
-}
-@media (max-width: 420px) {
-    .docs-site #title.docs-package-title { font-size: 23px; }
 }

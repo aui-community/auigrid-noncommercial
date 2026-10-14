@@ -1,9 +1,42 @@
-/* eslint-disable */
-/*
- * AUIGrid 사용자 정의 에디트 렌더러
- * 컬러 픽커인 jQuery Spectrum 에디트 렌더러
- * jQuery spectrum.js : https://github.com/bgrins/spectrum
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Color picker edit renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * Uses Spectrum (MIT, https://github.com/bgrins/spectrum) and jQuery (MIT), loaded separately.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
  */
+/*
+ * AUIGrid 사용자 정의 에디트 렌더러 - Spectrum 색상 편집기
+ *
+ * jQuery Spectrum 색상 선택기를 셀 편집기로 연결하는 예제입니다.
+ * 색상표 또는 직접 입력으로 색상을 고르고 확인하면 HEX 문자열을 저장하며, 취소하면 기존 값을 유지합니다.
+ *
+ * 연결 파일
+ *   AUIGrid.js, jQuery와 Spectrum의 spectrum.js 및 spectrum.css가 필요합니다.
+ *   AUIGrid.js 다음에 AUIGrid.SpectrumEditor.js를 연결하고 편집 시작 전에 Spectrum을 로드합니다.
+ *   WebDemo의 Spectrum 파일은 external/spectrum/에 있습니다.
+ *
+ * 사용법 (그리드 속성 editable: true)
+ *   {
+ *     dataField: "color", // 예: "#ff8800"
+ *     editRenderer: {
+ *       type: "CustomEditRenderer",
+ *       jsClass: AUIGrid.SpectrumEditor,
+ *       vPosition: "bottom"
+ *     }
+ *   }
+ *
+ * 설정 변경
+ *   이 예제는 extraProps를 Spectrum에 전달하지 않습니다.
+ *   색상표와 버튼 문구 등은 create()의 spectrum() 옵션에서 변경합니다.
+ *   별도 렌더러 CSS 없이 Spectrum의 CSS를 사용합니다.
+ *   외부 라이브러리: Spectrum (MIT License), https://github.com/bgrins/spectrum
+ */
+/* eslint-disable */
 window.AUIGrid.SpectrumEditor = window.AUIGrid.Class({
 	/****************************************************************
 	 *

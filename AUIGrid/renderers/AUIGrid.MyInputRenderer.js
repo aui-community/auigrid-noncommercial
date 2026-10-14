@@ -1,8 +1,39 @@
-/* eslint-disable */
-/*
- * AUIGrid 사용자 정의 렌더러
- * input 렌더러 (자체 수정 기능을 갖춘 렌더러)
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Input renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
  */
+/*
+ * AUIGrid 사용자 정의 렌더러 - 항상 표시되는 텍스트 입력란
+ *
+ * 셀에 input을 항상 표시하고, 입력란이 포커스를 잃으면 AUIGrid.setCellValue()로 값을 저장합니다.
+ * Enter 또는 Tab을 누르면 다음 행의 같은 칼럼으로 이동합니다.
+ * 별도 편집기를 여는 editRenderer가 아니라 자체 입력 기능을 가진 renderer입니다.
+ *
+ * 연결 파일
+ *   AUIGrid.js 다음에 AUIGrid.MyInputRenderer.js와 AUIGrid.MyInputRenderer.css를 연결합니다.
+ *   별도 외부 라이브러리는 필요하지 않습니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "name", // input에 표시하고 저장할 행 필드
+ *     editable: false,   // 기본 편집기가 별도로 열리지 않게 설정
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: AUIGrid.MyInputRenderer
+ *     }
+ *   }
+ *
+ * 설정 변경
+ *   입력 모양은 전용 CSS에서, 저장과 키 이동 동작은 __inputBlurHandler와 __inputKeyDownHandler에서 수정합니다.
+ *   이 예제에는 extraProps 옵션이 없습니다.
+ */
+/* eslint-disable */
 window.AUIGrid.MyInputRenderer = window.AUIGrid.Class({
 	/****************************************************************
 	 *

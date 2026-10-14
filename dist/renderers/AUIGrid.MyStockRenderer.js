@@ -1,7 +1,40 @@
-/* eslint-disable */
-/*
- * AUIGrid 사용자 정의 렌더러
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Stock renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
  */
+/*
+ * AUIGrid 사용자 정의 렌더러 - 주가 표시
+ *
+ * 현재가, 등락률과 등락 차이를 한 셀에 표시합니다.
+ * 등락률이 양수면 빨강과 상승 아이콘, 음수면 파랑과 하락 아이콘을 사용합니다.
+ *
+ * 연결 파일
+ *   AUIGrid.js 다음에 AUIGrid.MyStockRenderer.js를 연결합니다.
+ *   배치는 WebDemo renderer_custom_1.html의 .aui-grid-renderer-custom .my-child1~3 CSS를 함께 적용합니다.
+ *   페이지 기준 ./assets/ico_up.gif와 ./assets/ico_down.gif가 필요합니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "close",
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: AUIGrid.MyStockRenderer
+ *     }
+ *   }
+ *   행 데이터 예: { close: "72,000", vars: 1.5, gap: "1,000" }
+ *
+ * 데이터와 표시
+ *   close는 현재가, vars는 등락률, gap은 등락 차이입니다. 필드명은 구현에 고정되어 있습니다.
+ *   vars 뒤에는 %를 붙이며, 나머지 값은 전달받은 내용을 표시합니다.
+ *   데모의 rowHeight는 38입니다. 이 예제에는 extraProps 옵션이 없습니다.
+ */
+/* eslint-disable */
 window.AUIGrid.MyStockRenderer = window.AUIGrid.Class({
 	/****************************************************************
 	 *

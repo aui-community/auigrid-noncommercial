@@ -269,7 +269,8 @@ export function createDemo(onChange: (view: DemoView) => void, _baseUrl: string)
         rowHeight: 38,
         headerHeight: 36,
         showRowNumColumn: false,
-        fixedColumnCount: 1,
+        // 모든 칼럼이 함께 가로 스크롤되도록 고정을 해제합니다.
+        fixedColumnCount: 0,
         selectionMode: 'singleRow',
         enableSorting: true
     };

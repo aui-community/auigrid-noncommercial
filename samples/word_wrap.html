@@ -1,107 +1,138 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="Content-Script-Type" content="text/javascript">
-	<meta http-equiv="Content-Style-Type" content="text/css">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=800">
-	<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid">
-	<meta name="og:url" content="https://www.auisoft.net/">
-	<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft">
-	<title>AUIGrid 데모, HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
-	<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
 
-	<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
-	<link href="./demo.css" rel="stylesheet">
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet" />
 
-	<!-- 공용 스크립트. 여기에 공통적인 스크립트가 존재합니다.  -->
-	<script type="text/javascript" src="./common.js"></script>
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
 
-	<!-- AUIGrid 컴포넌트의 CSS 파일입니다. 원하는 테마 스타일 CSS를 선언하십시오.-->
-	<link href="./style/AUIGrid_style.css" rel="stylesheet">
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
 
-	<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
-	<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
-	<!-- 실제적인 AUIGrid 라이브러리입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
-	<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+<style>
+    .my-custom-column {
+        text-align: left;
+    }
+</style>
 
-	<style>
-		.my-custom-column {
-			text-align: left;
-		}
-	</style>
+<script>
+    // AUIGrid 생성 후 반환 ID
+    let myGridID;
 
-	<script>
-		// AUIGrid 생성 후 반환 ID
-		let myGridID;
+    // 시작점
+    function init() {
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+        // 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
+        requestGridData("./data/message_100.json");
+    }
 
-		// 시작점
-		function init() {
-			// AUIGrid 그리드를 생성합니다.
-			createAUIGrid();
-			// 데이터 요청, 요청 성공 시 AUIGrid 에 데이터 삽입합니다.
-			requestGridData("./data/message_100.json");
-		}
+    // AUIGrid 를 생성합니다.
+    function createAUIGrid() {
+        // 그리드 칼럼 레이아웃 설정
+        const columnLayout = [
+            {
+                dataField: "id",
+                headerText: "ID",
+                width: 140
+            },
+            {
+                dataField: "msg",
+                headerText: "Message",
+                style: "my-custom-column",
+                width: 500,
+                widthFit: 500
+            },
+            {
+                dataField: "date",
+                headerText: "Date",
+                width: 160
+            }
+        ];
 
-		// AUIGrid 를 생성합니다.
-		function createAUIGrid() {
-			// 그리드 칼럼 레이아웃 설정
-			const columnLayout = [{
-				dataField: "id",
-				headerText: "ID",
-				width: 140
-			}, {
-				dataField: "msg",
-				headerText: "Message",
-				style: "my-custom-column",
-				width: 500,
-				widthFit: 500
-			}, {
-				dataField: "date",
-				headerText: "Date",
-				width: 160
-			}];
+        // 그리드 속성 설정
+        const gridProps = {
+            // 워드랩 적용
+            wordWrap: true,
+            showRowCheckColumn: true,
+            editable: true,
+            selectionMode: "multipleCells"
+        };
 
-			// 그리드 속성 설정
-			const gridProps = {
-				// 워드랩 적용 
-				wordWrap: true,
-				showRowCheckColumn: true,
-				editable: true,
-				selectionMode: "multipleCells"
-			};
-
-			// 실제로 #grid_wrap 에 그리드 생성
-			myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-		}
-	</script>
+        // 실제로 #grid_wrap 에 그리드 생성
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
 </head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
 
-<body>
-
-	<div id="main">
-		<div class="desc">
-			<p>출력할 텍스트가 긴 경우 word-wrap 형식으로 출력시킵니다. ( wordWrap = true 설정)</p>
-			<p>자동 개행이 발생하며, 개별 자동 행 높이로 출력됩니다.</p>
-			<p>BR 태그로 원하는 곳에서 개행을 하여 출력을 원한다면 TemplateRenderer 사용으로 가능합니다. 다음 데모를 참고하십시오.</p>
-			<p><a href="./word_wrap_template.html">BR 태그 사용하여 수동 개행 및 자동 행 높이 데모 보기</a></p>
-		</div>
-		<div>
-			<!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-			<div id="grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
-		</div>
-		<div class="desc_bottom">
-			<p id="elapse"></p>
-		</div>
-	</div>
-	<div id="footer">
-		<div class="copyright">
-			<p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net </p>
-		</div>
-	</div>
+<div id="main">
+    <div class="desc">
+        <p>출력할 텍스트가 긴 경우 word-wrap 형식으로 출력시킵니다. ( wordWrap = true 설정)</p>
+        <p>자동 개행이 발생하며, 개별 자동 행 높이로 출력됩니다.</p>
+        <p>
+            <strong>wordWrap 의 사용은 그리드 퍼포먼스에 가장 큰 영향을 미치는 속성 중 하나입니다.</strong>
+        </p>
+        <p><strong>설정한 칼럼의 개수와 보여지는 행의 개수에 비례하여 퍼포먼스는 낮아집니다.</strong></p>
+        <p>
+            <strong>따라서 wordWrap 사용은 적은 수의 컬럼에서 꼭 필요한 상황에 최소한으로 사용하십시오.</strong>
+        </p>
+        <p>
+            BR 태그로 원하는 곳에서 개행을 하여 출력을 원한다면 TemplateRenderer 사용으로 가능합니다. 다음 데모를
+            참고하십시오.
+        </p>
+        <p>
+            <a href="javascript:changeLocation('./word_wrap_template.html?ex1_7')"
+                >BR 태그 사용하여 수동 개행 및 자동 행 높이 데모 보기</a
+            >
+        </p>
+        <p>
+            많은 수의 행, 열에서 불가피하게 wordWrap 을 사용해야 한다면 usePaging = true 설정으로 페이징 모드를 사용해야
+            합니다.<a href="javascript:changeLocation('./word_wrap-paging.html?ex1_7')">wordWrap - 페이징 데모 보기</a>
+        </p>
+    </div>
+    <div>
+        <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
+        <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+    </div>
+    <div class="desc_bottom">
+        <p id="elapse"></p>
+    </div>
+</div>
+<div id="footer">
+    <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
 </body>
-
 </html>

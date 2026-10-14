@@ -122,30 +122,19 @@
      color: #676da4;
  }
 
- .sc-progress {
-     display: flex;
-     align-items: center;
-     gap: 6px;
-     padding: 0 7px;
- }
-
- .sc-progress-track {
-     height: 4px;
+ /* PercentageRenderer를 사용하며 좁은 밴드형 칼럼에 맞춰 기존 색상과 여백을 유지합니다. */
+ .sc-progress .aui-grid-percentage-track {
+     margin-left: 7px;
      background: #e3eceb;
-     flex: 1;
-     overflow: hidden;
-     border-radius: 3px;
  }
 
- .sc-progress-track i {
-     display: block;
-     height: 100%;
+ .sc-progress .aui-grid-percentage-bar {
      background: #27b698;
-     border-radius: 3px;
  }
 
- .sc-progress span {
+ .sc-progress .aui-grid-percentage-label {
      font-size: 10px;
      min-width: 27px;
+     margin-right: 7px;
      color: #607e80;
  }

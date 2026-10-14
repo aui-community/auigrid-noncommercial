@@ -1,58 +1,73 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href=".././static/prism.css">
-<link rel="stylesheet" href=".././static/style.css" type="text/css" media="screen">
-<link rel="stylesheet" href=".././static/typography.css">
-<link rel="stylesheet" href=".././static/code-examples.css">
-<meta charset="utf-8">
-<meta content="text/javascript" http-equiv="Content-Script-Type">
-<meta content="text/css" http-equiv="Content-Style-Type">
-<meta content="IE=edge" http-equiv="X-UA-Compatible">
-<meta content="no-cache" http-equiv="Pragma">
-<meta content="-1" http-equiv="Expires">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title">
-<meta content="AUIGrid API Documentation" property="og:title">
-<meta content="http://www.auisoft.net/documentation/auigrid" property="og:url">
-<meta content="AUIGrid API Documentation" property="og:description">
-<meta content="AUIGrid API Documentation" name="keywords">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href=".././static/prism.css" />
+<link rel="stylesheet" href=".././static/style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href=".././static/typography.css" />
+<link rel="stylesheet" href=".././static/code-examples.css" />
+<meta charset="utf-8" />
+<meta content="text/javascript" http-equiv="Content-Script-Type" />
+<meta content="text/css" http-equiv="Content-Style-Type" />
+<meta content="IE=edge" http-equiv="X-UA-Compatible" />
+<meta content="no-cache" http-equiv="Pragma" />
+<meta content="-1" http-equiv="Expires" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="AUIGrid API Documentation" name="apple-mobile-web-app-title" />
+<meta content="AUIGrid API Documentation" property="og:title" />
+<meta content="http://www.auisoft.net/documentation/auigrid" property="og:url" />
+<meta content="AUIGrid API Documentation" property="og:description" />
+<meta content="AUIGrid API Documentation" name="keywords" />
 
-<script src="../static/doc.js?v=250612" type="text/javascript"></script>
+<script src="../static/doc.js?v=261012" type="text/javascript"></script>
 <!-- This project uses Prism.js (https://prismjs.com/)  Licensed under the MIT License (https://opensource.org/licenses/MIT) -->
 <script src="../static/prism.js" data-manual></script>
 <script src="../static/code-examples.js"></script>
-<title>	AUIGrid Documentation</title>
+<title>AUIGrid Documentation</title>
 
-<link rel="icon" href="../static/favicon.ico" sizes="any">
-<link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
-<meta name="theme-color" content="#222729">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="../static/docs-brand.css">
+<link rel="icon" href="../static/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png" />
+<meta name="theme-color" content="#222729" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+/>
+<link rel="stylesheet" href="../static/docs-brand.css" />
 </head>
 <body class="demo-typography docs-site">
-<header class="docs-header"><div class="docs-header-inner">
-    <a id="logo-bar" class="docs-brand docs-package-brand" href="../index.html" aria-label="AUIGrid 문서 홈">
-      <img src="../static/favicon.svg" width="40" height="40" alt="">
-      <span id="title" class="docs-package-title">AUIGrid v3.0.19 Documentation</span>
-    </a>
-  </div></header><nav class="docs-breadcrumb" aria-label="현재 위치"><a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span><span aria-hidden="true">/</span><span aria-current="page">BarRenderer</span></nav>
+<nav class="docs-breadcrumb" aria-label="현재 위치">
+    <a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span
+    ><span aria-hidden="true">/</span><span aria-current="page">BarRenderer</span>
+</nav>
 <div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
-<!-- API 문서도 소개 문서와 같은 h1을 사용하고 검색은 제목 아래에 배치합니다. -->
-<h1>BarRenderer</h1>
-<div id="searchbox" class="searchbox">
-<span class="keyword"><input placeholder="검색어 입력" maxlength="255" class="box_window" name="i_query" id="i_query" type="text"></span>
-</div>
-<div id="desc_top">
-<p><p>셀의 값을 바 게이지로 표시하는 렌더러입니다.</p>
-<p>바 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
-<p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p></p>
-<a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
-<div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">
+    <table cellspacing="0" cellpadding="0" class="classHeaderTable"></table>
+    <!-- API 문서도 소개 문서와 같은 h1을 사용하고 검색은 제목 아래에 배치합니다. -->
+    <h1>BarRenderer</h1>
+    <div id="searchbox" class="searchbox">
+        <span class="keyword"
+            ><input
+                placeholder="이름 또는 설명 검색"
+                aria-label="이 페이지에서 찾기"
+                aria-describedby="search-status"
+                aria-controls="summaryTableStyle"
+                maxlength="255"
+                class="box_window"
+                name="i_query"
+                id="i_query"
+                type="search"
+        /></span>
+    </div>
+    <!-- 검색 개수와 결과 없음 상태를 화면과 보조 기술에 함께 알립니다. -->
+    <p id="search-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <div id="desc_top">
+        <p></p>
+        <p>셀의 값을 바 게이지로 표시하는 렌더러입니다.</p>
+        <p>바 렌더러는 칼럼 레이아웃을 정의할 때 개별 칼럼의 renderer 속성 값인 Object 형태로 선언되어야 합니다.</p>
+        <p><strong>칼럼의 renderer 속성의 type 으로만 설정 가능합니다.</strong></p>
+        </p>
+        <a name="mxmlSyntaxSummary"></a><span class="classHeaderTableLabel">아래는 설정 예제 입니다.</span>
+        <div class="mxmlSyntax" id="mxmlSyntax"><pre><code class="language-javascript">
 const columnLayout = [{
      dataField : "name",
      headerText : "Name",
@@ -69,89 +84,117 @@ const columnLayout = [{
       }
 }];
 </code></pre></div>
-</div>
+    </div>
 </div>
 <div class="summarySection">
-<table id="summaryTableStyle" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>Name</th><th>Description</th>
-</tr>
-<tr id="height">
-<td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<span class="signatureLink">height</span>
-</div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.18<br>
-<p>렌더러 표시 영역의 높이를 픽셀 단위로 지정합니다.</p>
-<p>양수를 지정하며 기본값 NaN이면 행 높이에 맞춥니다. wordWrap이 true이면 지정한 높이를 행 높이 계산에 반영합니다.</p>
-<pre><code class="language-javascript">renderer: {
+    <table id="summaryTableStyle" class="summaryTable" cellpadding="3" cellspacing="0">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr id="height">
+            <td class="summaryTableSignatureCol">
+                <div class="summarySignature">
+                    <span class="signatureLink">height</span>
+                </div>
+            </td>
+            <td class="summaryTableDescription">
+                <span class="label">Type : </span>Number &nbsp; <span class="label">Version: </span>3.0.18<br />
+                <p>렌더러 표시 영역의 높이를 픽셀 단위로 지정합니다.</p>
+                <p>
+                    양수를 지정하며 기본값 NaN이면 행 높이에 맞춥니다. wordWrap이 true이면 지정한 높이를 행 높이 계산에
+                    반영합니다.
+                </p>
+                <pre><code class="language-javascript">renderer: {
     type: "BarRenderer",
     height: 30 // 표시 영역의 높이
 }</code></pre>
-<p>Also See : <a href="../DataGrid/Methods.html#setRendererProp">setRendererProp()</a></p>
-<p><a href="../../samples/renderer_height.html" target="_blank">관련 데모 보기</a></p>
-기본값(default) : <code>NaN</code></td>
-</tr>
-<tr id="max">
-<td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<span class="signatureLink">max</span>
-</div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>Number<br>
-<p>바 게이지 축의 최댓값을 지정합니다.</p>
-<p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
-기본값(default) : <code>100</code></td>
-</tr>
-<tr id="min">
-<td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<span class="signatureLink">min</span>
-</div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>Number<br>
-<p>바 게이지 축의 최솟값을 지정합니다.</p>
-<p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
-기본값(default) : <code>0</code></td>
-</tr>
-<tr id="offset">
-<td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<span class="signatureLink">offset</span>
-</div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>Number<br>
-<p>바 게이지에 표시되는 텍스트의 좌우 여백을 지정합니다.</p>
-<p>기본적으로 칼럼 전체의 text-align 스타일을 따릅니다. 그러나 min, max 가 -100 ~ 100 사이 인 경우(즉, 0이라는 기준점이 있는 경우)
-게이지의 시작은 0 에서 음수와 양수 범위로 나뉘어 출력되고, 텍스트는 가운데 출력이 됩니다.</p>
-<p> 이 때 텍스트의 좌우 여백을 지정하여 좀 더 자연스러운 텍스트를 출력할 수 있습니다.</p>
-<p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
-기본값(default) : <code>0</code></td>
-</tr>
-<tr id="showLabel">
-<td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<span class="signatureLink">showLabel</span>
-</div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>Boolean<br>
-<p>바 게이지에 값 텍스트를 표시할지 지정합니다.</p>
-<p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
-기본값(default) : <code>true</code></td>
-</tr>
-<tr id="style">
-<td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<span class="signatureLink">style</span>
-</div>
-</td><td class="summaryTableDescription"><span class="label">Type : </span>String<br>
-<p>바 게이지에 적용할 CSS 클래스 이름을 지정합니다. 스타일은 CSS에 미리 정의되어 있어야 합니다.</p>
-<p>스타일은 CSS 에서 미리 선언된 CSS 클래스 선언자여야 합니다.</p>
-<p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
-기본값(default) : <code>null</code></td>
-</tr>
-</table>
+                <p>Also See : <a href="../DataGrid/Methods.html#setRendererProp">setRendererProp()</a></p>
+                <p><a href="../../samples/renderer_height.html" target="_blank">관련 데모 보기</a></p>
+                기본값(default) : <code>NaN</code>
+            </td>
+        </tr>
+        <tr id="max">
+            <td class="summaryTableSignatureCol">
+                <div class="summarySignature">
+                    <span class="signatureLink">max</span>
+                </div>
+            </td>
+            <td class="summaryTableDescription">
+                <span class="label">Type : </span>Number<br />
+                <p>바 게이지 축의 최댓값을 지정합니다.</p>
+                <p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
+                기본값(default) : <code>100</code>
+            </td>
+        </tr>
+        <tr id="min">
+            <td class="summaryTableSignatureCol">
+                <div class="summarySignature">
+                    <span class="signatureLink">min</span>
+                </div>
+            </td>
+            <td class="summaryTableDescription">
+                <span class="label">Type : </span>Number<br />
+                <p>바 게이지 축의 최솟값을 지정합니다.</p>
+                <p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
+                기본값(default) : <code>0</code>
+            </td>
+        </tr>
+        <tr id="offset">
+            <td class="summaryTableSignatureCol">
+                <div class="summarySignature">
+                    <span class="signatureLink">offset</span>
+                </div>
+            </td>
+            <td class="summaryTableDescription">
+                <span class="label">Type : </span>Number<br />
+                <p>바 게이지에 표시되는 텍스트의 좌우 여백을 지정합니다.</p>
+                <p>
+                    기본적으로 칼럼 전체의 text-align 스타일을 따릅니다. 그러나 min, max 가 -100 ~ 100 사이 인 경우(즉,
+                    0이라는 기준점이 있는 경우) 게이지의 시작은 0 에서 음수와 양수 범위로 나뉘어 출력되고, 텍스트는
+                    가운데 출력이 됩니다.
+                </p>
+                <p>이 때 텍스트의 좌우 여백을 지정하여 좀 더 자연스러운 텍스트를 출력할 수 있습니다.</p>
+                <p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
+                기본값(default) : <code>0</code>
+            </td>
+        </tr>
+        <tr id="showLabel">
+            <td class="summaryTableSignatureCol">
+                <div class="summarySignature">
+                    <span class="signatureLink">showLabel</span>
+                </div>
+            </td>
+            <td class="summaryTableDescription">
+                <span class="label">Type : </span>Boolean<br />
+                <p>바 게이지에 값 텍스트를 표시할지 지정합니다.</p>
+                <p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
+                기본값(default) : <code>true</code>
+            </td>
+        </tr>
+        <tr id="style">
+            <td class="summaryTableSignatureCol">
+                <div class="summarySignature">
+                    <span class="signatureLink">style</span>
+                </div>
+            </td>
+            <td class="summaryTableDescription">
+                <span class="label">Type : </span>String<br />
+                <p>바 게이지에 적용할 CSS 클래스 이름을 지정합니다. 스타일은 CSS에 미리 정의되어 있어야 합니다.</p>
+                <p>스타일은 CSS 에서 미리 선언된 CSS 클래스 선언자여야 합니다.</p>
+                <p><a href="../../samples/renderer_bar.html" target="_blank">관련 데모 보기</a></p>
+                기본값(default) : <code>null</code>
+            </td>
+        </tr>
+    </table>
 </div>
 <div class="MainContent">
-<p></p>
-
+    <p></p>
 </div>
-<footer class="docs-footer"><div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div><span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span></footer></body>
+<footer class="docs-footer">
+    <div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div>
+    <span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span>
+</footer>
+</body>
 </html>
 <!--Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved-->

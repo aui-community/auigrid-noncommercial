@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet" />
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<!-- 추가 제공 편집기는 AUIGrid.js 다음에 JS와 CSS를 함께 연결합니다. -->
+<script src="../AUIGrid/editRenderers/AUIGrid.RgbColorEditor.js?rev=20261013"></script>
+<link rel="stylesheet" href="../AUIGrid/editRenderers/AUIGrid.RgbColorEditor.css" />
+<style>
+    /* 셀 배경 대신 색상 견본과 코드를 나란히 보여 줍니다. */
+    .rgb-demo-color {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 100%;
+        padding: 0 12px;
+        box-sizing: border-box;
+        text-align: left;
+    }
+    .rgb-demo-swatch {
+        flex: none;
+        width: 24px;
+        height: 24px;
+        box-sizing: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+    }
+    .rgb-demo-code {
+        font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        white-space: nowrap;
+    }
+</style>
+<script>
+    let myGridID;
+
+    // 같은 편집기에서 저장 형식과 색상표를 칼럼별로 지정합니다.
+    function init() {
+        const columnLayout = [
+            { dataField: "id", headerText: "ID", width: 84, editable: false },
+            { dataField: "name", headerText: "상태명", width: 132, editable: false },
+            {
+                dataField: "hexColor",
+                headerText: "배경색 (HEX 저장)",
+                width: 228,
+                editRenderer: {
+                    type: "CustomEditRenderer",
+                    jsClass: AUIGrid.RgbColorEditor,
+                    vPosition: "bottom"
+                },
+                renderer: { type: "TemplateRenderer" },
+                labelFunction: colorLabel
+            },
+            {
+                dataField: "rgbColor",
+                headerText: "글자색 (RGB 저장)",
+                width: 252,
+                editRenderer: {
+                    type: "CustomEditRenderer",
+                    jsClass: AUIGrid.RgbColorEditor,
+                    vPosition: "bottom",
+                    extraProps: {
+                        format: "rgb",
+                        palette: ["#e53935", "#fb8c00", "#43a047", "#1e88e5", "#ffffff", "#000000"],
+                        confirm: "적용",
+                        cancel: "취소"
+                    }
+                },
+                renderer: { type: "TemplateRenderer" },
+                labelFunction: colorLabel
+            }
+        ];
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, {
+            editable: true,
+            enableUndoRedo: true,
+            showRowNumColumn: false,
+            rowIdField: "id",
+            rowHeight: 44,
+            headerHeight: 32
+        });
+        AUIGrid.setGridData(myGridID, [
+            { id: "B01", name: "진행중", hexColor: "#000000", rgbColor: "rgb(21, 101, 192)" },
+            { id: "B02", name: "완료", hexColor: "#f9a17d", rgbColor: "rgb(46, 125, 50)" },
+            { id: "B03", name: "지연", hexColor: "#6d61ff", rgbColor: "rgb(0, 105, 92)" },
+            { id: "B04", name: "보류", hexColor: "#fff8e1", rgbColor: "rgb(0, 105, 92)" },
+            { id: "B05", name: "검토", hexColor: "#64e5f5", rgbColor: "rgb(106, 27, 154)" },
+            { id: "B06", name: "취소", hexColor: "#eceff1", rgbColor: "rgb(84, 110, 122)" }
+        ]);
+        AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
+            document.querySelector("#edit-result").textContent = event.dataField + ": " + event.value;
+        });
+        AUIGrid.bind(myGridID, "cellEditCancel", function () {
+            document.querySelector("#edit-result").textContent = "편집을 취소했습니다.";
+        });
+    }
+
+    // 편집 결과를 색상 견본에 반영하되 붙여넣은 문자열을 HTML로 실행하지 않습니다.
+    function colorLabel(rowIndex, columnIndex, value) {
+        const text = value == null ? "" : String(value);
+        const color = /^(?:#[0-9a-f]{3}|#[0-9a-f]{6}|rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\))$/i.test(text)
+            ? text
+            : "transparent";
+        const escaped = text.replace(/[&<>"']/g, function (character) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character];
+        });
+        return (
+            '<div class="rgb-demo-color"><span class="rgb-demo-swatch" aria-hidden="true" style="background-color:' +
+            color +
+            '"></span><span class="rgb-demo-code">' +
+            escaped +
+            "</span></div>"
+        );
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+
+<div id="main">
+    <div class="desc">
+        <p>
+            배경색, 글자색 칼럼을 더블클릭하거나 선택 후 F2 / 스페이스바를 누르면
+            <code>AUIGrid.RgbColorEditor</code>가 열립니다.
+        </p>
+        <p>
+            RGB 슬라이더, 숫자, HEX 입력, 색상표로 고르고 <strong>Enter</strong> 또는 확인으로 적용,
+            <strong>Esc</strong> 또는 취소로 닫습니다.
+        </p>
+    </div>
+    <!-- 편집기를 연결하는 방법을 먼저 읽고 아래 그리드에서 직접 확인합니다. -->
+    <div class="desc">
+        <p>AUIGrid.js 다음에 편집기 JS와 편집기 CSS를 연결합니다. 칼럼의 editRenderer에 다음과 같이 지정합니다.</p>
+        <pre><code class="language-html">&lt;script src="../AUIGrid/editRenderers/AUIGrid.RgbColorEditor.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="../AUIGrid/editRenderers/AUIGrid.RgbColorEditor.css" /&gt;</code></pre>
+        <pre><code class="language-javascript">editRenderer: {
+    type: "CustomEditRenderer",
+    jsClass: AUIGrid.RgbColorEditor,
+    vPosition: "bottom",
+    extraProps: {
+        format: "rgb", // 생략하면 "hex"로 저장
+        palette: ["#e53935", "#43a047", "#1e88e5"],
+        confirm: "적용",
+        cancel: "취소"
+    }
+}</code></pre>
+        <p>
+            저장 형식(extraProps.format)은 "hex"(#rrggbb, 기본값) 또는 "rgb"(rgb(r, g, b))입니다. 기존 값은 #rgb,
+            #rrggbb 또는 rgb(r, g, b)를 사용합니다.
+        </p>
+        <p>
+            색상표(extraProps.palette)는 HEX 색상 배열이며 생략하면 기본 16색을 표시합니다. 버튼
+            문구(extraProps.confirm, extraProps.cancel)의 기본값은 "확인", "취소"입니다.
+        </p>
+    </div>
+    <div id="grid_wrap" style="width: 100%; height: 420px; margin: 0 auto"></div>
+    <p id="edit-result" role="status" aria-live="polite">색상 셀을 편집해 보십시오.</p>
+</div>
+<div id="footer">
+    <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

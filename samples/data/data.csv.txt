@@ -1,4 +1,4 @@
-#Cust0,Anna,Ireland,ireland.png,Galaxy S25,Yellow,232500,12,2025-04-24
+﻿#Cust0,Anna,Ireland,ireland.png,Galaxy S25,Yellow,232500,12,2025-04-24
 #Cust1,Jennifer,France,france.png,IPhone 16 Pro,Violet,377400,0,2025-04-23
 #Cust2,Kim,Singapore,singapore.png,Galaxy Note21,Gray,787600,20,2025-04-22
 #Cust3,Anna,China,china.png,IPhone 16,Blue,144400,10,2025-04-21

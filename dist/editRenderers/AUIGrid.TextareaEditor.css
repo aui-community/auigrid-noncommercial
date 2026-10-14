@@ -1,36 +1,102 @@
 @charset "UTF-8";
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Textarea edit renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
+ */
 
-.aui-grid-edit-renderer-custom-textarea {
-	text-align: right;
-	min-width: 240px;
+/* AUIGrid.TextareaEditor (개선판)
+ * 원본 CSS 와 함께 로드되어도 개선판 스타일이 적용되도록 .aui-ta-v2 로 범위를 지정합니다. */
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 {
+	box-sizing: border-box;
+	min-width: 280px;
+	padding: 8px;
+	background: #fff;
+	border: 1px solid #b8c0cc;
+	border-radius: 6px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+	text-align: left;
+	white-space: normal;
 }
-.aui-grid-edit-renderer-custom-textarea textarea {
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 textarea {
 	display: block;
-	font-size: 12px;
-	width: calc(100% - 8px);
-	height: 80px;
-	padding: 4px;
-	margin: 4px;
 	box-sizing: border-box;
+	width: 100%;
+	height: auto;
+	margin: 0;
+	padding: 6px 8px;
+	border: 1px solid #ccd2da;
+	border-radius: 4px;
+	font: 13px/1.5 "Malgun Gothic", sans-serif;
+	color: #222;
+	resize: vertical;
+	overflow-y: auto;
 }
-.aui-grid-edit-renderer-custom-textarea button {
-	font-size: 12px;
-	color: #000000 !important;
-	background: #eee;
-	border: 1px solid #aaaaaa;
-	background-clip: padding-box;
-	box-sizing: border-box;
-	display: inline-block;
-	line-height: 1em;
-	border-radius: 0px;
-	appearance: none;
-	-webkit-appearance: none;
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 textarea:focus {
+	border-color: #1e88e5;
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.15);
+}
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 .aui-ta-foot {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 6px;
+}
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 .aui-ta-help {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #8a9099;
+	font-size: 11px;
+}
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 .aui-ta-counter {
+	color: #8a9099;
+	font: 11px Consolas, monospace;
+}
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 .aui-ta-counter-full {
+	color: #e53935;
 	font-weight: bold;
-	text-align: center;
-	cursor: pointer;
-	padding: 4px;
-	margin: 4px 16px 4px 4px;
 }
-.aui-grid-edit-renderer-custom-textarea button:hover {
-	background: #ddd;
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 button {
+	display: inline-block;
+	height: 26px;
+	margin: 0;
+	padding: 0 14px;
+	border: 1px solid #ccd2da;
+	border-radius: 3px;
+	background: #fff;
+	color: #333 !important;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 24px;
+	cursor: pointer;
+}
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 button:hover {
+	background: #f3f5f8;
+}
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 .custom-textarea-confirm-btn {
+	border-color: #1e6fc4;
+	background: #1e88e5;
+	color: #fff !important;
+}
+
+.aui-grid-edit-renderer-custom-textarea.aui-ta-v2 .custom-textarea-confirm-btn:hover {
+	background: #1976d2;
 }

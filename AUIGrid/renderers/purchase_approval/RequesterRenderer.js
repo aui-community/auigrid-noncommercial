@@ -1,4 +1,43 @@
-/* 요청자의 SVG 아바타, 이름과 소속을 표시합니다. 자체 제작한 로컬 이미지를 사용합니다. */
+/*!
+ * AUIGrid Non-Commercial v3.0.20.0 - Purchase approval showcase renderer sample
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
+ */
+/*
+ * AUIGrid 사용자 정의 렌더러 - 구매 요청자 표시
+ *
+ * 요청자의 아바타, 이름과 소속을 표시하고 클릭하면 요청자 정보 조회를 페이지에 요청합니다.
+ *
+ * 연결 파일
+ *   AUIGrid.js 다음에 js/renderers/purchase_approval/cell-utils.js와 RequesterRenderer.js 파일을 순서대로 연결합니다.
+ *   showcase7.html의 purchase-cell 및 관련 자식 클래스 CSS를 함께 적용합니다. 별도 렌더러 CSS 파일은 없습니다.
+ *   같은 폴더의 avatars/avatar-1.svg~avatar-4.svg를 함께 제공합니다.
+ *
+ * 사용법
+ *   {
+ *     dataField: "requester",
+ *     renderer: {
+ *       type: "CustomRenderer",
+ *       jsClass: AUIGrid.RequesterRenderer,
+ *       extraProps: {
+ *         onAction: function (event) {
+ *           // event.id로 행을 찾고 event.action과 event.value에 맞게 화면 또는 데이터를 처리합니다.
+ *         }
+ *       }
+ *     }
+ *   }
+ *   행 데이터 예: { id: "P01", requester: "김민수", team: "개발팀", tone: 0 }
+ *
+ * 데이터와 동작
+ *   requester는 이름, team은 소속입니다. tone은 0 이상의 정수로 네 아바타 중 하나를 선택합니다.
+ *   요청자 클릭: action은 "requester"이며 value는 undefined입니다.
+ *   onAction은 { id, action, value }를 받습니다. 렌더러가 데이터를 직접 변경하지 않습니다.
+ */
 var purchaseAvatarBase = new URL("./avatars/", document.currentScript.src).href;
 window.AUIGrid.RequesterRenderer = window.AUIGrid.Class({
 	tagName: 'div',
