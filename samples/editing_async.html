@@ -175,6 +175,8 @@
         button.disabled = true;
         showResult(id + " 주문의 삭제 가능 여부를 확인합니다.");
         try {
+            // 외부 버튼에서 시작해도 대기 중 Esc를 받을 수 있도록 그리드에 포커스를 옮깁니다.
+            AUIGrid.setFocus(myGridID);
             // 메소드의 완료는 승인 또는 취소 모두에 해당하므로 실제 데이터로 구분합니다.
             await AUIGrid.removeRow(myGridID, "selectedIndex");
             if (AUIGrid.getGridData(myGridID).some((item) => item.id === id)) {

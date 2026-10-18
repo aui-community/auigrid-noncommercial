@@ -187,8 +187,9 @@ const columnLayout = [{
                 <p>
                     v3.0.20부터 그리드의
                     <a href="../DataGrid/Properties.html#useAsyncHandler">useAsyncHandler</a>=true이면 배열을 반환하는
-                    Promise도 사용할 수 있습니다. 목록을 열 때 응답을 기다리며, Esc 또는 거부된 Promise는 목록 열기를
-                    취소합니다. 데이터, 칼럼이나 대상 셀이 바뀐 뒤 도착한 응답은 무시합니다.
+                    Promise도 사용할 수 있습니다. 목록을 열면 즉시 목록 레이어에 로딩 안내를 표시하고, 응답 항목으로
+                    교체합니다. Esc 또는 거부된 Promise는 목록 열기를 취소합니다. 데이터, 칼럼이나 대상 셀이 바뀐 뒤
+                    도착한 응답은 무시합니다.
                 </p>
                 <p>
                     keyField와 valueField를 사용하면 셀 표시 과정에서도 조회할 수 있으며 같은 표시 대상의 비동기 결과를

@@ -1,5 +1,5 @@
 /*!
- * AUIGrid Non-Commercial v3.0.20.0 - Messages (English (Canada))
+ * AUIGrid Non-Commercial v3.0.20.1 - Messages (English (Canada))
  * Copyright (c) AUISoft Co., Ltd. All rights reserved.
  *
  * AUIGrid 화면 메시지 파일입니다. AUIGrid 사용권 범위 안에서 번역하거나 수정하여 사용할 수 있습니다.
@@ -9,7 +9,7 @@
 /* eslint-disable */
 /**
  * AUIGrid 에서 사용되는 메세지들을 정의합니다. - 캐나다 영어
- * 마지막 추가된 버전 : v3.0.16.11
+ * 마지막 추가된 버전 : v3.0.20.1
  */
 (function () {
 	const AUIGridMessages = {

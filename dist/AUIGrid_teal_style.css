@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /*!
- * Teal Theme Style for AUIGrid Non-Commercial v3.0.20.0
+ * Teal Theme Style for AUIGrid Non-Commercial v3.0.20.1
  * Copyright (c) AUISoft Co., Ltd. All rights reserved.
  *
  * 해당 원본을 직접 수정하지 마시고, 복사하여 사용하거나, CSS 클래스 재정의를 하여 스타일을 변경하십시오.
@@ -223,7 +223,7 @@
 /* 고정 칼럼과 일반 칼럼 경계선 */
 .aui-grid-fixed-column-rule {
 	background: #b7bdc0;
-	width: 1px;
+	width: 0.5px;
 }
 
 /* 고정 로우와 일반 로우 경계선 */
@@ -2810,128 +2810,4 @@
 	text-align: inherit;
 	color: inherit;
 	font-weight: inherit;
-}
-
-/* 내장 MultiAutoCompleteRenderer: 태그 선택, 검색 및 추천 목록 */
-/* 그리드 밖에 열리는 팝업에도 테마의 글꼴, 표면색과 입력 색을 직접 지정합니다. */
-.aui-grid-multi-autocomplete {
-	min-width: 0;
-	color: #212e34;
-	background: #ffffff;
-	border: 1px solid #0f766e;
-	border-radius: 3px;
-	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14), 0 1px 4px rgba(0, 0, 0, 0.08);
-	font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', AppleSDGothicNeo-Light, sans-serif;
-	color-scheme: light;
-	accent-color: #0f766e;
-	font-size: 12px;
-	box-sizing: border-box;
-	text-align: left;
-}
-
-/* 선택 태그와 검색 입력 영역 */
-.aui-grid-multi-autocomplete .aui-multi-ac-box {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 4px;
-	padding: 4px;
-	min-height: 32px;
-	background: #ffffff;
-	border-radius: 3px 3px 0 0;
-	cursor: text;
-	box-sizing: border-box;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-tag {
-	display: inline-flex;
-	align-items: center;
-	gap: 2px;
-	max-width: 100%;
-	padding: 2px 4px 2px 8px;
-	border-radius: 12px;
-	background: #d4e6e5;
-	color: #0c5e58;
-	font-weight: 600;
-	line-height: 18px;
-	white-space: nowrap;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-remove {
-	width: 16px;
-	height: 16px;
-	padding: 0;
-	border: 0;
-	border-radius: 50%;
-	background: transparent;
-	color: inherit;
-	font-size: 13px;
-	line-height: 16px;
-	cursor: pointer;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-remove:hover,
-.aui-grid-multi-autocomplete .aui-multi-ac-remove:focus-visible {
-	background: #0f766e;
-	color: #ffffff;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-remove:focus-visible {
-	outline: 2px solid #0f766e;
-	outline-offset: 1px;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-input {
-	flex: 1 1 60px;
-	min-width: 60px;
-	height: 22px;
-	padding: 0 4px;
-	border: 0;
-	outline: none;
-	font: inherit;
-	color: inherit;
-	caret-color: #0f766e;
-	background: transparent;
-}
-
-/* 입력 안내와 검색 결과가 없을 때의 글자도 테마 대비를 유지합니다. */
-.aui-grid-multi-autocomplete .aui-multi-ac-input::placeholder {
-	color: #5d6d73;
-	opacity: 1;
-}
-
-/* 추천 목록 */
-.aui-grid-multi-autocomplete .aui-multi-ac-list {
-	/* 항목 높이와 개수에 관계없이 목록을 최대 200px로 표시합니다. */
-	max-height: 200px;
-	box-sizing: border-box;
-	list-style: none;
-	margin: 0;
-	padding: 2px 0;
-	border-top: 1px solid #d3d6d8;
-	overflow-y: auto;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-list li {
-	padding: 0 10px;
-	line-height: 28px;
-	cursor: pointer;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-list li:hover {
-	background: #edf5f4;
-	color: #212e34;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-list li.is-active {
-	background: #0f766e;
-	color: #ffffff;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-list mark {
-	background: none;
-	color: inherit;
-	font-weight: 800;
-	text-decoration: underline;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-list li.aui-multi-ac-empty {
-	color: #5d6d73;
-	cursor: default;
-}
-.aui-grid-multi-autocomplete .aui-multi-ac-list li.aui-multi-ac-empty:hover {
-	background: none;
 }

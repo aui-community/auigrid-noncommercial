@@ -1,7 +1,7 @@
 <script>
 	/**
-	 * AUIGrid.vue for Vue.js v1.7.20261014
-	 * Based on AUIGrid v3.0.20.0
+	 * AUIGrid.vue for Vue.js v1.7.20261019
+	 * Based on AUIGrid v3.0.20.1
 	 * Copyright © AUISoft Co., Ltd.
 	 * www.auisoft.net
 	 */

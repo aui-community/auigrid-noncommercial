@@ -62,9 +62,14 @@
                     type: "InputEditRenderer",
                     // ID는 고유값만 가능하도록 에디팅 유효성 검사
                     validator: function (oldValue, newValue, item, dataField) {
-                        if (oldValue != newValue) {
-                            // dataField 에서 newValue 값이 유일한 값인지 조사
-                            const isValid = AUIGrid.isUniqueValue(myGridID, dataField, newValue);
+                        // numeric 칼럼에 저장될 숫자로 비교해 "01", "1.0"도 기존 1과 중복으로 판정합니다.
+                        const value = Number(newValue);
+                        if (String(newValue).trim() === "" || !Number.isFinite(value)) {
+                            return { validate: false, message: "유한한 숫자 ID를 입력해 주세요." };
+                        }
+                        if (Number(oldValue) !== value) {
+                            // 현재 값과 같으면 허용하고, 다른 값이면 전체 행에서 중복을 확인합니다.
+                            const isValid = AUIGrid.isUniqueValue(myGridID, dataField, value);
                             // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
                             return {
                                 "validate": isValid,
@@ -83,7 +88,7 @@
                     // 에디팅 유효성 검사
                     validator: function (oldValue, newValue, item) {
                         let isValid = false;
-                        const matcher = /^[A-Za-z+]{2,8}$/; // 알파벳 2~8자 체크 정규식
+                        const matcher = /^[A-Za-z]{2,8}$/; // 알파벳 2~8자 체크 정규식
                         if (matcher.test(newValue)) {
                             isValid = true;
                         }
@@ -150,11 +155,19 @@
                     type: "InputEditRenderer",
                     // 에디팅 유효성 검사
                     validator: function (oldValue, newValue, item) {
-                        let isValid = false;
-                        const email_matcher = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/; // 이메일 체크 정규식
-                        if (email_matcher.test(newValue)) {
-                            isValid = true;
-                        }
+                        // 따옴표 없는 영문 주소 예제입니다. 점 사이에는 문자가 있어야 하며 +도 허용합니다.
+                        const parts = String(newValue).split("@");
+                        const local = parts[0];
+                        const domain = parts[1] || "";
+                        const atom = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+$/;
+                        const domainLabel = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?$/;
+                        const isValid =
+                            parts.length === 2 &&
+                            local.length <= 64 &&
+                            String(newValue).length <= 254 &&
+                            local.split(".").every((part) => atom.test(part)) &&
+                            domain.includes(".") &&
+                            domain.split(".").every((part) => domainLabel.test(part));
                         // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
                         return {
                             "validate": isValid,
@@ -241,14 +254,13 @@
 
 <div id="main">
     <div class="desc">
-        <p>그리드 데이터 수정 시 유효성 검사(validating)에 맞지 않는다면 수정 완료를 못하도록 설정할 수 있습니다.</p>
-        <p>이 유효성 검사는 다음 editRenderer 에서만 가능합니다.</p>
-        <p style="margin-left: 20px">■ 기본 입력 렌더러(InputEditRenderer)</p>
-        <p style="margin-left: 20px">■ 마스크 입력 렌더러(MaskEditRenderer)</p>
-        <p style="margin-left: 20px">■ 달력 입력 렌더러(CalendarRenderer)</p>
-        <p style="margin-left: 20px">■ 콤보박스 입력 렌더러(ComboBoxRenderer)</p>
-        <p>위 4개 외 다른 편집 렌더러는 미리 예약된 값 중 선택이므로 유효성 검사 불필요함.</p>
-        <p>유효한 값이 아니라면 지정된 메시지를 출력합니다.</p>
+        <p>editRenderer의 validator로 입력값을 검사합니다. 유효하지 않으면 안내를 표시하고 수정을 완료하지 않습니다.</p>
+        <p>
+            이 예제는 InputEditRenderer를 사용합니다. 선택 개수 검증은
+            <a href="./editRenderer_cbx_autocomplete.html?ercauto&amp;theme=default">자동완성 다중선택 예제</a>의 업무
+            (검증) 칼럼에서 확인하십시오.
+        </p>
+        <p>이메일은 따옴표 없는 영문 주소 형식을 검사하는 예제이며, 실제 메일함의 존재 여부는 확인하지 않습니다.</p>
     </div>
     <div>
         <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->

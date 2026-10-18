@@ -1,5 +1,5 @@
 /*!
- * AUIGrid Non-Commercial v3.0.20.0 - Series bar edit renderer sample
+ * AUIGrid Non-Commercial v3.0.20.1 - Series bar edit renderer sample
  * Copyright (c) AUISoft Co., Ltd. All rights reserved.
  *
  * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
@@ -51,8 +51,8 @@
  *
  * 여러 필드 방식
  *   dataField: "m1,m2,m3"이면 각 필드에서 읽습니다. compareField도 같은 형식을 지원합니다.
- *   이때 extraProps.gridID에 AUIGrid.create()가 반환한 그리드 ID를 반드시 지정합니다.
- *   예: extraProps: { gridID: myGridID, labels: ["1월", "2월", "3월"] }
+ *   v3.0.20.1부터 엔진이 전달하는 this.pid로 대상 그리드를 찾습니다. 별도 ID 설정은 필요 없습니다.
+ *   이전 엔진을 사용하는 경우에는 extraProps.gridID를 지정할 수 있습니다.
  *   행 데이터 예: { m1: 100, m2: 120, m3: 140, "m1,m2,m3": "" }
  *   확인하면 바뀐 필드를 AUIGrid.updateRow()로 저장하고, 취소하면 기존 값을 유지합니다.
  *   extraProps.onChange를 지정하면 저장 후 { rowIndex, changes, item }을 전달합니다.
@@ -114,6 +114,9 @@
 		columnIndex: -1,
 		rowIndex: -1,
 		dataField: '',
+
+		/* v3.0.20.1부터 엔진이 create() 전에 전달하는 소유 그리드 ID */
+		pid: '',
 		extraProps: null,
 
 		/****************************************************************
@@ -154,9 +157,9 @@
 			this.__values = [];
 			for (var i = 0; i < count; i++) this.__values.push(values[i] || 0);
 			this.__original = this.__values.join(',');
-			// 여러 필드 방식 : 편집기가 각 필드를 직접 저장합니다. (그리드 ID 필요)
+			// 여러 필드는 소유 그리드에 저장합니다. 이전 엔진의 gridID 설정도 계속 지원합니다.
 			this.__fields = fieldList(this.dataField);
-			this.__multi = !!(this.__fields && props.gridID);
+			this.__multi = !!(this.__fields && (this.pid || props.gridID));
 			this.__closed = false;
 			this.__labels = labels.length ? labels : this.__values.map(function (v, idx) {
 				return String(idx + 1);
@@ -507,7 +510,8 @@
 		/* 여러 필드 방식 : 바뀐 필드만 updateRow 로 저장하고 onChange 를 호출합니다. */
 		__saveFields: function () {
 			var props = this.extraProps || {};
-			var gridID = props.gridID;
+			// 엔진이 주입한 ID를 우선해 같은 편집기를 여러 그리드에서 사용할 수 있습니다.
+			var gridID = this.pid || props.gridID;
 			var item = this.data;
 			var values = this.__values;
 			var changes = {};

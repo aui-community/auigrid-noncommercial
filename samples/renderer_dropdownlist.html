@@ -99,7 +99,7 @@
             },
             {
                 dataField: "asyncDept",
-                displayField: "asyncDeptName", // useAsyncHandler: true에서 listFunction 사용 시 필수
+                displayField: "asyncDeptName", // 비동기 key-value 목록의 표시 이름을 저장할 필드 (필수)
                 headerText: "부서명(비동기)",
                 width: 200,
                 renderer: {
@@ -141,8 +141,6 @@
             },
             {
                 dataField: "leaf",
-                // useAsyncHandler와 listFunction 조합에는 표시 필드를 지정합니다. 이 문자열 목록은 값 자체를 표시합니다.
-                displayField: "leaf",
                 headerText: "그룹 하위",
                 width: 160,
                 renderer: {
@@ -193,20 +191,6 @@
 
         // 실제로 #grid_wrap 에 그리드 생성
         myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
-
-        // 에디팅 정상 종료 이벤트 바인딩
-        AUIGrid.bind(myGridID, "cellEditEnd", function (event) {
-            if (event.dataField === "asyncDept") {
-                // 렌더러는 코드만 저장하므로 표시 이름은 데모의 업무 코드에서 별도로 갱신합니다.
-                const selected = keyValueList.find((entry) => entry.code === event.value);
-                const name = selected ? selected.value : "";
-                AUIGrid.updateRow(myGridID, { asyncDeptName: name }, event.rowIndex);
-                document.getElementById("async-status").textContent =
-                    "저장 코드(asyncDept): " + event.value + " / 표시 이름(asyncDeptName): " + name;
-            }
-            document.getElementById("elapse").textContent =
-                `수정 완료(${event.type}) : ( ${event.rowIndex}, ${event.columnIndex} ) : ${event.value}`;
-        });
     }
 
     // 체크된 아이템 얻기
@@ -279,18 +263,18 @@
         <p>■ "그룹, 하위그룹" 칼럼은 관련성을 갖는 구조로 작성된 모습입니다.</p>
         <p>
             "부서명(비동기)"은 useAsyncHandler를 true로 설정하고 listFunction의 응답을 기다립니다. keyField는 저장 코드,
-            valueField는 목록의 이름이며 셀은 displayField의 값을 표시합니다.
+            valueField는 목록의 이름입니다. 셀은 처음부터 displayField의 값을 표시하고, 목록을 열 때만 조회합니다.
         </p>
         <p>
-            목록 응답은 0.6초 지연으로 모의 처리합니다. 선택 후 표시 이름은 데모의 cellEditEnd 코드에서 updateRow로
-            갱신합니다.
+            목록 응답은 0.6초 지연으로 모의 처리합니다. 선택한 항목의 code와 value를 dataField와 displayField에 함께
+            저장합니다.
         </p>
         <details>
             <summary>비동기 칼럼 설정 코드 보기</summary>
             <pre><code class="language-javascript">// 그리드 생성 속성: { useAsyncHandler: true }
 {
     dataField: "asyncDept",
-    displayField: "asyncDeptName", // useAsyncHandler: true에서 listFunction 사용 시 필수
+    displayField: "asyncDeptName", // 비동기 key-value 목록의 표시 이름을 저장할 필드 (필수)
     renderer: {
         type: "DropDownListRenderer",
         keyField: "code",
@@ -309,9 +293,7 @@
         <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
         <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
     </div>
-    <div class="desc_bottom">
-        <p id="elapse"></p>
-    </div>
+    <div class="desc_bottom"></div>
 </div>
 <div id="footer">
     <div class="copyright">

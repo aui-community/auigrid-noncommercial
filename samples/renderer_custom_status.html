@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+<meta name="og:title" content="HTML5, 자바스크립트 데이터그리드 AUIGrid" />
+<meta name="og:url" content="https://www.auisoft.net/" />
+<meta name="og:description" content="HTML5, 자바스크립트 데이타그리드(javascript datagrid) AUISoft" />
+<title>AUIGrid v3.0 샘플- HTML5, 자바스크립트 데이터그리드 AUIGrid</title>
+<link href="https://www.auisoft.net/aui.ico" rel="shortcut icon" />
+
+<!-- 데모 구성용 CSS 입니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<link href="./demo.css" rel="stylesheet" />
+
+<!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
+<link href="../AUIGrid/AUIGrid_style.css" rel="stylesheet" />
+
+<!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
+<script type="text/javascript" src="../AUIGrid/AUIGridLicense.js"></script>
+
+<!-- AUIGrid 컴포넌트 JS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오.-->
+<script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
+
+<!-- AUIGrid.js 뒤에 직접 만든 렌더러와 편집기를 연결합니다. -->
+<script src="../AUIGrid/renderers/AUIGrid.RatingRenderer.js"></script>
+<link rel="stylesheet" href="../AUIGrid/renderers/AUIGrid.RatingRenderer.css" />
+<script src="../AUIGrid/editRenderers/AUIGrid.RatingEditor.js"></script>
+<link rel="stylesheet" href="../AUIGrid/editRenderers/AUIGrid.RatingEditor.css" />
+<script>
+    let myGridID;
+
+    function init() {
+        createAUIGrid();
+        // 별 모양 대신 1~5의 숫자를 저장합니다.
+        AUIGrid.setGridData(myGridID, [
+            { id: "S01", service: "상품 안내", rating: 3 },
+            { id: "S02", service: "주문 접수", rating: 5 },
+            { id: "S03", service: "배송 안내", rating: 4 },
+            { id: "S04", service: "교환 접수", rating: 2 },
+            { id: "S05", service: "추가 상담", rating: 1 }
+        ]);
+    }
+
+    function createAUIGrid() {
+        const columnLayout = [
+            { dataField: "id", headerText: "ID", width: 90, editable: false },
+            { dataField: "service", headerText: "서비스", width: 180, editable: false },
+            {
+                dataField: "rating",
+                headerText: "만족도",
+                width: 240,
+                dataType: "numeric", // 편집 후에도 숫자로 저장합니다.
+                renderer: {
+                    type: "CustomRenderer",
+                    jsClass: AUIGrid.RatingRenderer
+                },
+                editRenderer: {
+                    type: "CustomEditRenderer",
+                    jsClass: AUIGrid.RatingEditor,
+                    vPosition: "bottom"
+                }
+            }
+        ];
+        const gridProps = {
+            editable: true,
+            enableUndoRedo: true,
+            rowIdField: "id",
+            rowHeight: 40,
+            headerHeight: 32
+        };
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridProps);
+    }
+
+    // 화면의 별과 실제 저장된 숫자를 비교합니다.
+    function showGridData() {
+        const rows = AUIGrid.getGridData(myGridID).map(function (item) {
+            return { id: item.id, service: item.service, rating: item.rating };
+        });
+        document.getElementById("stored-data").textContent = JSON.stringify(rows, null, 2);
+    }
+</script>
+<!-- 데모용 공용 스크립트입니다. 여기에 공통적인 스크립트가 존재합니다. 실제 프로젝트에서는 불필요 하니 추가할 필요 없습니다. -->
+<script src="./package-data.js"></script>
+<script src="./common.js"></script>
+</head>
+<body class="package-demo">
+<header class="package-demo-header">
+    <div class="package-demo-header-inner">
+        <a class="package-demo-brand" href="../index.html"
+            ><span class="package-demo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+            ><strong>AUIGrid v3.0.20 Samples</strong></a
+        >
+        <nav aria-label="패키지 안내">
+            <a href="../index.html">샘플 목록</a><a href="../documentation/index.html">문서</a>
+        </nav>
+    </div>
+</header>
+
+<div id="main">
+    <div class="desc">
+        <p>
+            <strong>CustomRenderer</strong>로 숫자를 별로 표시하고, <strong>CustomEditRenderer</strong>로 1~5점을
+            선택하는 예제입니다.
+        </p>
+        <p>
+            만족도 셀을 더블클릭하거나 선택 후 F2를 누르십시오. 별을 누른 뒤 확인하면 저장하고, 취소 또는 Esc를 누르면
+            원래 값으로 돌아갑니다.
+        </p>
+        <p>Tab으로 버튼을 이동하고 Enter 또는 Space로 누를 수 있습니다. 바깥 셀을 클릭해도 선택한 점수가 적용됩니다.</p>
+        <div class="src_cover"><pre><code class="language-javascript">// 그리드 속성: editable: true
+// 행 데이터: { rating: 3 }
+{
+    dataField: &quot;rating&quot;, headerText: &quot;만족도&quot;, width: 240,
+    dataType: &quot;numeric&quot;, // 편집 후에도 숫자로 저장합니다.
+    renderer: {
+        type: &quot;CustomRenderer&quot;,
+        jsClass: AUIGrid.RatingRenderer
+    },
+    editRenderer: {
+        type: &quot;CustomEditRenderer&quot;,
+        jsClass: AUIGrid.RatingEditor,
+        vPosition: &quot;bottom&quot;
+    }
+}</code></pre></div>
+        <p>
+            데이터에는 숫자 하나를 저장합니다. 직접 만드는 과정은
+            <a
+                href="https://www.auisoft.net/documentation/auigrid/Desc/custom-renderers.html"
+                target="_blank"
+                rel="noopener"
+                >8. 사용자 정의 렌더러 만들기</a
+            >에서 확인할 수 있습니다.
+        </p>
+        <details>
+            <summary>연결 파일과 전체 소스</summary>
+            <p>AUIGrid.js 다음에 아래 JS와 CSS를 연결합니다.</p>
+            <pre><code class="language-html">&lt;script src=&quot;../AUIGrid/renderers/AUIGrid.RatingRenderer.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../AUIGrid/renderers/AUIGrid.RatingRenderer.css&quot; /&gt;
+&lt;script src=&quot;../AUIGrid/editRenderers/AUIGrid.RatingEditor.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../AUIGrid/editRenderers/AUIGrid.RatingEditor.css&quot; /&gt;</code></pre>
+            <p>
+                <a href="../AUIGrid/renderers/AUIGrid.RatingRenderer.js" target="_blank" rel="noopener"
+                    >별점 렌더러 JS</a
+                >
+                |
+                <a href="../AUIGrid/renderers/AUIGrid.RatingRenderer.css" target="_blank" rel="noopener">렌더러 CSS</a>
+                |
+                <a href="../AUIGrid/editRenderers/AUIGrid.RatingEditor.js" target="_blank" rel="noopener"
+                    >별점 편집기 JS</a
+                >
+                |
+                <a href="../AUIGrid/editRenderers/AUIGrid.RatingEditor.css" target="_blank" rel="noopener"
+                    >편집기 CSS</a
+                >
+            </p>
+        </details>
+    </div>
+    <div id="grid_wrap" style="width: 100%; height: 300px; margin: 0 auto"></div>
+    <div class="desc_bottom">
+        <button type="button" class="btn" onclick="AUIGrid.undo(myGridID)">실행 취소</button>
+        <button type="button" class="btn" onclick="AUIGrid.redo(myGridID)">다시 실행</button>
+        <button type="button" class="btn" onclick="showGridData()">데이터 확인</button>
+        <pre id="stored-data" aria-live="polite">데이터 확인을 누르면 현재 저장된 값을 표시합니다.</pre>
+    </div>
+</div>
+<div id="footer">
+    <div class="copyright">
+        <p>Copyright © AUISoft Co., Ltd. https://www.auisoft.net</p>
+    </div>
+</div>
+</body>
+</html>

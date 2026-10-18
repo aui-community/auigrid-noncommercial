@@ -1,5 +1,5 @@
 /*!
- * AUIGrid Non-Commercial v3.0.20.0 - RGB color edit renderer sample
+ * AUIGrid Non-Commercial v3.0.20.1 - RGB color edit renderer sample
  * Copyright (c) AUISoft Co., Ltd. All rights reserved.
  *
  * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
@@ -70,6 +70,9 @@ window.AUIGrid.RgbColorEditor = window.AUIGrid.Class({
 
 	/* 데이터 필드명 */
 	dataField: '',
+
+	/* v3.0.20.1부터 엔진이 create() 전에 전달하는 소유 그리드 ID */
+	pid: '',
 
 	/* 사용자가 설정한 여분의 속성 */
 	extraProps: null,

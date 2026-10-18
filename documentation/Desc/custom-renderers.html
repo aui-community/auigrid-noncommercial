@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta
+    name="description"
+    content="CustomRenderer와 CustomEditRenderer로 별점 평가를 직접 만드는 예제입니다. 숫자를 별로 표시하고 선택한 점수를 저장하거나 취소하는 방법을 안내합니다."
+/>
+<title>사용자 정의 렌더러 만들기 | AUIGrid v3.0.20 Documentation</title>
+<link rel="stylesheet" href="../static/prism.css" />
+<link rel="stylesheet" href="../static/style.css" />
+<link rel="stylesheet" href="../static/typography.css" />
+<link rel="stylesheet" href="../static/code-examples.css" />
+<link rel="stylesheet" href="../static/mcp-guide.css" />
+<script src="../static/prism.js" data-manual></script>
+<script src="../static/code-examples.js"></script>
+
+<link rel="icon" href="../static/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="../static/apple-touch-icon.png" />
+<meta name="theme-color" content="#222729" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+/>
+<link rel="stylesheet" href="../static/docs-brand.css" />
+</head>
+<body class="demo-typography mcp-guide docs-site">
+<!-- 웹 문서와 패키지의 외곽은 공식 생성기가 적용합니다. -->
+<nav class="docs-breadcrumb" aria-label="현재 위치">
+    <a href="../index.html">문서</a><span aria-hidden="true">/</span><span>AUIGrid</span
+    ><span aria-hidden="true">/</span><span aria-current="page">8. 사용자 정의 렌더러 만들기</span>
+</nav>
+<main class="MainContent">
+    <h1>8. 사용자 정의 렌더러 만들기</h1>
+    <p>
+        <strong>CustomRenderer</strong>는 셀 표시를, <strong>CustomEditRenderer</strong>는 편집 화면을 직접 만드는
+        기능입니다. 숫자 <code>3</code>을 <strong>★★★☆☆</strong>로 표시하고 별을 눌러 점수를 바꾸는
+        예제로 시작해 보겠습니다.
+    </p>
+    <p>
+        <a
+            href="https://www.auisoft.net../../samples/renderer_custom_status.html?ren_status&amp;theme=default"
+            target="_blank"
+            rel="noopener"
+            >별점 평가 데모 실행</a
+        >
+    </p>
+    <nav class="mcp-toc" aria-label="이 문서의 내용">
+        <a href="#prepare">파일 준비</a><a href="#renderer">별 표시</a><a href="#editor">점수 선택</a>
+        <a href="#connect">그리드에 연결</a><a href="#adapt">내 화면에 맞추기</a>
+    </nav>
+
+    <h2 id="prepare">8.1 파일 준비</h2>
+    <p>
+        렌더러와 편집기를 각각 JS, CSS 파일로 작성하고 AUIGrid.js 뒤에 연결합니다. 외부 라이브러리는 필요하지 않습니다.
+    </p>
+    <pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;./AUIGrid/AUIGrid_style.css&quot;&gt;
+&lt;script src=&quot;./AUIGrid/AUIGridLicense.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./AUIGrid/AUIGrid.js&quot;&gt;&lt;/script&gt;
+
+&lt;script src=&quot;./js/renderers/AUIGrid.RatingRenderer.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;./js/renderers/AUIGrid.RatingRenderer.css&quot; /&gt;
+&lt;script src=&quot;./js/editRenderers/AUIGrid.RatingEditor.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;./js/editRenderers/AUIGrid.RatingEditor.css&quot; /&gt;</code></pre>
+    <p>
+        행의 <code>rating</code>에는 1~5의 정수를 저장합니다. 칼럼에 <code>dataType: "numeric"</code>을
+        지정하여 편집 후에도 숫자로 저장합니다.
+    </p>
+    <pre><code class="language-javascript">{ id: &quot;S01&quot;, service: &quot;상품 안내&quot;, rating: 3 }</code></pre>
+
+    <h2 id="renderer">8.2 CustomRenderer로 별 표시하기</h2>
+    <p>
+        <code>AUIGrid.Class</code>로 클래스를 만들고 <code>AUIGrid.RendererBase</code>를 상속합니다.
+        <code>update()</code>에서 <code>this.data[this.dataField]</code>를 읽어 별을 그립니다.
+    </p>
+    <p>별을 담을 요소는 한 번만 만듭니다. 그리드가 셀을 재사용할 때는 채운 별과 빈 별의 개수만 바꿉니다.</p>
+    <p><code>AUIGrid.RatingRenderer.js</code></p>
+    <pre><code class="language-javascript">window.AUIGrid.RatingRenderer = window.AUIGrid.Class({
+    tagName: &quot;div&quot;,
+    cssClass: &quot;aui-grid-renderer-base aui-rating-renderer&quot;,
+    __filled: null,
+    __empty: null,
+
+    // 셀이 재사용되므로 별을 담을 요소는 한 번 만들고 표시 값만 갱신합니다.
+    update: function () {
+        if (!this.__filled) {
+            this.__filled = document.createElement(&quot;span&quot;);
+            this.__empty = document.createElement(&quot;span&quot;);
+            this.__filled.className = &quot;aui-rating-filled&quot;;
+            this.__empty.className = &quot;aui-rating-empty&quot;;
+            this.element.append(this.__filled, this.__empty);
+            this.element.setAttribute(&quot;role&quot;, &quot;img&quot;);
+        }
+        // 데이터가 아직 없는 초기 셀도 빈 별로 표시합니다.
+        const value = this.data ? Number(this.data[this.dataField]) : 0;
+        const score = Number.isInteger(value) &amp;&amp; value &gt;= 1 &amp;&amp; value &lt;= 5 ? value : 0;
+        this.__filled.textContent = &quot;★&quot;.repeat(score);
+        this.__empty.textContent = &quot;☆&quot;.repeat(5 - score);
+        this.element.setAttribute(&quot;aria-label&quot;, score ? &quot;5점 만점에 &quot; + score + &quot;점&quot; : &quot;미평가&quot;);
+        this.setHeight(this.rowHeight - 2);
+    },
+
+    // 직접 보관한 DOM 참조를 해제합니다.
+    destroy: function (unload) {
+        this.__filled = this.__empty = null;
+        this.$super.destroy(unload);
+    }
+}).extend(window.AUIGrid.RendererBase);</code></pre>
+    <details>
+        <summary>AUIGrid.RatingRenderer.css</summary>
+        <pre><code class="language-css">/* 별점 셀에만 적용합니다. 채운 별과 빈 별은 모양과 색상으로 구분합니다. */
+.aui-rating-renderer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+.aui-rating-filled { color: #b77900; }
+.aui-rating-empty { color: #8793a3; }</code></pre>
+    </details>
+
+    <h2 id="editor">8.3 CustomEditRenderer로 점수 선택하기</h2>
+    <p>
+        <code>AUIGrid.EditRendererBase</code>를 상속하고 <code>create()</code>에서 별 버튼과 확인, 취소 버튼을
+        만듭니다. 현재 칼럼 정보는 <code>this.columnData</code>에서 바로 읽습니다.
+    </p>
+    <p>
+        별을 누르면 <code>injectValue()</code>로 적용할 점수만 전달합니다. 확인은
+        <code>triggerEditEndEvent()</code>, 취소는 <code>triggerEditCancelEvent()</code>를 호출합니다. 행 데이터를 직접
+        수정하지 않으므로 취소와 Undo/Redo가 유지됩니다.
+    </p>
+    <p><code>AUIGrid.RatingEditor.js</code></p>
+    <pre><code class="language-javascript">window.AUIGrid.RatingEditor = window.AUIGrid.Class({
+    tagName: &quot;div&quot;,
+    cssClass: &quot;aui-grid-edit-renderer-custom aui-rating-editor&quot;,
+    __score: 0,
+    __focusTimer: null,
+
+    create: function () {
+        const original = this.data[this.dataField];
+        this.__score = Number(original) || 0;
+        // 선택하지 않고 닫아도 원래 점수가 보존됩니다.
+        this.injectValue(original);
+        // 현재 칼럼 정보는 엔진이 전달한 columnData에서 바로 읽습니다.
+        this.element.setAttribute(&quot;role&quot;, &quot;group&quot;);
+        this.element.setAttribute(&quot;aria-label&quot;, this.columnData.headerText + &quot; 선택&quot;);
+        const stars = document.createElement(&quot;div&quot;);
+        stars.className = &quot;aui-rating-stars&quot;;
+        for (let score = 1; score &lt;= 5; score++) {
+            const button = document.createElement(&quot;button&quot;);
+            button.type = &quot;button&quot;;
+            button.dataset.score = score;
+            button.setAttribute(&quot;aria-label&quot;, score + &quot;점&quot;);
+            stars.appendChild(button);
+        }
+        const actions = document.createElement(&quot;div&quot;);
+        actions.className = &quot;aui-rating-actions&quot;;
+        // 데이터가 아닌 고정된 버튼만 HTML로 만듭니다.
+        actions.innerHTML = &#x27;&lt;button type=&quot;button&quot; data-action=&quot;confirm&quot;&gt;확인&lt;/button&gt; &lt;button type=&quot;button&quot; data-action=&quot;cancel&quot;&gt;취소&lt;/button&gt;&#x27;;
+        this.element.append(stars, actions);
+        this.__refreshStars();
+        this.__onClick = this.__onClick.bind(this);
+        this.__onKeyDown = this.__onKeyDown.bind(this);
+        this.element.addEventListener(&quot;click&quot;, this.__onClick);
+        this.element.addEventListener(&quot;keydown&quot;, this.__onKeyDown);
+        // 그리드가 레이어를 배치한 뒤 첫 별에 포커스를 옮깁니다.
+        this.__focusTimer = setTimeout(function () { stars.firstChild.focus(); }, 0);
+    },
+
+    // 별을 다시 그려도 버튼은 유지하므로 키보드 포커스가 사라지지 않습니다.
+    __refreshStars: function () {
+        const score = this.__score;
+        this.element.querySelectorAll(&quot;[data-score]&quot;).forEach(function (button) {
+            const filled = Number(button.dataset.score) &lt;= score;
+            button.textContent = filled ? &quot;★&quot; : &quot;☆&quot;;
+            button.classList.toggle(&quot;is-filled&quot;, filled);
+            button.setAttribute(&quot;aria-pressed&quot;, Number(button.dataset.score) === score ? &quot;true&quot; : &quot;false&quot;);
+        });
+        this.element.querySelector(&#x27;[data-action=&quot;confirm&quot;]&#x27;).disabled = !Number.isInteger(score) || score &lt; 1 || score &gt; 5;
+    },
+
+    __onClick: function (event) {
+        const button = event.target.closest(&quot;button&quot;);
+        if (!button) return;
+        if (button.dataset.score) {
+            this.__score = Number(button.dataset.score);
+            // 행 데이터를 직접 바꾸지 않고 그리드에 적용 후보만 전달합니다.
+            this.injectValue(this.__score);
+            this.__refreshStars();
+        } else if (button.dataset.action === &quot;confirm&quot;) {
+            this.triggerEditEndEvent(this.__score);
+        } else if (button.dataset.action === &quot;cancel&quot;) {
+            this.triggerEditCancelEvent();
+        }
+    },
+
+    __onKeyDown: function (event) {
+        // Tab, Enter, Space는 버튼의 기본 동작을 사용하고 그리드에는 전달하지 않습니다.
+        event.stopPropagation();
+        if (event.key === &quot;Escape&quot;) {
+            event.preventDefault();
+            this.triggerEditCancelEvent();
+        }
+    },
+
+    destroy: function (unload) {
+        clearTimeout(this.__focusTimer);
+        this.element.removeEventListener(&quot;click&quot;, this.__onClick);
+        this.element.removeEventListener(&quot;keydown&quot;, this.__onKeyDown);
+        this.$super.destroy(unload);
+    }
+}).extend(window.AUIGrid.EditRendererBase);</code></pre>
+    <details>
+        <summary>AUIGrid.RatingEditor.css</summary>
+        <pre><code class="language-css">/* 별점 편집기 안에만 적용합니다. */
+.aui-rating-editor {
+    box-sizing: border-box;
+    width: 240px;
+    padding: 12px;
+    color: #273444;
+    background: #fff;
+    border: 1px solid #b8c8db;
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+}
+.aui-rating-editor button { font: inherit; cursor: pointer; }
+.aui-rating-editor button:focus-visible { outline: 2px solid #2877b8; outline-offset: 1px; }
+.aui-rating-stars { display: flex; justify-content: center; }
+.aui-rating-stars button {
+    width: 40px;
+    padding: 4px 0;
+    color: #8793a3;
+    background: transparent;
+    border: 0;
+    font-size: 30px;
+    line-height: 1.2;
+}
+.aui-rating-stars button.is-filled { color: #b77900; }
+.aui-rating-actions { margin-top: 12px; text-align: right; }
+.aui-rating-actions button {
+    padding: 6px 12px;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+}
+.aui-rating-actions button[data-action=&quot;confirm&quot;] { color: #fff; background: #2877b8; border-color: #2877b8; }
+.aui-rating-actions button:disabled { opacity: .45; cursor: default; }</code></pre>
+    </details>
+    <p>
+        Tab으로 버튼을 이동하고 Enter 또는 Space로 누릅니다. Esc는 취소합니다. 바깥 셀 클릭으로 편집이 끝나면
+        <code>injectValue()</code>로 전달한 점수가 적용됩니다. <code>destroy()</code>에서는 등록한
+        이벤트와 예약된 포커스를 정리합니다.
+    </p>
+
+    <h2 id="connect">8.4 칼럼에 연결하고 실행하기</h2>
+    <p><code>jsClass</code>에는 클래스 자체를 전달합니다. 아래 컨테이너 다음에 스크립트를 실행하십시오.</p>
+    <pre><code class="language-html">&lt;div id=&quot;grid_wrap&quot; style=&quot;width: 100%; height: 300px&quot;&gt;&lt;/div&gt;</code></pre>
+    <pre><code class="language-javascript">const columnLayout = [
+    { dataField: &quot;id&quot;, headerText: &quot;ID&quot;, width: 90, editable: false },
+    { dataField: &quot;service&quot;, headerText: &quot;서비스&quot;, editable: false },
+    {
+        dataField: &quot;rating&quot;, headerText: &quot;만족도&quot;, width: 240,
+        dataType: &quot;numeric&quot;, // 편집 후에도 숫자로 저장합니다.
+        renderer: {
+            type: &quot;CustomRenderer&quot;,
+            jsClass: AUIGrid.RatingRenderer
+        },
+        editRenderer: {
+            type: &quot;CustomEditRenderer&quot;,
+            jsClass: AUIGrid.RatingEditor,
+            vPosition: &quot;bottom&quot;
+        }
+    }
+];
+const myGridID = AUIGrid.create(&quot;#grid_wrap&quot;, columnLayout, {
+    editable: true, rowHeight: 40, enableUndoRedo: true
+});
+AUIGrid.setGridData(myGridID, [
+    { id: &quot;S01&quot;, service: &quot;상품 안내&quot;, rating: 3 },
+    { id: &quot;S02&quot;, service: &quot;주문 접수&quot;, rating: 5 },
+    { id: &quot;S03&quot;, service: &quot;배송 안내&quot;, rating: 4 },
+    { id: &quot;S04&quot;, service: &quot;교환 접수&quot;, rating: 2 },
+    { id: &quot;S05&quot;, service: &quot;추가 상담&quot;, rating: 1 }
+]);</code></pre>
+    <p>
+        만족도 셀을 더블클릭하거나 선택 후 F2로 엽니다. 네 번째 별을 누르고 확인하면
+        <code>rating</code>에 숫자 <code>4</code>가 저장됩니다. 취소 또는 Esc는 기존
+        값을 유지하며 Ctrl+Z로 저장한 값을 되돌릴 수 있습니다.
+    </p>
+
+    <h2 id="adapt">8.5 내 화면에 맞게 바꾸기</h2>
+    <p>
+        별의 색상과 크기는 두 CSS 파일에서 변경합니다. 데이터 필드명을 바꾸려면 칼럼의
+        <code>dataField</code>와 행의 필드명을 함께 바꾸십시오. 렌더러와 편집기는
+        <code>this.dataField</code>를 사용하므로 그대로 재사용할 수 있습니다.
+    </p>
+    <p>
+        직접 추가한 속성과 메서드는 <code>__score</code>처럼 <code>__</code>로 시작해
+        기본 클래스와 구분합니다. 전체 설정은 <a href="../ColumnLayout/CustomRenderer.html">CustomRenderer</a>와
+        <a href="../ColumnLayout/CustomEditRenderer.html">CustomEditRenderer</a> API를 참고하십시오.
+    </p>
+    <p><a href="../index.html">문서 홈으로 돌아가기</a></p>
+</main>
+<footer class="docs-footer">
+    <div><a href="../index.html">AUIGrid 문서</a><a href="https://www.auisoft.net/">AUISoft 홈페이지</a></div>
+    <span>Copyright(c) 2026 AUISoft Co., Ltd. All Right Reserved</span>
+</footer>
+</body>
+</html>

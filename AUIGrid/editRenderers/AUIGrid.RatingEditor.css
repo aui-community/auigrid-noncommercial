@@ -1,0 +1,45 @@
+@charset "UTF-8";
+/*!
+ * AUIGrid Non-Commercial v3.0.20.1 - 별점 선택 편집 렌더러 예제
+ * Copyright (c) AUISoft Co., Ltd. All rights reserved.
+ *
+ * AUIGrid 예제 파일입니다. AUIGrid 사용권 범위 안에서 이 파일을 복사하거나 수정하여 사용할 수 있습니다.
+ * 이 허용은 이 예제 파일에만 적용되며 AUIGrid.js에는 적용되지 않습니다.
+ * This is an AUIGrid sample file. You may copy and modify it for use with AUIGrid within the
+ * scope of your AUIGrid license. This permission applies only to this sample file, not to AUIGrid.js.
+ * License: https://github.com/aui-community/auigrid-noncommercial/blob/main/LICENSE
+ */
+/* 별점 편집기 안에만 적용합니다. */
+.aui-rating-editor {
+    box-sizing: border-box;
+    width: 240px;
+    padding: 12px;
+    color: #273444;
+    background: #fff;
+    border: 1px solid #b8c8db;
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+}
+.aui-rating-editor button { font: inherit; cursor: pointer; }
+.aui-rating-editor button:focus-visible { outline: 2px solid #2877b8; outline-offset: 1px; }
+.aui-rating-stars { display: flex; justify-content: center; }
+.aui-rating-stars button {
+    width: 40px;
+    padding: 4px 0;
+    color: #8793a3;
+    background: transparent;
+    border: 0;
+    font-size: 30px;
+    line-height: 1.2;
+}
+.aui-rating-stars button.is-filled { color: #b77900; }
+.aui-rating-actions { margin-top: 12px; text-align: right; }
+.aui-rating-actions button {
+    padding: 6px 12px;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+}
+.aui-rating-actions button[data-action="confirm"] { color: #fff; background: #2877b8; border-color: #2877b8; }
+.aui-rating-actions button:disabled { opacity: .45; cursor: default; }

@@ -345,29 +345,31 @@ const columnLayout = [{
             </td>
             <td class="summaryTableDescription">
                 <span class="label">Type : </span>Function<br />
-                <p>선택 목록에 표시할 항목 배열을 반환하는 함수를 지정합니다. list보다 우선합니다.</p>
-                <ul>
-                    <li>rowIndex : 행 인덱스</li>
-                    <li>columnIndex : 칼럼 인덱스</li>
-                    <li>item : 해당 행의 데이터 객체</li>
-                    <li>dataField : 해당 칼럼의 데이터 필드명</li>
-                    <li>value : 현재 입력값. useAsyncHandler=true에서 다섯 번째 인자로 전달합니다.</li>
-                </ul>
+                <p>현재 행에 사용할 선택 목록을 배열로 반환하는 함수를 지정합니다. list보다 우선합니다.</p>
                 <p>
-                    <a href="../DataGrid/Properties.html#useAsyncHandler">useAsyncHandler</a>=true이면 배열 또는 배열로
-                    이행되는 Promise를 반환할 수 있습니다. 입력 시작이나 타이핑 중에는 조회하지 않습니다. Enter, Tab,
-                    포커스 이동 또는 forceEditingComplete()로 입력을 확정할 때 조회하고 응답을 기다린 뒤 적용합니다.
-                    리스트 아이콘이나 아래 방향키로 목록을 열 때도 조회합니다. 대기 중 Esc로 취소할 수 있고, 실패하거나
-                    데이터가 교체된 요청의 결과는 적용하지 않습니다.
+                    인자는 행 인덱스(rowIndex), 칼럼 인덱스(columnIndex), 행 데이터(item), 칼럼 필드명(dataField) 및
+                    현재 입력값(value)입니다. 다섯 번째 인자 value는 v3.0.20부터 전달합니다.
                 </p>
                 <p>
-                    비동기 목록에서는 자동완성을 지원하지 않으며 autoCompleteMode와 autoEasyMode를 적용하지 않습니다.
-                    조회한 항목을 선택할 때는 목록을 재사용하고, 목록에 없는 다른 입력값을 확정하면 새로 조회합니다.
+                    v3.0.20부터
+                    <a href="../DataGrid/Properties.html#useAsyncHandler">useAsyncHandler</a>=true이면 Promise로 목록을
+                    반환할 수 있습니다. keyField와 valueField를 함께 지정한 경우에만 칼럼의
+                    <a href="./Column.html#displayField">displayField</a>가 필수입니다. 이 조건은 배열을 동기로 반환하는
+                    함수에도 적용됩니다. ["A", "B", "C"] 같은 문자열 목록은 displayField 없이 사용하며, 선택한 값을
+                    dataField에 저장합니다.
                 </p>
                 <p>
-                    이 조합에서는 칼럼의 <a href="./Column.html#displayField">displayField</a> 설정이 필수입니다. 동기
-                    배열을 반환해도 같으며, 행 데이터에 표시 필드가 없으면 빈 셀로 표시합니다. ConditionRenderer의 반환
-                    설정도 편집 시작 시 검사합니다.
+                    비동기 모드에서는 목록 버튼을 누르거나 Enter, Tab 등으로 입력을 확정할 때 조회하며, 목록 레이어에
+                    즉시 로딩 안내를 표시합니다. 응답을 받으면 열린 목록을 갱신하거나 입력 확정을 완료합니다. 입력 중
+                    자동완성은 사용하지 않으며, 목록에서 선택한 항목은 다시 조회하지 않습니다. 현재 입력값에 맞는 목록을
+                    반환하십시오.
+                </p>
+                <p>Esc, 요청 실패 또는 대상 행과 칼럼의 변경으로 취소된 응답은 적용하지 않습니다.</p>
+                <p>
+                    v3.0.20.1부터 비동기 모드에서 keyField와 valueField를 지정하면, 선택한 항목의 키는 dataField에,
+                    이름은 displayField에 함께 저장합니다. Undo/Redo도 두 값을 한 번에 복원하므로 완료 이벤트에서
+                    표시값을 따로 수정할 필요가 없습니다. 입력한 이름이 목록에 있으면 해당 항목을 저장하고, 없으면
+                    입력값을 두 필드에 저장합니다.
                 </p>
                 <pre><code class="language-javascript">// 그리드 속성: useAsyncHandler: true
 // 행 데이터: { assigneeId: "A", assigneeName: "김민수" }
@@ -379,19 +381,10 @@ const columnLayout = [{
         keyField: "id",
         valueField: "name",
         listFunction: async function (rowIndex, columnIndex, item, dataField, value) {
-            return await requestUsers(item.department, value); // 항목 배열을 반환합니다.
+            return await requestUsers(item, value); // [{ id: "B", name: "이서연" }]
         }
     }
 }</code></pre>
-                <p>
-                    목록 선택은 dataField에 키를 저장합니다. displayField의 행 값은 자동으로 바뀌지 않으므로 표시 이름
-                    갱신이 필요하면 함께 반영하십시오. 입력한 이름이 valueField와 일치하면 대응하는 키를 저장하고, 일치
-                    항목이 없으면 입력 문자열을 저장합니다. 초기 표시값을 변경하지 않고 확정하면 원본 키를 유지합니다.
-                </p>
-                <p>
-                    useAsyncHandler=false에서는 기존 동기 배열 반환을 사용하십시오. 입력할 때마다 서버에서 검색하려면
-                    <a href="./RemoteListRenderer.html">RemoteListRenderer</a>를 사용하십시오.
-                </p>
                 <p><a href="../../samples/editRenderer_combobox.html" target="_blank">관련 데모 보기</a></p>
             </td>
         </tr>

@@ -26,7 +26,22 @@
 <script type="text/javascript" src="../AUIGrid/AUIGrid.js"></script>
 
 <style>
-    /* 양쪽 고정 개수의 입력과 버튼을 같은 폭과 간격으로 배치합니다. */
+    /* 설정 영역의 배경과 구분선을 없애고 조작 항목을 간결하게 배치합니다. */
+    .desc .fixed-column-controls {
+        gap: 6px;
+        margin: 10px 0 4px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+
+    .fixed-column-controls .demo-option-row {
+        gap: 6px 8px;
+        padding-top: 0;
+        border-top: 0;
+    }
+
+    /* 양쪽 고정 개수의 입력과 버튼은 같은 폭을 유지합니다. */
     .fixed-column-controls .demo-option-label {
         flex-basis: 300px;
     }
@@ -295,7 +310,7 @@
     </div>
     <div style="overflow-x: auto">
         <!-- 에이유아이 그리드가 이곳에 생성됩니다. -->
-        <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto"></div>
+        <div id="grid_wrap" style="width: 100%; height: 360px; margin: 0 auto"></div>
     </div>
     <div class="desc_bottom">
         <p id="elapse"></p>
