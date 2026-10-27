@@ -1,0 +1,6 @@
+dist/** linguist-vendored
+AUIGrid/** linguist-vendored
+documentation/** linguist-documentation
+samples*/** linguist-documentation
+export_server_samples/** linguist-documentation
+pdfkit/** linguist-vendored
