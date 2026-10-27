@@ -1,5 +1,5 @@
 AUI Non-Commercial License (AUIGrid)
-버전 2.0 · 시행일 2026-10-14
+버전 2.1 · 시행일 2026-10-28
 
 중요: 소프트웨어를 다운로드하거나 사용하기 전에 본 계약서를 주의 깊게 읽어 주십시오.
 본 계약서는 주식회사 에이유아이소프트(AUISoft Co., Ltd., 이하 "당사", www.auisoft.net)와 소프트웨어 사용자(개인 또는 단체, 이하 "귀하") 간의 법적 구속력이 있는 계약입니다.
@@ -13,7 +13,7 @@ ________________________________________________________________________________
 
 1.1 소프트웨어: 본 저장소 또는 당사가 지정한 배포 경로(예: jsDelivr CDN)를 통해 제공되는 AUIGrid 비상업판으로, 프로그램, 스크립트, 스타일시트, 이미지, 문서, 예제 및 관련 자료와 그 업데이트를 형식과 관계없이 모두 포함합니다.
 1.2 비상업판: 상용(Enterprise) 라이선스와 기능은 같으나, 본 계약에 정한 목적과 환경에서만 사용할 수 있는 무료 사용권이 적용되는 소프트웨어입니다.
-1.3 로컬호스트: 외부에서 접속할 수 없는 귀하의 컴퓨터 안의 실행 환경으로, 주소가 localhost 또는 127.0.0.1 인 경우를 말합니다.
+1.3 로컬호스트: 외부에서 접속할 수 없는 귀하의 컴퓨터 안의 실행 환경으로, 주소가 localhost 또는 127.0.0.1 인 경우를 말합니다. 같은 네트워크의 사설 IP(예: 192.168.x.x)는 로컬호스트에 해당하지 않습니다.
 1.4 접속 도메인 · 접속 IP: 로컬호스트가 아닌 도메인, 서브도메인 또는 IP 주소로서, 소프트웨어가 포함된 웹 페이지나 애플리케이션에 다른 사람이나 다른 장치가 접속할 수 있게 되는 주소를 말합니다.
 1.5 상업적 이용: 기업 또는 조직의 업무 운영, 수익 창출, 고객에게 제품이나 서비스를 제공하는 활동에 소프트웨어를 사용하는 행위를 말합니다.
 1.6 수정: 소프트웨어의 원본 코드를 변경, 확장, 개작하거나 다른 코드와 결합하여 원본을 변형하는 모든 행위를 말합니다. 소프트웨어가 공개한 API(속성, 메소드, 이벤트, 사용자 정의 렌더러 등)를 문서에 따라 사용하는 것은 수정에 해당하지 않습니다.
@@ -39,11 +39,12 @@ ________________________________________________________________________________
 3.2 상업적 이용, 또는 비즈니스나 전문적 운영 목적의 사용
 3.3 소프트웨어나 그 수정본을 라이선스, 임대, 교환, 판매하거나, 대가를 받고 제공하는 행위
 3.4 소프트웨어를 상업 제품이나 서비스에 포함하거나 함께 배포하는 행위
-3.5 정부 기관, 지방자치단체, 공공기관 또는 국제기구에서의 사용
-3.6 당사의 서면 허가 없이 소프트웨어를 수정하는 행위
+3.5 정부 기관, 지방자치단체, 공공기관 또는 국제기구에서의 사용. 다만 국공립 학교와 공공 연구기관에서 수업, 학술, 연구 목적으로 하는 사용은 2.2에 따라 할 수 있습니다.
+3.6 당사의 서면 허가 없이 소프트웨어를 수정하는 행위. 다만 예제(samples 폴더 등)와 React · Vue 래퍼 컴포넌트는 2.2와 2.3의 목적 범위에서 수정하여 사용할 수 있습니다.
 3.7 사용권 검사, 사용 환경 제한 등 소프트웨어의 기술적 보호 조치를 제거, 우회 또는 무력화하는 행위
 3.8 관련 법령이 명시적으로 허용하는 경우를 제외하고, 소프트웨어를 역분해, 디컴파일, 디스어셈블, 리버스 엔지니어링하거나 소스코드를 추출하려고 시도하는 행위
 3.9 소프트웨어에 포함된 저작권 표시, 라이선스 표시 및 머리 주석을 제거하거나 변경하는 행위
+3.10 소프트웨어나 그 수정본을 다른 저장소, 웹 사이트, 패키지 저장소 등에 다시 배포하거나 게시하는 행위. 다만 귀하의 코드에서 당사의 배포 경로(본 저장소, jsDelivr CDN)를 참조하는 것과 GitHub 이용약관에 따라 본 저장소를 포크하는 것은 할 수 있습니다.
 
 상업적 목적으로 사용하거나 로컬호스트 밖에서 사용하려면 상용 라이선스를 구매하여야 합니다.
 상용 라이선스: https://www.auisoft.net/price.html · 문의: aui@auisoft.net
@@ -98,7 +99,7 @@ English Translation (for reference; the Korean text prevails)
 ================================================================================
 
 AUI Non-Commercial License (AUIGrid)
-Version 2.0 · Effective 2026-10-14
+Version 2.1 · Effective 2026-10-28
 
 IMPORTANT: Please read this agreement carefully before downloading or using the software.
 This agreement is a legally binding agreement between AUISoft Co., Ltd. ("the Company", www.auisoft.net) and the user of the software (an individual or an entity, "you").
@@ -109,7 +110,7 @@ If you do not agree, do not download or install the software, and delete it imme
 
 1.1 Software: the AUIGrid Non-Commercial edition provided through this repository or a distribution channel designated by the Company (e.g., the jsDelivr CDN), including programs, scripts, stylesheets, images, documents, samples, related materials, and their updates, in any form.
 1.2 Non-Commercial edition: software with the same features as the commercial (Enterprise) license, under a free license that permits use only for the purposes and in the environment defined in this agreement.
-1.3 Localhost: an execution environment on your own computer that cannot be accessed from outside, with the address localhost or 127.0.0.1.
+1.3 Localhost: an execution environment on your own computer that cannot be accessed from outside, with the address localhost or 127.0.0.1. A private IP address on the same network (e.g., 192.168.x.x) is not localhost.
 1.4 Access domain / access IP: any domain, subdomain, or IP address other than localhost through which other people or devices can access a web page or application that includes the software.
 1.5 Commercial use: use of the software in business or organizational operations, revenue generation, or activities that provide products or services to customers.
 1.6 Modification: any act of changing, extending, or adapting the original code of the software, or combining it with other code in a way that alters the original. Using the software's published API (properties, methods, events, custom renderers, etc.) as documented is not a modification.
@@ -131,11 +132,12 @@ You may not:
 3.2 use the software commercially or for business or professional operations;
 3.3 license, rent, exchange, or sell the software or its modifications, or provide them for consideration;
 3.4 include the software in, or distribute it with, commercial products or services;
-3.5 use the software in government agencies, local governments, public institutions, or international organizations;
-3.6 modify the software without the Company's written permission;
+3.5 use the software in government agencies, local governments, public institutions, or international organizations, except that public schools and public research institutions may use it for teaching, academic work, and research under Section 2.2;
+3.6 modify the software without the Company's written permission, except that you may modify the samples (such as the samples folder) and the React and Vue wrapper components for the purposes in Sections 2.2 and 2.3;
 3.7 remove, bypass, or disable technical protection measures of the software, such as license checks and environment restrictions;
 3.8 except to the extent expressly permitted by applicable law, reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code of the software;
-3.9 remove or alter copyright notices, license notices, or header comments included in the software.
+3.9 remove or alter copyright notices, license notices, or header comments included in the software;
+3.10 redistribute or publish the software or its modifications on other repositories, websites, package registries, or similar channels, except that you may reference the Company's distribution channels (this repository and the jsDelivr CDN) from your code and fork this repository under the GitHub Terms of Service.
 
 To use the software commercially or outside localhost, you must purchase a commercial license.
 Commercial license: https://www.auisoft.net/price.html · Contact: aui@auisoft.net
